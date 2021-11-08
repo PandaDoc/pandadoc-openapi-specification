@@ -1,13 +1,13 @@
 # PandaDoc OpenAPI Specifications
-This repository contains [OpenAPI specifications](https://www.openapis.org/) for PandaDoc API.
+This repository contains [OpenAPI specifications](https://www.openapis.org/) for the PandaDoc API.
 
-## What can you do with openapi file? 
+## What can you do with the OpenAPI file?
  
-Use an OpenAPI file to build the SDK for  the language you need using some services, e.g. [OpenAPi-Generator](Https://openapi-generator.tech)  
+Use our OpenAPI file to build the SDK for the language you need with the help of an appropriate service.
 
 ## Releases
 
-See the "Releases" tab for version information.
+See the Releases tab for version information.
 
 ## Support
 
