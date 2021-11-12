@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   description: |
     PandaDoc Public API documentation
-  version: 1.0.0
+  version: 1.0.1
   title: PandaDoc Public API
   license:
     name: MIT
@@ -146,6 +146,7 @@ paths:
           in: query
           schema:
             type: integer
+            minimum: 1
           required: false
           description: Specify which page of the dataset to return.
           example: 1
@@ -216,11 +217,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  results:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/DocumentListResponse/properties/results/items'
+                $ref: '#/components/schemas/DocumentListResponse'
         '400':
           $ref: '#/components/responses/400RequestError'
         '401':
@@ -287,13 +284,16 @@ paths:
                         example: 1
                 tokens:
                   type: array
-                  description: You can pass a list of tokens/values to pre-fill tokens (variables) used in a template. Name is a token (variable) name in a template. Value is a real value you would like to replace a token (variable) with.
+                  description: You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.
                   items:
                     type: object
-                    nullable: true
-                  example:
-                    - name: Favorite.Pet
-                      value: Pands
+                    properties:
+                      name:
+                        type: string
+                        example: Favorite.Pet
+                      value:
+                        type: string
+                        example: Panda
                 fields:
                   type: object
                   nullable: true
@@ -333,8 +333,8 @@ paths:
                         type: array
                         items:
                           type: string
-                          example: |
-                            https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png
+                        example:
+                          - 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
                       name:
                         type: string
                         example: Image 1
@@ -342,7 +342,7 @@ paths:
                   type: array
                   description: 'Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.'
                   items:
-                    $ref: '#/components/schemas/PricingTableResponse'
+                    $ref: '#/components/schemas/PricingTableRequest'
                 content_placeholders:
                   type: array
                   description: 'You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.'
@@ -351,6 +351,7 @@ paths:
                     properties:
                       block_id:
                         type: string
+                        description: Content placeholder block id
                         example: hryJY9mqYZHjQCYQuSjRQg
                       content_library_items:
                         type: array
@@ -359,11 +360,18 @@ paths:
                           properties:
                             id:
                               type: string
+                              description: Content library item id
                               example: hryJY9mqYZHjQCYQuSjRQg
                             pricing_tables:
                               type: array
                               items:
-                                $ref: '#/components/schemas/PricingTableResponse'
+                                $ref: '#/components/schemas/PricingTableRequest'
+                            fields:
+                              type: object
+                            recipients:
+                              type: array
+                              items:
+                                type: object
                 url:
                   type: string
                   example: 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
@@ -518,7 +526,6 @@ paths:
             type: string
           required: true
       requestBody:
-        required: true
         content:
           application/json:
             schema:
@@ -644,11 +651,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  linked_objects:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/LinkedObjectCreateResponse'
+                $ref: '#/components/schemas/LinkedObjectListResponse'
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -1223,12 +1226,14 @@ paths:
           schema:
             type: integer
             format: int32
+            minimum: 1
           description: The amount of items on each page.
         - name: page
           in: query
           schema:
             type: integer
             format: int32
+            minimum: 1
           description: Page number of the results returned.
         - name: statuses
           in: query
@@ -1394,10 +1399,12 @@ components:
           type: string
           example: 4c82f23d91a75961f4d08134fc5ad0dfe6a4c36a
     DocumentListResponse:
+      type: object
       properties:
         results:
           type: array
           items:
+            type: object
             properties:
               id:
                 type: string
@@ -1416,18 +1423,11 @@ components:
                 example: '2021-10-08T11:06:32.337395Z'
               expiration_date:
                 type: string
+                nullable: true
                 example: '2021-10-08T11:06:32.337395Z'
               version:
                 type: string
                 example: '2'
-            example:
-              id: ZsiBHUyksDoKActQNGz542
-              name: test doc
-              status: document.draft
-              date_created: '2021-10-08T11:06:32.337395Z'
-              date_modified: '2021-10-08T11:06:32.337395Z'
-              expiration_date: 2021-10-08T11:06:32.337Z
-              version: 2
     DocumentCreateByTemplateRequest:
       type: object
       properties:
@@ -1463,6 +1463,7 @@ components:
               signing_order:
                 type: integer
                 example: 1
+                nullable: true
         tokens:
           type: array
           description: You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.
@@ -1478,41 +1479,18 @@ components:
         fields:
           type: object
           description: You can pass a list of fields/values to pre-fill fields used in a template. Note that the Signature field can't be pre-filled.
-          properties:
+          example:
             Like:
-              type: object
-              properties:
-                value:
-                  type: boolean
-                  example: true
+              value: true
             Delivery:
-              type: object
-              properties:
-                value:
-                  type: string
-                  example: Same Day Delivery
-            Favorite.Color:
-              type: object
-              properties:
-                value:
-                  type: string
-                  example: PandaDoc green
+              value: Same Day Delivery
             Date:
-              type: object
-              properties:
-                value:
-                  type: string
-                  example: 2019-12-31T00:00:00.000Z
+              value: '2019-12-31T00:00:00.000Z'
         metadata:
           type: object
           description: You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id.
-          properties:
-            opp_id:
-              type: string
-              example: 1234567
-            my_favorite_pet:
-              type: string
-              example: Panda
+          example:
+            my_favorite_pet: Cat
         tags:
           type: array
           description: Mark your document with one or several tags.
@@ -1531,8 +1509,8 @@ components:
                 type: array
                 items:
                   type: string
-                  example: |
-                    https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png
+                example:
+                  - 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
               name:
                 type: string
                 example: Image 1
@@ -1540,90 +1518,7 @@ components:
           type: array
           description: 'Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document. Make sure that "Automatically add products to this table" is enabled in the PandaDoc template pricing tables you wish to populate via API.'
           items:
-            type: object
-            properties:
-              name:
-                type: string
-                example: Pricing Table 1
-              options:
-                type: object
-                properties:
-                  discount:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        example: Discount
-                      is_global:
-                        type: boolean
-                        example: true
-                      type:
-                        type: string
-                        example: absolute
-                      value:
-                        type: number
-                        example: 2.26
-                  currency:
-                    type: string
-                    example: USD
-              sections:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    title:
-                      type: string
-                      example: Sample Section
-                    default:
-                      type: boolean
-                      example: true
-                    rows:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          data:
-                            type: object
-                            properties:
-                              price:
-                                type: integer
-                                example: 10
-                              qty:
-                                type: integer
-                                example: 3
-                              tax_first:
-                                type: object
-                                properties:
-                                  type:
-                                    type: string
-                                    example: percent
-                                  value:
-                                    type: number
-                                    example: 7.5
-                              name:
-                                type: string
-                                example: Toy Pands
-                              description:
-                                type: string
-                                example: Fluffy!
-                          custom_fields:
-                            type: object
-                            properties:
-                              Fluffiness:
-                                type: string
-                                example: 5 / 5
-                          options:
-                            type: object
-                            properties:
-                              qty_editable:
-                                type: boolean
-                                example: true
-                              optional_selected:
-                                type: boolean
-                                example: true
-                              optional:
-                                type: boolean
-                                example: true
+            $ref: '#/components/schemas/PricingTableRequest'
         content_placeholders:
           type: array
           description: 'You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.'
@@ -1638,72 +1533,7 @@ components:
                     pricing_tables:
                       type: array
                       items:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                            example: Pricing Table 1
-                          options:
-                            type: object
-                            properties:
-                              discount:
-                                type: object
-                                properties:
-                                  name:
-                                    type: string
-                                    example: Discount
-                                  is_global:
-                                    type: boolean
-                                    example: true
-                                  type:
-                                    type: string
-                                    example: absolute
-                                  value:
-                                    type: number
-                                    example: 2.26
-                              currency:
-                                type: string
-                                example: USD
-                          sections:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                default:
-                                  type: boolean
-                                  example: true
-                                title:
-                                  type: string
-                                  example: Sample Section
-                                rows:
-                                  type: array
-                                  items:
-                                    type: object
-                                    properties:
-                                      data:
-                                        type: object
-                                        properties:
-                                          price:
-                                            type: integer
-                                            example: 10
-                                          qty:
-                                            type: integer
-                                            example: 3
-                                          name:
-                                            type: string
-                                            example: Placeholder Panda
-                                      options:
-                                        type: object
-                                        properties:
-                                          qty_editable:
-                                            type: boolean
-                                            example: true
-                                          optional_selected:
-                                            type: boolean
-                                            example: true
-                                          optional:
-                                            type: boolean
-                                            example: true
+                        $ref: '#/components/schemas/PricingTableRequest'
                     id:
                       type: string
                       example: 9d9k7VtSQ5KCXfsUQv4GxE
@@ -1716,20 +1546,10 @@ components:
     DocumentCreateByPdfRequest:
       type: object
       properties:
-        urls:
-          type: array
-          items:
-            type: string
-        name:
+        url:
           type: string
-        data:
-          type: string
-          description: JSON as a multipart/form-data string.
-        tags:
-          type: array
-          description: Mark your document with one or several tags.
-          items:
-            type: string
+          example: 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
+          description: Use a URL to specify the PDF. We support only URLs starting with https.
         recipients:
           type: array
           description: 'The list of recipients you''re sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.'
@@ -1746,45 +1566,44 @@ components:
                 type: string
               email:
                 type: string
+        parse_form_fields:
+          type: boolean
+          description: Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags.
+        name:
+          type: string
+        tags:
+          type: array
+          description: Mark your document with one or several tags.
+          items:
+            type: string
         fields:
           type: object
           description: |
             If you are creating a document from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are creating a document from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: "value": "".
-          properties:
+          example:
             Like:
-              type: object
-              properties:
-                value:
-                  type: boolean
+              value: true
             Delivery:
-              type: object
-              properties:
-                value:
-                  type: string
-            Favorite.Color:
-              type: object
-              properties:
-                value:
-                  type: string
+              value: Same Day Delivery
             Date:
-              type: object
-              properties:
-                value:
-                  type: string
-        parse_form_fields:
-          type: boolean
-          description: Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags.
+              value: '2019-12-31T00:00:00.000Z'
+        metadata:
+          type: object
+          description: You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id.
+          example:
+            my_favorite_pet: Cat
       required:
-        - data
+        - url
+        - recipients
         - parse_form_fields
     DocumentCreateResponse:
       properties:
         id:
           type: string
-          example: ZsiBHUyksDoKActQNGz542
+          example: cKbJ7uay3cEGtsKuGPwYGX
         name:
           type: string
-          example: Test doc
+          example: API Sample Document from PandaDoc Template
         status:
           type: string
           example: document.draft
@@ -1800,40 +1619,40 @@ components:
           example: '2021-10-08T11:06:32.337395Z'
         uuid:
           type: string
-          example: msFYActMfJHqNTKH8YSvF1
+          example: cKbJ7uay3cEGtsKuGPwYGX
     DocumentStatusResponse:
       properties:
         id:
           type: string
+          example: msFYActMfJHqNTKH8YSvF1
         name:
           type: string
+          example: API Sample Document from PandaDoc Template
         status:
           type: string
+          example: document.viewed
         date_created:
           type: string
+          example: '2017-07-06T08:42:13.836022Z'
         date_modified:
           type: string
           nullable: true
+          example: '2017-08-04T02:21:13.963750Z'
         date_completed:
           type: string
           nullable: true
+          example: '2018-08-03T08:21:38.809868Z'
         expiration_date:
           type: string
           nullable: true
+          example: '2018-08-05T08:21:38.809868Z'
         version:
           type: string
+          nullable: true
+          example: '2'
         uuid:
           type: string
-      example:
-        id: ZsiBHUyksDoKActQNGz542
-        name: test doc
-        status: document.draft
-        date_created: '2021-10-08T11:06:32.337395Z'
-        date_modified: '2021-10-08T11:06:32.337395Z'
-        date_completed: '2021-10-08T11:06:32.337395Z'
-        expiration_date: '2021-10-08T11:06:32.337395Z'
-        version: '2'
-        uuid: msFYActMfJHqNTKH8YSvF1
+          example: msFYActMfJHqNTKH8YSvF1
     DocumentDetailsResponse:
       properties:
         id:
@@ -1885,25 +1704,14 @@ components:
         expiration_date: {}
         metadata:
           type: object
-          properties:
-            document__created_via_public_api:
-              type: string
-              example: 'true'
-            my_favorite_pet:
-              type: string
-              example: Panda
-            opp_id:
-              type: string
-              example: 1234567
+          example:
+            document__created_via_public_api: 'true'
+            my_favorite_pet: Panda
+            opp_id: '1234567'
         tokens:
           type: array
           items:
             type: object
-            properties:
-              name:
-                type: string
-              value:
-                type: string
           example:
             - name: Document.GrandTotal
               value: $29.99
@@ -1913,24 +1721,6 @@ components:
           type: array
           items:
             type: object
-            properties:
-              name:
-                type: string
-                nullable: true
-              placeholder:
-                type: string
-                nullable: true
-              title:
-                type: string
-                nullable: true
-              uuid:
-                type: string
-                nullable: true
-              value: {}
-              assigned_to: {}
-              merge_field:
-                type: string
-                nullable: true
           example:
             - uuid: eyGJgkWJfUpRtUCsCFDwGU
               name: Favorite.Color
@@ -1961,103 +1751,7 @@ components:
                 role: ''
                 type: recipient
         pricing:
-          type: object
-          properties:
-            tables:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    example: pfXth77p5bSSPb4VyFbh3S
-                  name:
-                    type: string
-                    example: PricingTable1
-                  total:
-                    type: string
-                    example: 29.99
-                  is_included_in_total:
-                    type: boolean
-                    example: true
-                  summary:
-                    type: object
-                    properties:
-                      total:
-                        type: string
-                        example: 29.99
-                      subtotal:
-                        type: string
-                        example: 32.25
-                      discount:
-                        type: string
-                        example: 2.26
-                      tax:
-                        type: string
-                        example: 0
-                  currency:
-                    type: string
-                    example: USD
-                  items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id: {}
-                        sku: {}
-                        name:
-                          type: string
-                          example: Toy Panda
-                        cost:
-                          type: string
-                          example: 0
-                        price:
-                          type: string
-                          example: 10
-                        description:
-                          type: string
-                          example: Fluffy!
-                        custom_fields:
-                          type: object
-                          properties:
-                            Fluffiness:
-                              type: string
-                              example: 5 / 5
-                        custom_columns:
-                          type: object
-                          properties:
-                            Fluffiness:
-                              type: string
-                              example: ''
-                        discount: {}
-                        tax_first:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                              example: percent
-                            value:
-                              type: string
-                              example: 7.5
-                        tax_second: {}
-                        subtotal:
-                          type: string
-                          example: 32.25
-                        options:
-                          type: object
-                          properties:
-                            optional_selected:
-                              type: boolean
-                              example: true
-                            optional:
-                              type: boolean
-                              example: true
-                        qty:
-                          type: integer
-                          example: 3
-                        sale_price:
-                          type: string
-                          example: 10.75
+          $ref: '#/components/schemas/PricingTablesResponse'
         version:
           type: string
           example: '2'
@@ -2101,7 +1795,7 @@ components:
           properties:
             amount:
               type: string
-              example: 29.99
+              example: '29.99'
             currency:
               type: string
               example: USD
@@ -2118,7 +1812,7 @@ components:
                 example: deal
               entity_id:
                 type: string
-                example: 18640
+                example: '18640'
         status:
           type: string
           example: document.draft
@@ -2127,67 +1821,63 @@ components:
         recipient:
           type: string
           description: The email address for the recipient you're creating a document link for.
+          example: josh@example.com
         lifetime:
           type: number
           description: Provide the number of seconds that a document link should be valid for. Default is 3600 seconds.
-      example:
-        recipient: josh@example.com
-        lifetime: 900
+          example: 900
       required:
         - recipient
     DocumentCreateLinkResponse:
       properties:
         id:
           type: string
+          example: QYCPtavst3DqqBK72ZRtbF
         expires_at:
           type: string
-      example:
-        id: QYCPtavst3DqqBK72ZRtbF
-        expires_at: '2017-08-29T22:18:44.315Z'
+          example: '2017-08-29T22:18:44.315Z'
     DocumentSendRequest:
       properties:
         message:
           type: string
           description: A message that will be sent by email with a link to a document to sign.
+          example: Hello! This document was sent from the PandaDoc API
         subject:
           type: string
           description: Value that will be used as the email subject.
+          example: Please check this test API document from PandaDoc
         silent:
           type: boolean
           description: 'Disables sent, viewed, comment, and completed email notifications for document recipients and the document sender. By default, notifications emails are sent for specific actions. If set as true, it won''t affect the "Approve document" email notification sent to the Approver.'
-      example:
-        message: Hello! This document was sent from the PandaDoc API
-        subject: Please check this test API document from PandaDoc
-        silent: false
     DocumentSendResponse:
       type: object
       properties:
         id:
           type: string
+          example: msFYActMfJHqNTKH8YSvF1
         name:
           type: string
+          example: API Sample Document from PandaDoc Template
         status:
           type: string
+          example: document.sent
         date_created:
           type: string
+          example: '2018-02-06T08:42:13.836022Z'
         date_modified:
           type: string
+          example: '2018-02-06T08:42:13.836022Z'
         expiration_date:
           type: string
+          example: '2018-02-06T08:42:13.836022Z'
         version:
           type: string
+          example: '2'
         uuid:
           type: string
-      example:
-        id: ZsiBHUyksDoKActQNGz542
-        name: test doc
-        status: document.draft
-        date_created: '2021-10-08T11:06:32.337395Z'
-        date_modified: '2021-10-08T11:06:32.337395Z'
-        expiration_date: 2021-10-08T11:06:32.337Z
-        version: 2
-        uuid: msFYActMfJHqNTKH8YSvF1
+          example: msFYActMfJHqNTKH8YSvF1
     LinkedObjectListResponse:
+      type: object
       properties:
         linked_objects:
           type: array
@@ -2273,7 +1963,7 @@ components:
           items:
             type: object
         pricing:
-          $ref: '#/components/schemas/TemplateDetailsResponse/properties/pricing'
+          $ref: '#/components/schemas/PricingTablesResponse'
         tags:
           type: array
           items:
@@ -2426,15 +2116,7 @@ components:
                 nullable: true
                 example: Favorite.Color
         pricing:
-          type: object
-          properties:
-            tables:
-              type: array
-              items:
-                $ref: '#/components/schemas/PricingTableResponse'
-            total:
-              type: string
-              example: '11500'
+          $ref: '#/components/schemas/PricingTablesResponse'
         tags:
           type: array
           items:
@@ -2676,10 +2358,10 @@ components:
           example: 201
         request_time:
           type: string
-          example: 2021-10-15T10:46:57.867Z
+          example: '2021-10-15T10:46:57.867'
         response_time:
           type: string
-          example: 2021-10-15T10:46:57.969Z
+          example: '2021-10-15T10:46:57.969'
         response_body:
           type: object
           example:
@@ -2703,7 +2385,7 @@ components:
         request_body:
           type: object
           example:
-            date_created: 2021-10-15T10:45:41.138Z
+            date_created: '2021-10-15T10:45:41.138489Z'
             name: Another templates folder
             uuid: LKoqFUZZGowLAVo6ECFRyB
         token_type:
@@ -2744,10 +2426,10 @@ components:
                 example: 200
               request_time:
                 type: string
-                example: 2021-10-15T10:59:22.852Z
+                example: '2021-10-15T10:59:22.852'
               response_time:
                 type: string
-                example: 2021-10-15T10:59:23.152Z
+                example: '2021-10-15T10:59:23.152'
     DocumentStatusEnum:
       type: integer
       enum:
@@ -2787,151 +2469,307 @@ components:
         - '-date_expiration'
         - '-date_declined'
         - '-status'
-    PricingTableResponse:
+    PricingTableRequest:
       type: object
       properties:
         name:
           type: string
           example: Pricing Table
-        id:
-          type: string
-          example: 065c5cbc-a065-4843-ba17-028e63779605
-        total:
-          type: string
-          example: '11500'
-        is_included_in_total:
-          type: boolean
-        summary:
+        options:
           type: object
-          nullable: true
           properties:
-            subtotal:
+            currency:
               type: string
-              example: '11500'
-              nullable: true
-            total:
-              type: string
-              example: '11500'
-              nullable: true
+              example: USD
             discount:
-              type: string
-              example: '0'
+              type: object
               nullable: true
-            tax:
-              type: string
-              example: '0'
+              properties:
+                is_global:
+                  type: boolean
+                type:
+                  type: string
+                  enum:
+                    - absolute
+                    - percent
+                  example: absolute
+                name:
+                  type: string
+                  example: Global Discount
+                value:
+                  type: number
+                  example: 2.26
+            tax_first:
+              type: object
               nullable: true
-        items:
+              properties:
+                is_global:
+                  type: boolean
+                type:
+                  type: string
+                  enum:
+                    - percent
+                  example: percent
+                name:
+                  type: string
+                  example: Tax First
+                value:
+                  type: number
+                  example: 2.26
+            tax_second:
+              type: object
+              nullable: true
+              properties:
+                is_global:
+                  type: boolean
+                type:
+                  type: string
+                  enum:
+                    - percent
+                  example: percent
+                name:
+                  type: string
+                  example: Tax Second
+                value:
+                  type: number
+                  example: 2.26
+        sections:
           type: array
           items:
             type: object
             properties:
-              id:
+              title:
                 type: string
-                nullable: true
-              sku:
-                type: string
-                nullable: true
-              qty:
-                type: string
-                nullable: true
-                example: '10'
+                example: Sample Section
+              default:
+                type: boolean
+              multichoice_enabled:
+                type: boolean
+                default: false
+              rows:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    options:
+                      type: object
+                      properties:
+                        qty_editable:
+                          type: boolean
+                        optional_selected:
+                          type: boolean
+                        optional:
+                          type: boolean
+                    data:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: Toy Panda
+                        description:
+                          type: string
+                          example: Fluffy!
+                          nullable: true
+                        price:
+                          type: number
+                          example: 10
+                        cost:
+                          type: number
+                          example: 8.5
+                        qty:
+                          type: integer
+                          example: 3
+                        sku:
+                          type: string
+                          example: toy_panda
+                          nullable: true
+                        discount:
+                          type: object
+                          nullable: true
+                          properties:
+                            value:
+                              type: number
+                              example: 7.5
+                            type:
+                              type: string
+                              example: percent
+                        tax_first:
+                          type: object
+                          nullable: true
+                          properties:
+                            value:
+                              type: number
+                              example: 7.5
+                            type:
+                              type: string
+                              example: percent
+                        tax_second:
+                          type: object
+                          nullable: true
+                          properties:
+                            value:
+                              type: number
+                              example: 7.5
+                            type:
+                              type: string
+                              example: percent
+                    custom_fields:
+                      type: object
+                      example:
+                        Fluffiness: 5/5
+    PricingTablesResponse:
+      type: object
+      properties:
+        tables:
+          type: array
+          items:
+            type: object
+            properties:
               name:
                 type: string
-                nullable: true
-                example: Annual license
-              cost:
+                example: Pricing Table
+              id:
                 type: string
-                nullable: true
-              price:
+                example: 065c5cbc-a065-4843-ba17-028e63779605
+              total:
                 type: string
-                nullable: true
-                example: '100'
-              description:
-                type: string
-                nullable: true
-                example: 1 year subscription
-              custom_fields:
-                type: object
-                nullable: true
-                example: {}
-              custom_columns:
-                type: object
-                nullable: true
-                example:
-                  Images: ''
-                  Cost: ''
-                  Subtotal: ''
-              discount:
+                example: '11500'
+              is_included_in_total:
+                type: boolean
+              summary:
                 type: object
                 nullable: true
                 properties:
-                  value:
+                  subtotal:
                     type: string
+                    example: '11500'
                     nullable: true
-                  type:
+                  total:
                     type: string
+                    example: '11500'
                     nullable: true
-              tax_first:
-                type: object
-                nullable: true
-                properties:
-                  value:
+                  discount:
                     type: string
+                    example: '0'
                     nullable: true
-                  type:
+                  tax:
                     type: string
+                    example: '0'
                     nullable: true
-              tax_second:
-                type: object
-                nullable: true
-                properties:
-                  value:
-                    type: string
-                    nullable: true
-                  type:
-                    type: string
-                    nullable: true
-              subtotal:
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      nullable: true
+                    sku:
+                      type: string
+                      nullable: true
+                    qty:
+                      type: string
+                      nullable: true
+                      example: '10'
+                    name:
+                      type: string
+                      nullable: true
+                      example: Annual license
+                    cost:
+                      type: string
+                      nullable: true
+                    price:
+                      type: string
+                      nullable: true
+                      example: '100'
+                    description:
+                      type: string
+                      nullable: true
+                      example: 1 year subscription
+                    custom_fields:
+                      type: object
+                      nullable: true
+                      example: {}
+                    custom_columns:
+                      type: object
+                      nullable: true
+                      example:
+                        Images: ''
+                        Cost: ''
+                        Subtotal: ''
+                    discount:
+                      type: object
+                      nullable: true
+                      properties:
+                        value:
+                          type: string
+                          nullable: true
+                        type:
+                          type: string
+                          nullable: true
+                    tax_first:
+                      type: object
+                      nullable: true
+                      properties:
+                        value:
+                          type: string
+                          nullable: true
+                        type:
+                          type: string
+                          nullable: true
+                    tax_second:
+                      type: object
+                      nullable: true
+                      properties:
+                        value:
+                          type: string
+                          nullable: true
+                        type:
+                          type: string
+                          nullable: true
+                    subtotal:
+                      type: string
+                      nullable: true
+                      example: '10000'
+                    options:
+                      type: object
+                      nullable: true
+                      example: {}
+                      properties:
+                        optional:
+                          type: boolean
+                          nullable: true
+                        optional_selected:
+                          type: boolean
+                          nullable: true
+                        multichoice_enabled:
+                          type: boolean
+                          nullable: true
+                        multichoice_selected:
+                          type: boolean
+                          nullable: true
+                    sale_price:
+                      type: string
+                      nullable: true
+                      example: '1000'
+                    taxes:
+                      type: object
+                      nullable: true
+                      example: {}
+                    discounts:
+                      type: object
+                      nullable: true
+                      example: {}
+                    fees:
+                      type: object
+                      nullable: true
+                      example: {}
+              currency:
                 type: string
-                nullable: true
-                example: '10000'
-              options:
-                type: object
-                nullable: true
-                example: {}
-                properties:
-                  optional:
-                    type: boolean
-                    nullable: true
-                  optional_selected:
-                    type: boolean
-                    nullable: true
-                  multichoice_enabled:
-                    type: boolean
-                    nullable: true
-                  multichoice_selected:
-                    type: boolean
-                    nullable: true
-              sale_price:
-                type: string
-                nullable: true
-                example: '1000'
-              taxes:
-                type: object
-                nullable: true
-                example: {}
-              discounts:
-                type: object
-                nullable: true
-                example: {}
-              fees:
-                type: object
-                nullable: true
-                example: {}
-        currency:
+                example: USD
+        total:
           type: string
-          example: USD
+          example: '11500'
   responses:
     '401':
       description: Authentication error
