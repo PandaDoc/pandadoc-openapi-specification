@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "PandaDoc Public API documentation",
-    "version": "1.0.1",
+    "version": "2.0.0",
     "title": "PandaDoc Public API",
     "license": {
       "name": "MIT",
@@ -25,6 +25,7 @@
           "OAuth 2.0 Authentication"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
@@ -33,7 +34,7 @@
                     "$ref": "#/components/schemas/OAuth2CreateAccessTokenRequest"
                   },
                   {
-                    "$ref": "#/components/schemas/OAuth2RefreshAccessTokenRequests"
+                    "$ref": "#/components/schemas/OAuth2RefreshAccessTokenRequest"
                   }
                 ]
               }
@@ -75,7 +76,7 @@
           "Documents"
         ],
         "summary": "List documents",
-        "operationId": "documentList",
+        "operationId": "listDocuments",
         "parameters": [
           {
             "name": "completed_from",
@@ -98,6 +99,16 @@
             "required": false,
             "description": "Return results where the `date_completed` field (ISO 8601) is less than or equal to this value.",
             "example": "2021-10-27T15:22:23.132757Z"
+          },
+          {
+            "name": "contact_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Returns results where 'contact_id' is present in document as recipient or approver",
+            "example": "9FeAY2NB3C9qDdtQRb4tTL"
           },
           {
             "name": "count",
@@ -167,6 +178,16 @@
             },
             "required": false,
             "description": "Specify the form used for documents creation. This parameter can't be used with template_id.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "membership_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Returns results where 'membership_id' is present in document as owner (should be member uuid)",
             "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           },
           {
@@ -300,7 +321,7 @@
           "Documents"
         ],
         "summary": "Create document",
-        "operationId": "documentCreate",
+        "operationId": "createDocument",
         "parameters": [
           {
             "name": "editor_ver",
@@ -309,199 +330,17 @@
               "type": "string"
             },
             "required": false,
-            "example": "ev1",
+            "example": "ev2",
             "description": "Set this parameter as `ev1` if you want to create a document from PDF with Classic Editor when both editors are enabled for the workspace."
           }
         ],
         "requestBody": {
+          "required": true,
           "description": "Use a PandaDoc template or an existing PDF to create a document.\nSee the creation request examples [by template](#/schemas/DocumentCreateByTemplateRequest)\nand [by pdf](#/schemas/DocumentCreateByPdfRequest)\n",
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name the document you are creating.",
-                    "example": "API Sample Document from PandaDoc Template"
-                  },
-                  "template_uuid": {
-                    "type": "string",
-                    "description": "ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
-                    "example": "hryJY9mqYZHjQCYQuSjRQg"
-                  },
-                  "folder_uuid": {
-                    "type": "string",
-                    "example": "QMDSzwabfFzTgjW4kUijqQ",
-                    "description": "ID of the folder where the created document should be stored."
-                  },
-                  "recipients": {
-                    "type": "array",
-                    "description": "The list of recipients you're sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "email": {
-                          "type": "string",
-                          "example": "josh@example.com"
-                        },
-                        "first_name": {
-                          "type": "string",
-                          "example": "Josh"
-                        },
-                        "last_name": {
-                          "type": "string",
-                          "example": "Ron"
-                        },
-                        "role": {
-                          "type": "string",
-                          "example": "user"
-                        },
-                        "signing_order": {
-                          "type": "integer",
-                          "example": 1
-                        }
-                      }
-                    }
-                  },
-                  "tokens": {
-                    "type": "array",
-                    "description": "You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string",
-                          "example": "Favorite.Pet"
-                        },
-                        "value": {
-                          "type": "string",
-                          "example": "Panda"
-                        }
-                      }
-                    }
-                  },
-                  "fields": {
-                    "type": "object",
-                    "nullable": true,
-                    "description": "You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled.",
-                    "example": {
-                      "Like": {
-                        "value": true
-                      },
-                      "Delivery": {
-                        "value": "Same Dav Delivery"
-                      },
-                      "Favorite.Color": {
-                        "value": "PandaDoc green"
-                      },
-                      "Date": {
-                        "value": "2019-12-31T00:00:00.000Z"
-                      }
-                    }
-                  },
-                  "metadata": {
-                    "type": "object",
-                    "nullable": true,
-                    "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id.",
-                    "example": {
-                      "opp_id": "1234567",
-                      "my_favorite_pet": "Panda"
-                    }
-                  },
-                  "tags": {
-                    "type": "array",
-                    "description": "Mark your document with one or several tags.",
-                    "items": {
-                      "type": "string"
-                    },
-                    "example": [
-                      "created_via_api",
-                      "test_document"
-                    ]
-                  },
-                  "images": {
-                    "type": "array",
-                    "description": "You can pass a list of images to image blocks (one image in one block) for replacement.",
-                    "items": {
-                      "type": "object",
-                      "nullable": true,
-                      "properties": {
-                        "urls": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          },
-                          "example": [
-                            "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
-                          ]
-                        },
-                        "name": {
-                          "type": "string",
-                          "example": "Image 1"
-                        }
-                      }
-                    }
-                  },
-                  "pricing_tables": {
-                    "type": "array",
-                    "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
-                    "items": {
-                      "$ref": "#/components/schemas/PricingTableRequest"
-                    }
-                  },
-                  "content_placeholders": {
-                    "type": "array",
-                    "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "block_id": {
-                          "type": "string",
-                          "description": "Content placeholder block id",
-                          "example": "hryJY9mqYZHjQCYQuSjRQg"
-                        },
-                        "content_library_items": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "description": "Content library item id",
-                                "example": "hryJY9mqYZHjQCYQuSjRQg"
-                              },
-                              "pricing_tables": {
-                                "type": "array",
-                                "items": {
-                                  "$ref": "#/components/schemas/PricingTableRequest"
-                                }
-                              },
-                              "fields": {
-                                "type": "object"
-                              },
-                              "recipients": {
-                                "type": "array",
-                                "items": {
-                                  "type": "object"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "url": {
-                    "type": "string",
-                    "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
-                    "description": "Use a URL to specify the PDF. We support only URLs starting with https."
-                  },
-                  "parse_form_fields": {
-                    "type": "boolean",
-                    "description": "Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags."
-                  }
-                }
+                "$ref": "#/components/schemas/DocumentCreateRequest"
               }
             },
             "multipart/form-data": {
@@ -551,7 +390,7 @@
           "Documents"
         ],
         "summary": "Document status",
-        "operationId": "documentStatus",
+        "operationId": "statusDocument",
         "parameters": [
           {
             "name": "id",
@@ -560,7 +399,8 @@
               "type": "string"
             },
             "required": true,
-            "description": "Specify document ID."
+            "description": "Specify document ID.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           }
         ],
         "responses": {
@@ -602,7 +442,8 @@
             "schema": {
               "type": "string"
             },
-            "required": true
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           }
         ],
         "responses": {
@@ -615,13 +456,77 @@
         }
       }
     },
+    "/public/v1/documents/{id}/status": {
+      "patch": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Document status change",
+        "operationId": "changeDocumentStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify document ID.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentStatusChangeRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Binary attachment file"
+                  },
+                  "data": {
+                    "type": "object",
+                    "description": "JSON as a multipart/form-data string."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
     "/public/v1/documents/{id}/details": {
       "get": {
         "tags": [
           "Documents"
         ],
         "summary": "Document details",
-        "operationId": "documentDetails",
+        "operationId": "detailsDocument",
         "parameters": [
           {
             "name": "id",
@@ -630,7 +535,8 @@
             "schema": {
               "type": "string"
             },
-            "required": true
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           }
         ],
         "responses": {
@@ -665,7 +571,7 @@
           "Documents"
         ],
         "summary": "Create a Document Link",
-        "operationId": "documentCreateLink",
+        "operationId": "createDocumentLink",
         "parameters": [
           {
             "name": "id",
@@ -674,7 +580,8 @@
             "schema": {
               "type": "string"
             },
-            "required": true
+            "required": true,
+            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
           }
         ],
         "requestBody": {
@@ -731,10 +638,12 @@
             "schema": {
               "type": "string"
             },
-            "required": true
+            "required": true,
+            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -784,7 +693,8 @@
               "type": "string"
             },
             "required": true,
-            "description": "Specify document ID."
+            "description": "Specify document ID.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           },
           {
             "name": "watermark_color",
@@ -793,7 +703,8 @@
               "type": "string"
             },
             "required": false,
-            "description": "HEX code (for example `#RRGGBB`)."
+            "description": "HEX code (for example `#FF5733`).",
+            "example": "#FF5733"
           },
           {
             "name": "watermark_font_size",
@@ -802,7 +713,8 @@
               "type": "integer"
             },
             "required": false,
-            "description": "Font size of the watermark."
+            "description": "Font size of the watermark.",
+            "example": 12
           },
           {
             "name": "watermark_opacity",
@@ -812,7 +724,8 @@
               "format": "float"
             },
             "required": false,
-            "description": "In range 0.0-1.0"
+            "description": "In range 0.0-1.0",
+            "example": 0.5
           },
           {
             "name": "watermark_text",
@@ -821,7 +734,8 @@
               "type": "string"
             },
             "required": false,
-            "description": "Specify watermark text."
+            "description": "Specify watermark text.",
+            "example": "John Doe inc."
           }
         ],
         "responses": {
@@ -907,7 +821,7 @@
           "Documents"
         ],
         "summary": "List Linked Objects",
-        "operationId": "linkedObjectList",
+        "operationId": "listLinkedObjects",
         "parameters": [
           {
             "name": "id",
@@ -916,7 +830,8 @@
               "type": "string"
             },
             "required": true,
-            "description": "Specify document ID."
+            "description": "Specify document ID.",
+            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
           }
         ],
         "responses": {
@@ -949,7 +864,7 @@
           "Documents"
         ],
         "summary": "Create Linked Object",
-        "operationId": "linkedObjectsCreate",
+        "operationId": "createLinkedObject",
         "parameters": [
           {
             "name": "id",
@@ -958,7 +873,8 @@
               "type": "string"
             },
             "required": true,
-            "description": "Specify document ID."
+            "description": "Specify document ID.",
+            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
           }
         ],
         "requestBody": {
@@ -1006,7 +922,7 @@
           "Documents"
         ],
         "summary": "Delete Linked Object",
-        "operationId": "linkedObjectDelete",
+        "operationId": "deleteLinkedObject",
         "parameters": [
           {
             "name": "id",
@@ -1015,7 +931,8 @@
               "type": "string"
             },
             "required": true,
-            "description": "Specify document ID."
+            "description": "Specify document ID.",
+            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
           },
           {
             "name": "linked_object_id",
@@ -1024,9 +941,346 @@
               "type": "string"
             },
             "required": true,
-            "description": "Specify linked object ID."
+            "description": "Specify linked object ID.",
+            "example": "deb0d530-d759-4189-a422-8d2265e01b2e"
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/attachments": {
+      "get": {
+        "summary": "Document Attachment List",
+        "description": "Return list of objects attached to particular document",
+        "operationId": "listDocumentAttachments",
+        "tags": [
+          "Document Attachments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentAttachmentResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "post": {
+        "summary": "Document Attachment Create",
+        "description": "Creates an attachment for a particular document",
+        "operationId": "createDocumentAttachment",
+        "tags": [
+          "Document Attachments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Uploads attachment to document by using Multipart Form Data",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentAttachmentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentAttachmentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/attachments/{attachment_id}": {
+      "get": {
+        "summary": "Document Attachment Details",
+        "description": "Returns details of the specific document's attachment",
+        "operationId": "detailsDocumentAttachment",
+        "tags": [
+          "Document Attachments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "description": "Attachment UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "89ce2f49-10fb-4e9b-b5f3-e28be2a5c042"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentAttachmentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Document Attachment Delete",
+        "description": "Deletes specific document's attachment",
+        "operationId": "deleteDocumentAttachment",
+        "tags": [
+          "Document Attachments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "description": "Attachment UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "89ce2f49-10fb-4e9b-b5f3-e28be2a5c042"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/attachments/{attachment_id}/download": {
+      "get": {
+        "summary": "Document Attachment Download",
+        "description": "Returns document attachment file for download",
+        "operationId": "downloadDocumentAttachment",
+        "tags": [
+          "Document Attachments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "attachment_id",
+            "in": "path",
+            "description": "Attachment UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "89ce2f49-10fb-4e9b-b5f3-e28be2a5c042"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/ownership": {
+      "patch": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Update document ownership",
+        "operationId": "transferDocumentOwnership",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify document ID.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentTransferOwnershipRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/ownership": {
+      "patch": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Transfer all documents ownership",
+        "operationId": "transferAllDocumentsOwnership",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentTransferAllOwnershipRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "204": {
             "description": "No content"
@@ -1062,7 +1316,7 @@
             "schema": {
               "type": "string"
             },
-            "example": "name"
+            "example": "Sample Pricing Table"
           },
           {
             "name": "id",
@@ -1070,7 +1324,8 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "UXdP7Lnbvvr4WEb2wzM2hc"
           },
           {
             "name": "deleted",
@@ -1086,7 +1341,8 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "S6xX7saJfA44mtJxGWd95L"
           },
           {
             "name": "count",
@@ -1096,7 +1352,8 @@
               "type": "integer",
               "format": "int32",
               "minimum": 1
-            }
+            },
+            "example": 10
           },
           {
             "name": "page",
@@ -1114,7 +1371,8 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "pricing_tables"
           }
         ],
         "responses": {
@@ -1156,7 +1414,8 @@
             "schema": {
               "type": "string"
             },
-            "required": true
+            "required": true,
+            "example": "UXdP7Lnbvvr4WEb2wzM2hc"
           }
         ],
         "responses": {
@@ -1200,7 +1459,8 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "Sample onboarding template"
           },
           {
             "name": "shared",
@@ -1226,7 +1486,8 @@
               "type": "integer",
               "format": "int32",
               "minimum": 1
-            }
+            },
+            "example": 10
           },
           {
             "name": "page",
@@ -1244,7 +1505,8 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "e9LxBesSL73AeZMzeYdfvV"
           },
           {
             "name": "folder_uuid",
@@ -1252,7 +1514,8 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "xDKHoJ8DkwhiTQSUzNveCJ"
           },
           {
             "name": "tag",
@@ -1292,7 +1555,7 @@
       "get": {
         "summary": "Details Template",
         "description": "Return detailed data about a template.",
-        "operationId": "detailsTemaplate",
+        "operationId": "detailsTemplate",
         "tags": [
           "Templates"
         ],
@@ -1304,7 +1567,8 @@
             "schema": {
               "type": "string"
             },
-            "required": true
+            "required": true,
+            "example": "EE8yUNg5HztqVAuH85He8V"
           }
         ],
         "responses": {
@@ -1349,7 +1613,8 @@
             "schema": {
               "type": "string"
             },
-            "required": true
+            "required": true,
+            "example": "EE8yUNg5HztqVAuH85He8V"
           }
         ],
         "responses": {
@@ -1391,7 +1656,8 @@
               "format": "int32",
               "minimum": 1
             },
-            "description": "Optionally, specify how many forms to return. Default is 50 forms, maximum is 100 forms."
+            "description": "Optionally, specify how many forms to return. Default is 50 forms, maximum is 100 forms.",
+            "example": 10
           },
           {
             "name": "page",
@@ -1450,7 +1716,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Specify the form name."
+            "description": "Specify the form name.",
+            "example": "New Form"
           }
         ],
         "responses": {
@@ -1485,6 +1752,7 @@
           "Folders API"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -1529,7 +1797,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "The UUID of the folder containing folders. To list the folders located in the root folder, remove this parameter in the request."
+            "description": "The UUID of the folder containing folders. To list the folders located in the root folder, remove this parameter in the request.",
+            "example": "Nq8htXxFssmhRxAPSP4SBP"
           },
           {
             "name": "count",
@@ -1539,7 +1808,8 @@
               "format": "int32",
               "minimum": 1
             },
-            "description": "Optionally, specify how many folders to return. Default is 50 folders, maximum is 100 folders."
+            "description": "Optionally, specify how many folders to return. Default is 50 folders, maximum is 100 folders.",
+            "example": 10
           },
           {
             "name": "page",
@@ -1591,10 +1861,12 @@
               "type": "string"
             },
             "required": true,
-            "description": "The UUID of the folder that you are renaming."
+            "description": "The UUID of the folder that you are renaming.",
+            "example": "Nq8htXxFssmhRxAPSP4SBP"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -1638,6 +1910,7 @@
           "Folders API"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -1682,7 +1955,8 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
+            },
+            "example": "Nq8htXxFssmhRxAPSP4SBP"
           },
           {
             "name": "count",
@@ -1692,7 +1966,8 @@
               "format": "int32",
               "minimum": 1
             },
-            "description": "Optionally, specify how many folders to return. Default is 50 folders, maximum is 100 folders."
+            "description": "Optionally, specify how many folders to return. Default is 50 folders, maximum is 100 folders.",
+            "example": 10
           },
           {
             "name": "page",
@@ -1744,10 +2019,12 @@
               "type": "string"
             },
             "required": true,
-            "description": "The UUID of the folder which you are renaming."
+            "description": "The UUID of the folder which you are renaming.",
+            "example": "Nq8htXxFssmhRxAPSP4SBP"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -1786,7 +2063,7 @@
       "get": {
         "summary": "List API Log",
         "description": "Get the list of all logs within the selected workspace. Optionally filter by date, page, and `#` of items per page.",
-        "operationId": "listApiLogs",
+        "operationId": "listLogs",
         "tags": [
           "API Logs"
         ],
@@ -1797,7 +2074,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as \"-90d\" (for past 90 days)."
+            "description": "Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as \"-90d\" (for past 90 days).",
+            "example": "-7d"
           },
           {
             "name": "to",
@@ -1805,7 +2083,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as \"-10d\" (for past 10 days) or a special \"now\" value."
+            "description": "Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as \"-10d\" (for past 10 days) or a special \"now\" value.",
+            "example": "now"
           },
           {
             "name": "count",
@@ -1815,7 +2094,8 @@
               "format": "int32",
               "minimum": 1
             },
-            "description": "The amount of items on each page."
+            "description": "The amount of items on each page.",
+            "example": 10
           },
           {
             "name": "page",
@@ -1845,7 +2125,11 @@
                 ]
               }
             },
-            "description": "Returns only the predefined status codes. Allows 1xx, 2xx, 3xx, 4xx, and 5xx."
+            "description": "Returns only the predefined status codes. Allows 1xx, 2xx, 3xx, 4xx, and 5xx.",
+            "example": [
+              400,
+              500
+            ]
           },
           {
             "name": "methods",
@@ -1865,7 +2149,11 @@
                 ]
               }
             },
-            "description": "Returns only the predefined HTTP methods. Allows GET, POST, PUT, PATCH, and DELETE."
+            "description": "Returns only the predefined HTTP methods. Allows GET, POST, PUT, PATCH, and DELETE.",
+            "example": [
+              "GET",
+              "POST"
+            ]
           },
           {
             "name": "search",
@@ -1873,7 +2161,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Returns the results containing a string."
+            "description": "Returns the results containing a string.",
+            "example": "documents/hryJY9mqYZHjQCYQuSjRQg/send"
           },
           {
             "name": "environment_type",
@@ -1915,7 +2204,7 @@
       "get": {
         "summary": "Details API Log",
         "description": "Returns details of the specific API log event.",
-        "operationId": "detailsApiLog",
+        "operationId": "detailsLog",
         "tags": [
           "API Logs"
         ],
@@ -1924,6 +2213,7 @@
             "name": "id",
             "in": "path",
             "description": "Log event id.",
+            "example": "AXp2jrHMK2MKv_lRqmQ",
             "schema": {
               "type": "string"
             },
@@ -1946,6 +2236,322 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/contacts": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "List contacts",
+        "operationId": "listContacts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "403": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Create contact",
+        "operationId": "createContact",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/contacts/{id}": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Get contact details by id",
+        "operationId": "detailsContact",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Contact id.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "SyoufNkJiHRn24LpuJ7RXb"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "403": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Delete contact by id",
+        "operationId": "deleteContact",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Contact id.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "SyoufNkJiHRn24LpuJ7RXb"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "403": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Update contact by id",
+        "operationId": "updateContact",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Contact id.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "SyoufNkJiHRn24LpuJ7RXb"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/members": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "List members",
+        "description": "Retrieve all members details of the workspace",
+        "operationId": "listMembers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "403": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/members/current": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Current member details",
+        "description": "A method to define to whom credentials belong",
+        "operationId": "detailsCurrentMember",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "403": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/members/{id}": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Member details",
+        "description": "A method to retrieve a member's details by id",
+        "operationId": "detailsMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Membership id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "radQBiBkU7MBk59NSgaGf5"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "403": {
+            "$ref": "#/components/responses/401"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -1993,7 +2599,7 @@
           "code"
         ]
       },
-      "OAuth2RefreshAccessTokenRequests": {
+      "OAuth2RefreshAccessTokenRequest": {
         "type": "object",
         "title": "OAuth2RefreshAccessTokenRequests",
         "properties": {
@@ -2141,7 +2747,10 @@
                   "example": 1,
                   "nullable": true
                 }
-              }
+              },
+              "required": [
+                "email"
+              ]
             }
           },
           "tokens": {
@@ -2158,7 +2767,11 @@
                   "type": "string",
                   "example": "Panda"
                 }
-              }
+              },
+              "required": [
+                "name",
+                "value"
+              ]
             }
           },
           "fields": {
@@ -2213,7 +2826,11 @@
                   "type": "string",
                   "example": "Image 1"
                 }
-              }
+              },
+              "required": [
+                "urls",
+                "name"
+              ]
             }
           },
           "pricing_tables": {
@@ -2234,30 +2851,72 @@
                   "items": {
                     "type": "object",
                     "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "9d9k7VtSQ5KCXfsUQv4GxE"
+                      },
+                      "fields": {
+                        "type": "object"
+                      },
                       "pricing_tables": {
                         "type": "array",
                         "items": {
                           "$ref": "#/components/schemas/PricingTableRequest"
                         }
                       },
-                      "id": {
-                        "type": "string",
-                        "example": "9d9k7VtSQ5KCXfsUQv4GxE"
+                      "recipients": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "string",
+                              "example": "josh@example.com"
+                            },
+                            "first_name": {
+                              "type": "string",
+                              "example": "Josh"
+                            },
+                            "last_name": {
+                              "type": "string",
+                              "example": "Ron"
+                            },
+                            "role": {
+                              "type": "string",
+                              "example": "user"
+                            },
+                            "signing_order": {
+                              "type": "integer",
+                              "example": 1,
+                              "nullable": true
+                            }
+                          },
+                          "required": [
+                            "email"
+                          ]
+                        }
                       }
-                    }
+                    },
+                    "required": [
+                      "id"
+                    ]
                   }
                 },
                 "block_id": {
                   "type": "string",
-                  "example": "9d9k7VtSQ5KCXfsUQv4GxE"
+                  "example": "Content Placeholder 1"
                 }
-              }
+              },
+              "required": [
+                "block_id"
+              ]
             }
           }
         },
         "required": [
           "name",
-          "template_uuid"
+          "template_uuid",
+          "recipients"
         ]
       },
       "DocumentCreateByPdfRequest": {
@@ -2270,26 +2929,35 @@
           },
           "recipients": {
             "type": "array",
-            "description": "The list of recipients you're sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.",
+            "description": "The list of recipients you're sending the document to. Every object must contain the email parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter passed, a person is assigned all fields matching their corresponding role. If not passed, a person will receive a read-only link to view the document. If the `first_name` and `last_name` not passed the system 1. creates a new contact, if none exists with the given `email`; or 2. gets the existing contact with the given `email` that already exists.",
             "items": {
               "type": "object",
               "properties": {
-                "role": {
-                  "type": "string"
-                },
-                "last_name": {
-                  "type": "string"
-                },
-                "signing_order": {
-                  "type": "integer"
+                "email": {
+                  "type": "string",
+                  "example": "josh@example.com"
                 },
                 "first_name": {
-                  "type": "string"
+                  "type": "string",
+                  "example": "Josh"
                 },
-                "email": {
-                  "type": "string"
+                "last_name": {
+                  "type": "string",
+                  "example": "Ron"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "user"
+                },
+                "signing_order": {
+                  "type": "integer",
+                  "example": 1,
+                  "nullable": true
                 }
-              }
+              },
+              "required": [
+                "email"
+              ]
             }
           },
           "parse_form_fields": {
@@ -2304,7 +2972,11 @@
             "description": "Mark your document with one or several tags.",
             "items": {
               "type": "string"
-            }
+            },
+            "example": [
+              "pdf_document",
+              "test_document"
+            ]
           },
           "fields": {
             "type": "object",
@@ -2331,11 +3003,237 @@
         },
         "required": [
           "url",
-          "recipients",
-          "parse_form_fields"
+          "recipients"
         ]
       },
+      "DocumentCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name the document you are creating.",
+            "example": "API Sample Document from PandaDoc Template"
+          },
+          "template_uuid": {
+            "type": "string",
+            "description": "ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
+            "example": "hryJY9mqYZHjQCYQuSjRQg"
+          },
+          "folder_uuid": {
+            "type": "string",
+            "example": "QMDSzwabfFzTgjW4kUijqQ",
+            "description": "ID of the folder where the created document should be stored."
+          },
+          "recipients": {
+            "type": "array",
+            "description": "The list of recipients you're sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "josh@example.com"
+                },
+                "first_name": {
+                  "type": "string",
+                  "example": "Josh"
+                },
+                "last_name": {
+                  "type": "string",
+                  "example": "Ron"
+                },
+                "role": {
+                  "type": "string",
+                  "example": "user"
+                },
+                "signing_order": {
+                  "type": "integer",
+                  "example": 1
+                }
+              },
+              "required": [
+                "email"
+              ]
+            }
+          },
+          "tokens": {
+            "type": "array",
+            "description": "You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Favorite.Pet"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "Panda"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ]
+            }
+          },
+          "fields": {
+            "type": "object",
+            "nullable": true,
+            "description": "You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled.",
+            "example": {
+              "Like": {
+                "value": true
+              },
+              "Delivery": {
+                "value": "Same Dav Delivery"
+              },
+              "Favorite.Color": {
+                "value": "PandaDoc green"
+              },
+              "Date": {
+                "value": "2019-12-31T00:00:00.000Z"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id.",
+            "example": {
+              "opp_id": "1234567",
+              "my_favorite_pet": "Panda"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "description": "Mark your document with one or several tags.",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "created_via_api",
+              "test_document"
+            ]
+          },
+          "images": {
+            "type": "array",
+            "description": "You can pass a list of images to image blocks (one image in one block) for replacement.",
+            "items": {
+              "type": "object",
+              "nullable": true,
+              "properties": {
+                "urls": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": [
+                    "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Image 1"
+                }
+              },
+              "required": [
+                "urls",
+                "name"
+              ]
+            }
+          },
+          "pricing_tables": {
+            "type": "array",
+            "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
+            "items": {
+              "$ref": "#/components/schemas/PricingTableRequest"
+            }
+          },
+          "content_placeholders": {
+            "type": "array",
+            "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "block_id": {
+                  "type": "string",
+                  "description": "Content placeholder block id",
+                  "example": "Content Placeholder 1"
+                },
+                "content_library_items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Content library item id",
+                        "example": "hryJY9mqYZHjQCYQuSjRQg"
+                      },
+                      "pricing_tables": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/PricingTableRequest"
+                        }
+                      },
+                      "fields": {
+                        "type": "object"
+                      },
+                      "recipients": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "string",
+                              "example": "josh@example.com"
+                            },
+                            "first_name": {
+                              "type": "string",
+                              "example": "Josh"
+                            },
+                            "last_name": {
+                              "type": "string",
+                              "example": "Ron"
+                            },
+                            "role": {
+                              "type": "string",
+                              "example": "user"
+                            },
+                            "signing_order": {
+                              "type": "integer",
+                              "example": 1,
+                              "nullable": true
+                            }
+                          },
+                          "required": [
+                            "email"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "url": {
+            "type": "string",
+            "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
+            "description": "Use a URL to specify the PDF. We support only URLs starting with https."
+          },
+          "parse_form_fields": {
+            "type": "boolean",
+            "description": "Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags."
+          }
+        }
+      },
       "DocumentCreateResponse": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -2369,6 +3267,7 @@
         }
       },
       "DocumentStatusResponse": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -2412,7 +3311,28 @@
           }
         }
       },
+      "DocumentStatusChangeRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/DocumentStatusEnum"
+          },
+          "note": {
+            "type": "string",
+            "description": "Provide “private notes” regarding the manual status change.",
+            "example": "A private note"
+          },
+          "notify_recipients": {
+            "type": "boolean",
+            "description": "Send a notification email about the status change to all recipients."
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
       "DocumentDetailsResponse": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -2420,7 +3340,7 @@
           },
           "name": {
             "type": "string",
-            "example": "API Sample Document from PandaDoc Templaten"
+            "example": "API Sample Document from PandaDoc Template"
           },
           "autonumbering_sequence_name_prefix": {},
           "date_created": {
@@ -2440,6 +3360,10 @@
             "type": "object",
             "properties": {
               "id": {
+                "type": "string",
+                "example": "7kqXgjFejB2toXxjcC5jfZ"
+              },
+              "membership_id": {
                 "type": "string",
                 "example": "7kqXgjFejB2toXxjcC5jfZ"
               },
@@ -2507,6 +3431,26 @@
               "type": "object"
             },
             "example": [
+              {
+                "uuid": "f9574c3b-5b1e-4479-b2c9-c3ccd92748f3",
+                "name": "Click to upload a file",
+                "title": "",
+                "placeholder": "Click to upload a file",
+                "value": {
+                  "name": "file_name.pdf",
+                  "url": "https://uploadfields.pandadoc-static.com/collect_files/e7b082c2-395b-43c7-a24c-66bd1bbb5d2f/65af1f23-9d26-4622-8ff0-f406b3be27b8-file_name.pdf"
+                },
+                "assigned_to": {
+                  "id": "Fx7CgaVgpGbJBgZ4i5oTx8",
+                  "first_name": "John",
+                  "last_name": "Roe",
+                  "email": "john@example.com",
+                  "recipient_type": "signer",
+                  "has_completed": false,
+                  "role": "",
+                  "type": "recipient"
+                }
+              },
               {
                 "uuid": "eyGJgkWJfUpRtUCsCFDwGU",
                 "name": "Favorite.Color",
@@ -2583,6 +3527,10 @@
                   "type": "string",
                   "example": "7kqXgjFejB2toXxjcC5jfZ"
                 },
+                "contact_id": {
+                  "type": "string",
+                  "example": "7kqXgjFejB2toXxjcC5jfZ"
+                },
                 "first_name": {
                   "type": "string",
                   "example": "Jhon"
@@ -2638,6 +3586,7 @@
         }
       },
       "DocumentCreateLinkRequest": {
+        "type": "object",
         "properties": {
           "recipient": {
             "type": "string",
@@ -2655,6 +3604,7 @@
         ]
       },
       "DocumentCreateLinkResponse": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -2667,6 +3617,7 @@
         }
       },
       "DocumentSendRequest": {
+        "type": "object",
         "properties": {
           "message": {
             "type": "string",
@@ -2721,6 +3672,95 @@
           }
         }
       },
+      "DocumentAttachmentRequest": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Binary file to be attached to a document"
+          },
+          "source": {
+            "type": "string",
+            "description": "URL link to the file to be attached to a document",
+            "example": "https://is3-ssl.mzstatic.com/1e7fbd74-d10c-8e3a-63c3-0beb3ea231a5/512x512bb.jpg"
+          },
+          "name": {
+            "type": "string",
+            "description": "Optional name to set for uploaded file",
+            "example": "Additional agreement"
+          }
+        }
+      },
+      "DocumentAttachmentResponse": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "example": "5a2df796-6c65-492b-955c-5709229a89f7"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-10-27T20:54:18.757496Z"
+          },
+          "created_by": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "WbAzFZFMgXHnoQREADTdnE"
+              },
+              "email": {
+                "type": "string",
+                "example": "test_user@mail.com"
+              },
+              "first_name": {
+                "type": "string",
+                "example": "John"
+              },
+              "last_name": {
+                "type": "string",
+                "example": "Smith"
+              },
+              "avatar": {
+                "type": "string",
+                "nullable": true,
+                "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+              }
+            }
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "example": "AttachedPhoto.jpg"
+          }
+        }
+      },
+      "DocumentTransferOwnershipRequest": {
+        "type": "object",
+        "properties": {
+          "membership_id": {
+            "type": "string",
+            "description": "A unique identifier of a workspace member.",
+            "example": "radQBiBkU7MBk59NSgaGfd"
+          }
+        }
+      },
+      "DocumentTransferAllOwnershipRequest": {
+        "type": "object",
+        "properties": {
+          "from_membership_id": {
+            "type": "string",
+            "description": "A unique identifier of a workspace member from whom you want to transfer ownership.",
+            "example": "Dqsxp4jNnFcS63tJEgLJGN"
+          },
+          "to_membership_id": {
+            "type": "string",
+            "description": "A unique identifier of a workspace member to whom you want to transfer ownership.",
+            "example": "radQBiBkU7MBk59NSgaGfd"
+          }
+        }
+      },
       "LinkedObjectListResponse": {
         "type": "object",
         "properties": {
@@ -2733,6 +3773,7 @@
         }
       },
       "LinkedObjectCreateRequest": {
+        "type": "object",
         "properties": {
           "provider": {
             "type": "string",
@@ -2757,6 +3798,7 @@
         ]
       },
       "LinkedObjectCreateResponse": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "string",
@@ -3522,7 +4564,8 @@
           10,
           11,
           12
-        ]
+        ],
+        "example": 12
       },
       "DocumentOrderingFieldsEnum": {
         "type": "string",
@@ -3554,7 +4597,11 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "Pricing Table"
+            "example": "Pricing Table 1"
+          },
+          "data_merge": {
+            "type": "boolean",
+            "description": "When set to true all field names in data rows must be passed as external names defined in the template."
           },
           "options": {
             "type": "object",
@@ -3567,9 +4614,6 @@
                 "type": "object",
                 "nullable": true,
                 "properties": {
-                  "is_global": {
-                    "type": "boolean"
-                  },
                   "type": {
                     "type": "string",
                     "enum": [
@@ -3586,15 +4630,17 @@
                     "type": "number",
                     "example": 2.26
                   }
-                }
+                },
+                "required": [
+                  "name",
+                  "type",
+                  "value"
+                ]
               },
               "tax_first": {
                 "type": "object",
                 "nullable": true,
                 "properties": {
-                  "is_global": {
-                    "type": "boolean"
-                  },
                   "type": {
                     "type": "string",
                     "enum": [
@@ -3610,15 +4656,17 @@
                     "type": "number",
                     "example": 2.26
                   }
-                }
+                },
+                "required": [
+                  "name",
+                  "type",
+                  "value"
+                ]
               },
               "tax_second": {
                 "type": "object",
                 "nullable": true,
                 "properties": {
-                  "is_global": {
-                    "type": "boolean"
-                  },
                   "type": {
                     "type": "string",
                     "enum": [
@@ -3634,7 +4682,12 @@
                     "type": "number",
                     "example": 2.26
                   }
-                }
+                },
+                "required": [
+                  "name",
+                  "type",
+                  "value"
+                ]
               }
             }
           },
@@ -3744,7 +4797,12 @@
                               }
                             }
                           }
-                        }
+                        },
+                        "required": [
+                          "name",
+                          "price",
+                          "qty"
+                        ]
                       },
                       "custom_fields": {
                         "type": "object",
@@ -3755,10 +4813,16 @@
                     }
                   }
                 }
-              }
+              },
+              "required": [
+                "title"
+              ]
             }
           }
-        }
+        },
+        "required": [
+          "name"
+        ]
       },
       "PricingTablesResponse": {
         "type": "object",
@@ -3949,6 +5013,35 @@
                         "type": "object",
                         "nullable": true,
                         "example": {}
+                      },
+                      "merged_data": {
+                        "type": "object",
+                        "nullable": true,
+                        "description": "Will contain all the fields in flat structure with external field names defined in the template.",
+                        "example": {
+                          "custom_name": "SomeName",
+                          "custom_description": "SomeCustomDescription",
+                          "custom_price": "10.99",
+                          "custom_qty": "1.00",
+                          "custom_sku": "Test",
+                          "custom_tax": {
+                            "value": "10",
+                            "type": "percent"
+                          },
+                          "custom_fee": {
+                            "value": "10",
+                            "type": "percent"
+                          },
+                          "custom_discount": {
+                            "value": "10",
+                            "type": "percent"
+                          },
+                          "custom_text": "Some other",
+                          "Cost": null,
+                          "Subtotal": "26.38",
+                          "fluffiness": "Fluffiness",
+                          "Other_field": "SomeText"
+                        }
                       }
                     }
                   }
@@ -3964,6 +5057,257 @@
             "type": "string",
             "example": "11500"
           }
+        }
+      },
+      "ContactDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "BCUWJhZm3k7grUNFAz6cD2"
+          },
+          "email": {
+            "type": "string",
+            "example": "user01@pandadoc.com"
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Doe"
+          },
+          "company": {
+            "type": "string",
+            "nullable": true,
+            "example": "John Doe Inc."
+          },
+          "job_title": {
+            "type": "string",
+            "nullable": true,
+            "example": "CTO"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "example": "+14842634627"
+          },
+          "state": {
+            "type": "string",
+            "nullable": true,
+            "example": "Texas"
+          },
+          "street_address": {
+            "type": "string",
+            "nullable": true,
+            "example": "1313 Mockingbird Lane"
+          },
+          "city": {
+            "type": "string",
+            "nullable": true,
+            "example": "Austin"
+          },
+          "postal_code": {
+            "type": "string",
+            "nullable": true,
+            "example": "75001"
+          }
+        }
+      },
+      "ContactListResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ContactDetailsResponse"
+        }
+      },
+      "ContactCreateRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user01@pandadoc.com"
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Doe"
+          },
+          "company": {
+            "type": "string",
+            "nullable": true,
+            "example": "John Doe Inc."
+          },
+          "job_title": {
+            "type": "string",
+            "nullable": true,
+            "example": "CTO"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "example": "+14842634627"
+          },
+          "state": {
+            "type": "string",
+            "nullable": true,
+            "example": "Texas"
+          },
+          "street_address": {
+            "type": "string",
+            "nullable": true,
+            "example": "1313 Mockingbird Lane"
+          },
+          "city": {
+            "type": "string",
+            "nullable": true,
+            "example": "Austin"
+          },
+          "postal_code": {
+            "type": "string",
+            "nullable": true,
+            "example": "75001"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ContactUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user01@pandadoc.com"
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Doe"
+          },
+          "company": {
+            "type": "string",
+            "nullable": true,
+            "example": "John Doe Inc."
+          },
+          "job_title": {
+            "type": "string",
+            "nullable": true,
+            "example": "CTO"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "example": "+14842634627"
+          },
+          "state": {
+            "type": "string",
+            "nullable": true,
+            "example": "Texas"
+          },
+          "street_address": {
+            "type": "string",
+            "nullable": true,
+            "example": "1313 Mockingbird Lane"
+          },
+          "city": {
+            "type": "string",
+            "nullable": true,
+            "example": "Austin"
+          },
+          "postal_code": {
+            "type": "string",
+            "nullable": true,
+            "example": "75001"
+          }
+        }
+      },
+      "MemberDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "A unique identifier of the user in the organization.",
+            "example": "ajnN7eGutJZsRKjQrNuPkh"
+          },
+          "membership_id": {
+            "type": "string",
+            "description": "A unique identifier of the user in the workspace.",
+            "example": "radQBiBkU7MBk59NSgaGf5"
+          },
+          "email": {
+            "type": "string",
+            "description": "A user's email address.",
+            "example": "josh@example.com"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "A user's first name.",
+            "example": "Josh"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "A user's last name.",
+            "example": "Ron"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "A boolean value that identifies if a member is active in the workspace.",
+            "example": true
+          },
+          "workspace": {
+            "type": "string",
+            "description": "A name of the user's current active workspace.",
+            "example": "xc4mBZ7dKErXQtJwwD6Ghg"
+          },
+          "workspace_name": {
+            "type": "string",
+            "description": "A unique identifier of the user's current active workspace.",
+            "example": "PandaDoc"
+          },
+          "emails_verified": {
+            "type": "boolean",
+            "description": "A boolean value that identifies if the email is verified.",
+            "example": true
+          },
+          "role": {
+            "type": "string",
+            "description": "A member's role in the workspace.",
+            "example": "Admin"
+          },
+          "user_license": {
+            "type": "string",
+            "description": "A user license in the organization.",
+            "example": "Full"
+          },
+          "date_created": {
+            "type": "string",
+            "description": "A date when a member was added to the workspace.",
+            "example": "2020-11-17T08:42:34.237567Z"
+          },
+          "date_modified": {
+            "type": "string",
+            "description": "Last modified date of a member.",
+            "example": "2021-11-30T10:30:35.071428Z"
+          }
+        }
+      },
+      "MemberListResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/MemberDetailsResponse"
         }
       }
     },
