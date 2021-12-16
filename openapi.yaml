@@ -3577,12 +3577,9 @@ components:
           nullable: true
           example: '75001'
     ContactListResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/ContactDetailsResponse'
+      type: array
+      items:
+        $ref: '#/components/schemas/ContactDetailsResponse'
     ContactCreateRequest:
       type: object
       properties:
@@ -3725,12 +3722,9 @@ components:
           description: Last modified date of a member.
           example: '2021-11-30T10:30:35.071428Z'
     MemberListResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberDetailsResponse'
+      type: array
+      items:
+        $ref: '#/components/schemas/MemberDetailsResponse'
   responses:
     '401':
       description: Authentication error
