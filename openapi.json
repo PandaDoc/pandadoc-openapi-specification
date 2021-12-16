@@ -5118,9 +5118,14 @@
         }
       },
       "ContactListResponse": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ContactDetailsResponse"
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactDetailsResponse"
+            }
+          }
         }
       },
       "ContactCreateRequest": {
@@ -5305,9 +5310,14 @@
         }
       },
       "MemberListResponse": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/MemberDetailsResponse"
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberDetailsResponse"
+            }
+          }
         }
       }
     },
