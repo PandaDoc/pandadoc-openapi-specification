@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   description: PandaDoc Public API documentation
-  version: 2.0.0
+  version: 3.0.0
   title: PandaDoc Public API
   license:
     name: MIT
@@ -2368,6 +2368,8 @@ components:
                 has_completed: false
                 role: ''
                 type: recipient
+              field_id: CollectFile1
+              type: collect_file
             - uuid: eyGJgkWJfUpRtUCsCFDwGU
               name: Favorite.Color
               merge_field: Favorite.Color
@@ -2382,6 +2384,8 @@ components:
                 has_completed: false
                 role: ''
                 type: recipient
+              field_id: text1
+              type: text
             - uuid: M4755SJuoyz5Jzsw4WXTDb
               name: Like
               merge_field: Like
@@ -2396,6 +2400,8 @@ components:
                 has_completed: false
                 role: ''
                 type: recipient
+              field_id: checkbox1
+              type: checkbox
         pricing:
           $ref: '#/components/schemas/PricingTablesResponse'
         version:
@@ -2800,40 +2806,22 @@ components:
           type: array
           items:
             type: object
-            properties:
-              uuid:
-                type: string
-                example: 74bcb05d-e4cd-458d-bc1d-671c2be8b221
-              name:
-                type: string
-                example: Favorite.Color
-              title:
-                type: string
-              placeholder:
-                type: string
-                example: Favorite Color
-              value:
-                type: object
-                nullable: true
+          example:
+            - uuid: 74bcb05d-e4cd-458d-bc1d-671c2be8b221
+              name: Favorite.Color
+              title: ''
+              placeholder: Favorite Color
+              value: ''
               assigned_to:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    example: HHaFsYvJCqMvdAtXwGcyL
-                  name:
-                    type: string
-                    example: user
-                  preassigned_person:
-                    type: object
-                    nullable: true
-                  type:
-                    type: string
-                    example: role
-              merge_field:
-                type: string
-                nullable: true
-                example: Favorite.Color
+                id: HHaFsYvJCqMvdAtXwGcyL
+                name: user
+                preassigned_person:
+                  email: test@panddoc.com
+                  type: preassigned contact
+                type: role
+              merge_field: Favorite.Color
+              field_id: text1
+              type: text
         pricing:
           $ref: '#/components/schemas/PricingTablesResponse'
         tags:
@@ -3577,9 +3565,12 @@ components:
           nullable: true
           example: '75001'
     ContactListResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/ContactDetailsResponse'
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactDetailsResponse'
     ContactCreateRequest:
       type: object
       properties:
@@ -3722,9 +3713,12 @@ components:
           description: Last modified date of a member.
           example: '2021-11-30T10:30:35.071428Z'
     MemberListResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/MemberDetailsResponse'
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberDetailsResponse'
   responses:
     '401':
       description: Authentication error
