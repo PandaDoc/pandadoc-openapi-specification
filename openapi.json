@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "PandaDoc Public API documentation",
-    "version": "3.0.0",
+    "version": "4.0.0",
     "title": "PandaDoc Public API",
     "license": {
       "name": "MIT",
@@ -306,10 +306,10 @@
             "$ref": "#/components/responses/400RequestError"
           },
           "401": {
-            "$ref": "#/components/responses/400RequestError"
+            "$ref": "#/components/responses/401"
           },
           "403": {
-            "$ref": "#/components/responses/401"
+            "$ref": "#/components/responses/403"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -4694,6 +4694,7 @@
                     "properties": {
                       "options": {
                         "type": "object",
+                        "title": "Pricing Table Request Row Options",
                         "properties": {
                           "qty_editable": {
                             "type": "boolean"
@@ -4708,6 +4709,7 @@
                       },
                       "data": {
                         "type": "object",
+                        "title": "Pricing Table Request Row Data",
                         "properties": {
                           "name": {
                             "type": "string",
@@ -4737,6 +4739,7 @@
                           },
                           "discount": {
                             "type": "object",
+                            "title": "Pricing Table Request Row Data Discount",
                             "nullable": true,
                             "properties": {
                               "value": {
@@ -4751,6 +4754,7 @@
                           },
                           "tax_first": {
                             "type": "object",
+                            "title": "Pricing Table Request Row Data Tax First",
                             "nullable": true,
                             "properties": {
                               "value": {
@@ -4765,6 +4769,7 @@
                           },
                           "tax_second": {
                             "type": "object",
+                            "title": "Pricing Table Request Row Data Tax Second",
                             "nullable": true,
                             "properties": {
                               "value": {
