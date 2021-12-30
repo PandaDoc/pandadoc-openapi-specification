@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   description: PandaDoc Public API documentation
-  version: 3.0.0
+  version: 4.0.0
   title: PandaDoc Public API
   license:
     name: MIT
@@ -235,9 +235,9 @@ paths:
         '400':
           $ref: '#/components/responses/400RequestError'
         '401':
-          $ref: '#/components/responses/400RequestError'
-        '403':
           $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
         '429':
           $ref: '#/components/responses/429'
     post:
@@ -3270,6 +3270,7 @@ components:
                   properties:
                     options:
                       type: object
+                      title: Pricing Table Request Row Options
                       properties:
                         qty_editable:
                           type: boolean
@@ -3279,6 +3280,7 @@ components:
                           type: boolean
                     data:
                       type: object
+                      title: Pricing Table Request Row Data
                       properties:
                         name:
                           type: string
@@ -3302,6 +3304,7 @@ components:
                           nullable: true
                         discount:
                           type: object
+                          title: Pricing Table Request Row Data Discount
                           nullable: true
                           properties:
                             value:
@@ -3312,6 +3315,7 @@ components:
                               example: percent
                         tax_first:
                           type: object
+                          title: Pricing Table Request Row Data Tax First
                           nullable: true
                           properties:
                             value:
@@ -3322,6 +3326,7 @@ components:
                               example: percent
                         tax_second:
                           type: object
+                          title: Pricing Table Request Row Data Tax Second
                           nullable: true
                           properties:
                             value:
