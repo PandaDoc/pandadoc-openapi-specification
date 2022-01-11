@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   description: PandaDoc Public API documentation
-  version: 4.0.0
+  version: 4.1.0
   title: PandaDoc Public API
   license:
     name: MIT
@@ -174,7 +174,7 @@ paths:
         - name: status
           in: query
           schema:
-            $ref: '#/components/schemas/DocumentStatusEnum'
+            $ref: '#/components/schemas/DocumentStatusRequestEnum'
           required: false
           description: |
             Specify the status of documents to return.
@@ -194,7 +194,7 @@ paths:
         - name: status__ne
           in: query
           schema:
-            $ref: '#/components/schemas/DocumentStatusEnum'
+            $ref: '#/components/schemas/DocumentStatusRequestEnum'
           required: false
           description: |
             Specify the status of documents to return (exclude).
@@ -2216,8 +2216,7 @@ components:
           type: string
           example: API Sample Document from PandaDoc Template
         status:
-          type: string
-          example: document.draft
+          $ref: '#/components/schemas/DocumentStatusEnum'
         date_created:
           type: string
           example: '2021-10-08T11:06:32.337395Z'
@@ -2269,7 +2268,7 @@ components:
       type: object
       properties:
         status:
-          $ref: '#/components/schemas/DocumentStatusEnum'
+          $ref: '#/components/schemas/DocumentStatusRequestEnum'
         note:
           type: string
           description: Provide “private notes” regarding the manual status change.
@@ -2445,6 +2444,9 @@ components:
               has_completed:
                 type: boolean
                 example: true
+              shared_link:
+                type: string
+                example: 'https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364'
         grand_total:
           type: object
           properties:
@@ -2534,6 +2536,9 @@ components:
         uuid:
           type: string
           example: msFYActMfJHqNTKH8YSvF1
+        shared_link:
+          type: string
+          example: 'https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364'
     DocumentAttachmentRequest:
       type: object
       properties:
@@ -3137,46 +3142,6 @@ components:
               response_time:
                 type: string
                 example: '2021-10-15T10:59:23.152'
-    DocumentStatusEnum:
-      type: integer
-      enum:
-        - 0
-        - 1
-        - 2
-        - 3
-        - 4
-        - 5
-        - 6
-        - 7
-        - 8
-        - 9
-        - 10
-        - 11
-        - 12
-      example: 12
-    DocumentOrderingFieldsEnum:
-      type: string
-      enum:
-        - name
-        - date_created
-        - date_status_changed
-        - date_of_last_action
-        - date_modified
-        - date_sent
-        - date_completed
-        - date_expiration
-        - date_declined
-        - status
-        - '-name'
-        - '-date_created'
-        - '-date_status_changed'
-        - '-date_of_last_action'
-        - '-date_modified'
-        - '-date_sent'
-        - '-date_completed'
-        - '-date_expiration'
-        - '-date_declined'
-        - '-status'
     PricingTableRequest:
       type: object
       properties:
@@ -3724,6 +3689,63 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MemberDetailsResponse'
+    DocumentStatusEnum:
+      type: string
+      enum:
+        - document.draft
+        - document.sent
+        - document.completed
+        - document.uploaded
+        - document.error
+        - document.viewed
+        - document.waiting_approval
+        - document.approved
+        - document.rejected
+        - document.waiting_pay
+        - document.paid
+        - document.voided
+        - document.declined
+      example: document.draft
+    DocumentStatusRequestEnum:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+        - 10
+        - 11
+        - 12
+      example: 12
+    DocumentOrderingFieldsEnum:
+      type: string
+      enum:
+        - name
+        - date_created
+        - date_status_changed
+        - date_of_last_action
+        - date_modified
+        - date_sent
+        - date_completed
+        - date_expiration
+        - date_declined
+        - status
+        - '-name'
+        - '-date_created'
+        - '-date_status_changed'
+        - '-date_of_last_action'
+        - '-date_modified'
+        - '-date_sent'
+        - '-date_completed'
+        - '-date_expiration'
+        - '-date_declined'
+        - '-status'
   responses:
     '401':
       description: Authentication error
