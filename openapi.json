@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "PandaDoc Public API documentation",
-    "version": "4.1.0",
+    "version": "4.2.0",
     "title": "PandaDoc Public API",
     "license": {
       "name": "MIT",
@@ -514,6 +514,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -558,6 +561,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -672,6 +678,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -762,6 +771,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -809,6 +821,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -853,6 +868,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -958,6 +976,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -1003,6 +1024,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -1112,6 +1136,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -1210,6 +1237,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -1257,6 +1287,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -3262,6 +3295,30 @@
           "uuid": {
             "type": "string",
             "example": "cKbJ7uay3cEGtsKuGPwYGX"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rel": {
+                  "type": "string",
+                  "example": "status"
+                },
+                "href": {
+                  "type": "string",
+                  "example": "https://api.pandadoc.com/public/v1/documents/jzjCfYgKQYm2u9ctwN6io4"
+                },
+                "type": {
+                  "type": "string",
+                  "example": "GET"
+                }
+              }
+            }
+          },
+          "info_message": {
+            "type": "string",
+            "example": "You need to poll the Document Status method until the status will be changed to document.draft"
           }
         }
       },
@@ -5384,6 +5441,29 @@
                 "detail": {
                   "type": "string",
                   "example": "Not found"
+                }
+              }
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "mXpGsEBHdSFW97zKXq75hm"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "document.uploaded"
+                },
+                "info_message": {
+                  "type": "string",
+                  "example": "Warning - Document status document.uploaded doesn’t mean that the document already exists - processing happens asynchronously. Please follow the documentation section https://developers.pandadoc.com/reference/new-document"
                 }
               }
             }
