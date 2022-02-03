@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   description: PandaDoc Public API documentation
-  version: 4.1.0
+  version: 4.2.0
   title: PandaDoc Public API
   license:
     name: MIT
@@ -374,6 +374,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
   '/public/v1/documents/{id}/details':
@@ -403,6 +405,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
   '/public/v1/documents/{id}/session':
@@ -475,6 +479,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
   '/public/v1/documents/{id}/download':
@@ -536,6 +542,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
   '/public/v1/documents/{id}/download-protected':
@@ -567,6 +575,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
   '/public/v1/documents/{id}/linked-objects':
@@ -596,6 +606,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
     post:
@@ -664,6 +676,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
   '/public/v1/documents/{id}/attachments':
@@ -694,6 +708,8 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
     post:
@@ -765,6 +781,8 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
     delete:
@@ -831,6 +849,8 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
   '/public/v1/documents/{id}/ownership':
@@ -862,6 +882,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/ownership:
@@ -2230,6 +2252,23 @@ components:
         uuid:
           type: string
           example: cKbJ7uay3cEGtsKuGPwYGX
+        links:
+          type: array
+          items:
+            type: object
+            properties:
+              rel:
+                type: string
+                example: status
+              href:
+                type: string
+                example: 'https://api.pandadoc.com/public/v1/documents/jzjCfYgKQYm2u9ctwN6io4'
+              type:
+                type: string
+                example: GET
+        info_message:
+          type: string
+          example: You need to poll the Document Status method until the status will be changed to document.draft
     DocumentStatusResponse:
       type: object
       properties:
@@ -3783,6 +3822,21 @@ components:
               detail:
                 type: string
                 example: Not found
+    '409':
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: string
+                example: mXpGsEBHdSFW97zKXq75hm
+              status:
+                type: string
+                example: document.uploaded
+              info_message:
+                type: string
+                example: 'Warning - Document status document.uploaded doesn’t mean that the document already exists - processing happens asynchronously. Please follow the documentation section https://developers.pandadoc.com/reference/new-document'
     '429':
       description: Too Many Requests
       content:
