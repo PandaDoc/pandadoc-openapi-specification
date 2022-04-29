@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   description: PandaDoc Public API documentation
-  version: 4.2.0
+  version: 5.0.0
   title: PandaDoc Public API
   license:
     name: MIT
@@ -191,6 +191,7 @@ paths:
               * 10: document.paid
               * 11: document.voided
               * 12: document.declined
+              * 13: document.external_review
         - name: status__ne
           in: query
           schema:
@@ -211,6 +212,7 @@ paths:
               * 10: document.paid
               * 11: document.voided
               * 12: document.declined
+              * 13: document.external_review
         - name: tag
           in: query
           schema:
@@ -257,12 +259,164 @@ paths:
         required: true
         description: |
           Use a PandaDoc template or an existing PDF to create a document.
-          See the creation request examples [by template](#/schemas/DocumentCreateByTemplateRequest)
-          and [by pdf](#/schemas/DocumentCreateByPdfRequest)
+          See the creation request examples [by template](/schemas/DocumentCreateByTemplateRequest)
+          and [by pdf](/schemas/DocumentCreateByPdfRequest)
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/DocumentCreateRequest'
+            examples:
+              Simple APi Sample:
+                summary: Simple API Sample Document from PandaDoc Template
+                value:
+                  name: Simple API Sample Document from PandaDoc Template
+                  template_uuid: onoznwTq4Y3EELMPyvucnc
+                  recipients:
+                    - email: josh@example.com
+                      first_name: Josh
+                      last_name: Ron
+                      role: user
+                  tokens:
+                    - name: Favorite.Pet
+                      value: Panda
+                  fields:
+                    Favorite.Color:
+                      value: PandaDoc green
+                    Delivery:
+                      value: Same Day Delivery
+                    Like:
+                      value: true
+                    Date:
+                      value: '2019-12-31T00:00:00.000Z'
+                  metadata:
+                    my_favorite_pet: Panda
+                  tags:
+                    - created_via_api
+                    - test_document
+                  images:
+                    - name: Image 1
+                      urls:
+                        - 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
+                  pricing_tables:
+                    - name: Pricing Table 1
+                      data_merge: true
+                      options:
+                        Tax:
+                          type: percent
+                          name: Tax
+                          value: 10
+                      sections:
+                        - title: Sample Section
+                          default: true
+                          rows:
+                            - options:
+                                optional: true
+                                optional_selected: true
+                                qty_editable: true
+                              data:
+                                Name: Toy Panda
+                                Description: Fluffy!
+                                Price: 10
+                                QTY: 3
+                                Tax:
+                                  value: 20
+                                  type: percent
+                              custom_fields:
+                                Fluffiness: 5 / 5
+              Full APi Sample:
+                summary: Full API Sample Document from PandaDoc Template
+                value:
+                  name: Full API Sample Document from PandaDoc Template
+                  template_uuid: hryJY9mqYZHjQCYQuSjRQg
+                  folder_uuid: QMDSzwabfFzTgjW4kUijqQ
+                  owner:
+                    membership_id: QMDSzwabfFzTgjW6KijHyu
+                  recipients:
+                    - email: josh@example.com
+                      first_name: Josh
+                      last_name: Ron
+                      role: user
+                  tokens:
+                    - name: Favorite.Pet
+                      value: Panda
+                  fields:
+                    Favorite.Color:
+                      value: PandaDoc green
+                    Delivery:
+                      value: Same Day Delivery
+                    Like:
+                      value: true
+                    Date:
+                      value: '2019-12-31T00:00:00.000Z'
+                  metadata:
+                    my_favorite_pet: Panda
+                  tags:
+                    - created_via_api
+                    - test_document
+                  images:
+                    - name: Image 1
+                      urls:
+                        - 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
+                  pricing_tables:
+                    - name: Pricing Table 1
+                      data_merge: true
+                      options:
+                        Tax:
+                          type: percent
+                          name: Tax
+                          value: 10
+                      sections:
+                        - title: Sample Section
+                          default: true
+                          rows:
+                            - options:
+                                optional: true
+                                optional_selected: true
+                                qty_editable: true
+                              data:
+                                Name: Toy Panda
+                                Description: Fluffy!
+                                Price: 10
+                                QTY: 3
+                                Tax:
+                                  value: 20
+                                  type: percent
+                              custom_fields:
+                                Fluffiness: 5 / 5
+                  content_placeholders:
+                    - block_id: '{block_id}'
+                      content_library_items:
+                        - id: '{cli_id}'
+                          pricing_tables:
+                            - name: Pricing Table 1
+                              data_merge: false
+                              options:
+                                discount:
+                                  type: absolute
+                                  name: Discount
+                                  value: 2.26
+                              sections:
+                                - title: Sample Section
+                                  default: true
+                                  rows:
+                                    - options:
+                                        optional: true
+                                        optional_selected: true
+                                        qty_editable: true
+                                      data:
+                                        name: Placeholder Panda
+                                        price: 10
+                                        qty: 3
+                        - id: '{cli_id_2}'
+                          recipients:
+                            - email: john@example.com
+                              first_name: John
+                              last_name: Roe
+                              role: Signer
+                              signing_order: 2
+                          fields:
+                            Date:
+                              value: '2019-12-31T00:00:00.000Z'
           multipart/form-data:
             schema:
               type: object
@@ -2081,6 +2235,13 @@ components:
           type: string
           example: QMDSzwabfFzTgjW4kUijqQ
           description: ID of the folder where the created document should be stored.
+        owner:
+          type: object
+          description: You can set an owner of a document as an `email` or `membership_id`
+          additionalProperties:
+            type: string
+          example:
+            membership_id: QMDSzwabfFzTgjW6KijHyu
         recipients:
           type: array
           description: 'The list of recipients you''re sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.'
@@ -2405,6 +2566,8 @@ components:
                 recipient_type: signer
                 has_completed: false
                 role: ''
+                roles:
+                  - singer
                 type: recipient
               field_id: CollectFile1
               type: collect_file
@@ -2421,6 +2584,7 @@ components:
                 recipient_type: signer
                 has_completed: false
                 role: ''
+                roles: []
                 type: recipient
               field_id: text1
               type: text
@@ -2437,6 +2601,8 @@ components:
                 recipient_type: signer
                 has_completed: false
                 role: ''
+                roles:
+                  - signer
                 type: recipient
               field_id: checkbox1
               type: checkbox
@@ -2463,7 +2629,14 @@ components:
                 example: CC
               role:
                 type: string
+                deprecated: true
                 example: ''
+              roles:
+                type: array
+                items:
+                  type: string
+                example:
+                  - user
               last_name:
                 type: string
                 example: Dow
@@ -3192,68 +3365,16 @@ components:
           description: When set to true all field names in data rows must be passed as external names defined in the template.
         options:
           type: object
-          properties:
-            currency:
-              type: string
-              example: USD
-            discount:
-              type: object
-              nullable: true
-              properties:
-                type:
-                  type: string
-                  enum:
-                    - absolute
-                    - percent
-                  example: absolute
-                name:
-                  type: string
-                  example: Global Discount
-                value:
-                  type: number
-                  example: 2.26
-              required:
-                - name
-                - type
-                - value
-            tax_first:
-              type: object
-              nullable: true
-              properties:
-                type:
-                  type: string
-                  enum:
-                    - percent
-                  example: percent
-                name:
-                  type: string
-                  example: Tax First
-                value:
-                  type: number
-                  example: 2.26
-              required:
-                - name
-                - type
-                - value
-            tax_second:
-              type: object
-              nullable: true
-              properties:
-                type:
-                  type: string
-                  enum:
-                    - percent
-                  example: percent
-                name:
-                  type: string
-                  example: Tax Second
-                value:
-                  type: number
-                  example: 2.26
-              required:
-                - name
-                - type
-                - value
+          example:
+            currency: USD
+            Discount:
+              type: absolute
+              name: Global Discount
+              value: 10
+            Tax:
+              type: percent
+              name: Tax First
+              value: 15
         sections:
           type: array
           items:
@@ -3285,64 +3406,19 @@ components:
                     data:
                       type: object
                       title: Pricing Table Request Row Data
-                      properties:
-                        name:
-                          type: string
-                          example: Toy Panda
-                        description:
-                          type: string
-                          example: Fluffy!
-                          nullable: true
-                        price:
-                          type: number
-                          example: 10
-                        cost:
-                          type: number
-                          example: 8.5
-                        qty:
-                          type: integer
-                          example: 3
-                        sku:
-                          type: string
-                          example: toy_panda
-                          nullable: true
-                        discount:
-                          type: object
-                          title: Pricing Table Request Row Data Discount
-                          nullable: true
-                          properties:
-                            value:
-                              type: number
-                              example: 7.5
-                            type:
-                              type: string
-                              example: percent
-                        tax_first:
-                          type: object
-                          title: Pricing Table Request Row Data Tax First
-                          nullable: true
-                          properties:
-                            value:
-                              type: number
-                              example: 7.5
-                            type:
-                              type: string
-                              example: percent
-                        tax_second:
-                          type: object
-                          title: Pricing Table Request Row Data Tax Second
-                          nullable: true
-                          properties:
-                            value:
-                              type: number
-                              example: 7.5
-                            type:
-                              type: string
-                              example: percent
-                      required:
-                        - name
-                        - price
-                        - qty
+                      example:
+                        Name: Toy Panda
+                        Description: Fluffy
+                        Price: 10
+                        Cost: 8.5
+                        QTY: 3
+                        SKU: toy_panda
+                        Discount:
+                          value: 10
+                          type: percent
+                        Tax:
+                          value: 10
+                          type: percent
                     custom_fields:
                       type: object
                       example:
@@ -3744,6 +3820,7 @@ components:
         - document.paid
         - document.voided
         - document.declined
+        - document.external_review
       example: document.draft
     DocumentStatusRequestEnum:
       type: integer
@@ -3761,6 +3838,7 @@ components:
         - 10
         - 11
         - 12
+        - 13
       example: 12
     DocumentOrderingFieldsEnum:
       type: string
