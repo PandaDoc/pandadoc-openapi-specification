@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   description: PandaDoc Public API documentation
-  version: 5.0.0
+  version: 5.0.1
   title: PandaDoc Public API
   license:
     name: MIT
@@ -129,10 +129,17 @@ paths:
           example: BhVzRcxH9Z2LgfPPGXFUBa
         - name: metadata
           in: query
+          style: form
+          explode: true
           schema:
-            type: string
+            type: array
+            items:
+              type: string
           required: false
           description: 'Specify metadata to filter by in the format of `metadata_{metadata-key}={metadata-value}` such as `metadata_opportunity_id=2181432`. The `metadata_` prefix is always required.'
+          example:
+            - metadata_opportunity_id=2181432
+            - metadata_custom_key=custom_value
         - name: modified_from
           in: query
           schema:
