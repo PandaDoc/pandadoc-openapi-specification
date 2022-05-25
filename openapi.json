@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "PandaDoc Public API documentation",
-    "version": "5.0.1",
+    "version": "5.1.0",
     "title": "PandaDoc Public API",
     "license": {
       "name": "MIT",
@@ -1002,6 +1002,15 @@
             "required": false,
             "description": "Specify watermark text.",
             "example": "John Doe inc."
+          },
+          {
+            "name": "separate_files",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Set as `true` if you want to receive a zip file with all documents in separate when document transaction contains more than 1."
           }
         ],
         "responses": {
@@ -1055,6 +1064,15 @@
             "required": true,
             "description": "Specify document ID.",
             "example": "Mebvyy3NGsGBnY2rPLkH84"
+          },
+          {
+            "name": "separate_files",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Set as `true` if you want to receive a zip file with all documents in separate when document transaction contains more than 1."
           }
         ],
         "responses": {
@@ -3925,6 +3943,10 @@
                 "entity_id": {
                   "type": "string",
                   "example": "18640"
+                },
+                "id": {
+                  "type": "string",
+                  "example": "ea88ed1dc8094dd3a57754aa643a1954"
                 }
               }
             }
