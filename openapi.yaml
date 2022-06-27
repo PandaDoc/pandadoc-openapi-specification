@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   description: PandaDoc Public API documentation
-  version: 5.1.0
+  version: 5.2.0
   title: PandaDoc Public API
   license:
     name: MIT
@@ -1910,6 +1910,264 @@ paths:
         '401':
           $ref: '#/components/responses/400RequestError'
         '403':
+          $ref: '#/components/responses/401'
+        '429':
+          $ref: '#/components/responses/429'
+  /public/v1/webhook-subscriptions:
+    get:
+      tags:
+        - Webhook subscriptions
+      summary: Get all webhook subscriptions
+      operationId: listWebhookSubscriptions
+      responses:
+        '200':
+          description: List webhook subscriptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscriptionListResponse'
+        '401':
+          $ref: '#/components/responses/401'
+        '429':
+          $ref: '#/components/responses/429'
+    post:
+      tags:
+        - Webhook subscriptions
+      summary: Create webhook subscription
+      operationId: createWebhookSubscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSubscriptionCreateRequest'
+      responses:
+        '201':
+          description: Webhook subscription created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscriptionItemResponse'
+        '400':
+          $ref: '#/components/responses/400RequestError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '429':
+          $ref: '#/components/responses/429'
+  '/public/v1/webhook-subscriptions/{id}':
+    get:
+      tags:
+        - Webhook subscriptions
+      summary: Get webhook subscription by uuid
+      operationId: detailsWebhookSubscription
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Get webhook subscription by uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscriptionItemResponse'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+    patch:
+      tags:
+        - Webhook subscriptions
+      summary: Update webhook subscription
+      operationId: updateWebhookSubscription
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSubscriptionPatchRequest'
+      responses:
+        '200':
+          description: Webhook subscription updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscriptionItemResponse'
+        '400':
+          $ref: '#/components/responses/400RequestError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+    delete:
+      tags:
+        - Webhook subscriptions
+      summary: Delete webhook subscription
+      operationId: deleteWebhookSubscription
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Webhook subscription removed
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+  '/public/v1/webhook-subscriptions/{id}/shared-key':
+    patch:
+      tags:
+        - Webhook subscriptions
+      summary: Regenerate webhook subscription shared key
+      operationId: updateWebhookSubscriptionSharedKey
+      parameters:
+        - name: id
+          in: path
+          description: Webhook subscription uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Webhook subscription shared key regenerated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookSubscriptionSharedKeyResponse'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+  /public/v1/webhook-events:
+    get:
+      tags:
+        - Webhook events
+      summary: Get webhook event page
+      operationId: listWebhookEvent
+      parameters:
+        - name: count
+          in: query
+          description: Number of element in page
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: page
+          in: query
+          description: Page number
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: since
+          in: query
+          description: 'Filter option: all events from specified timestamp'
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          description: 'Filter option: all events up to specified timestamp'
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: type
+          in: query
+          description: 'Filter option: all events of type'
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/WebhookEventTriggerEnum'
+        - name: http_status_code
+          in: query
+          description: 'Filter option: all events of http status code'
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/WebhookEventHttpStatusCodeGroupEnum'
+        - name: error
+          in: query
+          description: 'Filter option: all events with following error'
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/WebhookEventErrorEnum'
+      responses:
+        '200':
+          description: Page of webhook events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEventPageResponse'
+        '401':
+          $ref: '#/components/responses/401'
+        '429':
+          $ref: '#/components/responses/429'
+  '/public/v1/webhook-events/{id}':
+    get:
+      tags:
+        - Webhook events
+      summary: Get webhook event by uuid
+      operationId: detailsWebhookEvent
+      parameters:
+        - name: id
+          in: path
+          description: Webhook event uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Get webhook event by uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEventDetailsResponse'
+        '401':
           $ref: '#/components/responses/401'
         '429':
           $ref: '#/components/responses/429'
@@ -3885,6 +4143,264 @@ components:
         - '-date_expiration'
         - '-date_declined'
         - '-status'
+    WebhookSubscriptionPayloadEnum:
+      type: string
+      enum:
+        - metadata
+        - fields
+        - products
+        - tokens
+        - pricing
+      example: pricing
+    WebhookSubscriptionTriggerEnum:
+      type: string
+      enum:
+        - recipient_completed
+        - document_updated
+        - document_deleted
+        - document_state_changed
+        - document_creation_failed
+      example: document_state_changed
+    WebhookSubscriptionStatusEnum:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+        - DEACTIVATED
+      example: ACTIVE
+    WebhookSubscriptionCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+          example: My Subscription
+        url:
+          type: string
+          format: url
+          nullable: false
+          example: 'https://example.com'
+        payload:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/WebhookSubscriptionPayloadEnum'
+        triggers:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/WebhookSubscriptionTriggerEnum'
+      required:
+        - name
+        - url
+        - triggers
+    WebhookSubscriptionPatchRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+          example: My Subscription
+        url:
+          type: string
+          format: url
+          nullable: false
+          example: 'https://example.com'
+        active:
+          type: boolean
+          nullable: false
+          default: true
+          example: true
+        payload:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/WebhookSubscriptionPayloadEnum'
+        triggers:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/WebhookSubscriptionTriggerEnum'
+    WebhookSubscriptionItemResponse:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          nullable: true
+          example: c661e488-619e-8001-821febbd3b93
+        name:
+          type: string
+          nullable: false
+          example: My Subscription
+        url:
+          type: string
+          format: url
+          nullable: false
+          example: 'https://example.com'
+        active:
+          type: boolean
+          nullable: false
+          example: true
+        payload:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/WebhookSubscriptionPayloadEnum'
+        triggers:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/WebhookSubscriptionTriggerEnum'
+        workspace_id:
+          type: string
+          nullable: false
+          example: Nq8htXxFssmhRxAPSP4SBP
+        shared_key:
+          type: string
+          nullable: false
+          example: 587c22285F57883db3ee
+        status:
+          $ref: '#/components/schemas/WebhookSubscriptionStatusEnum'
+    WebhookSubscriptionSharedKeyResponse:
+      type: object
+      properties:
+        shared_key:
+          type: string
+          nullable: false
+          example: 587c22285F57883db3ee
+    WebhookSubscriptionListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookSubscriptionItemResponse'
+    WebhookEventErrorEnum:
+      type: string
+      enum:
+        - INTERNAL_ERROR
+        - NOT_VALID_URL
+        - CONNECT_ERROR
+        - TIMEOUT_ERROR
+      example: TIMEOUT_ERROR
+    WebhookEventHttpStatusCodeGroupEnum:
+      type: integer
+      format: int32
+      enum:
+        - 100
+        - 200
+        - 300
+        - 400
+        - 500
+      example: 400
+    WebhookEventTriggerEnum:
+      type: string
+      enum:
+        - recipient_completed
+        - document_updated
+        - document_deleted
+        - document_state_changed
+        - document_creation_failed
+      example: document_state_changed
+    WebhookEventItemResponse:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Unique webhook subscription event identifier
+          format: uuid
+          nullable: true
+          example: c661e488-619e-8001-821febbd3b93
+        name:
+          type: string
+          description: Webhook subscription name
+          nullable: false
+          example: My Subscription
+        type:
+          $ref: '#/components/schemas/WebhookEventTriggerEnum'
+        http_status_code:
+          type: integer
+          format: int32
+          description: Webhook subscription event response http status code
+          nullable: true
+          example: 200
+        error:
+          $ref: '#/components/schemas/WebhookEventErrorEnum'
+        delivery_time:
+          type: string
+          format: date-time
+          description: Webhook subscription event delivery time
+          nullable: false
+          example: '2022-06-20T15:04:59.424730Z'
+    WebhookEventDetailsResponse:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Unique webhook subscription event identifier
+          format: uuid
+          nullable: true
+          example: c661e488-619e-8001-821febbd3b93
+        name:
+          type: string
+          description: Webhook subscription name
+          nullable: false
+          example: My Subscription
+        type:
+          $ref: '#/components/schemas/WebhookEventTriggerEnum'
+        http_status_code:
+          type: integer
+          format: int32
+          description: Webhook subscription event response http status code
+          nullable: true
+          example: 200
+        error:
+          $ref: '#/components/schemas/WebhookEventErrorEnum'
+        delivery_time:
+          type: string
+          format: date-time
+          description: Webhook subscription event delivery time
+          nullable: false
+          example: '2022-06-20T15:04:59.424730Z'
+        url:
+          type: string
+          description: Webhook subscription event destination url
+          nullable: false
+          example: 'https://example.com'
+        signature:
+          type: string
+          description: Webhook subscription event digital signature
+          nullable: false
+          example: 587c22285F57883db3ee
+        request_body:
+          type: string
+          description: Webhook subscription event request body
+          nullable: false
+          example: '[{\"event\":\"document_state_changed\"}]'
+        response_body:
+          type: string
+          description: Webhook subscription response body
+          nullable: true
+          example: <!doctype html>\n<html>\n</html>
+        response_headers:
+          type: string
+          description: Webhook subscription response headers
+          nullable: true
+          example: '[cache-control:\"max-age=604800\"]'
+        event_time:
+          type: string
+          format: date-time
+          description: Webhook subscription event trigger time
+          nullable: false
+          example: '2022-06-20T15:04:58.424730Z'
+    WebhookEventPageResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEventItemResponse'
   responses:
     '401':
       description: Authentication error
