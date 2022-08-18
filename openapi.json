@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "PandaDoc Public API documentation",
-    "version": "5.2.0",
+    "version": "5.3.0",
     "title": "PandaDoc Public API",
     "license": {
       "name": "MIT",
@@ -709,6 +709,55 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Update Document only in the draft status",
+        "operationId": "updateDocument",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Document ID",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
           }
         }
       }
@@ -3735,7 +3784,8 @@
               "type": "string"
             },
             "example": {
-              "membership_id": "QMDSzwabfFzTgjW6KijHyu"
+              "membership_id": "QMDSzwabfFzTgjW6KijHyu",
+              "email": "john.doe@example.com"
             }
           },
           "recipients": {
@@ -4045,6 +4095,84 @@
           "uuid": {
             "type": "string",
             "example": "msFYActMfJHqNTKH8YSvF1"
+          }
+        }
+      },
+      "DocumentUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "recipients": {
+            "type": "array",
+            "description": "The list of recipients you're sending the document to. The ID or email are required. If the ID is passed, an existing recipient will be updated. If the email is passed, a new recipient will be added to CC.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "josh@example.com"
+                },
+                "first_name": {
+                  "type": "string",
+                  "example": "Josh"
+                },
+                "last_name": {
+                  "type": "string",
+                  "example": "Ron"
+                }
+              }
+            }
+          },
+          "fields": {
+            "type": "object",
+            "description": "You may pass a list of fields/values which exist in a document. Please use `Merge Field` property of the fields like the key.",
+            "example": {
+              "Like": {
+                "value": true
+              },
+              "Delivery": {
+                "value": "Same Day Delivery"
+              },
+              "Date": {
+                "value": "2019-12-31T00:00:00.000Z"
+              }
+            }
+          },
+          "tokens": {
+            "type": "array",
+            "description": "You can pass a list of tokens/values. If a token name exists in a document then the value will be updated. Otherwise, a new token will be added to the document.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Favorite.Pet"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "Panda"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ]
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id. If metadata exists in a document then the value will be updated. Otherwise, metadata will be added to the document.",
+            "example": {
+              "my_favorite_pet": "Cat"
+            }
+          },
+          "pricing_tables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PricingTableRequest"
+            }
           }
         }
       },
@@ -4400,6 +4528,17 @@
           "silent": {
             "type": "boolean",
             "description": "Disables sent, viewed, comment, and completed email notifications for document recipients and the document sender. By default, notifications emails are sent for specific actions. If set as true, it won't affect the \"Approve document\" email notification sent to the Approver."
+          },
+          "sender": {
+            "type": "object",
+            "description": "You can set a sender of a document as an `email` or `membership_id`",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "example": {
+              "membership_id": "QMDSzwabfFzTgjW6KijHyu",
+              "email": "john.doe@example.com"
+            }
           }
         }
       },
