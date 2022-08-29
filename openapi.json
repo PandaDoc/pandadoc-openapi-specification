@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "PandaDoc Public API documentation",
-    "version": "5.4.0",
+    "version": "5.4.1",
     "title": "PandaDoc Public API",
     "license": {
       "name": "MIT",
@@ -1658,7 +1658,7 @@
       }
     },
     "/public/v1/documents/{id}/move-to-folder/{folder_id}": {
-      "delete": {
+      "post": {
         "tags": [
           "Documents"
         ],
