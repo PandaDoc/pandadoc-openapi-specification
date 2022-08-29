@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   description: PandaDoc Public API documentation
-  version: 5.3.0
+  version: 5.4.0
   title: PandaDoc Public API
   license:
     name: MIT
@@ -1103,6 +1103,38 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DocumentTransferAllOwnershipRequest'
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+  '/public/v1/documents/{id}/move-to-folder/{folder_id}':
+    delete:
+      tags:
+        - Documents
+      summary: Document move to folder
+      operationId: documentMoveToFolder
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: Specify document ID.
+          example: ZPeAfcpzr9aiVs5vqUf6jg
+        - name: folder_id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: Specify folder ID.
+          example: ZPeAfcpzr9aiVs5vqUf6jg
       responses:
         '204':
           description: No content
