@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "PandaDoc Public API documentation",
-    "version": "5.4.1",
+    "version": "5.5.0",
     "title": "PandaDoc Public API",
     "license": {
       "name": "MIT",
@@ -5073,6 +5073,14 @@
                     "type": {
                       "type": "string",
                       "example": "preassigned contact"
+                    },
+                    "placeholder_name": {
+                      "type": "string",
+                      "example": "Employee"
+                    },
+                    "placeholder_source": {
+                      "type": "string",
+                      "example": "bamboohr"
                     }
                   }
                 }
