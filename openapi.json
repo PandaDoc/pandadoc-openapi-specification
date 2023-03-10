@@ -4587,6 +4587,17 @@
               "membership_id": "QMDSzwabfFzTgjW6KijHyu",
               "email": "john.doe@example.com"
             }
+          },
+          "forwarding_settings": {
+            "type": "object",
+            "description": "You can set settings for `Document` and `Signature` forwarding. `forwarding_allowed` - your recipient will be able/not able to forward the document to another email address. `forwarding_with_reassigning_allowed` - your recipient will be able/not able to forward the right to fill out all fields (including signature) assigned to them to another email address.",
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "example": {
+              "forwarding_allowed": true,
+              "forwarding_with_reassigning_allowed": true
+            }
           }
         }
       },
