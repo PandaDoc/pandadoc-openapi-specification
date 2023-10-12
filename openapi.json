@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "PandaDoc Public API documentation",
-    "version": "5.5.0",
+    "version": "5.7.0",
     "title": "PandaDoc Public API",
     "license": {
       "name": "MIT",
@@ -1689,6 +1689,229 @@
         "responses": {
           "204": {
             "description": "No content"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/recipients": {
+      "post": {
+        "summary": "Add Document Recipient",
+        "description": "Adds recipient as CC to document",
+        "operationId": "addDocumentRecipient",
+        "tags": [
+          "Document Recipients"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentRecipientCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/recipients/{recipient_id}": {
+      "patch": {
+        "summary": "Edit Document Recipient",
+        "description": "Edit document recipient's details",
+        "operationId": "editDocumentRecipient",
+        "tags": [
+          "Document Recipients"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "recipient_id",
+            "in": "path",
+            "description": "Recipient UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "tf5dGS3Tmu3cj228ao6fnc"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentRecipientEditRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Document Recipient",
+        "description": "Deleted recipient from document",
+        "operationId": "deleteDocumentRecipient",
+        "tags": [
+          "Document Recipients"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "recipient_id",
+            "in": "path",
+            "description": "Recipient UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "tf5dGS3Tmu3cj228ao6fnc"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/recipients/{recipient_id}/reassign": {
+      "post": {
+        "summary": "Reassign Document Recipient",
+        "description": "Replace document recipient with another contact",
+        "operationId": "reassignDocumentRecipient",
+        "tags": [
+          "Document Recipients"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "recipient_id",
+            "in": "path",
+            "description": "Recipient UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "tf5dGS3Tmu3cj228ao6fnc"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentRecipientCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -4587,6 +4810,90 @@
               "membership_id": "QMDSzwabfFzTgjW6KijHyu",
               "email": "john.doe@example.com"
             }
+          },
+          "forwarding_settings": {
+            "type": "object",
+            "description": "Forwarding settings",
+            "properties": {
+              "forwarding_allowed": {
+                "type": "boolean",
+                "description": "Allow forwarding",
+                "example": true
+              },
+              "forwarding_with_reassigning_allowed": {
+                "type": "boolean",
+                "description": "Allow forwarding with reassigning",
+                "example": true
+              }
+            }
+          },
+          "selected_approvers": {
+            "type": "object",
+            "description": "Configuration for selected approvers",
+            "properties": {
+              "steps": {
+                "type": "array",
+                "description": "Approval steps",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "group"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Step ID",
+                      "example": "LzWmancTxrgfTMpsJP9Eqd"
+                    },
+                    "group": {
+                      "type": "object",
+                      "description": "Group information",
+                      "required": [
+                        "id",
+                        "type",
+                        "assignees"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Group ID",
+                          "example": "op9MA75HygJHiV4aeVHXCH"
+                        },
+                        "type": {
+                          "type": "string",
+                          "description": "Group type",
+                          "example": "selectable"
+                        },
+                        "assignees": {
+                          "type": "array",
+                          "description": "Assignees for the group",
+                          "required": [
+                            "user",
+                            "is_selected"
+                          ],
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "user": {
+                                "type": "string",
+                                "description": "User ID",
+                                "example": "tpBLrk3vJoLggypMSRt92i"
+                              },
+                              "is_selected": {
+                                "type": "boolean",
+                                "description": "Whether the user is selected",
+                                "example": true
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -4717,6 +5024,81 @@
             "type": "string",
             "description": "A unique identifier of a workspace member to whom you want to transfer ownership.",
             "example": "radQBiBkU7MBk59NSgaGfd"
+          }
+        }
+      },
+      "DocumentRecipientCreateRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "2eWSKSvVqmuVCnuUK3iWwD"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "contact",
+              "contact_group"
+            ],
+            "example": "contact"
+          }
+        },
+        "required": [
+          "id",
+          "kind"
+        ]
+      },
+      "DocumentRecipientEditRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user01@pandadoc.com"
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Doe"
+          },
+          "company": {
+            "type": "string",
+            "nullable": true,
+            "example": "John Doe Inc."
+          },
+          "job_title": {
+            "type": "string",
+            "nullable": true,
+            "example": "CTO"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "example": "+14842634627"
+          },
+          "state": {
+            "type": "string",
+            "nullable": true,
+            "example": "Texas"
+          },
+          "street_address": {
+            "type": "string",
+            "nullable": true,
+            "example": "1313 Mockingbird Lane"
+          },
+          "city": {
+            "type": "string",
+            "nullable": true,
+            "example": "Austin"
+          },
+          "postal_code": {
+            "type": "string",
+            "nullable": true,
+            "example": "75001"
           }
         }
       },
