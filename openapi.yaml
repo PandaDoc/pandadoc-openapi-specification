@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   description: PandaDoc Public API documentation
-  version: 5.7.0
+  version: 5.7.1
   title: PandaDoc Public API
   license:
     name: MIT
@@ -1168,8 +1168,16 @@ paths:
             schema:
               $ref: '#/components/schemas/DocumentRecipientCreateRequest'
       responses:
-        '204':
-          description: No content
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actor_id:
+                    type: string
+                    example: 2eWSKSvVqmuVCnuUK3iWwD
         '400':
           $ref: '#/components/responses/400RequestError'
         '401':
@@ -1282,8 +1290,12 @@ paths:
             schema:
               $ref: '#/components/schemas/DocumentRecipientCreateRequest'
       responses:
-        '204':
-          description: No content
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1public~1v1~1documents~1%7Bid%7D~1recipients/post/responses/200/content/application~1json/schema'
         '400':
           $ref: '#/components/responses/400RequestError'
         '401':
