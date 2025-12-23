@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE'
-  version: 7.0.0
+  version: 7.1.0
 servers:
   - url: 'https://api.pandadoc.com'
     description: Public API
@@ -3734,9 +3734,9 @@ paths:
         '400':
           $ref: '#/components/responses/400RequestError'
         '401':
-          $ref: '#/components/responses/400RequestError'
-        '403':
           $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/webhook-subscriptions:
@@ -4949,6 +4949,99 @@ paths:
                   detail:
                     type: string
                     example: This member or workspace does not exist.
+        '429':
+          $ref: '#/components/responses/429'
+  '/public/v1/workspaces/{workspace_id}/api-keys':
+    post:
+      tags:
+        - User and Workspace management
+      summary: Create API key
+      description: "This endpoint allows **Org Admins** to generate a new API key for a user.\n\n> ❗️ Current API-Key will be **disabled**, if an API key already exists in the workspace.\n\n> \U0001F4D8 \n> - Only an **Org Admin** can generate an API keys.\n> - The API key will be generated for the **Org admin** who makes the request, if the `user_id` is **not provided**.\n> - User must be in a workspace and has the **Admin** role, if you pass `user_id`.\n"
+      operationId: createApiKey
+      parameters:
+        - name: workspace_id
+          in: path
+          description: Workspace id.
+          schema:
+            type: string
+          required: true
+          examples:
+            Create Production API key:
+              value: BhVzRcxH9Z2LgfPPGXFUBa
+            Create Sandbox API key:
+              value: radQBiBkU7MBk59NSgaGf5
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              Create Production API key:
+                value:
+                  type: production
+                  user_id: ajnN7eGutJZsRKjQrNuPkh
+              Create Sandbox API key:
+                value:
+                  type: sandbox
+                  user_id: 2eWSKSvVqmuVCnuUK3iWwD
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  example: 2eWSKSvVqmuVCnuUK3iWwD
+                type:
+                  type: string
+                  enum:
+                    - production
+                    - sandbox
+              required:
+                - type
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                Create Production API key:
+                  value:
+                    user_id: ajnN7eGutJZsRKjQrNuPkh
+                    type: production
+                    workspace_id: BhVzRcxH9Z2LgfPPGXFUBa
+                    key: 5606722917eaf631cce6256e64b4afbd30d0e5fa
+                Create Sandbox API key:
+                  value:
+                    user_id: 2eWSKSvVqmuVCnuUK3iWwD
+                    type: sandbox
+                    workspace_id: radQBiBkU7MBk59NSgaGf5
+                    key: 1234522917eaf6313336256e64b4afbd30d54321
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    description: A unique identifier of the user.
+                    example: ajnN7eGutJZsRKjQrNuPkh
+                  type:
+                    type: string
+                    enum:
+                      - production
+                      - sandbox
+                    description: A type of created key.
+                    example: production
+                  workspace_id:
+                    type: string
+                    description: A unique identifier of the workspace.
+                    example: BhVzRcxH9Z2LgfPPGXFUBa
+                  key:
+                    type: string
+                    description: A New Public API key.
+                    example: 5606722917eaf631cce6256e64b4afbd30d0e5fa
+        '400':
+          $ref: '#/components/responses/400RequestError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
         '429':
           $ref: '#/components/responses/429'
 components:
