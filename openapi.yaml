@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE'
-  version: 6.10.0
+  version: 6.11.0
 servers:
   - url: 'https://api.pandadoc.com'
     description: Public API
@@ -2250,6 +2250,100 @@ paths:
           $ref: '#/components/responses/400RequestError'
         '401':
           $ref: '#/components/responses/401'
+        '429':
+          $ref: '#/components/responses/429'
+    post:
+      tags:
+        - Content Library Items
+      summary: Create Content Library Item
+      operationId: createContentLibraryItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the Content Library Item.
+                  example: CLI name example
+            examples:
+              Create Content Library Item:
+                value:
+                  name: CLI name example
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Binary PDF File
+                data:
+                  $ref: '#/paths/~1public~1v1~1content-library-items/post/requestBody/content/application~1json/schema'
+                  description: JSON as a multipart/form-data string.
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentLibraryResponse'
+              examples:
+                Create Template:
+                  value:
+                    id: va9aNuj3uX2w9M7uytn967
+                    name: Sample CLI
+                    date_created: '2024-07-08T14:41:42.625906Z'
+                    date_modified: '2024-07-08T14:41:42.700084Z'
+                    version: '2'
+                    status: cli.PROCESSED
+        '400':
+          $ref: '#/components/responses/400ValidationError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '429':
+          $ref: '#/components/responses/429'
+  '/public/v1/content-library-items/{id}':
+    get:
+      summary: Get Content Library Item Status
+      description: Get status of Content Library Item
+      operationId: getContentLibraryItemStatus
+      tags:
+        - Content Library Items
+      parameters:
+        - name: id
+          description: Content Library Item ID
+          in: path
+          schema:
+            type: string
+          required: true
+          example: EE8yUNg5HztqVAuH85He8V
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentLibraryResponse'
+              examples:
+                Content Library Item Status:
+                  value:
+                    id: vibuun3DXG8QDDLfXm27Ne
+                    name: API Sample PandaDoc CLI
+                    date_created: '2024-07-15T17:44:07.524617Z'
+                    date_modified: '2024-07-15T17:44:07.613821Z'
+                    version: '2'
+                    status: cli.PROCESSED
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
   '/public/v1/content-library-items/{id}/details':
@@ -9249,6 +9343,32 @@ components:
             - template.PROCESSED
             - template.UPLOADED
             - template.ERROR
+    ContentLibraryResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: iMymdDd9XFD3HyxP5VD67Q
+        name:
+          type: string
+          example: Sample CLI
+        date_created:
+          type: string
+          format: date-time
+          example: '2021-06-17T15:51:13.226974Z'
+        date_modified:
+          type: string
+          format: date-time
+          example: '2021-06-17T15:51:13.326974Z'
+        version:
+          type: string
+          example: '2'
+        status:
+          type: string
+          enum:
+            - cli.UPLOADED
+            - cli.PROCESSED
+            - cli.ERROR
   responses:
     '401':
       description: Authentication error
