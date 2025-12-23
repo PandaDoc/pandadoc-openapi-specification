@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE'
-  version: 6.11.0
+  version: 6.12.0
 servers:
   - url: 'https://api.pandadoc.com'
     description: Public API
@@ -335,9 +335,9 @@ paths:
       requestBody:
         required: true
         description: |
-          Use a PandaDoc template or an existing PDF to create a document.
-          See the creation request examples [by template](/schemas/DocumentCreateByTemplateRequest)
-          and [by pdf](/schemas/DocumentCreateByPdfRequest)
+          To create a PandaDoc document, you can use either:
+          1. A PandaDoc template (multipart/form-data)
+          2. A file or existing PDF (application/json)
         content:
           application/json:
             schema:
@@ -521,8 +521,7 @@ paths:
                   format: binary
                   description: Binary PDF File
                 data:
-                  type: object
-                  description: JSON as a multipart/form-data string.
+                  $ref: '#/components/schemas/DocumentCreateByPdfRequest'
       responses:
         '201':
           description: OK
@@ -2311,7 +2310,7 @@ paths:
     get:
       summary: Get Content Library Item Status
       description: Get status of Content Library Item
-      operationId: getContentLibraryItemStatus
+      operationId: statusContentLibraryItem
       tags:
         - Content Library Items
       parameters:
@@ -2648,7 +2647,7 @@ paths:
     get:
       summary: Get Template Status
       description: Get status of Template
-      operationId: getTemplateStatus
+      operationId: statusTemplate
       tags:
         - Templates
       parameters:
@@ -4915,7 +4914,7 @@ components:
                 $ref: '#/components/schemas/CreateDocumentActor'
             tokens:
               type: array
-              description: You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.
+              description: You can create a new variables or initialize variable value using tokens/values list.
               items:
                 type: object
                 properties:
@@ -5161,7 +5160,7 @@ components:
               value: '2019-12-31T00:00:00.000Z'
         tokens:
           type: array
-          description: 'You can pass a list of tokens/values. If a token name exists in a document then the value will be updated. Otherwise, a new token will be added to the document.'
+          description: Create or initialize multiple variables with their values using tokens/values list.
           items:
             type: object
             properties:

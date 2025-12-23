@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "6.11.0"
+    "version": "6.12.0"
   },
   "servers": [
     {
@@ -389,7 +389,7 @@
         ],
         "requestBody": {
           "required": true,
-          "description": "Use a PandaDoc template or an existing PDF to create a document.\nSee the creation request examples [by template](/schemas/DocumentCreateByTemplateRequest)\nand [by pdf](/schemas/DocumentCreateByPdfRequest)\n",
+          "description": "To create a PandaDoc document, you can use either:\n1. A PandaDoc template (multipart/form-data)\n2. A file or existing PDF (application/json)\n",
           "content": {
             "application/json": {
               "schema": {
@@ -676,8 +676,7 @@
                     "description": "Binary PDF File"
                   },
                   "data": {
-                    "type": "object",
-                    "description": "JSON as a multipart/form-data string."
+                    "$ref": "#/components/schemas/DocumentCreateByPdfRequest"
                   }
                 }
               }
@@ -3257,7 +3256,7 @@
       "get": {
         "summary": "Get Content Library Item Status",
         "description": "Get status of Content Library Item",
-        "operationId": "getContentLibraryItemStatus",
+        "operationId": "statusContentLibraryItem",
         "tags": [
           "Content Library Items"
         ],
@@ -3744,7 +3743,7 @@
       "get": {
         "summary": "Get Template Status",
         "description": "Get status of Template",
-        "operationId": "getTemplateStatus",
+        "operationId": "statusTemplate",
         "tags": [
           "Templates"
         ],
@@ -7133,7 +7132,7 @@
               },
               "tokens": {
                 "type": "array",
-                "description": "You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.",
+                "description": "You can create a new variables or initialize variable value using tokens/values list.",
                 "items": {
                   "type": "object",
                   "properties": {
@@ -7482,7 +7481,7 @@
           },
           "tokens": {
             "type": "array",
-            "description": "You can pass a list of tokens/values. If a token name exists in a document then the value will be updated. Otherwise, a new token will be added to the document.",
+            "description": "Create or initialize multiple variables with their values using tokens/values list.",
             "items": {
               "type": "object",
               "properties": {
