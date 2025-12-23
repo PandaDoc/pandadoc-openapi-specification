@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE'
-  version: 6.3.0
+  version: 6.4.0
 servers:
   - url: 'https://api.pandadoc.com'
     description: Public API
@@ -843,6 +843,8 @@ paths:
                     autonumbering_sequence_name_prefix: null
                     date_created: '2024-07-05T07:21:41.984654Z'
                     date_modified: '2024-07-05T07:21:42.409797Z'
+                    date_sent: null
+                    ref_number: MTMJR-FEUQB-ECEWW-3WVZP
                     created_by:
                       id: bgx5MR7LiR3f9MQtt4MWYM
                       email: siarhei.soroka@pandadoc.com
@@ -877,6 +879,8 @@ paths:
                     date_modified: '2021-10-23T21:07:04.147Z'
                     date_completed: '2021-10-23T21:07:04.147Z'
                     content_date_modified: '2021-10-23T21:07:04.147Z'
+                    date_sent: null
+                    ref_number: MTMJR-FEUQB-ECEWW-3WVZP
                     created_by:
                       id: 7kqXgjFejB2toXxjcC5jfZ
                       membership_id: 7kqXgjFejB2toXxjcC5jfZ
@@ -4067,6 +4071,60 @@ paths:
           $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
+  '/public/v1/workspaces/{workspace_id}/members/{member_id}':
+    delete:
+      tags:
+        - User and Workspace management
+      summary: Remove member
+      operationId: removeMember
+      parameters:
+        - name: workspace_id
+          in: path
+          description: Workspace id
+          schema:
+            type: string
+          required: true
+          example: BhVzRcxH9Z2LgfPPGXFUBa
+        - name: member_id
+          in: path
+          description: Member id
+          schema:
+            type: string
+          required: true
+          example: nPh2PDhFdDqAES9k64h9qX
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                properties:
+                  type:
+                    type: string
+                    example: request_error
+                  detail:
+                    type: string
+                    example: Owner can not be removed.
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                properties:
+                  type:
+                    type: string
+                    example: request_error
+                  detail:
+                    type: string
+                    example: This member or workspace does not exist.
+        '429':
+          $ref: '#/components/responses/429'
 components:
   schemas:
     OAuth2CreateAccessTokenRequest:
@@ -4799,6 +4857,13 @@ components:
         content_date_modified:
           type: string
           example: '2021-10-23T21:07:04.147345Z'
+        date_sent:
+          type: string
+          nullable: true
+          example: '2021-10-23T21:07:04.147345Z'
+        ref_number:
+          type: string
+          example: MTMJR-FEUQB-ECEWW-3WVZP
         created_by:
           type: object
           properties:
@@ -5426,6 +5491,11 @@ components:
                       required:
                         - qty_editable
                     custom_columns:
+                      type: object
+                      nullable: false
+                      additionalProperties:
+                        type: string
+                    text_columns:
                       type: object
                       nullable: false
                       additionalProperties:
@@ -7933,6 +8003,10 @@ components:
                       type: string
                       description: A user's workspace
                       example: fERpqZdFaF9dHVAeVxPFaV
+                    membership_id:
+                      type: string
+                      description: A user's membership id in workspace
+                      example: vibuun3DXG8QDDLfXm27Ne
     ListWorkspacesResponse:
       type: object
       properties:
@@ -8018,7 +8092,7 @@ components:
                             src:
                               type: string
                       price_configuration:
-                        $ref: '#/components/schemas/ProductCatalogItemRequest/properties/price_configuration'
+                        $ref: '#/components/schemas/ProductCatalogItemPriceConfiguration'
         images:
           type: array
           nullable: true
@@ -8042,73 +8116,7 @@ components:
               value:
                 type: string
         price_configuration:
-          type: object
-          x-examples:
-            example-1:
-              currency: USD
-              price: null
-              cost: null
-              tiers:
-                - value: 9.99
-                  min_qty: 1
-                - value: 8.99
-                  min_qty: 10
-                - value: 5.99
-                  min_qty: 100
-              pricing_method: 1
-            example-2:
-              currency: USD
-              price: 59.99
-              cost: 60
-              tiers: null
-              pricing_method: 0
-          properties:
-            currency:
-              type: string
-              example: USD
-            price:
-              type: number
-              example: 59.99
-              nullable: true
-            cost:
-              type: number
-              nullable: true
-            billing_type:
-              type: string
-            billing_cycle:
-              type: string
-              nullable: true
-            tiers:
-              type: array
-              description: only for volume based pricing
-              nullable: true
-              items:
-                type: object
-                properties:
-                  value:
-                    type: number
-                    format: float
-                    minimum: 0
-                    example: 9.99
-                  min_qty:
-                    type: number
-                    minimum: 1
-                required:
-                  - value
-                  - min_qty
-                x-examples:
-                  example-1:
-                    price: 9.99
-                    min_qty: 1
-            pricing_method:
-              type: integer
-              enum:
-                - 0
-                - 1
-                - 2
-          required:
-            - currency
-            - pricing_method
+          $ref: '#/components/schemas/ProductCatalogItemPriceConfiguration'
       required:
         - title
         - price_configuration
@@ -8220,7 +8228,7 @@ components:
                         type: string
         default_price_configuration:
           allOf:
-            - $ref: '#/components/schemas/ProductCatalogItemRequest/properties/price_configuration'
+            - $ref: '#/components/schemas/ProductCatalogItemPriceConfiguration'
             - type: object
               properties:
                 uuid:
@@ -8279,7 +8287,7 @@ components:
                 type: array
                 items:
                   allOf:
-                    - $ref: '#/components/schemas/ProductCatalogItemRequest/properties/price_configuration'
+                    - $ref: '#/components/schemas/ProductCatalogItemPriceConfiguration'
                     - type: object
                       properties:
                         uuid:
@@ -8376,7 +8384,75 @@ components:
                     type: string
                     nullable: true
             price_configuration:
-              $ref: '#/components/schemas/ProductCatalogItemRequest/properties/price_configuration'
+              $ref: '#/components/schemas/ProductCatalogItemPriceConfiguration'
+    ProductCatalogItemPriceConfiguration:
+      type: object
+      x-examples:
+        example-1:
+          currency: USD
+          price: null
+          cost: null
+          tiers:
+            - value: 9.99
+              min_qty: 1
+            - value: 8.99
+              min_qty: 10
+            - value: 5.99
+              min_qty: 100
+          pricing_method: 1
+        example-2:
+          currency: USD
+          price: 59.99
+          cost: 60
+          tiers: null
+          pricing_method: 0
+      properties:
+        currency:
+          type: string
+          example: USD
+        price:
+          type: number
+          example: 59.99
+          nullable: true
+        cost:
+          type: number
+          nullable: true
+        billing_type:
+          type: string
+        billing_cycle:
+          type: string
+          nullable: true
+        tiers:
+          type: array
+          description: only for volume based pricing
+          nullable: true
+          items:
+            type: object
+            properties:
+              value:
+                type: number
+                format: float
+                minimum: 0
+                example: 9.99
+              min_qty:
+                type: number
+                minimum: 1
+            required:
+              - value
+              - min_qty
+            x-examples:
+              example-1:
+                price: 9.99
+                min_qty: 1
+        pricing_method:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+      required:
+        - currency
+        - pricing_method
   responses:
     '401':
       description: Authentication error
