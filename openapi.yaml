@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE'
-  version: 6.5.0
+  version: 6.6.0
 servers:
   - url: 'https://api.pandadoc.com'
     description: Public API
@@ -852,9 +852,9 @@ paths:
                         placeholder: Signature
                         assigned_to:
                           id: 8KAZvGRL3W4u44a4fyDoeH
-                          first_name: '{{$randomFirstName}}'
-                          last_name: '{{$randomLastName}}'
-                          email: '{{$randomEmail}}'
+                          first_name: Recipient First Name
+                          last_name: Recipient Last Name
+                          email: test@pandadoc.com
                           phone: ''
                           recipient_type: signer
                           has_completed: true
@@ -877,9 +877,9 @@ paths:
                     status: document.completed
                     recipients:
                       - id: 8KAZvGRL3W4u44a4fyDoeH
-                        first_name: '{{$randomFirstName}}'
-                        last_name: '{{$randomLastName}}'
-                        email: '{{$randomEmail}}'
+                        first_name: Recipient First Name
+                        last_name: Recipient Last Name
+                        email: test@pandadoc.com
                         phone: ''
                         recipient_type: signer
                         has_completed: true
@@ -2923,19 +2923,67 @@ paths:
       tags:
         - Contacts
       summary: List contacts
+      description: This method returns a list of contacts associated with a workspace.
       operationId: listContacts
       parameters:
-        - name: email
+        - examples:
+            Default:
+              value: ''
+            List Contacts by Email:
+              value: john.doe@example.com
+          name: email
           in: query
           schema:
             type: string
           description: Optional search parameter. Filter results by exact match.
-          example: josh@example.com
       responses:
         '200':
           description: OK
           content:
             application/json:
+              examples:
+                Default:
+                  value:
+                    results:
+                      - id: kQDLgj54VGCocTSTzthywf
+                        email: john.doe@example.com
+                        first_name: John
+                        last_name: Doe
+                        company: ExampleCorp
+                        job_title: Software Engineer
+                        phone: +1-555-123-4567
+                        country: USA
+                        state: California
+                        street_address: 1234 Elm Street
+                        city: San Francisco
+                        postal_code: '94101'
+                      - id: kQDLgj54VGCocTSTzthywd
+                        email: jane.smith@example.com
+                        first_name: Jane
+                        last_name: Smith
+                        company: ExampleCorp
+                        job_title: Product Manager
+                        phone: +1-555-987-6543
+                        country: USA
+                        state: California
+                        street_address: 5678 Oak Street
+                        city: San Francisco
+                        postal_code: '94102'
+                List Contacts by Email:
+                  value:
+                    results:
+                      - id: EmnxmZvnmrUe2jqDDipSyf
+                        email: john.doe@example.com
+                        first_name: John
+                        last_name: Doe
+                        company: ExampleCorp
+                        job_title: Software Engineer
+                        phone: +1-555-123-4567
+                        country: USA
+                        state: California
+                        street_address: 1234 Elm Street
+                        city: San Francisco
+                        postal_code: '94101'
               schema:
                 $ref: '#/components/schemas/ContactListResponse'
         '400':
@@ -2950,11 +2998,26 @@ paths:
       tags:
         - Contacts
       summary: Create contact
+      description: This method adds a contact into a contacts list.
       operationId: createContact
       requestBody:
         required: true
         content:
           application/json:
+            examples:
+              Create Contact:
+                value:
+                  email: user01@pandadoc.com
+                  first_name: John
+                  last_name: Doe
+                  company: John Doe Inc.
+                  job_title: CTO
+                  phone: '+14842634627'
+                  country: USA
+                  state: Texas
+                  street_address: 1313 Mockingbird Lane
+                  city: Austin
+                  postal_code: '75001'
             schema:
               $ref: '#/components/schemas/ContactCreateRequest'
       responses:
@@ -2962,6 +3025,21 @@ paths:
           description: OK
           content:
             application/json:
+              examples:
+                Create Contact:
+                  value:
+                    id: BCUWJhZm3k7grUNFAz6cD2
+                    email: user01@pandadoc.com
+                    first_name: John
+                    last_name: Doe
+                    company: John Doe Inc.
+                    job_title: CTO
+                    phone: '+14842634627'
+                    country: USA
+                    state: Texas
+                    street_address: 1313 Mockingbird Lane
+                    city: Austin
+                    postal_code: '75001'
               schema:
                 $ref: '#/components/schemas/ContactDetailsResponse'
         '400':
@@ -2974,21 +3052,39 @@ paths:
     get:
       tags:
         - Contacts
-      summary: Get contact details by id
+      summary: Contact Details
+      description: Returns contact details by its ID.
       operationId: detailsContact
       parameters:
-        - name: id
+        - examples:
+            Default:
+              value: SyoufNkJiHRn24LpuJ7RXb
+          name: id
           in: path
           description: Contact id.
           schema:
             type: string
           required: true
-          example: SyoufNkJiHRn24LpuJ7RXb
       responses:
         '200':
           description: OK
           content:
             application/json:
+              examples:
+                Default:
+                  value:
+                    id: SyoufNkJiHRn24LpuJ7RXb
+                    email: nobody@example.com
+                    first_name: FName
+                    last_name: LName
+                    company: CompanyName
+                    job_title: JobTitle
+                    phone: Phone
+                    country: Country
+                    state: State
+                    street_address: Av. de Moscavide 2
+                    city: City
+                    postal_code: 1885-075
               schema:
                 $ref: '#/components/schemas/ContactDetailsResponse'
         '400':
@@ -3002,7 +3098,8 @@ paths:
     delete:
       tags:
         - Contacts
-      summary: Delete contact by id
+      summary: Delete Contact
+      description: This method deletes a contact.
       operationId: deleteContact
       parameters:
         - name: id
@@ -3026,20 +3123,37 @@ paths:
     patch:
       tags:
         - Contacts
-      summary: Update contact by id
+      summary: Update Contact
+      description: This method updates a contact details.
       operationId: updateContact
       parameters:
-        - name: id
+        - examples:
+            Default:
+              value: SyoufNkJiHRn24LpuJ7RXb
+          name: id
           in: path
           description: Contact id.
           schema:
             type: string
           required: true
-          example: SyoufNkJiHRn24LpuJ7RXb
       requestBody:
         required: true
         content:
           application/json:
+            examples:
+              Default:
+                value:
+                  email: test@pandadoc.com
+                  first_name: new first_name
+                  last_name: new last_name
+                  company: new company
+                  job_title: new job_title
+                  phone: new phone
+                  country: new country
+                  state: new state
+                  street_address: new street_address
+                  city: new city
+                  postal_code: new postal_code
             schema:
               $ref: '#/components/schemas/ContactUpdateRequest'
       responses:
@@ -3047,6 +3161,21 @@ paths:
           description: OK
           content:
             application/json:
+              examples:
+                Default:
+                  value:
+                    id: SyoufNkJiHRn24LpuJ7RXb
+                    email: test@pandadoc.com
+                    first_name: new first_name
+                    last_name: new last_name
+                    company: new company
+                    job_title: new job_title
+                    phone: new phone
+                    country: new country
+                    state: new state
+                    street_address: new street_address
+                    city: new city
+                    postal_code: new postal_code
               schema:
                 $ref: '#/components/schemas/ContactDetailsResponse'
         '400':
@@ -6861,46 +6990,62 @@ components:
         id:
           type: string
           example: BCUWJhZm3k7grUNFAz6cD2
+          description: A unique identifier of the contact
         email:
           type: string
           nullable: true
           example: user01@pandadoc.com
+          description: An email address of the contact
         first_name:
           type: string
           nullable: true
           example: John
+          description: Contact's first name
         last_name:
           type: string
           nullable: true
           example: Doe
+          description: Contact's last name
         company:
           type: string
           nullable: true
           example: John Doe Inc.
+          description: Contact's company name
         job_title:
           type: string
           nullable: true
           example: CTO
+          description: Contact's job title
         phone:
           type: string
           nullable: true
           example: '+14842634627'
+          description: A phone number
+        country:
+          type: string
+          nullable: true
+          example: USA
+          description: A country name
         state:
           type: string
           nullable: true
           example: Texas
+          description: A state name
         street_address:
           type: string
           nullable: true
           example: 1313 Mockingbird Lane
+          description: A street address
         city:
           type: string
           nullable: true
           example: Austin
+          description: A city name
         postal_code:
           type: string
           nullable: true
           example: '75001'
+          description: A postal code
     ContactListResponse:
       type: object
       properties:
@@ -6915,42 +7060,57 @@ components:
           type: string
           nullable: true
           example: user01@pandadoc.com
+          description: An email address of the contact
         first_name:
           type: string
           nullable: true
           example: John
+          description: Contact's first name
         last_name:
           type: string
           nullable: true
           example: Doe
+          description: Contact's last name
         company:
           type: string
           nullable: true
           example: John Doe Inc.
+          description: Contact's company name
         job_title:
           type: string
           nullable: true
           example: CTO
+          description: Contact's job title
         phone:
           type: string
           nullable: true
           example: '+14842634627'
+          description: A phone number
+        country:
+          type: string
+          nullable: true
+          example: USA
+          description: A country name
         state:
           type: string
           nullable: true
           example: Texas
+          description: A state name
         street_address:
           type: string
           nullable: true
           example: 1313 Mockingbird Lane
+          description: A street address
         city:
           type: string
           nullable: true
           example: Austin
+          description: A city name
         postal_code:
           type: string
           nullable: true
           example: '75001'
+          description: A postal code
     ContactUpdateRequest:
       type: object
       properties:
