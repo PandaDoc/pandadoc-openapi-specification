@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "6.13.0"
+    "version": "6.14.0"
   },
   "servers": [
     {
@@ -81,7 +81,7 @@
         "tags": [
           "Documents"
         ],
-        "summary": "List documents",
+        "summary": "List Documents",
         "description": "> 📘 List by Linked Objects\n>\n> To get a list of documents by their linked objects from external integrated systems.\n> [Use a separate endpoint](https://developers.pandadoc.com/reference/list-documents-by-linked-object)\n\n# Listing Documents Efficiently\n\nIf your workspace contains hundreds of thousands of documents, you may experience higher latency of your requests.\n\n> 👍 Pro tip\n> \n> Using `order_by = date_created` ensures stable performance and quick responses.\n> \n> If you need to order documents by a different field, use the `created_from` and `created_to` parameters to limit the result set, and run requests in batches.\n\n## Usage examples\n\n1. `count=100&order_by=date_created&created_from=2023-08-01T00:00:00.000000Z&created_to=2023-09-01T00:00:00.000000Z`  \n  This request returns only documents created in August. \n2. The next request is for `page = 2` (still listing documents created in August):  \n  `count=100&order_by=date_created&created_from=2023-08-01T00:00:00.000000Z&created_to=2023-09-01T00:00:00.000000Z&page=2`\n3. Once you receive an empty response, it means you listed all the documents created in the provided time range. Continue listing them by setting another month:  \n  `count=100&order_by=date_created&created_from=2023-07-01T00:00:00.000000Z&created_to=2023-08-01T00:00:00.000000Z`  \n  This request lists the documents created in July 2023.\n\n# Caveats\n\n- By default, PandaDoc API lists documents sorted by the `date_status_changed` attribute.\n",
         "operationId": "listDocuments",
         "parameters": [
@@ -372,7 +372,7 @@
         "tags": [
           "Documents"
         ],
-        "summary": "Create document",
+        "summary": "Create Document",
         "description": "## Create from a template\n> See the [Create document from template](https://developers.pandadoc.com/docs/create-document-from-template) tutorial for details on how to use this endpoint, as well as a sample template.\n\n## Create from an upload or a URL\n> See the [Create from PDF](https://developers.pandadoc.com/docs/create-document-from-file) tutorial for the usage specifics and sample PDF files.\n>\n> See the [Create from public PDF](https://developers.pandadoc.com/docs/create-and-send-a-document-from-a-publicly-available-pdf) guide for info about roles and fields, as well as PDF examples.\n\nYou have two options to create a document from file:\n\n1. Upload a local file. For this, use the `multipart/form-data` request type.\n2. Send a public URL in the document creation request like this:\n\n```json json\ncurl --request POST 'https://api.pandadoc.com/public/v1/documents' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\n  \"name\": \"My minimal document\",\n  \"url\": \"https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf\",\n  \"recipients\": [\n      {\n      \"email\":\"nobody@example.com\",\n      \"role\": \"user\"\n      }\n  ],\n  \"parse_form_fields\": false\n}'\n```\n**Note**: A file you upload is not stored in your PandaDoc account, so you have to upload it with every request.\n",
         "operationId": "createDocument",
         "parameters": [
@@ -385,6 +385,15 @@
             },
             "example": "ev2",
             "description": "Set this parameter as `ev1` if you want to create a document from PDF with Classic Editor when both editors are enabled for the workspace."
+          },
+          {
+            "name": "use_form_field_properties",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": true,
+            "description": "Set this parameter as `yes` or `1` or `true` (only when upload pdf with form fields) if you want to  respect form fields properties, like `required`."
           }
         ],
         "requestBody": {
@@ -602,6 +611,43 @@
                         ]
                       }
                     ],
+                    "tables": [
+                      {
+                        "name": "Table 1",
+                        "data": {
+                          "sections": [
+                            {
+                              "header": [
+                                {
+                                  "text": "header 1"
+                                },
+                                {
+                                  "text": "header 2"
+                                }
+                              ],
+                              "rows": [
+                                [
+                                  {
+                                    "text": "value 1"
+                                  },
+                                  {
+                                    "text": "value 2"
+                                  }
+                                ],
+                                [
+                                  {
+                                    "text": "value 3"
+                                  },
+                                  {
+                                    "text": "value 4"
+                                  }
+                                ]
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    ],
                     "content_placeholders": [
                       {
                         "block_id": "{block_id}",
@@ -733,7 +779,7 @@
         "tags": [
           "Documents"
         ],
-        "summary": "Document status",
+        "summary": "Document Status",
         "operationId": "statusDocument",
         "description": "It is useful to request document status to ensure a document is in the expected state before calling additional API methods. \n\n### Required Document Statuses\n\nHere are some common methods and the `document.status` required to proceed:\n\n| API Method           | Required Document State |\n| :------------------- | :---------------------- |\n| Send A Document      | `document.draft`        |\n| Get Document Details | `document.draft`        |\n| Embed A Document     | `document.sent`         |\n| Download A Document  | `document.completed`    |\n\n> 📘 Polling vs Webhooks\n> \n> If you are using the `GET` document status endpoint for [**polling**](https://en.wikipedia.org/wiki/Polling_(computer_science)), we also support and recommend using **webhooks** for event-driven needs: <https://developers.pandadoc.com/reference/on-document-status-change>\n\n### Available Document Statuses\n\nThe following is a complete list of all possible document statuses returned:\n\n| Document Status             | Status Description                                                                                                                                                                                                               |\n| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| `document.uploaded`         | The document has just been created or uploaded. It is in processing and will be in `document.draft` state momentarily.                                                                                                           |\n| `document.draft`            | The document is in a draft state. All aspects of the document can be edited in this state. Our API does not support edits after the document has been created, but it can still be edited manually on <https://app.pandadoc.com> |\n| `document.sent`             | The document has been \"sealed\" and optionally sent. No further document edits can occur except for document recipient(s) filling out or signing the document.                                                                    |\n| `document.viewed`           | Document recipient(s) have viewed the sent document.                                                                                                                                                                             |\n| `document.waiting_approval` | The document has an [automatic approval workflow](https://support.pandadoc.com/hc/en-us/articles/360016122334--Editor-2-0-Approval-workflow) and has not yet been approved.                                                      |\n| `document.rejected`         | The document has an [automatic approval workflow](https://support.pandadoc.com/hc/en-us/articles/360016122334--Editor-2-0-Approval-workflow) and was rejected.                                                                   |\n| `document.approved`         | The document has an [automatic approval workflow](https://support.pandadoc.com/hc/en-us/articles/360016122334--Editor-2-0-Approval-workflow) and was approved.                                                                   |\n| `document.waiting_pay`      | The document has a [Stripe payment](https://support.pandadoc.com/hc/en-us/articles/360017806894--Editor-2-0-Stripe) option and is awaiting payment.                                                                              |\n| `document.paid`             | The document has a [Stripe payment](https://support.pandadoc.com/hc/en-us/articles/360017806894--Editor-2-0-Stripe) option and was paid.                                                                                         |\n| `document.completed`        | The document has been completed by all recipients.                                                                                                                                                                               |\n| `document.voided`           | The document expired and is no longer available for completion or signature.                                                                                                                                                     |\n| `document.declined`         | The document was [manually marked](https://support.pandadoc.com/hc/en-us/articles/360041879753-Manually-change-document-status) as \"Declined\"                                                                                    |\n| `document.external_review`  | The document is reviewed by it's recipient using Suggest Edit feature                                                                                                                                                            |\n",
         "parameters": [
@@ -811,7 +857,7 @@
         "tags": [
           "Documents"
         ],
-        "summary": "Delete document",
+        "summary": "Delete Document",
         "operationId": "deleteDocument",
         "description": "Delete a document by ID.\n",
         "parameters": [
@@ -899,7 +945,7 @@
         "tags": [
           "Documents"
         ],
-        "summary": "Document status change",
+        "summary": "Document Status Change",
         "operationId": "changeDocumentStatus",
         "description": "PandaDoc has eight document statuses, but you can manually set your document status to only four:\n\n### Document statuses\n\n- Completed - `document.completed` - API code `2`\n- Expired - `document.voided` - code `11`\n- Paid - `document.paid` - code `10`. **Important**: You can only set it if you have a payment app connected.\n- Declined - `document.declined` - code `12`\n\n> 🚧 Pass a numeric code for the corresponding document status, for example, `2` for `document.completed`.\n\nFind more details in [\\[Editor 2.0\\] Manually change document status](https://support.pandadoc.com/hc/en-us/articles/360041879753--Editor-2-0-Manually-change-document-status) topic.\n\n| Current Status | To Completed: | To Expired: | To Paid: | To Declined: |\n|----------------|---------------|-------------|----------|--------------|\n| Draft          | YES           | NO          | YES      | YES          |\n| Approved       | NO            | NO          | NO       | NO           |\n| Sent           | YES           | YES         | NO       | YES          |\n| Viewed         | YES           | YES         | NO       | YES          |\n| Completed (Auto) | NO          | NO          | NO       | YES          |\n| Waithing for payment | NO      | NO          | YES      | YES          |\n| Paid           | NO            | NO          | NO       | NO           |\n| Expired        | YES           | NO          | YES      | YES          |\n| Declined       | YES           | NO          | YES      | NO           |\n\n> ✅ - from `document.voided` to `document.paid`\n>\n> ❌ - from `document.paid` to `document.voided`\n",
         "parameters": [
@@ -1762,6 +1808,133 @@
         }
       }
     },
+    "/public/v1/documents/{id}/editing-session": {
+      "post": {
+        "summary": "Create Document Editing Session",
+        "description": "Create a new editing session for a document. The session contains E-Token.",
+        "operationId": "createDocumentEditingSession",
+        "tags": [
+          "Documents"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document ID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "pSgK5XYZjyg3zXYZxsoUWg"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "examples": {
+                "Default": {
+                  "value": {
+                    "email": "john.doe@pandadoc.com",
+                    "lifetime": 100
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/EditingSessionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Document Editing Session created",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Default": {
+                    "value": {
+                      "id": "ce9825e5-3210-4a8f-1230-f32b643295d2",
+                      "email": "john.doe@pandadoc.com",
+                      "expires_at": "2025-01-10T00:09:09.612651Z",
+                      "key": "985b695b56eaaa571e9bb8e522afd5bd335c32d7",
+                      "document_id": "pSgK5XYZjyg3zXYZxsoUWg"
+                    }
+                  }
+                },
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/BaseEditingSessionResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "document_id": {
+                          "type": "string",
+                          "description": "ID of the document",
+                          "example": "pSgK5XYZjyg3zXYZxsoUWg"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Default": {
+                    "value": {
+                      "type": "request_error",
+                      "detail": {
+                        "lifetime": [
+                          "Ensure this value is greater than or equal to 60."
+                        ]
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "request_error"
+                    },
+                    "detail": {
+                      "type": "object",
+                      "example": {
+                        "count": [
+                          "A valid integer is required."
+                        ],
+                        "order_by": [
+                          "value is not a valid choice."
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
     "/public/v1/documents/{id}/session": {
       "post": {
         "tags": [
@@ -1846,7 +2019,7 @@
         "tags": [
           "Documents"
         ],
-        "summary": "Document download",
+        "summary": "Document Download",
         "operationId": "downloadDocument",
         "description": "Download documents as a PDF.\n",
         "parameters": [
@@ -1944,7 +2117,7 @@
         "tags": [
           "Documents"
         ],
-        "summary": "Download document protected",
+        "summary": "Download Document Protected",
         "description": "> 🚧 Production key only\n> \n> This endpoint only works with a Production key. You'll get a 401 Unauthorized error when trying to use a Sandbox key.\n\nDownload a signed PDF of a completed document\n",
         "operationId": "downloadProtectedDocument",
         "parameters": [
@@ -2755,6 +2928,7 @@
         ],
         "summary": "Transfer all documents ownership",
         "operationId": "transferAllDocumentsOwnership",
+        "description": "This method transfers ownership of all documents from one member to another.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -3840,6 +4014,133 @@
           },
           "400": {
             "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/templates/{id}/editing-session": {
+      "post": {
+        "summary": "Create Template Editing Session",
+        "description": "Create a new editing session for a template. The session contains E-Token.",
+        "operationId": "createTemplateEditingSession",
+        "tags": [
+          "Templates"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Template ID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "a53a2f96b91d47f99ee33f"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "examples": {
+                "Default": {
+                  "value": {
+                    "email": "john.doe@pandadoc.com",
+                    "lifetime": 100
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/EditingSessionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Template Editing Session created",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Default": {
+                    "value": {
+                      "id": "ce9825e5-3210-4a8f-1230-f32b643295d2",
+                      "email": "john.doe@pandadoc.com",
+                      "expires_at": "2025-01-10T00:09:09.612651Z",
+                      "key": "985b695b56eaaa571e9bb8e522afd5bd335c32d7",
+                      "template_id": "a53a2f96b91d47f99ee33f"
+                    }
+                  }
+                },
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/BaseEditingSessionResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "template_id": {
+                          "type": "string",
+                          "description": "ID of the template",
+                          "example": "a53a2f96b91d47f99ee33f"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Default": {
+                    "value": {
+                      "type": "request_error",
+                      "detail": {
+                        "lifetime": [
+                          "Ensure this value is greater than or equal to 60."
+                        ]
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "request_error"
+                    },
+                    "detail": {
+                      "type": "object",
+                      "example": {
+                        "count": [
+                          "A valid integer is required."
+                        ],
+                        "order_by": [
+                          "value is not a valid choice."
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -6731,7 +7032,7 @@
         "tags": [
           "User and Workspace management"
         ],
-        "summary": "Remove member",
+        "summary": "Remove Member",
         "operationId": "removeMember",
         "parameters": [
           {
@@ -7020,6 +7321,13 @@
                   "$ref": "#/components/schemas/PricingTableRequest"
                 }
               },
+              "tables": {
+                "type": "array",
+                "description": "Information to construct or populate a table can be passed when creating a document. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
+                "items": {
+                  "$ref": "#/components/schemas/TableRequest"
+                }
+              },
               "content_placeholders": {
                 "type": "array",
                 "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
@@ -7251,20 +7559,43 @@
               },
               "fields": {
                 "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "example": "some value"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "required": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "role"
+                  ]
+                },
                 "nullable": true,
-                "description": "You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled.",
+                "description": "You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled. The key of the object is the field name.",
                 "example": {
                   "Like": {
-                    "value": true
+                    "value": true,
+                    "role": "Client"
                   },
                   "Delivery": {
-                    "value": "Same Dav Delivery"
+                    "value": "Same Dav Delivery",
+                    "role": "Sender"
                   },
                   "Favorite.Color": {
-                    "value": "PandaDoc green"
+                    "value": "PandaDoc green",
+                    "role": "Client"
                   },
                   "Date": {
-                    "value": "2019-12-31T00:00:00.000Z"
+                    "value": "2019-12-31T00:00:00.000Z",
+                    "role": "Client"
                   }
                 }
               },
@@ -7300,6 +7631,13 @@
                 "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
                 "items": {
                   "$ref": "#/components/schemas/PricingTableRequest"
+                }
+              },
+              "tables": {
+                "type": "array",
+                "description": "Information to construct or populate a table can be passed when creating a document. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
+                "items": {
+                  "$ref": "#/components/schemas/TableRequest"
                 }
               },
               "content_placeholders": {
@@ -7584,6 +7922,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PricingTableRequest"
+            }
+          },
+          "tables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableRequest"
             }
           }
         }
@@ -9372,6 +9716,77 @@
             }
           }
         }
+      },
+      "TableRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the table."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "sections": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "header": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TableCell"
+                      }
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/TableCell"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "header",
+                    "rows"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "sections"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "data"
+        ]
+      },
+      "TableCell": {
+        "type": "object",
+        "description": "Defines a single cell in the table, which can appear in either the header or the rows.",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Cell text."
+          },
+          "col_span": {
+            "type": "integer",
+            "description": "Represents how many columns the cell occupies.",
+            "nullable": true
+          },
+          "row_span": {
+            "type": "integer",
+            "description": "Represents the number of rows the cell occupies.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "text"
+        ]
       },
       "PricingTableRequest": {
         "type": "object",
@@ -11232,9 +11647,14 @@
           "document_deleted",
           "document_state_changed",
           "document_creation_failed",
+          "document_completed_pdf_ready",
+          "document_section_added",
           "quote_updated",
           "template_created",
-          "template_modified"
+          "template_updated",
+          "template_deleted",
+          "content_library_item_created",
+          "content_library_item_creation_failed"
         ],
         "example": "document_state_changed"
       },
@@ -11423,9 +11843,14 @@
           "document_deleted",
           "document_state_changed",
           "document_creation_failed",
+          "document_completed_pdf_ready",
+          "document_section_added",
           "quote_updated",
           "template_created",
-          "template_modified"
+          "template_updated",
+          "template_deleted",
+          "content_library_item_created",
+          "content_library_item_creation_failed"
         ],
         "example": "document_state_changed"
       },
@@ -13400,10 +13825,12 @@
                 "value"
               ]
             },
-            "example": {
-              "name": "Favorite.Pet",
-              "value": "Panda"
-            }
+            "example": [
+              {
+                "name": "Favorite.Pet",
+                "value": "Panda"
+              }
+            ]
           }
         }
       },
@@ -13472,6 +13899,56 @@
               "cli.PROCESSED",
               "cli.ERROR"
             ]
+          }
+        }
+      },
+      "EditingSessionRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email of the user to create the editing session for",
+            "example": "john.doe@pandadoc.com"
+          },
+          "lifetime": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Lifetime of the E-Token in seconds.",
+            "example": 3600,
+            "minimum": 60,
+            "maximum": 86400,
+            "default": 3600
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "BaseEditingSessionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the editing session",
+            "example": "ce9825e5-3210-4a8f-1230-f32b643295d2"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email of the user to create the editing session for",
+            "example": "eric@pandadoc.com"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the editing session expires",
+            "example": "2025-01-10T00:09:09.612651Z"
+          },
+          "key": {
+            "type": "string",
+            "description": "E-Token value",
+            "example": "985b695b56eaaa571e9bb8e522afd5bd335c32d7"
           }
         }
       }
@@ -13633,7 +14110,9 @@
       "apiKey": {
         "type": "apiKey",
         "name": "Authorization",
-        "in": "header"
+        "in": "header",
+        "description": "The `Authorization` header must contain the API key. The value should be prefixed with `API-Key` followed by a space and the actual API key.\n",
+        "x-default": "API-Key 3039ba033eb1410caa0a2227158d63c9d6502cd8"
       },
       "oauth2": {
         "type": "oauth2",
