@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE'
-  version: 6.14.0
+  version: 7.0.0
 servers:
   - url: 'https://api.pandadoc.com'
     description: Public API
@@ -297,32 +297,8 @@ paths:
         ## Create from a template
         > See the [Create document from template](https://developers.pandadoc.com/docs/create-document-from-template) tutorial for details on how to use this endpoint, as well as a sample template.
 
-        ## Create from an upload or a URL
-        > See the [Create from PDF](https://developers.pandadoc.com/docs/create-document-from-file) tutorial for the usage specifics and sample PDF files.
-        >
+        ## Create from a URL
         > See the [Create from public PDF](https://developers.pandadoc.com/docs/create-and-send-a-document-from-a-publicly-available-pdf) guide for info about roles and fields, as well as PDF examples.
-
-        You have two options to create a document from file:
-
-        1. Upload a local file. For this, use the `multipart/form-data` request type.
-        2. Send a public URL in the document creation request like this:
-
-        ```json json
-        curl --request POST 'https://api.pandadoc.com/public/v1/documents' \
-        --header 'Content-Type: application/json' \
-        --data-raw '{
-          "name": "My minimal document",
-          "url": "https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf",
-          "recipients": [
-              {
-              "email":"nobody@example.com",
-              "role": "user"
-              }
-          ],
-          "parse_form_fields": false
-        }'
-        ```
-        **Note**: A file you upload is not stored in your PandaDoc account, so you have to upload it with every request.
       operationId: createDocument
       parameters:
         - name: editor_ver
@@ -336,14 +312,10 @@ paths:
           in: query
           schema:
             type: string
-          example: true
+          example: 'true'
           description: 'Set this parameter as `yes` or `1` or `true` (only when upload pdf with form fields) if you want to  respect form fields properties, like `required`.'
       requestBody:
         required: true
-        description: |
-          To create a PandaDoc document, you can use either:
-          1. A PandaDoc template (multipart/form-data)
-          2. A file or existing PDF (application/json)
         content:
           application/json:
             schema:
@@ -530,6 +502,63 @@ paths:
                           fields:
                             Date:
                               value: '2019-12-31T00:00:00.000Z'
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentCreateResponse'
+              examples:
+                Document from Template:
+                  value:
+                    id: D3okRfgHRX7NEhavcACReB
+                    name: Document from Template
+                    status: document.uploaded
+                    date_created: '2024-07-04T19:27:14.927317Z'
+                    date_modified: '2024-07-04T19:27:14.927317Z'
+                    expiration_date: null
+                    version: null
+                    uuid: D3okRfgHRX7NEhavcACReB
+                    links:
+                      - rel: status
+                        href: 'https://api.pandadoc.com/public/v1/documents/D3okRfgHRX7NEhavcACReB'
+                        type: GET
+                    info_message: You need to poll the Document Status method until the status will be changed to document.draft
+        '400':
+          $ref: '#/components/responses/400ValidationError'
+        '401':
+          $ref: '#/components/responses/401'
+        '429':
+          $ref: '#/components/responses/429'
+  /public/v1/documents?upload:
+    post:
+      tags:
+        - Documents
+      summary: Create Document from File Upload
+      description: |
+        ## Create from an upload
+        > See the [Create from PDF](https://developers.pandadoc.com/docs/create-document-from-file) tutorial for the usage specifics and sample PDF files.
+
+        **Note**: A file you upload is not stored in your PandaDoc account, so you have to upload it with every request.
+      operationId: createDocumentFromUpload
+      parameters:
+        - name: editor_ver
+          in: query
+          deprecated: true
+          schema:
+            type: string
+          example: ev2
+          description: Set this parameter as `ev1` if you want to create a document from PDF with Classic Editor when both editors are enabled for the workspace.
+        - name: use_form_field_properties
+          in: query
+          schema:
+            type: string
+          example: 'true'
+          description: 'Set this parameter as `yes` or `1` or `true` (only when upload pdf with form fields) if you want to  respect form fields properties, like `required`.'
+      requestBody:
+        required: true
+        content:
           multipart/form-data:
             schema:
               type: object
@@ -652,7 +681,7 @@ paths:
         - Documents
       summary: Update Document
       operationId: updateDocument
-      description: "> \U0001F6A7 Document status\n> \n> You can only update a document in the Draft status (`document.draft`). \n> \n> After creating a new document, it usually retains a `document.uploaded` status for 3-5 seconds while the document syncs across PandaDoc servers. When the document is available for further API calls, the document moves to the `document.draft` state. Use [Document Status](https://developers.pandadoc.com/reference/document-status) or Webhooks to check document status.\n"
+      description: "Use the PATCH method to update a PandaDoc document.\n\n> \U0001F6A7 Document status\n> \n> You can only update a document in the Draft status (`document.draft`). \n> \n> After creating a new document, it usually retains a `document.uploaded` status for 3-5 seconds while the document syncs across PandaDoc servers. When the document is available for further API calls, the document moves to the `document.draft` state. Use [Document Status](https://developers.pandadoc.com/reference/document-status) or Webhooks to check document status.\n"
       parameters:
         - examples:
             Update document:
@@ -688,7 +717,7 @@ paths:
         - Documents
       summary: Document Status Change
       operationId: changeDocumentStatus
-      description: "PandaDoc has eight document statuses, but you can manually set your document status to only four:\n\n### Document statuses\n\n- Completed - `document.completed` - API code `2`\n- Expired - `document.voided` - code `11`\n- Paid - `document.paid` - code `10`. **Important**: You can only set it if you have a payment app connected.\n- Declined - `document.declined` - code `12`\n\n> \U0001F6A7 Pass a numeric code for the corresponding document status, for example, `2` for `document.completed`.\n\nFind more details in [\\[Editor 2.0\\] Manually change document status](https://support.pandadoc.com/hc/en-us/articles/360041879753--Editor-2-0-Manually-change-document-status) topic.\n\n| Current Status | To Completed: | To Expired: | To Paid: | To Declined: |\n|----------------|---------------|-------------|----------|--------------|\n| Draft          | YES           | NO          | YES      | YES          |\n| Approved       | NO            | NO          | NO       | NO           |\n| Sent           | YES           | YES         | NO       | YES          |\n| Viewed         | YES           | YES         | NO       | YES          |\n| Completed (Auto) | NO          | NO          | NO       | YES          |\n| Waithing for payment | NO      | NO          | YES      | YES          |\n| Paid           | NO            | NO          | NO       | NO           |\n| Expired        | YES           | NO          | YES      | YES          |\n| Declined       | YES           | NO          | YES      | NO           |\n\n> ✅ - from `document.voided` to `document.paid`\n>\n> ❌ - from `document.paid` to `document.voided`\n"
+      description: "PandaDoc has eight document statuses, but you can manually set your document status to only four:\n\n### Document statuses\n\n- Completed - `document.completed` - API code `2`\n- Expired - `document.voided` - code `11`\n- Paid - `document.paid` - code `10`. **Important**: You can only set it if you have a payment app connected.\n- Declined - `document.declined` - code `12`\n\n> \U0001F6A7 Pass a numeric code for the corresponding document status, for example, `2` for `document.completed`.\n\nFind more details in [\\[Editor 2.0\\] Manually change document status](https://support.pandadoc.com/en/articles/9714842-manually-change-document-status) topic.\n\n| Current Status | To Completed: | To Expired: | To Paid: | To Declined: |\n|----------------|---------------|-------------|----------|--------------|\n| Draft          | YES           | NO          | YES      | YES          |\n| Approved       | NO            | NO          | NO       | NO           |\n| Sent           | YES           | YES         | NO       | YES          |\n| Viewed         | YES           | YES         | NO       | YES          |\n| Completed (Auto) | NO          | NO          | NO       | YES          |\n| Waithing for payment | NO      | NO          | YES      | YES          |\n| Paid           | NO            | NO          | NO       | NO           |\n| Expired        | YES           | NO          | YES      | YES          |\n| Declined       | YES           | NO          | YES      | NO           |\n\n> ✅ - from `document.voided` to `document.paid`\n>\n> ❌ - from `document.paid` to `document.voided`\n"
       parameters:
         - examples:
             Mark as Decline:
@@ -732,6 +761,45 @@ paths:
                   status: 10
                   note: Change status to Paid
                   notify_recipients: false
+      responses:
+        '204':
+          description: No content
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '429':
+          $ref: '#/components/responses/429'
+  '/public/v1/documents/{id}/status?upload':
+    patch:
+      tags:
+        - Documents
+      summary: Document Status Change with Upload
+      operationId: changeDocumentStatusWithUpload
+      description: "PandaDoc has eight document statuses, but you can manually set your document status to only four:\n\n### Document statuses\n\n- Completed - `document.completed` - API code `2`\n- Expired - `document.voided` - code `11`\n- Paid - `document.paid` - code `10`. **Important**: You can only set it if you have a payment app connected.\n- Declined - `document.declined` - code `12`\n\n> \U0001F6A7 Pass a numeric code for the corresponding document status, for example, `2` for `document.completed`.\n\nFind more details in [\\[Editor 2.0\\] Manually change document status](https://support.pandadoc.com/en/articles/9714842-manually-change-document-status) topic.\n\n| Current Status | To Completed: | To Expired: | To Paid: | To Declined: |\n|----------------|---------------|-------------|----------|--------------|\n| Draft          | YES           | NO          | YES      | YES          |\n| Approved       | NO            | NO          | NO       | NO           |\n| Sent           | YES           | YES         | NO       | YES          |\n| Viewed         | YES           | YES         | NO       | YES          |\n| Completed (Auto) | NO          | NO          | NO       | YES          |\n| Waithing for payment | NO      | NO          | YES      | YES          |\n| Paid           | NO            | NO          | NO       | NO           |\n| Expired        | YES           | NO          | YES      | YES          |\n| Declined       | YES           | NO          | YES      | NO           |\n\n> ✅ - from `document.voided` to `document.paid`\n>\n> ❌ - from `document.paid` to `document.voided`\n"
+      parameters:
+        - examples:
+            Mark as Decline:
+              value: iGsFiaV2hEEvQdhr2WAkMk
+            Mark as Completed:
+              value: iGsFiaV2hEEvQdhr2WAkMk
+            Mark as Expired:
+              value: iGsFiaV2hEEvQdhr2WAkMk
+            Mark as Paid:
+              value: iGsFiaV2hEEvQdhr2WAkMk
+          name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: Specify document ID.
+      requestBody:
+        required: true
+        content:
           multipart/form-data:
             schema:
               type: object
@@ -741,9 +809,9 @@ paths:
                   format: binary
                   description: Binary attachment file
                 data:
-                  $ref: '#/components/schemas/DocumentStatusChangeRequest'
-                  type: object
-                  description: JSON as a multipart/form-data string.
+                  allOf:
+                    - $ref: '#/components/schemas/DocumentStatusChangeRequest'
+                    - description: JSON as a multipart/form-data string.
       responses:
         '204':
           description: No content
@@ -1059,7 +1127,7 @@ paths:
                         name: Like
                         merge_field: Like
                         title: Checkbox
-                        value: value
+                        value: true
                         assigned_to:
                           id: Fx7CgaVgpGbJBgZ4i5oTx8
                           first_name: John
@@ -1416,7 +1484,7 @@ paths:
     post:
       tags:
         - Documents
-      summary: Create Document Session
+      summary: Create Document Session for Embedded Sign
       operationId: createDocumentLink
       description: "Create a document session for a recipient to view and sign a document. This endpoint returns a session ID that can be used to generate a document link for sharing.\n\n> \U0001F6A7 Document State\n> \n> You can generate an `id` only for documents in the `sent, waiting for payment, paid, and completed` statuses. In order to move a document to the `sent` status without actually sending any emails to recipients, use the [Send Document](/reference/send-document) endpoint with the `silent`: `true` parameter.\n> \n> If a document is in \"waiting_approval\", \"rejected\", or \"declined\" status, you can't use [Share Document](ref:share-document) call. Share Document endpoint will return HTTP 400 with an error.\n\n> \U0001F4D8 Generating a Document Link from the returned `id`\n> \n> The `id` this endpoint returns is a session id. Use this URL format to view a document:\n> \n> ```html\n> https://app.pandadoc.com/s/{id}/\n> ```\n\nWhen generating a document link, first we must request a `session ID` per the session endpoint above. Once the `session ID` is generated, it can then be placed in the URL format above for sharing.\n\n> \U0001F6A7 Lifetime Parameter\n> \n> We see the `lifetime` parameter often overlooked when generating a `session ID`. Make sure that you provide a `lifetime` value in seconds that is great enough for the recipient(s) to complete the shared document. We recommend values under 1 year for security purposes, e.g.: `\"lifetime\": 31535999`\n"
       parameters:
@@ -1507,7 +1575,8 @@ paths:
           in: query
           schema:
             type: boolean
-          description: Set as `true` if you want to receive a zip file with all documents in separate when document transaction contains more than 1.
+            default: false
+          description: Download document bundle as a zip-archive of separate PDFs (1 file per section).
       responses:
         '200':
           description: OK
@@ -1532,8 +1601,8 @@ paths:
     get:
       tags:
         - Documents
-      summary: Download Document Protected
-      description: "> \U0001F6A7 Production key only\n> \n> This endpoint only works with a Production key. You'll get a 401 Unauthorized error when trying to use a Sandbox key.\n\nDownload a signed PDF of a completed document\n"
+      summary: Download Completed Document
+      description: "Download a completed document as a verifiable PDF (Download Protected Document)\n> \U0001F6A7 Production key only\n> \n> This endpoint only works with a Production key. You'll get a 401 Unauthorized error when trying to use a Sandbox key.\n\nDownload a signed PDF of a completed document\n"
       operationId: downloadProtectedDocument
       parameters:
         - name: id
@@ -1547,7 +1616,8 @@ paths:
           in: query
           schema:
             type: boolean
-          description: Set as `true` if you want to receive a zip file with all documents in separate when document transaction contains more than 1.
+            default: false
+          description: Download document bundle as a zip-archive of separate PDFs (1 file per section).
       responses:
         '200':
           description: OK
@@ -2383,8 +2453,9 @@ paths:
                   format: binary
                   description: Binary PDF File
                 data:
-                  $ref: '#/paths/~1public~1v1~1content-library-items/post/requestBody/content/application~1json/schema'
-                  description: JSON as a multipart/form-data string.
+                  allOf:
+                    - $ref: '#/paths/~1public~1v1~1content-library-items/post/requestBody/content/application~1json/schema'
+                    - description: JSON as a multipart/form-data string.
       responses:
         '201':
           description: OK
@@ -2643,8 +2714,9 @@ paths:
                   format: binary
                   description: Binary PDF File
                 data:
-                  $ref: '#/components/schemas/CreateTemplateRequest'
-                  description: JSON as a multipart/form-data string.
+                  allOf:
+                    - $ref: '#/components/schemas/CreateTemplateRequest'
+                    - description: JSON as a multipart/form-data string.
       responses:
         '201':
           description: OK
@@ -4991,7 +5063,7 @@ components:
                 example: '2'
     DocumentCreateByTemplateRequest:
       allOf:
-        - $ref: '#/components/schemas/DocumentCreateRequest/allOf/0'
+        - $ref: '#/components/schemas/DocumentCreateByPdfRequest/allOf/0'
         - type: object
           title: DocumentCreateByTemplateRequest
           properties:
@@ -5103,33 +5175,6 @@ components:
             - recipients
     DocumentCreateByPdfRequest:
       allOf:
-        - $ref: '#/components/schemas/DocumentCreateRequest/allOf/0'
-        - type: object
-          title: DocumentCreateByPDFRequest
-          properties:
-            url:
-              type: string
-              example: 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
-              description: Use a URL to specify the PDF. We support only URLs starting with https.
-            parse_form_fields:
-              type: boolean
-              description: Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags.
-            fields:
-              type: object
-              description: |
-                If you are creating a document from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are creating a document from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: "value": "".
-              example:
-                Like:
-                  value: true
-                Delivery:
-                  value: Same Day Delivery
-                Date:
-                  value: '2019-12-31T00:00:00.000Z'
-          required:
-            - url
-            - recipients
-    DocumentCreateRequest:
-      allOf:
         - type: object
           properties:
             name:
@@ -5191,138 +5236,180 @@ components:
                 - test_document
                 - created_from_source
         - type: object
-          title: DocumentCreateRequest
+          title: DocumentCreateByPDFRequest
           properties:
-            detect_title_variables:
-              type: boolean
-              description: Set this parameter as true if you want to detect title variables in the document.
-            template_uuid:
-              type: string
-              description: 'ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.'
-              example: hryJY9mqYZHjQCYQuSjRQg
-            fields:
-              type: object
-              additionalProperties:
-                type: object
-                properties:
-                  value:
-                    type: string
-                    example: some value
-                  role:
-                    type: string
-                  required:
-                    type: boolean
-                required:
-                  - value
-                  - role
-              nullable: true
-              description: You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled. The key of the object is the field name.
-              example:
-                Like:
-                  value: true
-                  role: Client
-                Delivery:
-                  value: Same Dav Delivery
-                  role: Sender
-                Favorite.Color:
-                  value: PandaDoc green
-                  role: Client
-                Date:
-                  value: '2019-12-31T00:00:00.000Z'
-                  role: Client
-            images:
-              type: array
-              description: You can pass a list of images to image blocks (one image in one block) for replacement.
-              items:
-                type: object
-                nullable: true
-                properties:
-                  urls:
-                    type: array
-                    items:
-                      type: string
-                    example:
-                      - 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
-                  name:
-                    type: string
-                    example: Image 1
-                required:
-                  - urls
-                  - name
-            pricing_tables:
-              type: array
-              description: 'Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.'
-              items:
-                $ref: '#/components/schemas/PricingTableRequest'
-            tables:
-              type: array
-              description: 'Information to construct or populate a table can be passed when creating a document. Keep in mind that this is an array, so multiple table objects can be passed to a document.'
-              items:
-                $ref: '#/components/schemas/TableRequest'
-            content_placeholders:
-              type: array
-              description: 'You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.'
-              items:
-                type: object
-                properties:
-                  block_id:
-                    type: string
-                    description: Content placeholder block id
-                    example: Content Placeholder 1
-                  content_library_items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: Content library item id
-                          example: hryJY9mqYZHjQCYQuSjRQg
-                        pricing_tables:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/PricingTableRequest'
-                        fields:
-                          type: object
-                        recipients:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              email:
-                                type: string
-                                nullable: true
-                                example: josh@example.com
-                              phone:
-                                type: string
-                                nullable: true
-                                example: '+14842634627'
-                              delivery_methods:
-                                $ref: '#/components/schemas/RecipientDeliveryMethods'
-                              first_name:
-                                type: string
-                                example: Josh
-                              last_name:
-                                type: string
-                                example: Ron
-                              role:
-                                type: string
-                                example: user
-                              signing_order:
-                                type: integer
-                                example: 1
-                                nullable: true
-                              redirect:
-                                $ref: '#/components/schemas/RecipientRedirect'
-                      required:
-                        - id
             url:
               type: string
               example: 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
               description: Use a URL to specify the PDF. We support only URLs starting with https.
             parse_form_fields:
               type: boolean
-              description: Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags.
+              description: Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags.
+            fields:
+              type: object
+              description: |
+                If you are creating a document from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are creating a document from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: "value": "".
+              example:
+                Like:
+                  value: true
+                Delivery:
+                  value: Same Day Delivery
+                Date:
+                  value: '2019-12-31T00:00:00.000Z'
+          required:
+            - url
+            - recipients
+    DocumentCreateRequest:
+      oneOf:
+        - allOf:
+            - type: object
+              title: DocumentCreateRequestFromPandaDocTemplate
+              description: Use a PandaDoc template to create a document.
+              properties:
+                template_uuid:
+                  type: string
+                  description: 'ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.'
+                  example: hryJY9mqYZHjQCYQuSjRQg
+              required:
+                - template_uuid
+            - $ref: '#/components/schemas/DocumentCreateByPdfRequest/allOf/0'
+            - type: object
+              properties:
+                detect_title_variables:
+                  type: boolean
+                  description: Set this parameter as true if you want to detect title variables in the document.
+                fields:
+                  type: object
+                  additionalProperties:
+                    type: object
+                    properties:
+                      value:
+                        type: string
+                        example: some value
+                      role:
+                        type: string
+                      required:
+                        type: boolean
+                    required:
+                      - value
+                      - role
+                  nullable: true
+                  description: You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled. The key of the object is the field name.
+                  example:
+                    Like:
+                      value: 'true'
+                      role: Client
+                    Delivery:
+                      value: Same Dav Delivery
+                      role: Sender
+                    Favorite.Color:
+                      value: PandaDoc green
+                      role: Client
+                    Date:
+                      value: '2019-12-31T00:00:00.000Z'
+                      role: Client
+                images:
+                  type: array
+                  description: You can pass a list of images to image blocks (one image in one block) for replacement.
+                  items:
+                    type: object
+                    nullable: true
+                    properties:
+                      urls:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                          - 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
+                      name:
+                        type: string
+                        example: Image 1
+                    required:
+                      - urls
+                      - name
+                pricing_tables:
+                  type: array
+                  description: 'Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.'
+                  items:
+                    $ref: '#/components/schemas/PricingTableRequest'
+                tables:
+                  type: array
+                  description: 'Information to construct or populate a table can be passed when creating a document. Keep in mind that this is an array, so multiple table objects can be passed to a document.'
+                  items:
+                    $ref: '#/components/schemas/TableRequest'
+                content_placeholders:
+                  type: array
+                  description: 'You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.'
+                  items:
+                    type: object
+                    properties:
+                      block_id:
+                        type: string
+                        description: Content placeholder block id
+                        example: Content Placeholder 1
+                      content_library_items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: Content library item id
+                              example: hryJY9mqYZHjQCYQuSjRQg
+                            pricing_tables:
+                              type: array
+                              items:
+                                $ref: '#/components/schemas/PricingTableRequest'
+                            fields:
+                              type: object
+                            recipients:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  email:
+                                    type: string
+                                    nullable: true
+                                    example: josh@example.com
+                                  phone:
+                                    type: string
+                                    nullable: true
+                                    example: '+14842634627'
+                                  delivery_methods:
+                                    $ref: '#/components/schemas/RecipientDeliveryMethods'
+                                  first_name:
+                                    type: string
+                                    example: Josh
+                                  last_name:
+                                    type: string
+                                    example: Ron
+                                  role:
+                                    type: string
+                                    example: user
+                                  signing_order:
+                                    type: integer
+                                    example: 1
+                                    nullable: true
+                                  redirect:
+                                    $ref: '#/components/schemas/RecipientRedirect'
+                          required:
+                            - id
+                parse_form_fields:
+                  type: boolean
+                  description: Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags.
+        - allOf:
+            - type: object
+              title: DocumentCreateRequestFromFileByUrl
+              description: Use a URL to create a document.
+              properties:
+                url:
+                  type: string
+                  example: 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
+                  description: Use a URL to specify the PDF. We support only URLs starting with https.
+              required:
+                - url
+            - $ref: '#/components/schemas/DocumentCreateByPdfRequest/allOf/0'
+            - $ref: '#/components/schemas/DocumentCreateRequest/oneOf/0/allOf/2'
     DocumentCreateResponse:
       type: object
       properties:
@@ -5474,6 +5561,7 @@ components:
             - 11
             - 12
           example: 12
+          description: Number code for the target document status. See notes for the codes corresponding to each status.
         note:
           type: string
           description: Provide “private notes” regarding the manual status change.
@@ -5600,17 +5688,17 @@ components:
                 roles: []
                 type: recipient_group
                 members:
-                  id: 4b011d86-286b-4f86-b697-90a6ad3f1489
-                  email: john@example.com
-                  first_name: John
-                  last_name: Doe
+                  - id: 4b011d86-286b-4f86-b697-90a6ad3f1489
+                    email: john@example.com
+                    first_name: John
+                    last_name: Doe
               field_id: text1
               type: text
             - uuid: M4755SJuoyz5Jzsw4WXTDb
               name: Like
               merge_field: Like
               title: Checkbox
-              value: value
+              value: true
               assigned_to:
                 id: Fx7CgaVgpGbJBgZ4i5oTx8
                 first_name: John
@@ -5715,7 +5803,7 @@ components:
           example: Please check this test API document from PandaDoc
         silent:
           type: boolean
-          description: 'Disables sent, viewed, comment, and completed email notifications for document recipients and the document sender. By default, notifications emails are sent for specific actions. If set as true, it won''t affect the "Approve document" email notification sent to the Approver.'
+          description: 'If set true, disables sent, viewed, comment and completed email notifications for document recipients and the document sender. Also disables automatic reminders (manual reminders still possible). Doesn''t affect "Approve document" email notification sent to the Approver. We recommend always including the silent parameter to facilitate seamless document email management, as this setting is preserved throughout the entire document lifecycle.'
         sender:
           type: object
           description: You can set a sender of a document as an `email` or `membership_id`
@@ -5726,23 +5814,23 @@ components:
             email: john.doe@example.com
         forwarding_settings:
           type: object
-          description: Forwarding settings
+          description: Set settings for Document and Signature forwarding.
           properties:
             forwarding_allowed:
               type: boolean
-              description: Allow forwarding
+              description: Your recipient will be able/not able to forward the document to another email address.
               example: true
             forwarding_with_reassigning_allowed:
               type: boolean
-              description: Allow forwarding with reassigning
+              description: Your recipient will be able/not able to forward the right to fill out all fields (including signature) assigned to them to another email address.
               example: true
         selected_approvers:
           type: object
-          description: Configuration for selected approvers
+          description: Configuration for selected approvers.
           properties:
             steps:
               type: array
-              description: Approval steps
+              description: Approval steps.
               items:
                 type: object
                 required:
@@ -5751,11 +5839,11 @@ components:
                 properties:
                   id:
                     type: string
-                    description: Step ID
+                    description: Step ID.
                     example: LzWmancTxrgfTMpsJP9Eqd
                   group:
                     type: object
-                    description: Group information
+                    description: Group information.
                     required:
                       - id
                       - type
@@ -5763,15 +5851,15 @@ components:
                     properties:
                       id:
                         type: string
-                        description: Group ID
+                        description: Group ID.
                         example: op9MA75HygJHiV4aeVHXCH
                       type:
                         type: string
-                        description: Group type
+                        description: Group type.
                         example: selectable
                       assignees:
                         type: array
-                        description: Assignees for the group
+                        description: Assignees for the group.
                         required:
                           - user
                           - is_selected
@@ -5780,11 +5868,11 @@ components:
                           properties:
                             user:
                               type: string
-                              description: User ID
+                              description: User ID.
                               example: tpBLrk3vJoLggypMSRt92i
                             is_selected:
                               type: boolean
-                              description: Whether the user is selected
+                              description: Whether the user is selected.
                               example: true
     DocumentSendResponse:
       type: object
@@ -8521,7 +8609,7 @@ components:
               description: You can pass a list of fields/values to pre-fill fields used in a template. Note that the Signature field can't be pre-filled.
               example:
                 Like:
-                  value: true
+                  value: 'true'
                 Delivery:
                   value: Same Day Delivery
                 Date:
@@ -8640,7 +8728,7 @@ components:
               description: You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled.
               example:
                 Like:
-                  value: true
+                  value: 'true'
                 Delivery:
                   value: Same Dav Delivery
                 Favorite.Color:
