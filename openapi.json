@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "6.7.0"
+    "version": "6.8.0"
   },
   "servers": [
     {
@@ -6603,597 +6603,446 @@
         }
       },
       "DocumentCreateByTemplateRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name the document you are creating. If name is not passed, the template name is used.",
-            "example": "API Sample Document from PandaDoc Template"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DocumentCreateRequest/allOf/0"
           },
-          "detect_title_variables": {
-            "type": "boolean",
-            "description": "Set this parameter as true if you want to detect title variables in the document.",
-            "example": true
-          },
-          "template_uuid": {
-            "type": "string",
-            "description": "The ID of a template you want to use. You can copy it from an in app template url such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
-            "example": "hryJY9mqYZHjQCYQuSjRQg"
-          },
-          "folder_uuid": {
-            "type": "string",
-            "example": "QMDSzwabfFzTgjW4kUijqQ"
-          },
-          "recipients": {
-            "type": "array",
-            "description": "The list of recipients you're sending the document to. Every object must contain the email parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter passed, a person is assigned all fields matching their corresponding role. If not passed, a person will receive a read-only link to view the document. If the `first_name` and `last_name` not passed the system 1. creates a new contact, if none exists with the given `email`; or 2. gets the existing contact with the given `email` that already exists.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "josh@example.com"
-                },
-                "phone": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "+14842634627"
-                },
-                "delivery_methods": {
-                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                },
-                "first_name": {
-                  "type": "string",
-                  "example": "Josh"
-                },
-                "last_name": {
-                  "type": "string",
-                  "example": "Ron"
-                },
-                "role": {
-                  "type": "string",
-                  "example": "user"
-                },
-                "signing_order": {
-                  "type": "integer",
-                  "example": 1,
-                  "nullable": true
-                },
-                "redirect": {
-                  "$ref": "#/components/schemas/RecipientRedirect"
-                }
-              }
-            }
-          },
-          "tokens": {
-            "type": "array",
-            "description": "You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Favorite.Pet"
-                },
-                "value": {
-                  "type": "string",
-                  "example": "Panda"
-                }
-              },
-              "required": [
-                "name",
-                "value"
-              ]
-            }
-          },
-          "fields": {
+          {
             "type": "object",
-            "description": "You can pass a list of fields/values to pre-fill fields used in a template. Note that the Signature field can't be pre-filled.",
-            "example": {
-              "Like": {
-                "value": true
+            "title": "DocumentCreateByTemplateRequest",
+            "properties": {
+              "detect_title_variables": {
+                "type": "boolean",
+                "description": "Set this parameter as true if you want to detect title variables in the document.",
+                "example": true
               },
-              "Delivery": {
-                "value": "Same Day Delivery"
+              "template_uuid": {
+                "type": "string",
+                "description": "The ID of a template you want to use. You can copy it from an in app template url such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
+                "example": "hryJY9mqYZHjQCYQuSjRQg"
               },
-              "Date": {
-                "value": "2019-12-31T00:00:00.000Z"
-              }
-            }
-          },
-          "metadata": {
-            "type": "object",
-            "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id.",
-            "example": {
-              "my_favorite_pet": "Cat"
-            }
-          },
-          "tags": {
-            "type": "array",
-            "description": "Mark your document with one or several tags.",
-            "items": {
-              "type": "string"
-            },
-            "example": [
-              "created_via_api",
-              "test_document"
-            ]
-          },
-          "images": {
-            "type": "array",
-            "description": "You can pass a list of images to image blocks (one image in one block) for replacement.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "urls": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
+              "fields": {
+                "type": "object",
+                "description": "You can pass a list of fields/values to pre-fill fields used in a template. Note that the Signature field can't be pre-filled.",
+                "example": {
+                  "Like": {
+                    "value": true
                   },
-                  "example": [
-                    "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
-                  ]
-                },
-                "name": {
-                  "type": "string",
-                  "example": "Image 1"
+                  "Delivery": {
+                    "value": "Same Day Delivery"
+                  },
+                  "Date": {
+                    "value": "2019-12-31T00:00:00.000Z"
+                  }
                 }
               },
-              "required": [
-                "urls",
-                "name"
-              ]
-            }
-          },
-          "pricing_tables": {
-            "type": "array",
-            "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document. Make sure that \"Automatically add products to this table\" is enabled in the PandaDoc template pricing tables you wish to populate via API.",
-            "items": {
-              "$ref": "#/components/schemas/PricingTableRequest"
-            }
-          },
-          "content_placeholders": {
-            "type": "array",
-            "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "content_library_items": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "example": "9d9k7VtSQ5KCXfsUQv4GxE"
+              "images": {
+                "type": "array",
+                "description": "You can pass a list of images to image blocks (one image in one block) for replacement.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "urls": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
                       },
-                      "fields": {
-                        "type": "object"
-                      },
-                      "pricing_tables": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/PricingTableRequest"
-                        }
-                      },
-                      "recipients": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "email": {
-                              "type": "string",
-                              "nullable": true,
-                              "example": "josh@example.com"
-                            },
-                            "phone": {
-                              "type": "string",
-                              "nullable": true,
-                              "example": "+14842634627"
-                            },
-                            "delivery_methods": {
-                              "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                            },
-                            "first_name": {
-                              "type": "string",
-                              "example": "Josh"
-                            },
-                            "last_name": {
-                              "type": "string",
-                              "example": "Ron"
-                            },
-                            "role": {
-                              "type": "string",
-                              "example": "user"
-                            },
-                            "signing_order": {
-                              "type": "integer",
-                              "example": 1,
-                              "nullable": true
-                            },
-                            "redirect": {
-                              "$ref": "#/components/schemas/RecipientRedirect"
+                      "example": [
+                        "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
+                      ]
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Image 1"
+                    }
+                  },
+                  "required": [
+                    "urls",
+                    "name"
+                  ]
+                }
+              },
+              "pricing_tables": {
+                "type": "array",
+                "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document. Make sure that \"Automatically add products to this table\" is enabled in the PandaDoc template pricing tables you wish to populate via API.",
+                "items": {
+                  "$ref": "#/components/schemas/PricingTableRequest"
+                }
+              },
+              "content_placeholders": {
+                "type": "array",
+                "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "content_library_items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "9d9k7VtSQ5KCXfsUQv4GxE"
+                          },
+                          "fields": {
+                            "type": "object"
+                          },
+                          "pricing_tables": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/PricingTableRequest"
+                            }
+                          },
+                          "recipients": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "email": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "example": "josh@example.com"
+                                },
+                                "phone": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "example": "+14842634627"
+                                },
+                                "delivery_methods": {
+                                  "$ref": "#/components/schemas/RecipientDeliveryMethods"
+                                },
+                                "first_name": {
+                                  "type": "string",
+                                  "example": "Josh"
+                                },
+                                "last_name": {
+                                  "type": "string",
+                                  "example": "Ron"
+                                },
+                                "role": {
+                                  "type": "string",
+                                  "example": "user"
+                                },
+                                "signing_order": {
+                                  "type": "integer",
+                                  "example": 1,
+                                  "nullable": true
+                                },
+                                "redirect": {
+                                  "$ref": "#/components/schemas/RecipientRedirect"
+                                }
+                              }
                             }
                           }
-                        }
+                        },
+                        "required": [
+                          "id"
+                        ]
                       }
                     },
-                    "required": [
-                      "id"
-                    ]
-                  }
-                },
-                "block_id": {
-                  "type": "string",
-                  "example": "Content Placeholder 1"
+                    "block_id": {
+                      "type": "string",
+                      "example": "Content Placeholder 1"
+                    }
+                  },
+                  "required": [
+                    "block_id"
+                  ]
                 }
-              },
-              "required": [
-                "block_id"
-              ]
-            }
+              }
+            },
+            "required": [
+              "template_uuid",
+              "recipients"
+            ]
           }
-        },
-        "required": [
-          "template_uuid",
-          "recipients"
         ]
       },
       "DocumentCreateByPdfRequest": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
-            "description": "Use a URL to specify the PDF. We support only URLs starting with https."
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DocumentCreateRequest/allOf/0"
           },
-          "recipients": {
-            "type": "array",
-            "description": "The list of recipients you're sending the document to. Every object must contain the email parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter passed, a person is assigned all fields matching their corresponding role. If not passed, a person will receive a read-only link to view the document. If the `first_name` and `last_name` not passed the system 1. creates a new contact, if none exists with the given `email`; or 2. gets the existing contact with the given `email` that already exists.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "josh@example.com"
-                },
-                "phone": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "+14842634627"
-                },
-                "delivery_methods": {
-                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                },
-                "first_name": {
-                  "type": "string",
-                  "example": "Josh"
-                },
-                "last_name": {
-                  "type": "string",
-                  "example": "Ron"
-                },
-                "role": {
-                  "type": "string",
-                  "example": "user"
-                },
-                "signing_order": {
-                  "type": "integer",
-                  "example": 1,
-                  "nullable": true
-                },
-                "redirect": {
-                  "$ref": "#/components/schemas/RecipientRedirect"
-                }
-              }
-            }
-          },
-          "parse_form_fields": {
-            "type": "boolean",
-            "description": "Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags."
-          },
-          "name": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "description": "Mark your document with one or several tags.",
-            "items": {
-              "type": "string"
-            },
-            "example": [
-              "pdf_document",
-              "test_document"
-            ]
-          },
-          "fields": {
+          {
             "type": "object",
-            "description": "If you are creating a document from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are creating a document from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: \"value\": \"\".\n",
-            "example": {
-              "Like": {
-                "value": true
+            "title": "DocumentCreateByPDFRequest",
+            "properties": {
+              "url": {
+                "type": "string",
+                "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
+                "description": "Use a URL to specify the PDF. We support only URLs starting with https."
               },
-              "Delivery": {
-                "value": "Same Day Delivery"
+              "parse_form_fields": {
+                "type": "boolean",
+                "description": "Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags."
               },
-              "Date": {
-                "value": "2019-12-31T00:00:00.000Z"
-              }
-            }
-          },
-          "metadata": {
-            "type": "object",
-            "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id.",
-            "example": {
-              "my_favorite_pet": "Cat"
-            }
-          }
-        },
-        "required": [
-          "url",
-          "recipients"
-        ]
-      },
-      "DocumentCreateRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name the document you are creating.",
-            "example": "API Sample Document from PandaDoc Template"
-          },
-          "detect_title_variables": {
-            "type": "boolean",
-            "description": "Set this parameter as true if you want to detect title variables in the document."
-          },
-          "template_uuid": {
-            "type": "string",
-            "description": "ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
-            "example": "hryJY9mqYZHjQCYQuSjRQg"
-          },
-          "folder_uuid": {
-            "type": "string",
-            "example": "QMDSzwabfFzTgjW4kUijqQ",
-            "description": "ID of the folder where the created document should be stored."
-          },
-          "owner": {
-            "type": "object",
-            "description": "You can set an owner of a document as an `email` or `membership_id`",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "example": {
-              "membership_id": "QMDSzwabfFzTgjW6KijHyu",
-              "email": "john.doe@example.com"
-            }
-          },
-          "recipients": {
-            "type": "array",
-            "description": "The list of recipients you're sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "josh@example.com"
-                },
-                "phone": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "+14842634627"
-                },
-                "delivery_methods": {
-                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                },
-                "first_name": {
-                  "type": "string",
-                  "example": "Josh"
-                },
-                "last_name": {
-                  "type": "string",
-                  "example": "Ron"
-                },
-                "role": {
-                  "type": "string",
-                  "example": "user"
-                },
-                "signing_order": {
-                  "type": "integer",
-                  "example": 1
-                },
-                "redirect": {
-                  "$ref": "#/components/schemas/RecipientRedirect"
-                }
-              }
-            }
-          },
-          "tokens": {
-            "type": "array",
-            "description": "You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Favorite.Pet"
-                },
-                "value": {
-                  "type": "string",
-                  "example": "Panda"
-                }
-              },
-              "required": [
-                "name",
-                "value"
-              ]
-            }
-          },
-          "fields": {
-            "type": "object",
-            "nullable": true,
-            "description": "You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled.",
-            "example": {
-              "Like": {
-                "value": true
-              },
-              "Delivery": {
-                "value": "Same Dav Delivery"
-              },
-              "Favorite.Color": {
-                "value": "PandaDoc green"
-              },
-              "Date": {
-                "value": "2019-12-31T00:00:00.000Z"
-              }
-            }
-          },
-          "metadata": {
-            "type": "object",
-            "nullable": true,
-            "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id.",
-            "example": {
-              "opp_id": "1234567",
-              "my_favorite_pet": "Panda"
-            }
-          },
-          "tags": {
-            "type": "array",
-            "description": "Mark your document with one or several tags.",
-            "items": {
-              "type": "string"
-            },
-            "example": [
-              "created_via_api",
-              "test_document"
-            ]
-          },
-          "images": {
-            "type": "array",
-            "description": "You can pass a list of images to image blocks (one image in one block) for replacement.",
-            "items": {
-              "type": "object",
-              "nullable": true,
-              "properties": {
-                "urls": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
+              "fields": {
+                "type": "object",
+                "description": "If you are creating a document from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are creating a document from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: \"value\": \"\".\n",
+                "example": {
+                  "Like": {
+                    "value": true
                   },
-                  "example": [
-                    "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
-                  ]
-                },
-                "name": {
-                  "type": "string",
-                  "example": "Image 1"
-                }
-              },
-              "required": [
-                "urls",
-                "name"
-              ]
-            }
-          },
-          "pricing_tables": {
-            "type": "array",
-            "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
-            "items": {
-              "$ref": "#/components/schemas/PricingTableRequest"
-            }
-          },
-          "content_placeholders": {
-            "type": "array",
-            "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "block_id": {
-                  "type": "string",
-                  "description": "Content placeholder block id",
-                  "example": "Content Placeholder 1"
-                },
-                "content_library_items": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "Content library item id",
-                        "example": "hryJY9mqYZHjQCYQuSjRQg"
-                      },
-                      "pricing_tables": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/PricingTableRequest"
-                        }
-                      },
-                      "fields": {
-                        "type": "object"
-                      },
-                      "recipients": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "email": {
-                              "type": "string",
-                              "nullable": true,
-                              "example": "josh@example.com"
-                            },
-                            "phone": {
-                              "type": "string",
-                              "nullable": true,
-                              "example": "+14842634627"
-                            },
-                            "delivery_methods": {
-                              "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                            },
-                            "first_name": {
-                              "type": "string",
-                              "example": "Josh"
-                            },
-                            "last_name": {
-                              "type": "string",
-                              "example": "Ron"
-                            },
-                            "role": {
-                              "type": "string",
-                              "example": "user"
-                            },
-                            "signing_order": {
-                              "type": "integer",
-                              "example": 1,
-                              "nullable": true
-                            },
-                            "redirect": {
-                              "$ref": "#/components/schemas/RecipientRedirect"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "required": [
-                      "id"
-                    ]
+                  "Delivery": {
+                    "value": "Same Day Delivery"
+                  },
+                  "Date": {
+                    "value": "2019-12-31T00:00:00.000Z"
                   }
                 }
               }
+            },
+            "required": [
+              "url",
+              "recipients"
+            ]
+          }
+        ]
+      },
+      "DocumentCreateRequest": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name the document you are creating.",
+                "example": "API Sample Document from PandaDoc Template"
+              },
+              "folder_uuid": {
+                "type": "string",
+                "example": "QMDSzwabfFzTgjW4kUijqQ",
+                "description": "ID of the folder where the created document should be stored."
+              },
+              "owner": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "john.doe@example.com"
+                  },
+                  "membership_id": {
+                    "type": "string",
+                    "example": "QMDSzwabfFzTgjW6KijHyu"
+                  }
+                },
+                "description": "You can set an owner of a document as an `email` or `membership_id`. Only one of the properties can be passed.",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "example": {
+                  "membership_id": "QMDSzwabfFzTgjW6KijHyu"
+                }
+              },
+              "recipients": {
+                "type": "array",
+                "description": "The list of recipients you're sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.",
+                "items": {
+                  "$ref": "#/components/schemas/CreateDocumentActor"
+                }
+              },
+              "tokens": {
+                "type": "array",
+                "description": "You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Favorite.Pet"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "Panda"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "value"
+                  ]
+                }
+              },
+              "metadata": {
+                "type": "object",
+                "nullable": true,
+                "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id.",
+                "example": {
+                  "opp_id": "1234567",
+                  "my_favorite_pet": "Panda"
+                }
+              },
+              "tags": {
+                "type": "array",
+                "description": "Mark your document with one or several tags.",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "created_via_api",
+                  "test_document",
+                  "created_from_source"
+                ]
+              }
             }
           },
-          "url": {
-            "type": "string",
-            "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
-            "description": "Use a URL to specify the PDF. We support only URLs starting with https."
-          },
-          "parse_form_fields": {
-            "type": "boolean",
-            "description": "Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags."
+          {
+            "type": "object",
+            "title": "DocumentCreateRequest",
+            "properties": {
+              "detect_title_variables": {
+                "type": "boolean",
+                "description": "Set this parameter as true if you want to detect title variables in the document."
+              },
+              "template_uuid": {
+                "type": "string",
+                "description": "ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
+                "example": "hryJY9mqYZHjQCYQuSjRQg"
+              },
+              "fields": {
+                "type": "object",
+                "nullable": true,
+                "description": "You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled.",
+                "example": {
+                  "Like": {
+                    "value": true
+                  },
+                  "Delivery": {
+                    "value": "Same Dav Delivery"
+                  },
+                  "Favorite.Color": {
+                    "value": "PandaDoc green"
+                  },
+                  "Date": {
+                    "value": "2019-12-31T00:00:00.000Z"
+                  }
+                }
+              },
+              "images": {
+                "type": "array",
+                "description": "You can pass a list of images to image blocks (one image in one block) for replacement.",
+                "items": {
+                  "type": "object",
+                  "nullable": true,
+                  "properties": {
+                    "urls": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
+                      ]
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Image 1"
+                    }
+                  },
+                  "required": [
+                    "urls",
+                    "name"
+                  ]
+                }
+              },
+              "pricing_tables": {
+                "type": "array",
+                "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
+                "items": {
+                  "$ref": "#/components/schemas/PricingTableRequest"
+                }
+              },
+              "content_placeholders": {
+                "type": "array",
+                "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "block_id": {
+                      "type": "string",
+                      "description": "Content placeholder block id",
+                      "example": "Content Placeholder 1"
+                    },
+                    "content_library_items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Content library item id",
+                            "example": "hryJY9mqYZHjQCYQuSjRQg"
+                          },
+                          "pricing_tables": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/PricingTableRequest"
+                            }
+                          },
+                          "fields": {
+                            "type": "object"
+                          },
+                          "recipients": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "email": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "example": "josh@example.com"
+                                },
+                                "phone": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "example": "+14842634627"
+                                },
+                                "delivery_methods": {
+                                  "$ref": "#/components/schemas/RecipientDeliveryMethods"
+                                },
+                                "first_name": {
+                                  "type": "string",
+                                  "example": "Josh"
+                                },
+                                "last_name": {
+                                  "type": "string",
+                                  "example": "Ron"
+                                },
+                                "role": {
+                                  "type": "string",
+                                  "example": "user"
+                                },
+                                "signing_order": {
+                                  "type": "integer",
+                                  "example": 1,
+                                  "nullable": true
+                                },
+                                "redirect": {
+                                  "$ref": "#/components/schemas/RecipientRedirect"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "required": [
+                          "id"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "url": {
+                "type": "string",
+                "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
+                "description": "Use a URL to specify the PDF. We support only URLs starting with https."
+              },
+              "parse_form_fields": {
+                "type": "boolean",
+                "description": "Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags."
+              }
+            }
           }
-        }
+        ]
       },
       "DocumentCreateResponse": {
         "type": "object",
@@ -7309,37 +7158,19 @@
             "type": "array",
             "description": "The list of recipients you're sending the document to. The ID or email are required. If the ID is passed, an existing recipient will be updated. If the email is passed, a new recipient will be added to CC.",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/UpdateDocumentRecipient"
                 },
-                "email": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "josh@example.com"
-                },
-                "phone": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "+14842634627"
-                },
-                "first_name": {
-                  "type": "string",
-                  "example": "Josh"
-                },
-                "last_name": {
-                  "type": "string",
-                  "example": "Ron"
-                },
-                "delivery_methods": {
-                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                },
-                "redirect": {
-                  "$ref": "#/components/schemas/RecipientRedirect"
-                },
-                "verification_settings": {
-                  "$ref": "#/components/schemas/RecipientVerificationSettings"
+                {
+                  "$ref": "#/components/schemas/UpdateDocumentRecipientGroup"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "recipient": "#/components/schemas/UpdateDocumentRecipient",
+                  "recipient_group": "#/components/schemas/UpdateDocumentRecipientGroup"
                 }
               }
             }
@@ -7579,14 +7410,18 @@
                 "value": "value",
                 "assigned_to": {
                   "id": "Fx7CgaVgpGbJBgZ4i5oTx8",
-                  "first_name": "John",
-                  "last_name": "Roe",
-                  "email": "john@example.com",
+                  "name": "Group 2",
+                  "email": "group2@example.com",
                   "recipient_type": "signer",
                   "has_completed": false,
-                  "role": "",
                   "roles": [],
-                  "type": "recipient"
+                  "type": "recipient_group",
+                  "members": {
+                    "id": "4b011d86-286b-4f86-b697-90a6ad3f1489",
+                    "email": "john@example.com",
+                    "first_name": "John",
+                    "last_name": "Doe"
+                  }
                 },
                 "field_id": "text1",
                 "type": "text"
@@ -7637,73 +7472,20 @@
             "type": "array",
             "items": {
               "type": "object",
-              "properties": {
-                "recipient_type": {
-                  "type": "string",
-                  "example": "CC"
+              "description": "Actor",
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/DocumentDetailsRecipient"
                 },
-                "role": {
-                  "type": "string",
-                  "deprecated": true,
-                  "example": ""
-                },
-                "roles": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "example": [
-                    "user"
-                  ]
-                },
-                "last_name": {
-                  "type": "string",
-                  "example": "Dow"
-                },
-                "signing_order": {},
-                "id": {
-                  "type": "string",
-                  "example": "7kqXgjFejB2toXxjcC5jfZ"
-                },
-                "contact_id": {
-                  "type": "string",
-                  "example": "7kqXgjFejB2toXxjcC5jfZ"
-                },
-                "first_name": {
-                  "type": "string",
-                  "example": "Jhon"
-                },
-                "email": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "test@test.com"
-                },
-                "phone": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "+14842634627"
-                },
-                "delivery_methods": {
-                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                },
-                "has_completed": {
-                  "type": "boolean",
-                  "example": true
-                },
-                "shared_link": {
-                  "type": "string",
-                  "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
-                },
-                "signature_date": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "2021-10-23T21:07:04.147345Z"
-                },
-                "verification_settings": {
-                  "$ref": "#/components/schemas/RecipientVerificationSettings"
-                },
-                "redirect": {
-                  "$ref": "#/components/schemas/RecipientRedirect"
+                {
+                  "$ref": "#/components/schemas/DocumentDetailsRecipientGroup"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "recipient": "#/components/schemas/DocumentDetailsRecipient",
+                  "recipient_group": "#/components/schemas/DocumentDetailsRecipientGroup"
                 }
               }
             }
@@ -7964,7 +7746,7 @@
                   "example": "+14842634627"
                 },
                 "delivery_methods": {
-                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
+                  "$ref": "#/components/schemas/RecipientDeliveryMethods"
                 },
                 "signing_order": {},
                 "shared_link": {
@@ -8100,7 +7882,7 @@
             "example": "+14842634627"
           },
           "delivery_methods": {
-            "$ref": "#/components/schemas/RicipientDeliveryMethods"
+            "$ref": "#/components/schemas/RecipientDeliveryMethods"
           },
           "first_name": {
             "type": "string",
@@ -10412,18 +10194,203 @@
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "Checkbox": "#/components/schemas/Checkbox",
-            "Collect File": "#/components/schemas/CollectFile",
-            "Date": "#/components/schemas/Date",
-            "Dropdown": "#/components/schemas/Dropdown",
-            "Initials": "#/components/schemas/Initials",
-            "Payment": "#/components/schemas/Payment",
-            "Radio Buttons": "#/components/schemas/RadioButtons",
-            "Signature": "#/components/schemas/Signature",
-            "Stamp": "#/components/schemas/Stamp",
-            "Text": "#/components/schemas/Text"
+            "checkbox": "#/components/schemas/Checkbox",
+            "collect_file": "#/components/schemas/CollectFile",
+            "date": "#/components/schemas/Date",
+            "dropdown": "#/components/schemas/Dropdown",
+            "initials": "#/components/schemas/Initials",
+            "payment": "#/components/schemas/Payment",
+            "radio_buttons": "#/components/schemas/RadioButtons",
+            "signature": "#/components/schemas/Signature",
+            "stamp": "#/components/schemas/Stamp",
+            "text": "#/components/schemas/Text"
           }
         }
+      },
+      "CreateDocumentActor": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/CreateDocumentRecipient"
+          },
+          {
+            "$ref": "#/components/schemas/CreateDocumentRecipientGroup"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "recipient": "#/components/schemas/CreateDocumentRecipient",
+            "recipient_group": "#/components/schemas/CreateDocumentRecipientGroup"
+          }
+        }
+      },
+      "CreateDocumentRecipient": {
+        "title": "Recipient",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string",
+                "example": "user"
+              },
+              "signing_order": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "nullable": true,
+                "example": "josh@example.com"
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true,
+                "example": "+14842634627"
+              },
+              "first_name": {
+                "type": "string",
+                "example": "Josh"
+              },
+              "last_name": {
+                "type": "string",
+                "example": "Ron"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "delivery_methods": {
+                "$ref": "#/components/schemas/RecipientDeliveryMethods"
+              },
+              "redirect": {
+                "$ref": "#/components/schemas/RecipientRedirect"
+              },
+              "type": {
+                "type": "string",
+                "example": "recipient",
+                "enum": [
+                  "recipient"
+                ]
+              },
+              "verification_settings": {
+                "$ref": "#/components/schemas/RecipientVerificationSettings"
+              }
+            }
+          }
+        ]
+      },
+      "CreateDocumentRecipientGroup": {
+        "title": "RecipientGroup",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateDocumentRecipient/allOf/0"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "type": {
+                "type": "string",
+                "example": "recipient_group",
+                "enum": [
+                  "recipient_group"
+                ]
+              },
+              "members": {
+                "type": "array",
+                "minLength": 1,
+                "items": {
+                  "$ref": "#/components/schemas/CreateDocumentRecipient/allOf/1"
+                }
+              }
+            },
+            "required": [
+              "name",
+              "type"
+            ]
+          }
+        ]
+      },
+      "UpdateDocumentRecipient": {
+        "title": "Recipient",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateDocumentRecipient/allOf/0"
+          },
+          {
+            "$ref": "#/components/schemas/CreateDocumentRecipient/allOf/1"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "ZPeAfcpzr9aiVs5vqUf6jg"
+              },
+              "delivery_methods": {
+                "$ref": "#/components/schemas/RecipientDeliveryMethods"
+              },
+              "redirect": {
+                "$ref": "#/components/schemas/RecipientRedirect"
+              },
+              "type": {
+                "type": "string",
+                "example": "recipient",
+                "enum": [
+                  "recipient"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "UpdateDocumentRecipientGroup": {
+        "title": "RecipientGroup",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateDocumentRecipient/allOf/0"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "ZPeAfcpzr9aiVs5vqUf6jg"
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "type": {
+                "type": "string",
+                "example": "recipient_group",
+                "enum": [
+                  "recipient_group"
+                ]
+              },
+              "members": {
+                "type": "array",
+                "minLength": 1,
+                "items": {
+                  "$ref": "#/components/schemas/CreateDocumentRecipient/allOf/1"
+                }
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        ]
       },
       "BaseField": {
         "type": "object",
@@ -10453,10 +10420,10 @@
               }
             ],
             "discriminator": {
-              "propertyName": "recipient_type",
+              "propertyName": "type",
               "mapping": {
-                "Recipient": "#/components/schemas/RecipientAssignedTo",
-                "Recipient Group": "#/components/schemas/RecipientsGroupAssignedTo"
+                "recipient": "#/components/schemas/RecipientAssignedTo",
+                "recipient_group": "#/components/schemas/RecipientsGroupAssignedTo"
               }
             }
           },
@@ -10482,6 +10449,7 @@
         }
       },
       "Checkbox": {
+        "title": "Checkbox",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10497,12 +10465,19 @@
               "merge_field": {
                 "type": "string",
                 "example": "MergeId"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "checkbox"
+                ]
               }
             }
           }
         ]
       },
       "CollectFile": {
+        "title": "Collect File",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10523,12 +10498,19 @@
                     "example": "https://some-url.com/collect_files"
                   }
                 }
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "collect_file"
+                ]
               }
             }
           }
         ]
       },
       "Date": {
+        "title": "Date",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10545,12 +10527,19 @@
               "merge_field": {
                 "type": "string",
                 "example": "MergeId"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "date"
+                ]
               }
             }
           }
         ]
       },
       "Dropdown": {
+        "title": "Dropdown",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10566,12 +10555,19 @@
               "merge_field": {
                 "type": "string",
                 "example": "MergeId"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "dropdown"
+                ]
               }
             }
           }
         ]
       },
       "Initials": {
+        "title": "Initials",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10583,12 +10579,19 @@
                 "type": "object",
                 "description": "Value of the Initials field. Always empty object.",
                 "example": {}
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "initials"
+                ]
               }
             }
           }
         ]
       },
       "Payment": {
+        "title": "Payment Details",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10600,12 +10603,19 @@
                 "type": "string",
                 "description": "Value of the Payment field. Always empty string.",
                 "example": ""
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "payment_details"
+                ]
               }
             }
           }
         ]
       },
       "RadioButtons": {
+        "title": "Radio Buttons",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10621,12 +10631,19 @@
               "merge_field": {
                 "type": "string",
                 "example": "MergeId"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "radio_buttons"
+                ]
               }
             }
           }
         ]
       },
       "Signature": {
+        "title": "Signature",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10638,12 +10655,19 @@
                 "type": "object",
                 "description": "Value of the Signature field. Always empty object.",
                 "example": {}
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "signature"
+                ]
               }
             }
           }
         ]
       },
       "Stamp": {
+        "title": "Stamp",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10655,12 +10679,19 @@
                 "type": "object",
                 "description": "Value of the Stamp field. Always empty object.",
                 "example": {}
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "stamp"
+                ]
               }
             }
           }
         ]
       },
       "Text": {
+        "title": "Text",
         "allOf": [
           {
             "$ref": "#/components/schemas/BaseField"
@@ -10676,12 +10707,20 @@
               "merge_field": {
                 "type": "string",
                 "example": "MergeId"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text"
+                ]
               }
             }
           }
         ]
       },
       "RecipientAssignedTo": {
+        "title": "Recipient",
+        "description": "Recipient",
         "allOf": [
           {
             "type": "object",
@@ -10715,13 +10754,6 @@
               "has_completed": {
                 "type": "boolean",
                 "example": false
-              },
-              "type": {
-                "type": "string",
-                "enum": [
-                  "recipient",
-                  "recipient_group"
-                ]
               }
             }
           },
@@ -10766,12 +10798,20 @@
                     "type": "string"
                   }
                 }
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "recipient"
+                ]
               }
             }
           }
         ]
       },
       "RecipientsGroupAssignedTo": {
+        "title": "Recipient Group",
+        "description": "Collection of Recipients",
         "allOf": [
           {
             "$ref": "#/components/schemas/RecipientAssignedTo/allOf/0"
@@ -10807,6 +10847,12 @@
                     }
                   }
                 }
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "recipient_group"
+                ]
               }
             }
           }
@@ -11296,476 +11342,347 @@
         }
       },
       "UploadSectionByPdfRequest": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
-            "description": "Use a URL to specify the PDF. We support only URLs starting with https."
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/UploadSectionRequest/allOf/0"
           },
-          "recipients": {
-            "type": "array",
-            "description": "The list of recipients you're sending the document to. Every object must contain the email parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter passed, a person is assigned all fields matching their corresponding role. If not passed, a person will receive a read-only link to view the document. If the `first_name` and `last_name` not passed the system 1. creates a new contact, if none exists with the given `email`; or 2. gets the existing contact with the given `email` that already exists.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "josh@example.com"
-                },
-                "phone": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "+14842634627"
-                },
-                "delivery_methods": {
-                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                },
-                "first_name": {
-                  "type": "string",
-                  "example": "Josh"
-                },
-                "last_name": {
-                  "type": "string",
-                  "example": "Ron"
-                },
-                "role": {
-                  "type": "string",
-                  "example": "user"
-                },
-                "signing_order": {
-                  "type": "integer",
-                  "example": 1,
-                  "nullable": true
-                },
-                "redirect": {
-                  "$ref": "#/components/schemas/RecipientRedirect"
+          {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
+                "description": "Use a URL to specify the PDF. We support only URLs starting with https."
+              },
+              "parse_form_fields": {
+                "type": "boolean",
+                "description": "Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags."
+              },
+              "fields": {
+                "type": "object",
+                "description": "If you are upload a section from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are upload a section from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: \"value\": \"\".\n",
+                "example": {
+                  "Like": {
+                    "value": true
+                  },
+                  "Delivery": {
+                    "value": "Same Day Delivery"
+                  },
+                  "Date": {
+                    "value": "2019-12-31T00:00:00.000Z"
+                  }
                 }
               }
-            }
-          },
-          "parse_form_fields": {
-            "type": "boolean",
-            "description": "Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags."
-          },
-          "name": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "description": "Mark your document with one or several tags.",
-            "items": {
-              "type": "string"
             },
-            "example": [
-              "pdf_document",
-              "test_document"
+            "required": [
+              "url",
+              "recipients"
             ]
-          },
-          "fields": {
-            "type": "object",
-            "description": "If you are upload a section from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are upload a section from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: \"value\": \"\".\n",
-            "example": {
-              "Like": {
-                "value": true
-              },
-              "Delivery": {
-                "value": "Same Day Delivery"
-              },
-              "Date": {
-                "value": "2019-12-31T00:00:00.000Z"
-              }
-            }
           }
-        },
-        "required": [
-          "url",
-          "recipients"
         ]
       },
       "UploadSectionByTemplateRequest": {
-        "type": "object",
-        "properties": {
-          "template_uuid": {
-            "type": "string",
-            "description": "The ID of a template you want to use. You can copy it from an in app template url such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
-            "example": "hryJY9mqYZHjQCYQuSjRQg"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/UploadSectionRequest/allOf/0"
           },
-          "recipients": {
-            "type": "array",
-            "description": "The list of recipients you're sending the document to. Every object must contain the email parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter passed, a person is assigned all fields matching their corresponding role. If not passed, a person will receive a read-only link to view the document. If the `first_name` and `last_name` not passed the system 1. creates a new contact, if none exists with the given `email`; or 2. gets the existing contact with the given `email` that already exists.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "josh@example.com"
-                },
-                "phone": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "+14842634627"
-                },
-                "delivery_methods": {
-                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                },
-                "first_name": {
-                  "type": "string",
-                  "example": "Josh"
-                },
-                "last_name": {
-                  "type": "string",
-                  "example": "Ron"
-                },
-                "role": {
-                  "type": "string",
-                  "example": "user"
-                },
-                "signing_order": {
-                  "type": "integer",
-                  "example": 1,
-                  "nullable": true
-                },
-                "redirect": {
-                  "$ref": "#/components/schemas/RecipientRedirect"
-                }
-              }
-            }
-          },
-          "tokens": {
-            "type": "array",
-            "description": "You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Favorite.Pet"
-                },
-                "value": {
-                  "type": "string",
-                  "example": "Panda"
-                }
-              },
-              "required": [
-                "name",
-                "value"
-              ]
-            }
-          },
-          "fields": {
+          {
             "type": "object",
-            "description": "You can pass a list of fields/values to pre-fill fields used in a template. Note that the Signature field can't be pre-filled.",
-            "example": {
-              "Like": {
-                "value": true
+            "properties": {
+              "template_uuid": {
+                "type": "string",
+                "description": "The ID of a template you want to use. You can copy it from an in app template url such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
+                "example": "hryJY9mqYZHjQCYQuSjRQg"
               },
-              "Delivery": {
-                "value": "Same Day Delivery"
+              "fields": {
+                "type": "object",
+                "description": "You can pass a list of fields/values to pre-fill fields used in a template. Note that the Signature field can't be pre-filled.",
+                "example": {
+                  "Like": {
+                    "value": true
+                  },
+                  "Delivery": {
+                    "value": "Same Day Delivery"
+                  },
+                  "Date": {
+                    "value": "2019-12-31T00:00:00.000Z"
+                  }
+                }
               },
-              "Date": {
-                "value": "2019-12-31T00:00:00.000Z"
-              }
-            }
-          },
-          "pricing_tables": {
-            "type": "array",
-            "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document. Make sure that \"Automatically add products to this table\" is enabled in the PandaDoc template pricing tables you wish to populate via API.",
-            "items": {
-              "$ref": "#/components/schemas/PricingTableRequest"
-            }
-          },
-          "content_placeholders": {
-            "type": "array",
-            "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "content_library_items": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "example": "9d9k7VtSQ5KCXfsUQv4GxE"
-                      },
-                      "fields": {
-                        "type": "object"
-                      },
-                      "pricing_tables": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/PricingTableRequest"
-                        }
-                      },
-                      "recipients": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "email": {
-                              "type": "string",
-                              "nullable": true,
-                              "example": "josh@example.com"
-                            },
-                            "phone": {
-                              "type": "string",
-                              "nullable": true,
-                              "example": "+14842634627"
-                            },
-                            "delivery_methods": {
-                              "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                            },
-                            "first_name": {
-                              "type": "string",
-                              "example": "Josh"
-                            },
-                            "last_name": {
-                              "type": "string",
-                              "example": "Ron"
-                            },
-                            "role": {
-                              "type": "string",
-                              "example": "user"
-                            },
-                            "signing_order": {
-                              "type": "integer",
-                              "example": 1,
-                              "nullable": true
-                            },
-                            "redirect": {
-                              "$ref": "#/components/schemas/RecipientRedirect"
+              "pricing_tables": {
+                "type": "array",
+                "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document. Make sure that \"Automatically add products to this table\" is enabled in the PandaDoc template pricing tables you wish to populate via API.",
+                "items": {
+                  "$ref": "#/components/schemas/PricingTableRequest"
+                }
+              },
+              "content_placeholders": {
+                "type": "array",
+                "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "content_library_items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "9d9k7VtSQ5KCXfsUQv4GxE"
+                          },
+                          "fields": {
+                            "type": "object"
+                          },
+                          "pricing_tables": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/PricingTableRequest"
+                            }
+                          },
+                          "recipients": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "email": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "example": "josh@example.com"
+                                },
+                                "phone": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "example": "+14842634627"
+                                },
+                                "delivery_methods": {
+                                  "$ref": "#/components/schemas/RecipientDeliveryMethods"
+                                },
+                                "first_name": {
+                                  "type": "string",
+                                  "example": "Josh"
+                                },
+                                "last_name": {
+                                  "type": "string",
+                                  "example": "Ron"
+                                },
+                                "role": {
+                                  "type": "string",
+                                  "example": "user"
+                                },
+                                "signing_order": {
+                                  "type": "integer",
+                                  "example": 1,
+                                  "nullable": true
+                                },
+                                "redirect": {
+                                  "$ref": "#/components/schemas/RecipientRedirect"
+                                }
+                              }
                             }
                           }
-                        }
+                        },
+                        "required": [
+                          "id"
+                        ]
                       }
                     },
-                    "required": [
-                      "id"
-                    ]
-                  }
-                },
-                "block_id": {
-                  "type": "string",
-                  "example": "Content Placeholder 1"
+                    "block_id": {
+                      "type": "string",
+                      "example": "Content Placeholder 1"
+                    }
+                  },
+                  "required": [
+                    "block_id"
+                  ]
                 }
-              },
-              "required": [
-                "block_id"
-              ]
-            }
+              }
+            },
+            "required": [
+              "template_uuid",
+              "recipients"
+            ]
           }
-        },
-        "required": [
-          "template_uuid",
-          "recipients"
         ]
       },
       "UploadSectionRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name the section you are creating.",
-            "example": "API Sample Section from PandaDoc Template"
-          },
-          "template_uuid": {
-            "type": "string",
-            "description": "ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
-            "example": "hryJY9mqYZHjQCYQuSjRQg"
-          },
-          "recipients": {
-            "type": "array",
-            "description": "The list of recipients you're sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "email": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "josh@example.com"
-                },
-                "phone": {
-                  "type": "string",
-                  "nullable": true,
-                  "example": "+14842634627"
-                },
-                "delivery_methods": {
-                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                },
-                "first_name": {
-                  "type": "string",
-                  "example": "Josh"
-                },
-                "last_name": {
-                  "type": "string",
-                  "example": "Ron"
-                },
-                "role": {
-                  "type": "string",
-                  "example": "user"
-                },
-                "signing_order": {
-                  "type": "integer",
-                  "example": 1
-                },
-                "redirect": {
-                  "$ref": "#/components/schemas/RecipientRedirect"
-                }
-              }
-            }
-          },
-          "tokens": {
-            "type": "array",
-            "description": "You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Favorite.Pet"
-                },
-                "value": {
-                  "type": "string",
-                  "example": "Panda"
-                }
-              },
-              "required": [
-                "name",
-                "value"
-              ]
-            }
-          },
-          "fields": {
+        "allOf": [
+          {
             "type": "object",
-            "nullable": true,
-            "description": "You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled.",
-            "example": {
-              "Like": {
-                "value": true
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name the document you are creating.",
+                "example": "API Sample Document from PandaDoc Template"
               },
-              "Delivery": {
-                "value": "Same Dav Delivery"
+              "recipients": {
+                "type": "array",
+                "description": "The list of recipients you're sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.",
+                "items": {
+                  "$ref": "#/components/schemas/CreateDocumentActor"
+                }
               },
-              "Favorite.Color": {
-                "value": "PandaDoc green"
+              "tokens": {
+                "type": "array",
+                "description": "You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Favorite.Pet"
+                    },
+                    "value": {
+                      "type": "string",
+                      "example": "Panda"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "value"
+                  ]
+                }
               },
-              "Date": {
-                "value": "2019-12-31T00:00:00.000Z"
+              "tags": {
+                "type": "array",
+                "description": "Mark your document with one or several tags.",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "created_via_api",
+                  "test_document",
+                  "created_from_source"
+                ]
               }
             }
           },
-          "tags": {
-            "type": "array",
-            "description": "Mark your document with one or several tags.",
-            "items": {
-              "type": "string"
-            },
-            "example": [
-              "created_via_api",
-              "test_document"
-            ]
-          },
-          "pricing_tables": {
-            "type": "array",
-            "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
-            "items": {
-              "$ref": "#/components/schemas/PricingTableRequest"
-            }
-          },
-          "content_placeholders": {
-            "type": "array",
-            "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "block_id": {
-                  "type": "string",
-                  "description": "Content placeholder block id",
-                  "example": "Content Placeholder 1"
-                },
-                "content_library_items": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "string",
-                        "description": "Content library item id",
-                        "example": "hryJY9mqYZHjQCYQuSjRQg"
-                      },
-                      "pricing_tables": {
-                        "type": "array",
-                        "items": {
-                          "$ref": "#/components/schemas/PricingTableRequest"
-                        }
-                      },
-                      "fields": {
-                        "type": "object"
-                      },
-                      "recipients": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "email": {
-                              "type": "string",
-                              "nullable": true,
-                              "example": "josh@example.com"
-                            },
-                            "phone": {
-                              "type": "string",
-                              "nullable": true,
-                              "example": "+14842634627"
-                            },
-                            "delivery_methods": {
-                              "$ref": "#/components/schemas/RicipientDeliveryMethods"
-                            },
-                            "first_name": {
-                              "type": "string",
-                              "example": "Josh"
-                            },
-                            "last_name": {
-                              "type": "string",
-                              "example": "Ron"
-                            },
-                            "role": {
-                              "type": "string",
-                              "example": "user"
-                            },
-                            "signing_order": {
-                              "type": "integer",
-                              "example": 1,
-                              "nullable": true
-                            },
-                            "redirect": {
-                              "$ref": "#/components/schemas/RecipientRedirect"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "required": [
-                      "id"
-                    ]
+          {
+            "type": "object",
+            "properties": {
+              "template_uuid": {
+                "type": "string",
+                "description": "ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
+                "example": "hryJY9mqYZHjQCYQuSjRQg"
+              },
+              "fields": {
+                "type": "object",
+                "nullable": true,
+                "description": "You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled.",
+                "example": {
+                  "Like": {
+                    "value": true
+                  },
+                  "Delivery": {
+                    "value": "Same Dav Delivery"
+                  },
+                  "Favorite.Color": {
+                    "value": "PandaDoc green"
+                  },
+                  "Date": {
+                    "value": "2019-12-31T00:00:00.000Z"
                   }
                 }
+              },
+              "pricing_tables": {
+                "type": "array",
+                "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
+                "items": {
+                  "$ref": "#/components/schemas/PricingTableRequest"
+                }
+              },
+              "content_placeholders": {
+                "type": "array",
+                "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "block_id": {
+                      "type": "string",
+                      "description": "Content placeholder block id",
+                      "example": "Content Placeholder 1"
+                    },
+                    "content_library_items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Content library item id",
+                            "example": "hryJY9mqYZHjQCYQuSjRQg"
+                          },
+                          "pricing_tables": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/PricingTableRequest"
+                            }
+                          },
+                          "fields": {
+                            "type": "object"
+                          },
+                          "recipients": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "email": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "example": "josh@example.com"
+                                },
+                                "phone": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "example": "+14842634627"
+                                },
+                                "delivery_methods": {
+                                  "$ref": "#/components/schemas/RecipientDeliveryMethods"
+                                },
+                                "first_name": {
+                                  "type": "string",
+                                  "example": "Josh"
+                                },
+                                "last_name": {
+                                  "type": "string",
+                                  "example": "Ron"
+                                },
+                                "role": {
+                                  "type": "string",
+                                  "example": "user"
+                                },
+                                "signing_order": {
+                                  "type": "integer",
+                                  "example": 1,
+                                  "nullable": true
+                                },
+                                "redirect": {
+                                  "$ref": "#/components/schemas/RecipientRedirect"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "required": [
+                          "id"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "url": {
+                "type": "string",
+                "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
+                "description": "Use a URL to specify the PDF. We support only URLs starting with https."
+              },
+              "parse_form_fields": {
+                "type": "boolean",
+                "description": "Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags."
               }
             }
-          },
-          "url": {
-            "type": "string",
-            "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
-            "description": "Use a URL to specify the PDF. We support only URLs starting with https."
-          },
-          "parse_form_fields": {
-            "type": "boolean",
-            "description": "Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags."
           }
-        }
+        ]
       },
       "UploadSectionListResponse": {
         "type": "object",
@@ -11976,7 +11893,7 @@
           "url"
         ]
       },
-      "RicipientDeliveryMethods": {
+      "RecipientDeliveryMethods": {
         "type": "object",
         "nullable": true,
         "properties": {
@@ -12875,6 +12792,175 @@
         "required": [
           "currency",
           "pricing_method"
+        ]
+      },
+      "DocumentDetailsRecipient": {
+        "title": "Recipient",
+        "allOf": [
+          {
+            "type": "object",
+            "description": "Actor",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "7kqXgjFejB2toXxjcC5jfZ"
+              },
+              "recipient_type": {
+                "type": "string",
+                "example": "CC"
+              },
+              "role": {
+                "type": "string",
+                "deprecated": true,
+                "example": ""
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "user"
+                ]
+              },
+              "signing_order": {
+                "type": "integer",
+                "minimum": 1,
+                "nullable": true
+              },
+              "email": {
+                "type": "string",
+                "nullable": true,
+                "example": "test@test.com"
+              },
+              "has_completed": {
+                "type": "boolean",
+                "example": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "Recipient",
+            "properties": {
+              "last_name": {
+                "type": "string",
+                "example": "Dow"
+              },
+              "contact_id": {
+                "type": "string",
+                "example": "7kqXgjFejB2toXxjcC5jfZ"
+              },
+              "first_name": {
+                "type": "string",
+                "example": "Jhon"
+              },
+              "phone": {
+                "type": "string",
+                "nullable": true,
+                "example": "+14842634627"
+              },
+              "delivery_methods": {
+                "$ref": "#/components/schemas/RecipientDeliveryMethods"
+              },
+              "has_completed": {
+                "type": "boolean",
+                "example": true
+              },
+              "shared_link": {
+                "type": "string",
+                "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
+              },
+              "signature_date": {
+                "type": "string",
+                "nullable": true,
+                "example": "2021-10-23T21:07:04.147345Z"
+              },
+              "verification_settings": {
+                "$ref": "#/components/schemas/RecipientVerificationSettings"
+              },
+              "redirect": {
+                "$ref": "#/components/schemas/RecipientRedirect"
+              },
+              "avatar": {
+                "type": "string",
+                "nullable": true,
+                "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+              },
+              "type": {
+                "type": "string",
+                "example": "recipient",
+                "enum": [
+                  "recipient"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "DocumentDetailsRecipientGroup": {
+        "title": "Recipient Group",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DocumentDetailsRecipient/allOf/0"
+          },
+          {
+            "type": "object",
+            "description": "Recipient Group",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Group 1"
+              },
+              "type": {
+                "type": "string",
+                "example": "recipient_group",
+                "enum": [
+                  "recipient_group"
+                ]
+              },
+              "members": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "Recipient Group Member",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "4b011d86-286b-4f86-b697-90a6ad3f1489"
+                    },
+                    "first_name": {
+                      "type": "string",
+                      "example": "Jhon"
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "example": "Dow"
+                    },
+                    "email": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "test@test.com"
+                    },
+                    "shared_link": {
+                      "type": "string",
+                      "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
+                    },
+                    "avatar": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+                    },
+                    "signature_date": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "2021-10-23T21:07:04.147345Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
         ]
       }
     },
