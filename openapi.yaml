@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE'
-  version: 6.4.0
+  version: 6.5.0
 servers:
   - url: 'https://api.pandadoc.com'
     description: Public API
@@ -78,7 +78,6 @@ paths:
           schema:
             type: string
             format: datetime
-          required: false
           example: '2021-10-27T15:22:23.132757Z'
           description: Return results where the `date_completed` field (ISO 8601) is greater than or equal to this value.
         - name: completed_to
@@ -86,21 +85,18 @@ paths:
           schema:
             type: string
             format: datetime
-          required: false
           description: Return results where the `date_completed` field (ISO 8601) is less than or equal to this value.
           example: '2021-10-27T15:22:23.132757Z'
         - name: contact_id
           in: query
           schema:
             type: string
-          required: false
           description: Returns results where 'contact_id' is present in document as recipient or approver
           example: 9FeAY2NB3C9qDdtQRb4tTL
         - name: count
           in: query
           schema:
             type: integer
-          required: false
           description: 'Specify how many document results to return. Default is 50 documents, maximum is 100 documents.'
           example: 50
         - name: created_from
@@ -108,7 +104,6 @@ paths:
           schema:
             type: string
             format: datetime
-          required: false
           description: Return results where the `date_created` field (ISO 8601) is greater than or equal to this value.
           example: '2021-10-27T15:22:23.132757Z'
         - name: created_to
@@ -116,14 +111,12 @@ paths:
           schema:
             type: string
             format: datetime
-          required: false
           description: Return results where the `date_created` field (ISO 8601) is less than this value.
           example: '2021-10-27T15:22:23.132757Z'
         - name: deleted
           in: query
           schema:
             type: boolean
-          required: false
           description: Returns only the deleted documents.
         - name: id
           in: query
@@ -135,21 +128,18 @@ paths:
           in: query
           schema:
             type: string
-          required: false
           description: The UUID of the folder where the documents are stored.
           example: BhVzRcxH9Z2LgfPPGXFUBa
         - name: form_id
           in: query
           schema:
             type: string
-          required: false
           description: Specify the form used for documents creation. This parameter can't be used with template_id.
           example: BhVzRcxH9Z2LgfPPGXFUBa
         - name: membership_id
           in: query
           schema:
             type: string
-          required: false
           description: Returns results where 'membership_id' is present in document as owner (should be member uuid)
           example: BhVzRcxH9Z2LgfPPGXFUBa
         - name: metadata
@@ -160,7 +150,6 @@ paths:
             type: array
             items:
               type: string
-          required: false
           description: 'Specify metadata to filter by in the format of `metadata_{metadata-key}={metadata-value}` such as `metadata_opportunity_id=2181432`. The `metadata_` prefix is always required.'
           example:
             - metadata_opportunity_id=2181432
@@ -170,7 +159,6 @@ paths:
           schema:
             type: string
             format: datetime
-          required: false
           description: Return results where the `date_modified` field (iso-8601) is greater than or equal to this value.
           example: '2021-10-27T15:22:23.132757Z'
         - name: modified_to
@@ -178,14 +166,12 @@ paths:
           schema:
             type: string
             format: datetime
-          required: false
           description: Return results where the `date_modified` field (iso-8601) is less than this value.
           example: '2021-10-27T15:22:23.132757Z'
         - name: order_by
           in: query
           schema:
             $ref: '#/components/schemas/DocumentOrderingFieldsEnum'
-          required: false
           description: 'Specify the order of documents to return. Use `value` (for example, `date_created`) for ASC and `-value` (for example, `-date_created`) for DESC.'
           examples:
             Default order by date_status_changed:
@@ -195,21 +181,18 @@ paths:
           schema:
             type: integer
             minimum: 1
-          required: false
           description: Specify which page of the dataset to return.
           example: 1
         - name: q
           in: query
           schema:
             type: string
-          required: false
           description: Search query. Filter by document reference number (this token is stored on the template level) or name.
           example: Sample Document
         - name: status
           in: query
           schema:
             $ref: '#/components/schemas/DocumentStatusRequestEnum'
-          required: false
           description: |
             Specify the status of documents to return.
               * 0: document.draft
@@ -230,7 +213,6 @@ paths:
           in: query
           schema:
             $ref: '#/components/schemas/DocumentStatusRequestEnum'
-          required: false
           description: |
             Specify the status of documents to return (exclude).
               * 0: document.draft
@@ -251,14 +233,12 @@ paths:
           in: query
           schema:
             type: string
-          required: false
           description: Search tag. Filter by document tag.
           example: tag_1
         - name: template_id
           in: query
           schema:
             type: string
-          required: false
           description: Specify the template used for documents creation. Parameter can't be used with form_id.
           example: BhVzRcxH9Z2LgfPPGXFUBa
       responses:
@@ -347,9 +327,9 @@ paths:
       parameters:
         - name: editor_ver
           in: query
+          deprecated: true
           schema:
             type: string
-          required: false
           example: ev2
           description: Set this parameter as `ev1` if you want to create a document from PDF with Classic Editor when both editors are enabled for the workspace.
       requestBody:
@@ -363,7 +343,7 @@ paths:
             schema:
               $ref: '#/components/schemas/DocumentCreateRequest'
             examples:
-              Simple APi Sample:
+              Simple API Sample:
                 summary: Simple API Sample Document from PandaDoc Template
                 value:
                   name: Simple API Sample Document from PandaDoc Template
@@ -420,7 +400,7 @@ paths:
                                   type: percent
                               custom_fields:
                                 Fluffiness: 5 / 5
-              Full APi Sample:
+              Full API Sample:
                 summary: Full API Sample Document from PandaDoc Template
                 value:
                   name: 'Full API Sample Document from [PandaDoc] Template'
@@ -797,9 +777,11 @@ paths:
     get:
       tags:
         - Documents
-      summary: Document details
+      summary: Document Details
       operationId: detailsDocument
       description: |
+        Return detailed data about a document. Use Document Status for getting just a basic info and status.
+
         Get details about a document by its `id`. Details include:
 
         - Basic document information (name, document state, owner, sender, grand total, etc.)
@@ -818,6 +800,8 @@ paths:
               value: BhVzRcxH9Z2LgfPPGXFUBa
             API Sample Document from PandaDoc template:
               value: PeePkgJLFT2UittjVdEyYG
+            Completed Document Details:
+              value: f9CbJKS4ZAs6nU629cuowb
           name: id
           description: Document ID
           in: path
@@ -832,6 +816,98 @@ paths:
               schema:
                 $ref: '#/components/schemas/DocumentDetailsResponse'
               examples:
+                Completed Document Details:
+                  value:
+                    approval_execution: null
+                    content_date_modified: '2024-07-08T15:43:54.194562Z'
+                    linked_objects: []
+                    date_completed: '2024-07-08T15:43:53.877522Z'
+                    id: f9CbJKS4ZAs6nU629cuowb
+                    name: Digital Marketing Proposal
+                    autonumbering_sequence_name_prefix: null
+                    date_created: '2024-07-08T15:36:09.600947Z'
+                    date_modified: '2024-07-08T15:43:53.918819Z'
+                    date_sent: '2024-07-08T15:41:23.351853Z'
+                    ref_number: MTMJR-FEUQB-ECEWW-3WVZP
+                    created_by:
+                      id: FA5QAu8UGA3oVDQZuPL75B
+                      email: pandaDoc@pandadoc.com
+                      first_name: Panda
+                      last_name: Doc
+                      avatar: null
+                      membership_id: RyMNXBjBPRppw56TfYBrXi
+                    template:
+                      id: gZRVmyHiQV5riXSCMKsku2
+                      name: Sample Template
+                    expiration_date: '2024-09-06T15:43:36.297737Z'
+                    metadata:
+                      document__created_via_public_api: 'true'
+                      document__creation_source: public api
+                    tokens: []
+                    fields:
+                      - uuid: f03e22f3-b3a8-4783-8b26-e43880ef87bf
+                        name: Signature
+                        title: ''
+                        value: {}
+                        placeholder: Signature
+                        assigned_to:
+                          id: 8KAZvGRL3W4u44a4fyDoeH
+                          first_name: '{{$randomFirstName}}'
+                          last_name: '{{$randomLastName}}'
+                          email: '{{$randomEmail}}'
+                          phone: ''
+                          recipient_type: signer
+                          has_completed: true
+                          role: Client
+                          roles:
+                            - Client
+                          signing_order: null
+                          delivery_methods:
+                            sms: false
+                            email: true
+                          redirect:
+                            is_enabled: false
+                            url: null
+                          type: recipient
+                        field_id: signature_f03e22f3-b3a8-4783-8b26-e43880ef87bf
+                        type: signature
+                    pricing: {}
+                    tags:
+                      - tag1
+                    status: document.completed
+                    recipients:
+                      - id: 8KAZvGRL3W4u44a4fyDoeH
+                        first_name: '{{$randomFirstName}}'
+                        last_name: '{{$randomLastName}}'
+                        email: '{{$randomEmail}}'
+                        phone: ''
+                        recipient_type: signer
+                        has_completed: true
+                        role: Client
+                        roles:
+                          - Client
+                        signing_order: null
+                        delivery_methods:
+                          sms: false
+                          email: true
+                        redirect:
+                          is_enabled: false
+                          url: null
+                        contact_id: HzXnuyNraSXMhXchYjUmHJ
+                        shared_link: 'https://app.pandadoc.com/document/15d4b481384b652a298530ddc7023bfc07a67d59'
+                        signature_date: '2024-07-08T15:43:53.800135Z'
+                        verification_settings: null
+                        type: recipient
+                    sent_by:
+                      id: FA5QAu8UGA3oVDQZuPL75B
+                      email: pandadoc@pandadoc.com
+                      first_name: Panda
+                      last_name: Doc
+                      avatar: null
+                    grand_total:
+                      amount: '0'
+                      currency: EUR
+                    version: '2'
                 Document from empty template:
                   value:
                     approval_execution: null
@@ -922,7 +998,7 @@ paths:
                           type: recipient
                         field_id: CollectFile1
                         type: collect_file
-                      - uuid: eyGJgkWJfUpRtUCsCFDwGU
+                      - uuid: f9574c3b-5b1e-4479-b2c9-c3ccd92748f3
                         name: Favorite.Color
                         merge_field: Favorite.Color
                         title: Textfield
@@ -939,7 +1015,7 @@ paths:
                           type: recipient
                         field_id: text1
                         type: text
-                      - uuid: M4755SJuoyz5Jzsw4WXTDb
+                      - uuid: f9574c3b-5b1e-4479-b2c9-c3ccd92748f3
                         name: Like
                         merge_field: Like
                         title: Checkbox
@@ -1285,14 +1361,12 @@ paths:
           in: query
           schema:
             type: string
-          required: false
           description: HEX code (for example `#FF5733`).
           example: '#FF5733'
         - name: watermark_font_size
           in: query
           schema:
             type: integer
-          required: false
           description: Font size of the watermark.
           example: 12
         - name: watermark_opacity
@@ -1300,21 +1374,18 @@ paths:
           schema:
             type: number
             format: float
-          required: false
           description: In range 0.0-1.0
           example: 0.5
         - name: watermark_text
           in: query
           schema:
             type: string
-          required: false
           description: Specify watermark text.
           example: John Doe inc.
         - name: separate_files
           in: query
           schema:
             type: boolean
-          required: false
           description: Set as `true` if you want to receive a zip file with all documents in separate when document transaction contains more than 1.
       responses:
         '200':
@@ -1355,7 +1426,6 @@ paths:
           in: query
           schema:
             type: boolean
-          required: false
           description: Set as `true` if you want to receive a zip file with all documents in separate when document transaction contains more than 1.
       responses:
         '200':
@@ -1729,6 +1799,9 @@ paths:
                               type: string
                         layout:
                           $ref: '#/paths/~1public~1v1~1documents~1%7Bid%7D~1fields/post/requestBody/content/application~1json/schema/properties/fields/items/properties/layout'
+                        section_uuid:
+                          type: string
+                          format: uuid
         '401':
           $ref: '#/components/responses/401'
         '404':
@@ -2187,13 +2260,13 @@ paths:
   /public/v1/templates:
     get:
       summary: List Templates
-      description: 'Optionally, filter by a search query or tags.'
+      description: 'Retrieves a list of templates. You can filter results by a search query, tags, or fields.'
       operationId: listTemplates
       tags:
         - Templates
       parameters:
         - name: q
-          description: Optional search query. Filter by template name.
+          description: Search query. Filter by template name.
           in: query
           schema:
             type: string
@@ -2204,27 +2277,29 @@ paths:
           schema:
             type: boolean
         - name: deleted
-          description: Optional. Returns only the deleted templates.
+          description: Returns only the deleted templates.
           in: query
           schema:
             type: boolean
         - name: count
-          description: 'Optionally, specify how many templates to return. Default is 50 templates, maximum is 100 templates.'
+          description: Specify how many templates to return.
           in: query
           schema:
             type: integer
             format: int32
             minimum: 1
+            maximum: 100
+            default: 50
           example: 10
         - name: page
-          description: 'Optionally, specify which page of the dataset to return.'
+          description: Specify which page of the dataset to return.
           in: query
           schema:
             type: integer
             format: int32
             minimum: 1
         - name: id
-          description: 'Optionally, specify template ID.'
+          description: Specify template ID.
           in: query
           schema:
             type: string
@@ -2234,7 +2309,9 @@ paths:
           in: query
           schema:
             type: string
-          example: xDKHoJ8DkwhiTQSUzNveCJ
+          examples:
+            List from a Folder:
+              value: xDKHoJ8DkwhiTQSUzNveCJ
         - name: tag
           in: query
           style: form
@@ -2243,12 +2320,18 @@ paths:
             type: array
             items:
               type: string
-          description: Optional search tag. Filter by template tag.
+          description: Search tag. Filter by template tag.
         - name: fields
-          description: 'A comma-separated list of additional fields to include in the response.  Each field must be a valid template property.  Currently, only one additional field, `content_date_modified`, is supported.  For example, `GET /templates?fields=content_date_modified`.'
+          description: A comma-separated list of additional fields to include in the response.
           in: query
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+              enum:
+                - content_date_modified
+          style: form
+          explode: false
       responses:
         '200':
           description: OK
@@ -2256,6 +2339,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TemplateListResponse'
+              examples:
+                Default:
+                  value:
+                    results:
+                      - id: iMymdDd9XFD3HyxP5VD67Q
+                        name: Blank
+                        date_created: '2021-06-17T15:51:13.226974Z'
+                        date_modified: '2021-06-17T15:51:13.326974Z'
+                        version: '2'
+                        content_date_modified: '2021-06-17T15:51:13.426974Z'
+                List from a Folder:
+                  value:
+                    results:
+                      - id: vibuun3DXG8QDDLfXm27Ne
+                        name: New template
+                        date_created: '2024-07-15T17:44:07.524617Z'
+                        date_modified: '2024-07-15T17:44:07.613821Z'
+                        version: '2'
         '401':
           $ref: '#/components/responses/401'
         '429':
@@ -2267,10 +2368,16 @@ paths:
       operationId: createTemplate
       parameters:
         - name: fields
-          description: 'A comma-separated list of additional fields to include in the response.  Each field must be a valid template property.  Currently, only one additional field, `content_date_modified`, is supported.  For example, `POST /templates?fields=content_date_modified`.'
+          description: A comma-separated list of additional fields to include in the response.
           in: query
           schema:
-            type: string
+            type: array
+            items:
+              type: string
+              enum:
+                - content_date_modified
+          style: form
+          explode: false
       requestBody:
         required: true
         content:
@@ -2282,6 +2389,10 @@ paths:
                   type: string
                   description: The name of the template.
                   example: Template
+            examples:
+              Create Template:
+                value:
+                  name: Sample Template
       responses:
         '201':
           description: OK
@@ -2289,6 +2400,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TemplateListResponse/properties/results/items'
+              examples:
+                Create Template:
+                  value:
+                    id: va9aNuj3uX2w9M7uytn967
+                    name: Sample Template
+                    date_created: '2024-07-08T14:41:42.625906Z'
+                    date_modified: '2024-07-08T14:41:42.700084Z'
+                    version: '2'
         '400':
           $ref: '#/components/responses/400ValidationError'
         '401':
@@ -2297,19 +2416,34 @@ paths:
           $ref: '#/components/responses/429'
   '/public/v1/templates/{id}/details':
     get:
-      summary: Details Template
-      description: Return detailed data about a template.
+      summary: Template Details
+      description: |
+        Get details about a template by `id`. Details include:
+
+        - Basic template information (name, author, etc)
+        - Roles
+        - All fields with values
+        - All tokens with values
+        - Pricing information (pricing tables, products, quotes)
+        - Template metadata
+        - Template tags
+        - Content placeholders
+        - Modification timestamps. Note that `date_modified` means any changes associated with the template roles, while `content_date_modified` logs any changes in the template content.
       operationId: detailsTemplate
       tags:
         - Templates
       parameters:
-        - name: id
+        - examples:
+            Template Details:
+              value: vibuun3DXG8QDDLfXm27Ne
+            Default:
+              value: iMymdDd9XFD3HyxP5VD67Q
+          name: id
           description: Template ID
           in: path
           schema:
             type: string
           required: true
-          example: EE8yUNg5HztqVAuH85He8V
       responses:
         '200':
           description: OK
@@ -2317,6 +2451,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TemplateDetailsResponse'
+              examples:
+                Template Details:
+                  value:
+                    id: vibuun3DXG8QDDLfXm27Ne
+                    name: New template
+                    date_created: '2024-07-15T17:44:07.524617Z'
+                    date_modified: '2024-07-15T17:44:07.613821Z'
+                    content_date_modified: '2024-07-15T17:44:08.685118Z'
+                    created_by:
+                      id: FA5QAu8UGA3oVDQZuPL75B
+                      email: siarhei.soroka@pandadoc.com
+                      first_name: Siarhei
+                      last_name: Soroka
+                      avatar: null
+                      membership_id: RyMNXBjBPRppw56TfYBrXi
+                    metadata: {}
+                    tokens: []
+                    fields: []
+                    pricing: {}
+                    tags: []
+                    roles:
+                      - id: UDhBsFhy4857fsdBJ11FuL
+                        name: Client
+                        signing_order: null
+                        preassigned_person: null
+                    version: '2'
+                    content_placeholders: []
+                    images: []
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -2767,7 +2929,6 @@ paths:
           in: query
           schema:
             type: string
-          required: false
           description: Optional search parameter. Filter results by exact match.
           example: josh@example.com
       responses:
@@ -3155,21 +3316,18 @@ paths:
         - name: since
           in: query
           description: 'Filter option: all events from specified timestamp'
-          required: false
           schema:
             type: string
             format: date-time
         - name: to
           in: query
           description: 'Filter option: all events up to specified timestamp'
-          required: false
           schema:
             type: string
             format: date-time
         - name: type
           in: query
           description: 'Filter option: all events of type'
-          required: false
           schema:
             type: array
             items:
@@ -3177,7 +3335,6 @@ paths:
         - name: http_status_code
           in: query
           description: 'Filter option: all events of http status code'
-          required: false
           schema:
             type: array
             items:
@@ -3185,7 +3342,6 @@ paths:
         - name: error
           in: query
           description: 'Filter option: all events with following error'
-          required: false
           schema:
             type: array
             items:
@@ -3354,25 +3510,21 @@ paths:
         - name: page
           in: query
           description: page number
-          required: false
           schema:
             type: number
         - name: per_page
           in: query
           description: items per page
-          required: false
           schema:
             type: number
         - name: query
           in: query
           description: what we search for
-          required: false
           schema:
             type: string
         - name: order_by
           in: query
           description: how to order the search listing
-          required: false
           schema:
             type: string
             enum:
@@ -3387,7 +3539,6 @@ paths:
         - name: types
           in: query
           description: filter by catalog item types
-          required: false
           schema:
             type: array
             items:
@@ -3398,7 +3549,6 @@ paths:
         - name: billing_types
           in: query
           description: filter by billing types
-          required: false
           schema:
             type: array
             items:
@@ -3409,7 +3559,6 @@ paths:
         - name: exclude_uuids
           in: query
           description: exclude uuids
-          required: false
           schema:
             type: array
             items:
@@ -3417,12 +3566,10 @@ paths:
         - name: category_id
           in: query
           description: category id
-          required: false
           schema:
             type: string
         - name: no_category
           in: query
-          required: false
           schema:
             type: boolean
       responses:
@@ -3872,7 +4019,6 @@ paths:
         - name: count
           in: query
           description: Number of elements in page
-          required: false
           schema:
             type: integer
             format: int32
@@ -3882,7 +4028,6 @@ paths:
         - name: page
           in: query
           description: Page number
-          required: false
           schema:
             type: integer
             format: int32
@@ -3974,7 +4119,6 @@ paths:
         - name: count
           in: query
           description: Number of elements in page
-          required: false
           schema:
             type: integer
             format: int32
@@ -3984,7 +4128,6 @@ paths:
         - name: page
           in: query
           description: Page number
-          required: false
           schema:
             type: integer
             format: int32
@@ -3993,7 +4136,6 @@ paths:
         - name: show_removed
           in: query
           description: Filter option - show users with removed memberships
-          required: false
           schema:
             type: boolean
             default: true
@@ -4915,7 +5057,7 @@ components:
         fields:
           type: array
           items:
-            type: object
+            $ref: '#/components/schemas/Field'
           example:
             - uuid: f9574c3b-5b1e-4479-b2c9-c3ccd92748f3
               name: Click to upload a file
@@ -4937,7 +5079,7 @@ components:
                 type: recipient
               field_id: CollectFile1
               type: collect_file
-            - uuid: eyGJgkWJfUpRtUCsCFDwGU
+            - uuid: f9574c3b-5b1e-4479-b2c9-c3ccd92748f3
               name: Favorite.Color
               merge_field: Favorite.Color
               title: Textfield
@@ -6974,6 +7116,268 @@ components:
         - '-date_declined'
         - '-status'
       default: date_status_changed
+    Field:
+      anyOf:
+        - $ref: '#/components/schemas/Checkbox'
+        - $ref: '#/components/schemas/CollectFile'
+        - $ref: '#/components/schemas/Date'
+        - $ref: '#/components/schemas/Dropdown'
+        - $ref: '#/components/schemas/Initials'
+        - $ref: '#/components/schemas/Payment'
+        - $ref: '#/components/schemas/RadioButtons'
+        - $ref: '#/components/schemas/Signature'
+        - $ref: '#/components/schemas/Stamp'
+        - $ref: '#/components/schemas/Text'
+      discriminator:
+        propertyName: type
+        mapping:
+          Checkbox: '#/components/schemas/Checkbox'
+          Collect File: '#/components/schemas/CollectFile'
+          Date: '#/components/schemas/Date'
+          Dropdown: '#/components/schemas/Dropdown'
+          Initials: '#/components/schemas/Initials'
+          Payment: '#/components/schemas/Payment'
+          Radio Buttons: '#/components/schemas/RadioButtons'
+          Signature: '#/components/schemas/Signature'
+          Stamp: '#/components/schemas/Stamp'
+          Text: '#/components/schemas/Text'
+    BaseField:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: 6ce1a193-04da-4023-98c3-51ef1b8747b9
+        name:
+          type: string
+          description: Name of a field
+        title:
+          type: string
+        placeholder:
+          type: string
+          description: Placeholder of a field
+        assigned_to:
+          anyOf:
+            - $ref: '#/components/schemas/RecipientAssignedTo'
+            - $ref: '#/components/schemas/RecipientsGroupAssignedTo'
+          discriminator:
+            propertyName: recipient_type
+            mapping:
+              Recipient: '#/components/schemas/RecipientAssignedTo'
+              Recipient Group: '#/components/schemas/RecipientsGroupAssignedTo'
+        field_id:
+          type: string
+          example: FieldId1
+        type:
+          type: string
+          enum:
+            - checkbox
+            - collect_file
+            - date
+            - dropdown
+            - initials
+            - payment_details
+            - radio_buttons
+            - signature
+            - stamp
+            - text
+    Checkbox:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: boolean
+              description: Value of the Checkbox field.
+              example: true
+            merge_field:
+              type: string
+              example: MergeId
+    CollectFile:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: object
+              description: Value of the Collect File field.
+              properties:
+                name:
+                  type: string
+                  example: example.jpg
+                url:
+                  type: string
+                  example: 'https://some-url.com/collect_files'
+    Date:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: string
+              format: date-time
+              description: Value of the Date field.
+              example: '2024-01-01T00:00:00'
+            merge_field:
+              type: string
+              example: MergeId
+    Dropdown:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: string
+              description: Value of the Dropdown field.
+              example: dropdown item 1
+            merge_field:
+              type: string
+              example: MergeId
+    Initials:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: object
+              description: Value of the Initials field. Always empty object.
+              example: {}
+    Payment:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: string
+              description: Value of the Payment field. Always empty string.
+              example: ''
+    RadioButtons:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: string
+              description: Value of the Radio Buttons field.
+              example: Option 1
+            merge_field:
+              type: string
+              example: MergeId
+    Signature:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: object
+              description: Value of the Signature field. Always empty object.
+              example: {}
+    Stamp:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: object
+              description: Value of the Stamp field. Always empty object.
+              example: {}
+    Text:
+      allOf:
+        - $ref: '#/components/schemas/BaseField'
+        - type: object
+          properties:
+            value:
+              type: string
+              description: Value of the Text field.
+              example: Some text
+            merge_field:
+              type: string
+              example: MergeId
+    RecipientAssignedTo:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              example: DueKG6wZYwmqsvPrnk76ma
+            email:
+              type: string
+              format: email
+              example: email@example.com
+            recipient_type:
+              type: string
+              example: signer
+            roles:
+              type: array
+              items:
+                type: string
+              example:
+                - Role 1
+            signing_order:
+              type: integer
+              example: 1
+            has_completed:
+              type: boolean
+              example: false
+            type:
+              type: string
+              enum:
+                - recipient
+                - recipient_group
+        - type: object
+          properties:
+            first_name:
+              type: string
+              example: John
+            last_name:
+              type: string
+              example: Doe
+            phone:
+              type: string
+              pattern: '^\+[1-9]\d{0,4}\d{2,14}$'
+              example: '+1234567890'
+            role:
+              type: string
+              example: Role 1
+            delivery_methods:
+              type: object
+              properties:
+                sms:
+                  type: boolean
+                email:
+                  type: boolean
+            redirect:
+              type: object
+              properties:
+                is_enabled:
+                  type: boolean
+                url:
+                  type: string
+    RecipientsGroupAssignedTo:
+      allOf:
+        - $ref: '#/components/schemas/RecipientAssignedTo/allOf/0'
+        - properties:
+            name:
+              type: string
+              example: Group name
+            members:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: 027d6a8e-bd05-45dc-a609-43840d523b7b
+                  email:
+                    type: string
+                    format: email
+                    example: email@example.com
+                  first_name:
+                    type: string
+                    example: John
+                  last_name:
+                    type: string
+                    example: Doe
     WebhookSubscriptionPayloadEnum:
       type: string
       enum:
