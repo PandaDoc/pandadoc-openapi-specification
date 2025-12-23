@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.4.0"
+    "version": "7.5.0"
   },
   "servers": [
     {
@@ -2105,7 +2105,7 @@
         ],
         "summary": "Create Document Session for Embedded Sign",
         "operationId": "createDocumentLink",
-        "description": "Create a document session for a recipient to view and sign a document. This endpoint returns a session ID that can be used to generate a document link for sharing.\n\n> 🚧 Document State\n> \n> You can generate an `id` only for documents in the `sent, waiting for payment, paid, and completed` statuses. In order to move a document to the `sent` status without actually sending any emails to recipients, use the [Send Document](/reference/send-document) endpoint with the `silent`: `true` parameter.\n> \n> If a document is in \"waiting_approval\", \"rejected\", or \"declined\" status, you can't use [Share Document](ref:share-document) call. Share Document endpoint will return HTTP 400 with an error.\n\n> 📘 Generating a Document Link from the returned `id`\n> \n> The `id` this endpoint returns is a session id. Use this URL format to view a document:\n> \n> ```html\n> https://app.pandadoc.com/s/{id}/\n> ```\n\nWhen generating a document link, first we must request a `session ID` per the session endpoint above. Once the `session ID` is generated, it can then be placed in the URL format above for sharing.\n\n> 🚧 Lifetime Parameter\n> \n> We see the `lifetime` parameter often overlooked when generating a `session ID`. Make sure that you provide a `lifetime` value in seconds that is great enough for the recipient(s) to complete the shared document. We recommend values under 1 year for security purposes, e.g.: `\"lifetime\": 31535999`\n",
+        "description": "Creates a document session for a recipient to view and sign a document.\n\n> 📘 How to create an Embedded Sign session\n> For more information on how to create an Embedded Sign session, see the [Embedded Signing](https://developers.pandadoc.com/docs/embedded-signing) documentation.\n",
         "parameters": [
           {
             "examples": {
@@ -4536,7 +4536,7 @@
         ],
         "summary": "Create Content Library Item from File Upload",
         "operationId": "createContentLibraryItemFromUpload",
-        "description": "This asynchronous endpoint allows users to create a new CLI by uploading a file.\nThe uploaded file is processed in the background to generate the CLI.\nThe maximum allowable file size for upload is 100 MB.\nOnce the file is uploaded, the processing will happen asynchronously, and users need to check the status of the CLI creation.\n",
+        "description": "This asynchronous endpoint allows users to create a new CLI by uploading a file.\nThe uploaded file is processed in the background to generate the CLI.\nThe maximum allowable file size for upload is 100 MB.\nField tags and form fields are not supported yet.\nOnce the file is uploaded, the processing will happen asynchronously, and users need to check the status of the CLI creation.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -4966,7 +4966,7 @@
         ],
         "summary": "Create Template from File Upload",
         "operationId": "createTemplateWithUpload",
-        "description": "This asynchronous endpoint allows users to create a new template by uploading a file.\n\nThe uploaded file is processed in the background to generate the template.\nThe maximum allowable file size for upload is 100 MB.\n\nOnce the file is uploaded, the processing will happen asynchronously, and users need to check [the status of the template](https://developers.pandadoc.com/reference/template-status) creation.\n",
+        "description": "This asynchronous endpoint allows users to create a new template by uploading a file.\n\nThe uploaded file is processed in the background to generate the template.\nThe maximum allowable file size for upload is 100 MB.\nField tags and form fields are not supported yet.\n\nOnce the file is uploaded, the processing will happen asynchronously, and users need to check [the status of the template](https://developers.pandadoc.com/reference/template-status) creation.\n",
         "parameters": [
           {
             "name": "fields",
@@ -7500,7 +7500,7 @@
         ],
         "summary": "Create Notarization Request",
         "operationId": "createNotarizationRequest",
-        "description": "Use this endpoint to connect with a notary, ready to complete online notarizations for your signers within minutes.\n\n> 🚧 Before you start\n> \n> Ensure the following before creating a notarization request:\n> \n> - Install the Notary On-Demand add-on.\n> - Activate a user, typically the org admin, with an API key in the Notary app. For activation, direct them to visit <https://notarize.pandadoc.com>.\n> - Create a document for notarization and get its `document_id`. To create a document, use the [Create Document from Template](https://developers.pandadoc.com/reference/create-document-from-pandadoc-template) or [Create Document from File Upload](https://developers.pandadoc.com/reference/create-document-from-pdf) endpoint.\n\nFor the notarization request, include in the request body:\n\n- `document_id`\n- At least one `invitees`, specifying their `email`, `first_name`, and `last_name`.\n- Optionally, include a `message` for your signers.\n\nAfter the API call is executed, your signers will receive an email invitation for notarization. Alternatively, you can directly share the `notarization_link` with your signers, which is available in the 201 response body.\n\nUpon successful notarization, you will receive an email with a link to the notarized document.\n\n> 📘 Tips\n> \n> - Ensure that signers are added as both invitees in the request body and recipients in the document to avoid inconveniences during notary sessions.\n> - Signers will receive an email with a notary link upon a successful API call; this link is also in the 201 response.\n> - Use the link to connect with commissioned online notaries, available Mon-Fri, 9 AM - 9 PM Central Time, typically responding within 2 minutes.\n> - Please note that a notary will notarize a copy of the original document, so it will not be available in your workspace.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n\n## Solutions for 4xx Response Codes\n\n- **403 Forbidden (Inactive Add-on)**: Ensure the Notary On-Demand add-on is installed.\n- **403 Forbidden (Transactions Limit)**: Purchase additional transactions either through the Notary UI or by contacting the Sales team.\n- **403 Forbidden (User Not Activated)**: Activate a user, typically the org admin, with an API key in the Notary app. For activation, direct them to visit <https://notarize.pandadoc.com>.\n- **429 Too Many Requests:** If you hit the limit, hold your API calls, then send them after waiting for the retry time.\n\nTo learn more about PandaDoc Notary On-Demand, visit our [website](https://notary.pandadoc.com/notary-on-demand/).\n",
+        "description": "Use this endpoint to connect with a notary, ready to complete online notarizations for your signers within minutes.\n\n> 🚧 Before you start\n> \n> Ensure the following before creating a notarization request:\n> \n> - Install the Notary On-Demand add-on.\n> - Activate a user, typically the org admin, with an API key in the Notary app. For activation, direct them to visit <https://notarize.pandadoc.com>.\n> - Create a document for notarization and get its `document_id`. To create a document, use the [Create Document from Template](https://developers.pandadoc.com/reference/create-document-from-pandadoc-template) or [Create Document from File Upload](https://developers.pandadoc.com/reference/create-document-from-pdf) endpoint.\n\nFor the notarization request, include in the request body:\n\n- `document_id`\n- At least one `invitees`, specifying their `email`, `first_name`, and `last_name`.\n- Optionally, include a `message` for your signers.\n\nAfter the API call is executed, your signers will receive an email invitation for notarization. Alternatively, you can directly share the `notarization_link` with your signers, which is available in the 201 response body.\n\nUpon successful notarization, you will receive an email with a link to the notarized document.\n\n> 📘 Tips\n> \n> - Ensure that signers are added as both invitees in the request body and recipients in the document to avoid inconveniences during notary sessions.\n> - Signers will receive an email with a notary link upon a successful API call; this link is also in the 201 response.\n> - Use the link to connect with commissioned online notaries, available Mon-Fri, 9 AM - 9 PM Central Time, typically responding within 2 minutes.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n\n## Solutions for 4xx Response Codes\n\n- **403 Forbidden (Inactive Add-on)**: Ensure the Notary On-Demand add-on is installed.\n- **403 Forbidden (Transactions Limit)**: Purchase additional transactions either through the Notary UI or by contacting the Sales team.\n- **403 Forbidden (User Not Activated)**: Activate a user, typically the org admin, with an API key in the Notary app. For activation, direct them to visit <https://notarize.pandadoc.com>.\n- **429 Too Many Requests:** If you hit the limit, hold your API calls, then send them after waiting for the retry time.\n\nTo learn more about PandaDoc Notary On-Demand, visit our [website](https://notary.pandadoc.com/notary-on-demand/).\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -8358,29 +8358,7 @@
                     },
                     "details": {
                       "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "code": {
-                            "type": "string",
-                            "example": "inactive_addon"
-                          },
-                          "pointer": {
-                            "type": "string",
-                            "nullable": true,
-                            "example": null
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "message": {
-                                "type": "string",
-                                "example": "You do not have Notary On Demand addon or it is inactive."
-                              }
-                            }
-                          }
-                        }
-                      }
+                      "example": []
                     }
                   }
                 }
@@ -9381,7 +9359,7 @@
           "User and Workspace management"
         ],
         "summary": "Create API Key",
-        "description": "Generate a new API key for the workspace.\n\n> 📘 \n> - Only an **Org Admin** can generate an API keys.\n> - To make another user a key's owner, pass `user_id` of this user. The user should has an **Admin** role in the workspace.\n> - Generating a new key invalidates existing key with the same type. Using this request, you can deactivate the key you're using for the request.\n",
+        "description": "Generate a new API key for the workspace.\nCheck out [API Key Authentication article](https://developers.pandadoc.com/reference/api-key-authentication-process) for detailed API Keys description.\n\n> 📘 \n> - Only an **Org Admin** can generate an API keys.\n> - To make another user a key's owner, pass `user_id` of this user. The user should has an **Admin** role in the workspace.\n> - Generating a new key invalidates existing key with the same type. Using this request, you can deactivate the key you're using for the request.\n",
         "operationId": "createApiKey",
         "parameters": [
           {
@@ -9610,6 +9588,243 @@
           },
           "429": {
             "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/beta/documents/{document_id}/docx-export-tasks": {
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "[Beta] Create DOCX Export Task",
+        "operationId": "createExportDocxTask",
+        "description": "> ⏱️ Export as DOCX is a non-blocking (asynchronous) operation\n> The document generation process may take some time.\n> With a successful request, you receive a response with task ID, status **created** and document id. After process completes, usually in a few minutes, the task status moves to the **done** state.\n> You can download documents up to 300 pages. For documents of 301+ pages, you will receive an error “400: The number of pages more then limit 300”\n",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify document id.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export DOCX task was created.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Default": {
+                    "value": {
+                      "id": "nPh2PDhFdDqAES9k64h9qX",
+                      "document_id": "BhVzRcxH9Z2LgfPPGXFUBa",
+                      "status": "done"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "Export task id.",
+                      "type": "string",
+                      "example": "nPh2PDhFdDqAES9k64h9qX"
+                    },
+                    "document_id": {
+                      "description": "Document id.",
+                      "type": "string",
+                      "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+                    },
+                    "status": {
+                      "description": "| **Status**    | **Description**                                                                             |\n|---------------|---------------------------------------------------------------------------------------------|\n| **created**   | The export task has been created, but the process has not started.                          |\n| **processing**| The export task is in progress.                                                             |\n| **done**      | The export task is completed, and the response contains URLs for downloading the documents. |\n| **error**     | An error occurred during the execution of the export task.                                  |\n",
+                      "type": "string",
+                      "enum": [
+                        "created",
+                        "processing",
+                        "done",
+                        "error"
+                      ],
+                      "example": "created"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "document_id",
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "unauthorized"
+                    },
+                    "details": {
+                      "type": "array",
+                      "example": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/paths/~1public~1v2~1product-catalog~1items/post/responses/403"
+          },
+          "404": {
+            "description": "Not found error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "not_found"
+                    },
+                    "details": {
+                      "type": "array",
+                      "example": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "too_many_requests"
+                    },
+                    "details": {
+                      "type": "array",
+                      "example": []
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/beta/documents/{document_id}/docx-export-tasks/{task_id}": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "[Beta] DOCX Export Task",
+        "operationId": "getDocxExportTask",
+        "description": "> 📘 This endpoint returns the current state of a DOCX export task for a document.\n> The endpoint supports downloading only multiple files if the document contains several sections. Downloading as a single file in this case is not possible.\n",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify document id.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "task_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify Task id.",
+            "example": "nPh2PDhFdDqAES9k64h9qX"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Got state of export DOCX task.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Default": {
+                    "value": {
+                      "id": "nPh2PDhFdDqAES9k64h9qX",
+                      "document_id": "BhVzRcxH9Z2LgfPPGXFUBa",
+                      "status": "done",
+                      "docx_items": [
+                        {
+                          "section_title": "Section 1",
+                          "url": "https://example.com/downloads/section1.docx"
+                        },
+                        {
+                          "section_title": "Section 2",
+                          "url": "https://example.com/downloads/section2.docx"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/paths/~1public~1beta~1documents~1%7Bdocument_id%7D~1docx-export-tasks/post/responses/200/content/application~1json/schema"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "docx_items": {
+                          "description": "DOCX files result URLs with their names.",
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "description": "List of download links and section item titles of the document.",
+                            "properties": {
+                              "section_title": {
+                                "description": "Document Section Item title.",
+                                "type": "string",
+                                "nullable": true,
+                                "example": "Section 1"
+                              },
+                              "url": {
+                                "description": "The url for downloading the DOCX file.",
+                                "type": "string",
+                                "format": "uri",
+                                "nullable": true
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/paths/~1public~1beta~1documents~1%7Bdocument_id%7D~1docx-export-tasks/post/responses/401"
+          },
+          "403": {
+            "$ref": "#/paths/~1public~1v2~1product-catalog~1items/post/responses/403"
+          },
+          "404": {
+            "$ref": "#/paths/~1public~1beta~1documents~1%7Bdocument_id%7D~1docx-export-tasks/post/responses/404"
+          },
+          "429": {
+            "$ref": "#/paths/~1public~1beta~1documents~1%7Bdocument_id%7D~1docx-export-tasks/post/responses/429"
           }
         }
       }
@@ -10612,12 +10827,12 @@
         "properties": {
           "recipient": {
             "type": "string",
-            "description": "The email address for the recipient you're creating a document link for.",
+            "description": "Email address of the person who will receive access to the document.",
             "example": "josh@example.com"
           },
           "lifetime": {
             "type": "number",
-            "description": "Provide the number of seconds that a document link should be valid for. Default is 3600 seconds.",
+            "description": "The duration in seconds for which the document link will remain valid. The link will expire and become inaccessible after this time period.\nFor security, we recommend setting the lifetime to less than one year (e.g., `\"lifetime\": 31535999`).\nIf not specified, the default value is 1 hour (3600 seconds).\n",
             "example": 900,
             "default": 3600
           }
@@ -10631,11 +10846,13 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "QYCPtavst3DqqBK72ZRtbF"
+            "example": "QYCPtavst3DqqBK72ZRtbF",
+            "description": "The session ID."
           },
           "expires_at": {
             "type": "string",
-            "example": "2017-08-29T22:18:44.315Z"
+            "example": "2017-08-29T22:18:44.315Z",
+            "description": "The date and time when the session will expire."
           }
         }
       },
