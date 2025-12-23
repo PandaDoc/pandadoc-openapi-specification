@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "description": "PandaDoc Public API documentation",
-    "version": "6.1.0",
+    "version": "6.2.0",
     "title": "PandaDoc Public API",
     "license": {
       "name": "MIT",
@@ -4007,6 +4007,18 @@
             },
             "required": true,
             "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "merge_field_scope",
+            "description": "Determines how the fields are mapped when creating a section.\n  * document: Default value. The fields of the entire document are updated.\n  * upload: Only the fields from the created section are updated. The merge field is appended with the upload ID.\n",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "document",
+                "upload"
+              ]
+            }
           }
         ],
         "requestBody": {
@@ -4971,7 +4983,16 @@
               "properties": {
                 "email": {
                   "type": "string",
+                  "nullable": true,
                   "example": "josh@example.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "+14842634627"
+                },
+                "delivery_methods": {
+                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
                 },
                 "first_name": {
                   "type": "string",
@@ -5117,7 +5138,16 @@
                           "properties": {
                             "email": {
                               "type": "string",
+                              "nullable": true,
                               "example": "josh@example.com"
+                            },
+                            "phone": {
+                              "type": "string",
+                              "nullable": true,
+                              "example": "+14842634627"
+                            },
+                            "delivery_methods": {
+                              "$ref": "#/components/schemas/RicipientDeliveryMethods"
                             },
                             "first_name": {
                               "type": "string",
@@ -5183,7 +5213,16 @@
               "properties": {
                 "email": {
                   "type": "string",
+                  "nullable": true,
                   "example": "josh@example.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "+14842634627"
+                },
+                "delivery_methods": {
+                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
                 },
                 "first_name": {
                   "type": "string",
@@ -5298,7 +5337,16 @@
               "properties": {
                 "email": {
                   "type": "string",
+                  "nullable": true,
                   "example": "josh@example.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "+14842634627"
+                },
+                "delivery_methods": {
+                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
                 },
                 "first_name": {
                   "type": "string",
@@ -5456,7 +5504,16 @@
                           "properties": {
                             "email": {
                               "type": "string",
+                              "nullable": true,
                               "example": "josh@example.com"
+                            },
+                            "phone": {
+                              "type": "string",
+                              "nullable": true,
+                              "example": "+14842634627"
+                            },
+                            "delivery_methods": {
+                              "$ref": "#/components/schemas/RicipientDeliveryMethods"
                             },
                             "first_name": {
                               "type": "string",
@@ -5625,7 +5682,13 @@
                 },
                 "email": {
                   "type": "string",
+                  "nullable": true,
                   "example": "josh@example.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "+14842634627"
                 },
                 "first_name": {
                   "type": "string",
@@ -5634,6 +5697,9 @@
                 "last_name": {
                   "type": "string",
                   "example": "Ron"
+                },
+                "delivery_methods": {
+                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
                 },
                 "redirect": {
                   "$ref": "#/components/schemas/RecipientRedirect"
@@ -5945,7 +6011,16 @@
                 },
                 "email": {
                   "type": "string",
+                  "nullable": true,
                   "example": "test@test.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "+14842634627"
+                },
+                "delivery_methods": {
+                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
                 },
                 "has_completed": {
                   "type": "boolean",
@@ -6192,9 +6267,47 @@
             "type": "string",
             "example": "msFYActMfJHqNTKH8YSvF1"
           },
-          "shared_link": {
-            "type": "string",
-            "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
+          "recipients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "7kqXgjFejB2toXxjcC5jfZ"
+                },
+                "first_name": {
+                  "type": "string",
+                  "example": "Jhon"
+                },
+                "last_name": {
+                  "type": "string",
+                  "example": "Dow"
+                },
+                "recipient_type": {
+                  "type": "string",
+                  "example": "CC"
+                },
+                "email": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "test@test.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "+14842634627"
+                },
+                "delivery_methods": {
+                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
+                },
+                "signing_order": {},
+                "shared_link": {
+                  "type": "string",
+                  "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
+                }
+              }
+            }
           }
         }
       },
@@ -6313,7 +6426,16 @@
         "properties": {
           "email": {
             "type": "string",
+            "nullable": true,
             "example": "user01@pandadoc.com"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "example": "+14842634627"
+          },
+          "delivery_methods": {
+            "$ref": "#/components/schemas/RicipientDeliveryMethods"
           },
           "first_name": {
             "type": "string",
@@ -6334,11 +6456,6 @@
             "type": "string",
             "nullable": true,
             "example": "CTO"
-          },
-          "phone": {
-            "type": "string",
-            "nullable": true,
-            "example": "+14842634627"
           },
           "state": {
             "type": "string",
@@ -7022,6 +7139,7 @@
                   "properties": {
                     "email": {
                       "type": "string",
+                      "nullable": true,
                       "example": "jane@example.com"
                     },
                     "type": {
@@ -8232,6 +8350,7 @@
           },
           "email": {
             "type": "string",
+            "nullable": true,
             "example": "user01@pandadoc.com"
           },
           "first_name": {
@@ -8297,6 +8416,7 @@
         "properties": {
           "email": {
             "type": "string",
+            "nullable": true,
             "example": "user01@pandadoc.com"
           },
           "first_name": {
@@ -8354,6 +8474,7 @@
         "properties": {
           "email": {
             "type": "string",
+            "nullable": true,
             "example": "user01@pandadoc.com"
           },
           "first_name": {
@@ -9048,7 +9169,16 @@
               "properties": {
                 "email": {
                   "type": "string",
+                  "nullable": true,
                   "example": "josh@example.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "+14842634627"
+                },
+                "delivery_methods": {
+                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
                 },
                 "first_name": {
                   "type": "string",
@@ -9131,7 +9261,16 @@
               "properties": {
                 "email": {
                   "type": "string",
+                  "nullable": true,
                   "example": "josh@example.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "+14842634627"
+                },
+                "delivery_methods": {
+                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
                 },
                 "first_name": {
                   "type": "string",
@@ -9233,7 +9372,16 @@
                           "properties": {
                             "email": {
                               "type": "string",
+                              "nullable": true,
                               "example": "josh@example.com"
+                            },
+                            "phone": {
+                              "type": "string",
+                              "nullable": true,
+                              "example": "+14842634627"
+                            },
+                            "delivery_methods": {
+                              "$ref": "#/components/schemas/RicipientDeliveryMethods"
                             },
                             "first_name": {
                               "type": "string",
@@ -9304,7 +9452,16 @@
               "properties": {
                 "email": {
                   "type": "string",
+                  "nullable": true,
                   "example": "josh@example.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "nullable": true,
+                  "example": "+14842634627"
+                },
+                "delivery_methods": {
+                  "$ref": "#/components/schemas/RicipientDeliveryMethods"
                 },
                 "first_name": {
                   "type": "string",
@@ -9426,7 +9583,16 @@
                           "properties": {
                             "email": {
                               "type": "string",
+                              "nullable": true,
                               "example": "josh@example.com"
+                            },
+                            "phone": {
+                              "type": "string",
+                              "nullable": true,
+                              "example": "+14842634627"
+                            },
+                            "delivery_methods": {
+                              "$ref": "#/components/schemas/RicipientDeliveryMethods"
                             },
                             "first_name": {
                               "type": "string",
@@ -9676,6 +9842,20 @@
           "is_enabled",
           "url"
         ]
+      },
+      "RicipientDeliveryMethods": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "email": {
+            "type": "boolean",
+            "default": true
+          },
+          "sms": {
+            "type": "boolean",
+            "default": false
+          }
+        }
       }
     },
     "responses": {
