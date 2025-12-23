@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.2.0"
+    "version": "7.3.0"
   },
   "servers": [
     {
@@ -2473,8 +2473,8 @@
     },
     "/public/v1/documents/{id}/attachments": {
       "get": {
-        "summary": "Document Attachment List",
-        "description": "Return list of objects attached to particular document",
+        "summary": "List Document Attachments",
+        "description": "Returns a list of attachments associated with a specified document.",
         "operationId": "listDocumentAttachments",
         "tags": [
           "Document Attachments"
@@ -2488,7 +2488,11 @@
               "type": "string"
             },
             "required": true,
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+            "examples": {
+              "List Document Attachments": {
+                "value": "BhVzRcxH9Z2LgfPPGXFUBa"
+              }
+            }
           }
         ],
         "responses": {
@@ -2500,6 +2504,25 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/DocumentAttachmentResponse"
+                  }
+                },
+                "examples": {
+                  "List Document Attachments": {
+                    "value": [
+                      {
+                        "uuid": "076797cd-dca6-4083-a3pi-6960714209d9",
+                        "date_created": "2024-07-15T21:14:39.973077Z",
+                        "created_by": {
+                          "id": "bSfiuAJNokERwsBxynKjwA",
+                          "email": "sergio@pandadoc.com",
+                          "first_name": "Sergio",
+                          "last_name": "",
+                          "avatar": null
+                        },
+                        "name": "document.pdf",
+                        "type": "general"
+                      }
+                    ]
                   }
                 }
               }
@@ -2520,9 +2543,90 @@
         }
       },
       "post": {
-        "summary": "Document Attachment Create",
+        "summary": "Create Document Attachment",
         "description": "Creates an attachment for a particular document",
         "operationId": "createDocumentAttachment",
+        "tags": [
+          "Document Attachments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentAttachmentRequest"
+              },
+              "examples": {
+                "Create Document Attachments": {
+                  "value": {
+                    "source": "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/1920px-Wikipedia-logo-v2.svg.png",
+                    "name": "Wikipedia logo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentAttachmentResponse"
+                },
+                "examples": {
+                  "Create Document Attachment": {
+                    "value": {
+                      "uuid": "1111bc85-b0f0-42a8-97e7-9265cd9a12a4",
+                      "date_created": "2025-01-31T14:02:59.667160Z",
+                      "created_by": {
+                        "id": "bSfiuAJNokERwsBxynKjwA",
+                        "email": "sergio@pandadoc.com",
+                        "first_name": "Sergio",
+                        "last_name": "",
+                        "avatar": null
+                      },
+                      "name": "Wikipedia logo",
+                      "type": "general"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/attachments?upload": {
+      "post": {
+        "summary": "Create Document Attachment From Upload",
+        "description": "Creates an attachment for a particular document",
+        "operationId": "createDocumentAttachmentFromFileUpload",
         "tags": [
           "Document Attachments"
         ],
@@ -2544,7 +2648,21 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/DocumentAttachmentRequest"
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Binary file to be attached to a document"
+                      }
+                    }
+                  },
+                  {
+                    "$ref": "#/components/schemas/DocumentAttachmentRequest/allOf/1"
+                  }
+                ]
               }
             }
           }
@@ -2578,7 +2696,7 @@
     "/public/v1/documents/{id}/attachments/{attachment_id}": {
       "get": {
         "summary": "Document Attachment Details",
-        "description": "Returns details of the specific document's attachment",
+        "description": "Returns details of the specific document's attachment.",
         "operationId": "detailsDocumentAttachment",
         "tags": [
           "Document Attachments"
@@ -2587,7 +2705,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Document UUID",
+            "description": "Document UUID.",
             "schema": {
               "type": "string"
             },
@@ -2597,7 +2715,7 @@
           {
             "name": "attachment_id",
             "in": "path",
-            "description": "Attachment UUID",
+            "description": "Attachment UUID.",
             "schema": {
               "type": "string"
             },
@@ -2612,6 +2730,23 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DocumentAttachmentResponse"
+                },
+                "examples": {
+                  "Document Attachment Details": {
+                    "value": {
+                      "uuid": "076797cd-dca6-4083-a3pi-6960714209d9",
+                      "date_created": "2024-07-15T21:14:39.973077Z",
+                      "created_by": {
+                        "id": "bSfiuAJNokERwsBxynKjwA",
+                        "email": "sergio@pandadoc.com",
+                        "first_name": "Sergio",
+                        "last_name": "",
+                        "avatar": null
+                      },
+                      "name": "document.pdf",
+                      "type": "general"
+                    }
+                  }
                 }
               }
             }
@@ -2631,8 +2766,8 @@
         }
       },
       "delete": {
-        "summary": "Document Attachment Delete",
-        "description": "Deletes specific document's attachment",
+        "summary": "Delete Document Attachment",
+        "description": "Deletes an attachment from the document.",
         "operationId": "deleteDocumentAttachment",
         "tags": [
           "Document Attachments"
@@ -2641,7 +2776,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Document UUID",
+            "description": "Document UUID.",
             "schema": {
               "type": "string"
             },
@@ -2651,7 +2786,7 @@
           {
             "name": "attachment_id",
             "in": "path",
-            "description": "Attachment UUID",
+            "description": "Attachment UUID.",
             "schema": {
               "type": "string"
             },
@@ -2677,8 +2812,8 @@
     },
     "/public/v1/documents/{id}/attachments/{attachment_id}/download": {
       "get": {
-        "summary": "Document Attachment Download",
-        "description": "Returns document attachment file for download",
+        "summary": "Download Document Attachment",
+        "description": "Download an attachment by ID.",
         "operationId": "downloadDocumentAttachment",
         "tags": [
           "Document Attachments"
@@ -2687,7 +2822,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Document UUID",
+            "description": "Document UUID.",
             "schema": {
               "type": "string"
             },
@@ -2697,7 +2832,7 @@
           {
             "name": "attachment_id",
             "in": "path",
-            "description": "Attachment UUID",
+            "description": "Attachment UUID.",
             "schema": {
               "type": "string"
             },
@@ -3498,6 +3633,492 @@
           },
           "400": {
             "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{document_id}/sections": {
+      "get": {
+        "tags": [
+          "Document Sections (Bundles)"
+        ],
+        "summary": "List Document Sections",
+        "operationId": "listSections",
+        "description": "Retrieve information about the sections within a document.\n",
+        "parameters": [
+          {
+            "examples": {
+              "List Document Sections": {
+                "value": "BhVzRcxH9Z2LgfPPGXFUBa"
+              }
+            },
+            "name": "document_id",
+            "description": "Document ID",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSectionListResponse"
+                },
+                "examples": {
+                  "List Document Sections": {
+                    "value": {
+                      "results": [
+                        {
+                          "uuid": "fGE5F6rAeBSPokHMBt8Pbm",
+                          "name": "[DEV] Test Template with HTML Tags"
+                        },
+                        {
+                          "uuid": "MBMsxWgditbvUAgSKXR8kA",
+                          "name": "Sample Document from PDF with Field Tags"
+                        },
+                        {
+                          "uuid": "JKmXhd9e4ZwNMyaEYFJEkK",
+                          "name": "Sample Document from PDF with Form Fields"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{document_id}/sections/uploads": {
+      "post": {
+        "tags": [
+          "Document Sections (Bundles)"
+        ],
+        "summary": "Create Document Section",
+        "operationId": "uploadSection",
+        "description": "With this endpoint, you can add a new section to an existing PandaDoc document (create a bundle).\n\nYou can upload a section to the document using a PandaDoc template or a file by URL.\n\n> ⏱️ Document Section creation is a non-blocking (asynchronous) operation\n> \n> The document creation process may take some time.\n> \n> With a successful request, you receive a response with the created upload ID and status `document_sections_upload.uploaded`. After processing completes on our servers, usually a few seconds, the document moves to the `document_sections_upload.PROCESSED` status.\n\n## Using a PandaDoc template\n\n<details>\n\n  > 🚧 Current Version Limitations\n  > \n  > Images in sections are currently not supported.\n\n  > 📘 Pricing tables note\n  > \n  > Each pricing table must have a unique name to populate it with data correctly.\n\n  A PandaDoc template is a document template created and edited in the PandaDoc web application. Our [help center](https://support.pandadoc.com/hc/en-us/articles/360041230753-Save-time-with-templates) has further information on PandaDoc templates. \n\n  If you don't have any PandaDoc Template yet, you can easily create one by clicking [Copy a Sample PandaDoc template](https://app.pandadoc.com/get-this-template/?pt=public_template&pub=eiC3a6qBVfEfbw7VCYgaeN). This will open the PandaDoc application in a new tab, copy the sample template into your account, and create a new document from the template.\n</details>\n\n## Using a File by URL\n\n<details>\n  \n  Using this endpoint you can add a section to the existing document. The section is created from a file you upload. The file can be a PDF, DocX, or RTF.\n\n  > 📘 We've prepared two samples that you can use to test the request.\n  > Download them here:\n  >\n  > - [Download a Sample PDF with Form Fields](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf) \n  > - [Download a Sample PDF with Field Tags](https://5132871.fs1.hubspotusercontent-na1.net/hubfs/5132871/SamplePandaDocPdf_FieldTags_updated.pdf)\n\n  > ❗️ Limitations\n  > \n  > * This method does not support multiple documents.\n  > * The maximum supported file size is 50 MB. API returns \"413 Request entity too large\" in case of bigger files.\n  > * PandaDoc does not support creating document from a PDF with encrypted files (to check whether a file is encrypted or not, try Get info -> Secure: Password Encrypted).\n\n  ### PDF Form Fields\n\n  PandaDoc recognizes PDF form fields. To enable this feature, pass the optional `parse_form_fields` value as `true` when making a create document section API call. We support Text fields, Dropdowns, and Signature fields.\n\n  If you would like to pass additional parameters to configure PDF form fields, use the PDF field name as an optId. You can use a PDF editor such as Adobe Acrobat, Foxit to get and edit field names in your PDF.\n\n  [**Download a Sample PDF with Form Fields**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf)\n\n  ### PDF/DocX/RTF Field Tags\n\n  This parsing format allows a word processor such as [Microsoft Word](https://support.office.com/en-us/article/Save-as-PDF-d85416c5-7d77-4fd6-a216-6f4bf7c7c110?ui=en-US&rs=en-US&ad=US) or [Google Docs](https://support.google.com/drive/answer/2423534?co=GENIE.Platform%3DDesktop&hl=en) to prepare a document and save it in PDF, DocX or RTF format.\n\n  Within the text, PandaDoc parses field tags. A field tag starts and ends with brackets. The field tag includes basic information on how to create a form field in the PandaDoc document. The request JSON object `optId` can also extend this information for even greater control.\n\n  Here is an example of how the field tag in a PDF/DocX/RTF  is converted to a text field in the PandaDoc document:\n\n  ![](https://files.readme.io/38afedf-ex3.png \"ex3.png\")\n\n  [**Download a Sample PDF with Field Tags**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FieldTags.pdf)\n\n  #### PDF Field Tag Key\n\n  ![](https://files.readme.io/a81fbf1-field-tag-structure.png \"field-tag-structure.png\")\n\n  | Number | Key         | Description                                                                                                                                                                                                                                                                               | Example                           |\n  | :----- | :---------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- |\n  | 1      | `fieldType` | Field type from the table documented below                                                                                                                                                                                                                                                | `signature`, or `s` for shorthand |\n  | 2      | `*`         | Optional `*` denotes the field is not required                                                                                                                                                                                                                                            | `*`                               |\n  | 3      | `role`      | Role name. Associate the field tag with a recipient role. Roles must be assigned to recipients in the request body. In this case we are using role `s1` to keep the length short and denote the concept of \"signer 1\". `s1` would be the value passed as role in a recipient JSON object. | `s1`                              |\n  | 4      | `optId`     | Optional field Id. Specify more information about the field tag within the post request by using this id.                                                                                                                                                                                 | `sigBox17`                        |\n  | 5      | `_____`     | Use underscores to widen the field if desired. The form fields in PandaDoc will scale to the length and size of your field tag.                                                                                                                                                           | `_____`                           |\n\n  > 🚧 Role names restrictions\n  > \n  > Underscores are not supported in role names for a file with a Field Tag.\n\n  #### PDF/DocX/RTF Field Tag Supported Types\n\n  | Field Type  | Short Notation | Is PandaDoc Field |\n  | :---------- | :------------- | :---------------- |\n  | `textfield` | `t`            | Field             |\n  | `checkbox`  | `c`            | Field             |\n  | `signature` | `s`            | Field             |\n  | `date`      | `d`            | Field             |\n  | `initials`  | `i`            | Field             |\n  | `dropdown`  | `dd`           | Field             |\n\n  ```json Field Tags Example\n  \"fields\": {  \n    \"textfield\": {  \n        \"value\": \"Jane\",\n        \"role\": \"user\"\n    },\n    \"dropdown\": {\n        \"value\": \"opt1\",\n        \"role\": \"user\",\n        \"options\":[\n          \"opt1\",\n          \"opt2\",\n          \"opt3\"\n        ]\n    },\n    \"checkbox\": {  \n        \"value\": true,\n        \"role\": \"user\"\n    },\n    \"date\":{\n        \"value\": \"2022-05-20\",\n        \"role\": \"user\"\n    },\n    \"signature\": {  \n        \"value\": \"\",\n        \"role\": \"user\"\n    }\n  }\n  ```\n\n  > 📘 Fields in PandaDoc\n  > \n  > The following article explains how to use Fields: [Everything you need to know about Fields](https://support.pandadoc.com/hc/en-us/articles/360040595714--Editor-2-0-Fields)\n\n  ### Signing order\n\n  Set a signing order for document section sections created from a file.\n\n  ```json\n  \"recipients\": [  \n    {  \n      \"email\": \"josh@example.com\",\n      \"first_name\": \"Josh\",\n      \"last_name\": \"Ron\",\n      \"role\": \"user\",\n      \"signing_order\": 1\n    }\n  ]\n  ```\n\n  > 📘 Signing order in PandaDoc\n  >\n  > https://support.pandadoc.com/en/articles/9714771-signing-order: [How to use signing order](https://support.pandadoc.com/en/articles/9714771-signing-order)\n\n  ### Error handling\n\n  | Error description | Type | Root cause |\n  |---|---|---|\n  | Document version 1 is not supported. | Validation errors: Form fields | The creation document section is supported only for document version 2 |\n  | PDF content hasn't been processed: document is broken or locked | Processing errors: Failed to process document content | Document converter service can’t process PDF. This may be caused by locked PDF or if it’s broken. |\n  | Error occurred while parsing PDF field tags. Please try PDF flattening or reach out to support | Processing errors: Field tag / Form field validation error | Doc converter managed to parse PDF and extract tags, but at least 1 of them is invalid (having negative position, for example). Usually we recommend PDF flattening and it helps |\n  | No role='{role}' for field tag specified in `recipients` found, roles passed were {roles} | Validation errors: Field tags | Role is invalid. When the role specified in field tag is empty or wasn’t provided in a payload for any recipient |\n  | All field tags within PDF must be declared within `fields`  object of the JSON Payload. No field with optId='{optid}' found in fields object, fields passed were {optids} | Validation errors: Field tags | Label is invalid. Occurs when **optId** specified in field tag is empty or no field with **name = optId** was provided in a payload |\n  | One of field tags in PDF with type='{field}' doesn't have a role | Validation errors: Field tags | Field tag in PDF has no role. One of field tags in PDF with type=% doesn't have a role. |\n  | Role for form field with name='{role}' is not provided in payload | Validation errors: Form fields | Role for form field with ‘name’ is not provided. Occurs when `role` for form field with name=%s  is not provided in payload |\n  | Field for form field with name='{name}' is not specified in payload, available names are {names} | Validation errors: Form fields | Field ‘name’ is not specified in payload. Occurs when no field with name = form field name was provided in a payload |\n  | No role='{role}' for form field specified in 'recipients' found, roles passed were {roles}\" | Validation errors: Form fields | Failed to resolve field actor for `role` in form field with ‘name’.   Occurs when role from the form field is not found in recipient’s from payload |\n  | Failed to download file from link {url}. | Source errors | Error on attempt to download file.   An error has occurred on an attempt to download file using the provided ‘url’ in payload |\n  | Failed to download file from link {url} (status code: {status code}) | Source errors | Error with HTTP status code on attempt to download file.   An error has occurred on an attempt to download file using the provided ‘url’ in payload - remote server responded with the HTTP status code |\n  | Content type='{type}' is not supported, available types are {types} | Source errors | Content type is not supported.   Content type should be one of the following: PDF, ZIP, doc, docx, RTF |\n  | The maximum file size is exceeded, limit is {limit} MB | Source errors | The file size has exceeded the allowed limits. An error occurred while trying to download a file that is too large (limit is 50M) |\n    \n  </details>\n",
+        "parameters": [
+          {
+            "examples": {
+              "Create Document Section from Template": {
+                "value": "CFz2UnLXDck3UJkeGGEuB3"
+              }
+            },
+            "name": "document_id",
+            "description": "Document ID",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "name": "merge_field_scope",
+            "description": "Determines how the fields are mapped when creating a section.\n  * document: Default value. The fields of the entire document are updated.\n  * upload: Only the fields from the created section are updated. The merge field is appended with the upload ID.\n",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "document",
+                "upload"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/UploadSectionByTemplateRequest"
+                      },
+                      {
+                        "title": "From PandaDoc Template"
+                      }
+                    ]
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/UploadSectionRequest"
+                      },
+                      {
+                        "title": "From File By Url",
+                        "properties": {
+                          "url": {
+                            "type": "string",
+                            "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
+                            "description": "Use a URL to specify the PDF. We support only URLs starting with https."
+                          }
+                        },
+                        "required": [
+                          "url"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "examples": {
+                "Create Document Section From Template": {
+                  "value": {
+                    "name": "New section from template",
+                    "template_uuid": "hryJY9mqYZHjQCYQuSjRQg",
+                    "recipients": [
+                      {
+                        "role": "Client",
+                        "email": "client@pandadoc.com"
+                      },
+                      {
+                        "role": "Sender",
+                        "email": "sender@pandadoc.com"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSectionResponse"
+                },
+                "examples": {
+                  "Create Document Section From Template": {
+                    "value": {
+                      "uuid": "LQ6cUT7xevPLUEgJeF8Zrm",
+                      "document_uuid": "CFz2UnLXDck3UJkeGGEuB3",
+                      "status": "document_sections_upload.UPLOADED",
+                      "name": "null",
+                      "date_created": "2023-08-28T15:48:09.379860Z",
+                      "date_modified": "2023-08-28T15:48:09.379860Z",
+                      "info_message": "You need to poll the Document Sections Upload Status method until the status will be changed to document_sections_upload.PROCESSED"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{document_id}/sections/uploads?upload": {
+      "post": {
+        "tags": [
+          "Document Sections (Bundles)"
+        ],
+        "summary": "Create Document Section from File Upload",
+        "operationId": "uploadSectionWithUpload",
+        "description": "With this endpoint, you can add a new section to an existing PandaDoc document (create a bundle). The section is created from a file you upload. The file can be a PDF, DocX, or RTF.\n\n> 📘 We've prepared two samples that you can use to test the request.\n> Download them here:\n>\n> - [Download a Sample PDF with Form Fields](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf) \n> - [Download a Sample PDF with Field Tags](https://5132871.fs1.hubspotusercontent-na1.net/hubfs/5132871/SamplePandaDocPdf_FieldTags_updated.pdf)\n\n\n> 🚧 Usage specifics\n> \n> 1. This method uses a `multipart/form-data` request type instead of the `application/json` typically found in the PandaDoc API. This is to accommodate the upload of the included document.\n> 2. You can send a URL instead of a file in the document creation request.  \n>    In this case, you need to use the `application/json` content type and add the URL parameter in the body request. As an example, see [Create from public PDF](https://developers.pandadoc.com/docs/create-and-send-a-document-from-a-publicly-available-pdf) guide for more details.\n> 3. A file you upload is not stored in your PandaDoc account, so you have to upload it with every request.\n\n> ❗️ Limitations\n> \n> 1. This method does not support multiple documents.\n> 2. The maximum supported file size is 50 MB. API returns \"413 Request entity too large\" in case of bigger files.\n> 3. PandaDoc does not support creating document from a PDF with encrypted files (to check whether a file is encrypted or not, try Get info -> Secure: Password Encrypted).\n\n> ⏱️ Document Section creation is a non-blocking (asynchronous) operation\n> \n> The document creation process may take some time.\n> \n> With a successful request, you receive a response with the created upload ID and status `document_sections_upload.uploaded`. After processing completes on our servers, usually a few seconds, the document moves to the `document_sections_upload.PROCESSED` status.\n\n## PDF Form Fields\n\nPandaDoc recognizes PDF form fields. To enable this feature, pass the optional `parse_form_fields` value as `true` when making a create document section API call. We support Text fields, Dropdowns, and Signature fields.\n\nIf you would like to pass additional parameters to configure PDF form fields, use the PDF field name as an optId. You can use a PDF editor such as Adobe Acrobat, Foxit to get and edit field names in your PDF.\n\n[**Download a Sample PDF with Form Fields**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf)\n\n## PDF/DocX/RTF Field Tags\n\nThis parsing format allows a word processor such as [Microsoft Word](https://support.office.com/en-us/article/Save-as-PDF-d85416c5-7d77-4fd6-a216-6f4bf7c7c110?ui=en-US&rs=en-US&ad=US) or [Google Docs](https://support.google.com/drive/answer/2423534?co=GENIE.Platform%3DDesktop&hl=en) to prepare a document and save it in PDF, DocX or RTF format.\n\nWithin the text, PandaDoc parses field tags. A field tag starts and ends with brackets. The field tag includes basic information on how to create a form field in the PandaDoc document. The request JSON object `optId` can also extend this information for even greater control.\n\nHere is an example of how the field tag in a PDF/DocX/RTF  is converted to a text field in the PandaDoc document:\n\n![](https://files.readme.io/38afedf-ex3.png \"ex3.png\")\n\n[**Download a Sample PDF with Field Tags**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FieldTags.pdf)\n\n<details>\n\n  ### PDF Field Tag Key\n\n  ![](https://files.readme.io/a81fbf1-field-tag-structure.png \"field-tag-structure.png\")\n\n  | Number | Key         | Description                                                                                                                                                                                                                                                                               | Example                           |\n  | :----- | :---------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- |\n  | 1      | `fieldType` | Field type from the table documented below                                                                                                                                                                                                                                                | `signature`, or `s` for shorthand |\n  | 2      | `*`         | Optional `*` denotes the field is not required                                                                                                                                                                                                                                            | `*`                               |\n  | 3      | `role`      | Role name. Associate the field tag with a recipient role. Roles must be assigned to recipients in the request body. In this case we are using role `s1` to keep the length short and denote the concept of \"signer 1\". `s1` would be the value passed as role in a recipient JSON object. | `s1`                              |\n  | 4      | `optId`     | Optional field Id. Specify more information about the field tag within the post request by using this id.                                                                                                                                                                                 | `sigBox17`                        |\n  | 5      | `_____`     | Use underscores to widen the field if desired. The form fields in PandaDoc will scale to the length and size of your field tag.                                                                                                                                                           | `_____`                           |\n\n  > 🚧 Role names restrictions\n  > \n  > Underscores are not supported in role names for a file with a Field Tag.\n\n  ### PDF/DocX/RTF Field Tag Supported Types\n\n  | Field Type  | Short Notation | Is PandaDoc Field |\n  | :---------- | :------------- | :---------------- |\n  | `textfield` | `t`            | Field             |\n  | `checkbox`  | `c`            | Field             |\n  | `signature` | `s`            | Field             |\n  | `date`      | `d`            | Field             |\n  | `initials`  | `i`            | Field             |\n  | `dropdown`  | `dd`           | Field             |\n\n  > 📘 Fields in PandaDoc\n  > \n  > The following article explains how to use Fields: [Everything you need to know about Fields](https://support.pandadoc.com/hc/en-us/articles/360040595714--Editor-2-0-Fields)\n\n  ```json Field Tags Example\n  \"fields\": {  \n          \"textfield\": {  \n              \"value\": \"Jane\",\n              \"role\": \"user\"\n          },\n          \"dropdown\": {\n              \"value\": \"opt1\",\n              \"role\": \"user\",\n              \"options\":[\n                \"opt1\",\n                \"opt2\",\n                \"opt3\"\n              ]\n          },\n          \"checkbox\": {  \n              \"value\": true,\n              \"role\": \"user\"\n          },\n          \"date\":{\n              \"value\": \"2022-05-20\",\n              \"role\": \"user\"\n          },\n          \"signature\": {  \n              \"value\": \"\",\n              \"role\": \"user\"\n          }\n      }\n  ```\n\n</details>\n\n## Signing order\n\nSet a signing order for document section sections created from a file.\n\n```json\n\"recipients\": [  \n  {  \n    \"email\": \"josh@example.com\",\n    \"first_name\": \"Josh\",\n    \"last_name\": \"Ron\",\n    \"role\": \"user\",\n    \"signing_order\": 1\n  }\n]\n```\n\n## Error handling\n\n| Error description | Type | Root cause |\n|---|---|---|\n| Document version 1 is not supported. | Validation errors: Form fields | The creation document section is supported only for document version 2 |\n| PDF content hasn't been processed: document is broken or locked | Processing errors: Failed to process document content | Document converter service can’t process PDF. This may be caused by locked PDF or if it’s broken. |\n| Error occurred while parsing PDF field tags. Please try PDF flattening or reach out to support | Processing errors: Field tag / Form field validation error | Doc converter managed to parse PDF and extract tags, but at least 1 of them is invalid (having negative position, for example). Usually we recommend PDF flattening and it helps |\n| No role='{role}' for field tag specified in `recipients` found, roles passed were {roles} | Validation errors: Field tags | Role is invalid. When the role specified in field tag is empty or wasn’t provided in a payload for any recipient |\n| All field tags within PDF must be declared within `fields`  object of the JSON Payload. No field with optId='{optid}' found in fields object, fields passed were {optids} | Validation errors: Field tags | Label is invalid. Occurs when **optId** specified in field tag is empty or no field with **name = optId** was provided in a payload |\n| One of field tags in PDF with type='{field}' doesn't have a role | Validation errors: Field tags | Field tag in PDF has no role. One of field tags in PDF with type=% doesn't have a role. |\n| Role for form field with name='{role}' is not provided in payload | Validation errors: Form fields | Role for form field with ‘name’ is not provided. Occurs when `role` for form field with name=%s  is not provided in payload |\n| Field for form field with name='{name}' is not specified in payload, available names are {names} | Validation errors: Form fields | Field ‘name’ is not specified in payload. Occurs when no field with name = form field name was provided in a payload |\n| No role='{role}' for form field specified in 'recipients' found, roles passed were {roles}\" | Validation errors: Form fields | Failed to resolve field actor for `role` in form field with ‘name’.   Occurs when role from the form field is not found in recipient’s from payload |\n| Failed to download file from link {url}. | Source errors | Error on attempt to download file.   An error has occurred on an attempt to download file using the provided ‘url’ in payload |\n| Failed to download file from link {url} (status code: {status code}) | Source errors | Error with HTTP status code on attempt to download file.   An error has occurred on an attempt to download file using the provided ‘url’ in payload - remote server responded with the HTTP status code |\n| Content type='{type}' is not supported, available types are {types} | Source errors | Content type is not supported.   Content type should be one of the following: PDF, ZIP, doc, docx, RTF |\n| The maximum file size is exceeded, limit is {limit} MB | Source errors | The file size has exceeded the allowed limits. An error occurred while trying to download a file that is too large (limit is 50M) |\n",
+        "parameters": [
+          {
+            "name": "document_id",
+            "description": "Document ID",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "merge_field_scope",
+            "description": "Determines how the fields are mapped when creating a section.\n  * document: Default value. The fields of the entire document are updated.\n  * upload: Only the fields from the created section are updated. The merge field is appended with the upload ID.\n",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "document",
+                "upload"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Binary PDF/DocX/RTF File."
+                  },
+                  "data": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/UploadSectionRequest"
+                      },
+                      {
+                        "description": "JSON as a multipart/form-data string."
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSectionResponse"
+                },
+                "examples": {
+                  "Create Document Section from File Upload": {
+                    "value": {
+                      "uuid": "HiNXiDJazzufdxErSr5w6n",
+                      "name": "My Section",
+                      "document_uuid": "Gpzd2nXgFjCSЖzhTucci2E",
+                      "status": "document_sections_upload.UPLOADED",
+                      "date_created": "2024-07-15T08:14:33.050351Z",
+                      "date_modified": "2024-07-15T08:14:33.050351Z",
+                      "info_message": "You need to poll the Document Sections Upload Status method until the status will be changed to document_sections_upload.PROCESSED"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{document_id}/sections/uploads/{upload_id}": {
+      "get": {
+        "tags": [
+          "Document Sections (Bundles)"
+        ],
+        "summary": "Document Section Upload Status",
+        "operationId": "sectionDetails",
+        "description": "Receive the upload status of the document and sections by their `upload_id`.\n\nRequesting document section upload status is useful to ensure a document section upload is in the expected state before calling additional API methods.\n\nIn response, you receive an array with `sections_uuid`. You can receive information about each section using the [Document Section Info](https://developers.pandadoc.com/reference/document-section-info) endpoint.\n\n```json\n    \"section_uuids\": [\n        \"H8T8CJofGY6JwTsWsPuDEF\",\n        \"8MwLaU4SaZywqLiDk26mDF\"\n    ]\n```\n\n## Available Document Section Upload Statuses\n\nThe following is a complete list of all possible document statuses returned:\n\n| Document Status                      | Status Description                                                                                                                                                |\n| :----------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| `document_sections_upload.UPLOADED`  | The document section upload process has just been created. It is in processing and will be in `document_sections_upload.PROCESSED` state momentarily.             |\n| `document_sections_upload.PROCESSED` | The document sections upload is processed and the sections are already created in the document. All aspects of the document sections can be edited in this state. |\n| `document_sections_upload.ERROR`     | Document section upload procces has been failed. For more information check error details in the response.                                                        |\n",
+        "parameters": [
+          {
+            "name": "document_id",
+            "description": "Document ID.",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "upload_id",
+            "description": "Upload ID.",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "LQ6cUT7xevPLUEgJeF8Zrm"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSectionStatusResponse"
+                },
+                "examples": {
+                  "Document Section Upload Status": {
+                    "value": {
+                      "uuid": "zVbriqiPaulqj4ThcLeKQG",
+                      "name": "Sample Section",
+                      "document_uuid": "Gpzd2nXgFjCSS3hTucci2E",
+                      "status": "document_sections_upload.PROCESSED",
+                      "section_uuids": [
+                        "xn5gLB9ox1fbpZ9XDbAQsi"
+                      ],
+                      "date_created": "2024-07-15T08:20:28.187477Z",
+                      "date_modified": "2024-07-15T08:20:31.839240Z",
+                      "info_message": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{document_id}/sections/{section_id}": {
+      "get": {
+        "tags": [
+          "Document Sections (Bundles)"
+        ],
+        "summary": "Document Section Details",
+        "operationId": "sectionInfo",
+        "description": "Receive information about each section.",
+        "parameters": [
+          {
+            "name": "document_id",
+            "description": "Document ID.",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "section_id",
+            "description": "Section ID.",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "LQ6cUT7xevPLUEgJeF8Zrm"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SectionInfoResponse"
+                },
+                "examples": {
+                  "Document Section Details": {
+                    "value": {
+                      "uuid": "mcqRJhoEjDOUyT5AePMa9Z",
+                      "name": "New document",
+                      "document_uuid": "Gpzd2nXgFjCS3zipucci2E"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Document Sections (Bundles)"
+        ],
+        "summary": "Delete Document Section",
+        "operationId": "deleteSection",
+        "description": "Removes selected section from the document.",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify document ID.",
+            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
+          },
+          {
+            "name": "section_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify section ID.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -5658,9 +6279,9 @@
         "tags": [
           "Members"
         ],
-        "summary": "List members",
-        "description": "Retrieve all members details of the workspace",
+        "summary": "List Members",
         "operationId": "listMembers",
+        "description": "Retrieve all members details of the workspace implied by the OAuth token or API key.\\\nFor each member, the `workspace` parameter shows their active workspace, that is the workspace they are currently working in.\\\nThis means the `workspace` value can differ from the workspace implied by your API key.\n",
         "responses": {
           "200": {
             "description": "OK",
@@ -5668,6 +6289,44 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MemberListResponse"
+                },
+                "examples": {
+                  "List Members": {
+                    "value": {
+                      "results": [
+                        {
+                          "user_id": "FA5QAu8UGA3oVDDZuPL75B",
+                          "membership_id": "RyMNXBjBPRppi56TfYBrXi",
+                          "email": "joe.don@pandadoc.com",
+                          "first_name": "Joe",
+                          "last_name": "Don",
+                          "is_active": true,
+                          "workspace": "n7SK7prHeoWJSXb9VkrPve",
+                          "workspace_name": "Workspace",
+                          "email_verified": true,
+                          "role": "Admin",
+                          "user_license": "Full",
+                          "date_created": "2023-08-03T11:49:16.364213Z",
+                          "date_modified": "2024-07-11T20:36:43.362526Z"
+                        },
+                        {
+                          "user_id": "nXN9uokLULUw4L4HPsJGHQ",
+                          "membership_id": "mz4Ys3cVUSAyBpQKbHphtE",
+                          "email": "user.with.custom.role@pandadoc.com",
+                          "first_name": "",
+                          "last_name": "",
+                          "is_active": true,
+                          "workspace": "n7SK7prHeoWJSXb9VkrPve",
+                          "workspace_name": "Workspace",
+                          "email_verified": true,
+                          "role": "Custom",
+                          "user_license": "Full",
+                          "date_created": "2024-02-16T12:40:55.547303Z",
+                          "date_modified": "2024-03-21T15:55:33.783886Z"
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -5692,8 +6351,8 @@
         "tags": [
           "Members"
         ],
-        "summary": "Current member details",
-        "description": "A method to define to whom credentials belong",
+        "summary": "Current Member Details",
+        "description": "Returns the member details of the current user (the owner of the API key).\n\n**User** - is an account with a license in the Organization.  \n**Member** - is a User with a predefined Role in the Workspace.\n\n| Parameter | Description |\n|---|---|\n| `user_id` | A unique identifier of the `user` in the **organization** |\n| `membership_id` | A unique identifier of the `user` in the **workspace** |\n| `email` | A user email address |\n| `first_name` | A user's first name |\n| `last_name` | A user's last name |\n| `is_active` | A boolean value that identifies if a member is active and not blocked |\n| `workspace` | A unique identifier of the user's current active workspace |\n| `workspace_name` | A name of the user's current active workspace |\n| `email_verified` | A boolean value that identifies if the email is verified |\n| `role` | A member's role in the workspace |\n| `user_license` | A [user license](https://support.pandadoc.com/hc/en-us/articles/360051733434-User-licenses) in the organization:  <br/>`Full (Standard)`;  <br/>`Read-only`;  <br/>`eSignature`;  <br/>`Guest`;  <br/>`Creator` |\n| `date_created` | A date when a member was added to the workspace |\n| `date_modified` | Last modified date of a member |\n",
         "operationId": "detailsCurrentMember",
         "responses": {
           "200": {
@@ -5702,6 +6361,25 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MemberDetailsResponse"
+                },
+                "examples": {
+                  "Current Member Details": {
+                    "value": {
+                      "user_id": "FA5QAu8UGA3oVDDZuPL75B",
+                      "membership_id": "RyMNXBjBPRppi56TfYBrXi",
+                      "email": "siarhei@pandadoc.com",
+                      "first_name": "Siarhei",
+                      "last_name": "",
+                      "is_active": true,
+                      "workspace": "n7SK7prHeoWJSXb9VkrPve",
+                      "workspace_name": "Workspace",
+                      "email_verified": true,
+                      "role": "Admin",
+                      "user_license": "Full",
+                      "date_created": "2023-08-03T11:49:16.364213Z",
+                      "date_modified": "2024-07-11T20:36:43.362526Z"
+                    }
+                  }
                 }
               }
             }
@@ -5726,14 +6404,14 @@
         "tags": [
           "Members"
         ],
-        "summary": "Member details",
-        "description": "A method to retrieve a member's details by id",
+        "summary": "Member Details",
+        "description": "A method to retrieve a member's details by ID.\n\n**User** - is an account with a license in the Organization.  \n**Member** - is a User with a predefined Role in the Workspace.\n\n| Parameter | Description |\n|---|---|\n| `user_id` | A unique identifier of the `user` in the **organization** |\n| `membership_id` | A unique identifier of the `user` in the **workspace** |\n| `email` | A user email address |\n| `first_name` | A user's first name |\n| `last_name` | A user's last name |\n| `is_active` | A boolean value that identifies if a member is active and not blocked |\n| `workspace` | A unique identifier of the user's current active workspace |\n| `workspace_name` | A name of the user's current active workspace |\n| `email_verified` | A boolean value that identifies if the email is verified |\n| `role` | A member's role in the workspace |\n| `user_license` | A [user license](https://support.pandadoc.com/hc/en-us/articles/360051733434-User-licenses) in the organization:  <br/>`Full (Standard)`;  <br/>`Read-only`;  <br/>`eSignature`;  <br/>`Guest`;  <br/>`Creator` |\n| `date_created` | A date when a member was added to the workspace |\n| `date_modified` | Last modified date of a member |\n",
         "operationId": "detailsMember",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "Membership id",
+            "description": "Membership id.",
             "schema": {
               "type": "string"
             },
@@ -5748,6 +6426,84 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MemberDetailsResponse"
+                },
+                "examples": {
+                  "Member Details": {
+                    "value": {
+                      "user_id": "nXN9uokLULUw4L4HPsJGHQ",
+                      "membership_id": "mz4Ys3cVUSAyBpQKbHphtE",
+                      "email": "user.with.custom.role@pandadoc.com",
+                      "first_name": "",
+                      "last_name": "",
+                      "is_active": true,
+                      "workspace": "n7SK7prHeoWJSXb9VkrPve",
+                      "workspace_name": "Workspace",
+                      "email_verified": true,
+                      "role": "Custom",
+                      "user_license": "Full",
+                      "date_created": "2024-02-16T12:40:55.547303Z",
+                      "date_modified": "2024-03-21T15:55:33.783886Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/members/{member_id}/token": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Create Member Token",
+        "description": "> 🚧 \n> \n> This endpoint is only exposed upon request. Please reach out to your Account Manager to get access.\n\n> 📘 \n> \n> Make sure you're using Public API keys generated by Org Admin, otherwise you'll receive a 403 response.\n",
+        "operationId": "createMemberToken",
+        "parameters": [
+          {
+            "name": "member_id",
+            "in": "path",
+            "description": "Member id.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "radQBiBkU7MBk59NSgaGf5"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "1fc7b52182405dbf004b9e9ffb555a6ac61419ba"
+                    }
+                  }
+                },
+                "examples": {
+                  "Create Member Token": {
+                    "value": {
+                      "token": "1fc7b52182405dbf004b9e9ffb555a6ac61419ba"
+                    }
+                  }
                 }
               }
             }
@@ -7352,464 +8108,6 @@
         }
       }
     },
-    "/public/v1/documents/{document_id}/sections": {
-      "get": {
-        "tags": [
-          "Sections"
-        ],
-        "summary": "List Document Sections",
-        "operationId": "listSections",
-        "description": "Retrieve information about the sections within a document.\n",
-        "parameters": [
-          {
-            "examples": {
-              "List Document Sections": {
-                "value": "BhVzRcxH9Z2LgfPPGXFUBa"
-              }
-            },
-            "name": "document_id",
-            "description": "Document ID",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadSectionListResponse"
-                },
-                "examples": {
-                  "List Document Sections": {
-                    "value": {
-                      "results": [
-                        {
-                          "uuid": "fGE5F6rAeBSPokHMBt8Pbm",
-                          "name": "[DEV] Test Template with HTML Tags"
-                        },
-                        {
-                          "uuid": "MBMsxWgditbvUAgSKXR8kA",
-                          "name": "Sample Document from PDF with Field Tags"
-                        },
-                        {
-                          "uuid": "JKmXhd9e4ZwNMyaEYFJEkK",
-                          "name": "Sample Document from PDF with Form Fields"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400RequestError"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      }
-    },
-    "/public/v1/documents/{document_id}/sections/uploads": {
-      "post": {
-        "tags": [
-          "Sections"
-        ],
-        "summary": "Create Document Section",
-        "operationId": "uploadSection",
-        "description": "With this endpoint, you can add a new section to an existing PandaDoc document (create a bundle).\n\nYou can upload a section to the document using a PandaDoc template or a file by URL.\n\n> ⏱️ Document Section creation is a non-blocking (asynchronous) operation\n> \n> The document creation process may take some time.\n> \n> With a successful request, you receive a response with the created upload ID and status `document_sections_upload.uploaded`. After processing completes on our servers, usually a few seconds, the document moves to the `document_sections_upload.PROCESSED` status.\n\n## Using a PandaDoc template\n\n<details>\n\n  > 🚧 Current Version Limitations\n  > \n  > Images in sections are currently not supported.\n\n  > 📘 Pricing tables note\n  > \n  > Each pricing table must have a unique name to populate it with data correctly.\n\n  A PandaDoc template is a document template created and edited in the PandaDoc web application. Our [help center](https://support.pandadoc.com/hc/en-us/articles/360041230753-Save-time-with-templates) has further information on PandaDoc templates. \n\n  If you don't have any PandaDoc Template yet, you can easily create one by clicking [Copy a Sample PandaDoc template](https://app.pandadoc.com/get-this-template/?pt=public_template&pub=eiC3a6qBVfEfbw7VCYgaeN). This will open the PandaDoc application in a new tab, copy the sample template into your account, and create a new document from the template.\n</details>\n\n## Using a File by URL\n\n<details>\n  \n  Using this endpoint you can add a section to the existing document. The section is created from a file you upload. The file can be a PDF, DocX, or RTF.\n\n  > 📘 We've prepared two samples that you can use to test the request.\n  > Download them here:\n  >\n  > - [Download a Sample PDF with Form Fields](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf) \n  > - [Download a Sample PDF with Field Tags](https://5132871.fs1.hubspotusercontent-na1.net/hubfs/5132871/SamplePandaDocPdf_FieldTags_updated.pdf)\n\n  > ❗️ Limitations\n  > \n  > * This method does not support multiple documents.\n  > * The maximum supported file size is 50 MB. API returns \"413 Request entity too large\" in case of bigger files.\n  > * PandaDoc does not support creating document from a PDF with encrypted files (to check whether a file is encrypted or not, try Get info -> Secure: Password Encrypted).\n\n  ### PDF Form Fields\n\n  PandaDoc recognizes PDF form fields. To enable this feature, pass the optional `parse_form_fields` value as `true` when making a create document section API call. We support Text fields, Dropdowns, and Signature fields.\n\n  If you would like to pass additional parameters to configure PDF form fields, use the PDF field name as an optId. You can use a PDF editor such as Adobe Acrobat, Foxit to get and edit field names in your PDF.\n\n  [**Download a Sample PDF with Form Fields**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf)\n\n  ### PDF/DocX/RTF Field Tags\n\n  This parsing format allows a word processor such as [Microsoft Word](https://support.office.com/en-us/article/Save-as-PDF-d85416c5-7d77-4fd6-a216-6f4bf7c7c110?ui=en-US&rs=en-US&ad=US) or [Google Docs](https://support.google.com/drive/answer/2423534?co=GENIE.Platform%3DDesktop&hl=en) to prepare a document and save it in PDF, DocX or RTF format.\n\n  Within the text, PandaDoc parses field tags. A field tag starts and ends with brackets. The field tag includes basic information on how to create a form field in the PandaDoc document. The request JSON object `optId` can also extend this information for even greater control.\n\n  Here is an example of how the field tag in a PDF/DocX/RTF  is converted to a text field in the PandaDoc document:\n\n  ![](https://files.readme.io/38afedf-ex3.png \"ex3.png\")\n\n  [**Download a Sample PDF with Field Tags**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FieldTags.pdf)\n\n  #### PDF Field Tag Key\n\n  ![](https://files.readme.io/a81fbf1-field-tag-structure.png \"field-tag-structure.png\")\n\n  | Number | Key         | Description                                                                                                                                                                                                                                                                               | Example                           |\n  | :----- | :---------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- |\n  | 1      | `fieldType` | Field type from the table documented below                                                                                                                                                                                                                                                | `signature`, or `s` for shorthand |\n  | 2      | `*`         | Optional `*` denotes the field is not required                                                                                                                                                                                                                                            | `*`                               |\n  | 3      | `role`      | Role name. Associate the field tag with a recipient role. Roles must be assigned to recipients in the request body. In this case we are using role `s1` to keep the length short and denote the concept of \"signer 1\". `s1` would be the value passed as role in a recipient JSON object. | `s1`                              |\n  | 4      | `optId`     | Optional field Id. Specify more information about the field tag within the post request by using this id.                                                                                                                                                                                 | `sigBox17`                        |\n  | 5      | `_____`     | Use underscores to widen the field if desired. The form fields in PandaDoc will scale to the length and size of your field tag.                                                                                                                                                           | `_____`                           |\n\n  > 🚧 Role names restrictions\n  > \n  > Underscores are not supported in role names for a file with a Field Tag.\n\n  #### PDF/DocX/RTF Field Tag Supported Types\n\n  | Field Type  | Short Notation | Is PandaDoc Field |\n  | :---------- | :------------- | :---------------- |\n  | `textfield` | `t`            | Field             |\n  | `checkbox`  | `c`            | Field             |\n  | `signature` | `s`            | Field             |\n  | `date`      | `d`            | Field             |\n  | `initials`  | `i`            | Field             |\n  | `dropdown`  | `dd`           | Field             |\n\n  ```json Field Tags Example\n  \"fields\": {  \n    \"textfield\": {  \n        \"value\": \"Jane\",\n        \"role\": \"user\"\n    },\n    \"dropdown\": {\n        \"value\": \"opt1\",\n        \"role\": \"user\",\n        \"options\":[\n          \"opt1\",\n          \"opt2\",\n          \"opt3\"\n        ]\n    },\n    \"checkbox\": {  \n        \"value\": true,\n        \"role\": \"user\"\n    },\n    \"date\":{\n        \"value\": \"2022-05-20\",\n        \"role\": \"user\"\n    },\n    \"signature\": {  \n        \"value\": \"\",\n        \"role\": \"user\"\n    }\n  }\n  ```\n\n  > 📘 Fields in PandaDoc\n  > \n  > The following article explains how to use Fields: [Everything you need to know about Fields](https://support.pandadoc.com/hc/en-us/articles/360040595714--Editor-2-0-Fields)\n\n  ### Signing order\n\n  Set a signing order for document section sections created from a file.\n\n  ```json\n  \"recipients\": [  \n    {  \n      \"email\": \"josh@example.com\",\n      \"first_name\": \"Josh\",\n      \"last_name\": \"Ron\",\n      \"role\": \"user\",\n      \"signing_order\": 1\n    }\n  ]\n  ```\n\n  > 📘 Signing order in PandaDoc\n  >\n  > https://support.pandadoc.com/en/articles/9714771-signing-order: [How to use signing order](https://support.pandadoc.com/en/articles/9714771-signing-order)\n\n  ### Error handling\n\n  | Error description | Type | Root cause |\n  |---|---|---|\n  | Document version 1 is not supported. | Validation errors: Form fields | The creation document section is supported only for document version 2 |\n  | PDF content hasn't been processed: document is broken or locked | Processing errors: Failed to process document content | Document converter service can’t process PDF. This may be caused by locked PDF or if it’s broken. |\n  | Error occurred while parsing PDF field tags. Please try PDF flattening or reach out to support | Processing errors: Field tag / Form field validation error | Doc converter managed to parse PDF and extract tags, but at least 1 of them is invalid (having negative position, for example). Usually we recommend PDF flattening and it helps |\n  | No role='{role}' for field tag specified in `recipients` found, roles passed were {roles} | Validation errors: Field tags | Role is invalid. When the role specified in field tag is empty or wasn’t provided in a payload for any recipient |\n  | All field tags within PDF must be declared within `fields`  object of the JSON Payload. No field with optId='{optid}' found in fields object, fields passed were {optids} | Validation errors: Field tags | Label is invalid. Occurs when **optId** specified in field tag is empty or no field with **name = optId** was provided in a payload |\n  | One of field tags in PDF with type='{field}' doesn't have a role | Validation errors: Field tags | Field tag in PDF has no role. One of field tags in PDF with type=% doesn't have a role. |\n  | Role for form field with name='{role}' is not provided in payload | Validation errors: Form fields | Role for form field with ‘name’ is not provided. Occurs when `role` for form field with name=%s  is not provided in payload |\n  | Field for form field with name='{name}' is not specified in payload, available names are {names} | Validation errors: Form fields | Field ‘name’ is not specified in payload. Occurs when no field with name = form field name was provided in a payload |\n  | No role='{role}' for form field specified in 'recipients' found, roles passed were {roles}\" | Validation errors: Form fields | Failed to resolve field actor for `role` in form field with ‘name’.   Occurs when role from the form field is not found in recipient’s from payload |\n  | Failed to download file from link {url}. | Source errors | Error on attempt to download file.   An error has occurred on an attempt to download file using the provided ‘url’ in payload |\n  | Failed to download file from link {url} (status code: {status code}) | Source errors | Error with HTTP status code on attempt to download file.   An error has occurred on an attempt to download file using the provided ‘url’ in payload - remote server responded with the HTTP status code |\n  | Content type='{type}' is not supported, available types are {types} | Source errors | Content type is not supported.   Content type should be one of the following: PDF, ZIP, doc, docx, RTF |\n  | The maximum file size is exceeded, limit is {limit} MB | Source errors | The file size has exceeded the allowed limits. An error occurred while trying to download a file that is too large (limit is 50M) |\n    \n  </details>\n",
-        "parameters": [
-          {
-            "examples": {
-              "Create Document Section from Template": {
-                "value": "CFz2UnLXDck3UJkeGGEuB3"
-              }
-            },
-            "name": "document_id",
-            "description": "Document ID",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "name": "merge_field_scope",
-            "description": "Determines how the fields are mapped when creating a section.\n  * document: Default value. The fields of the entire document are updated.\n  * upload: Only the fields from the created section are updated. The merge field is appended with the upload ID.\n",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "document",
-                "upload"
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/UploadSectionByTemplateRequest"
-                      },
-                      {
-                        "title": "From PandaDoc Template"
-                      }
-                    ]
-                  },
-                  {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/UploadSectionRequest"
-                      },
-                      {
-                        "title": "From File By Url",
-                        "properties": {
-                          "url": {
-                            "type": "string",
-                            "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
-                            "description": "Use a URL to specify the PDF. We support only URLs starting with https."
-                          }
-                        },
-                        "required": [
-                          "url"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              "examples": {
-                "Create Document Section From Template": {
-                  "value": {
-                    "name": "New section from template",
-                    "template_uuid": "hryJY9mqYZHjQCYQuSjRQg",
-                    "recipients": [
-                      {
-                        "role": "Client",
-                        "email": "client@pandadoc.com"
-                      },
-                      {
-                        "role": "Sender",
-                        "email": "sender@pandadoc.com"
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadSectionResponse"
-                },
-                "examples": {
-                  "Create Document Section From Template": {
-                    "value": {
-                      "uuid": "LQ6cUT7xevPLUEgJeF8Zrm",
-                      "document_uuid": "CFz2UnLXDck3UJkeGGEuB3",
-                      "status": "document_sections_upload.UPLOADED",
-                      "name": "null",
-                      "date_created": "2023-08-28T15:48:09.379860Z",
-                      "date_modified": "2023-08-28T15:48:09.379860Z",
-                      "info_message": "You need to poll the Document Sections Upload Status method until the status will be changed to document_sections_upload.PROCESSED"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      }
-    },
-    "/public/v1/documents/{document_id}/sections/uploads?upload": {
-      "post": {
-        "tags": [
-          "Sections"
-        ],
-        "summary": "Create Document Section from File Upload",
-        "operationId": "uploadSectionWithUpload",
-        "description": "With this endpoint, you can add a new section to an existing PandaDoc document (create a bundle). The section is created from a file you upload. The file can be a PDF, DocX, or RTF.\n\n> 📘 We've prepared two samples that you can use to test the request.\n> Download them here:\n>\n> - [Download a Sample PDF with Form Fields](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf) \n> - [Download a Sample PDF with Field Tags](https://5132871.fs1.hubspotusercontent-na1.net/hubfs/5132871/SamplePandaDocPdf_FieldTags_updated.pdf)\n\n\n> 🚧 Usage specifics\n> \n> 1. This method uses a `multipart/form-data` request type instead of the `application/json` typically found in the PandaDoc API. This is to accommodate the upload of the included document.\n> 2. You can send a URL instead of a file in the document creation request.  \n>    In this case, you need to use the `application/json` content type and add the URL parameter in the body request. As an example, see [Create from public PDF](https://developers.pandadoc.com/docs/create-and-send-a-document-from-a-publicly-available-pdf) guide for more details.\n> 3. A file you upload is not stored in your PandaDoc account, so you have to upload it with every request.\n\n> ❗️ Limitations\n> \n> 1. This method does not support multiple documents.\n> 2. The maximum supported file size is 50 MB. API returns \"413 Request entity too large\" in case of bigger files.\n> 3. PandaDoc does not support creating document from a PDF with encrypted files (to check whether a file is encrypted or not, try Get info -> Secure: Password Encrypted).\n\n> ⏱️ Document Section creation is a non-blocking (asynchronous) operation\n> \n> The document creation process may take some time.\n> \n> With a successful request, you receive a response with the created upload ID and status `document_sections_upload.uploaded`. After processing completes on our servers, usually a few seconds, the document moves to the `document_sections_upload.PROCESSED` status.\n\n## PDF Form Fields\n\nPandaDoc recognizes PDF form fields. To enable this feature, pass the optional `parse_form_fields` value as `true` when making a create document section API call. We support Text fields, Dropdowns, and Signature fields.\n\nIf you would like to pass additional parameters to configure PDF form fields, use the PDF field name as an optId. You can use a PDF editor such as Adobe Acrobat, Foxit to get and edit field names in your PDF.\n\n[**Download a Sample PDF with Form Fields**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf)\n\n## PDF/DocX/RTF Field Tags\n\nThis parsing format allows a word processor such as [Microsoft Word](https://support.office.com/en-us/article/Save-as-PDF-d85416c5-7d77-4fd6-a216-6f4bf7c7c110?ui=en-US&rs=en-US&ad=US) or [Google Docs](https://support.google.com/drive/answer/2423534?co=GENIE.Platform%3DDesktop&hl=en) to prepare a document and save it in PDF, DocX or RTF format.\n\nWithin the text, PandaDoc parses field tags. A field tag starts and ends with brackets. The field tag includes basic information on how to create a form field in the PandaDoc document. The request JSON object `optId` can also extend this information for even greater control.\n\nHere is an example of how the field tag in a PDF/DocX/RTF  is converted to a text field in the PandaDoc document:\n\n![](https://files.readme.io/38afedf-ex3.png \"ex3.png\")\n\n[**Download a Sample PDF with Field Tags**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FieldTags.pdf)\n\n<details>\n\n  ### PDF Field Tag Key\n\n  ![](https://files.readme.io/a81fbf1-field-tag-structure.png \"field-tag-structure.png\")\n\n  | Number | Key         | Description                                                                                                                                                                                                                                                                               | Example                           |\n  | :----- | :---------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- |\n  | 1      | `fieldType` | Field type from the table documented below                                                                                                                                                                                                                                                | `signature`, or `s` for shorthand |\n  | 2      | `*`         | Optional `*` denotes the field is not required                                                                                                                                                                                                                                            | `*`                               |\n  | 3      | `role`      | Role name. Associate the field tag with a recipient role. Roles must be assigned to recipients in the request body. In this case we are using role `s1` to keep the length short and denote the concept of \"signer 1\". `s1` would be the value passed as role in a recipient JSON object. | `s1`                              |\n  | 4      | `optId`     | Optional field Id. Specify more information about the field tag within the post request by using this id.                                                                                                                                                                                 | `sigBox17`                        |\n  | 5      | `_____`     | Use underscores to widen the field if desired. The form fields in PandaDoc will scale to the length and size of your field tag.                                                                                                                                                           | `_____`                           |\n\n  > 🚧 Role names restrictions\n  > \n  > Underscores are not supported in role names for a file with a Field Tag.\n\n  ### PDF/DocX/RTF Field Tag Supported Types\n\n  | Field Type  | Short Notation | Is PandaDoc Field |\n  | :---------- | :------------- | :---------------- |\n  | `textfield` | `t`            | Field             |\n  | `checkbox`  | `c`            | Field             |\n  | `signature` | `s`            | Field             |\n  | `date`      | `d`            | Field             |\n  | `initials`  | `i`            | Field             |\n  | `dropdown`  | `dd`           | Field             |\n\n  > 📘 Fields in PandaDoc\n  > \n  > The following article explains how to use Fields: [Everything you need to know about Fields](https://support.pandadoc.com/hc/en-us/articles/360040595714--Editor-2-0-Fields)\n\n  ```json Field Tags Example\n  \"fields\": {  \n          \"textfield\": {  \n              \"value\": \"Jane\",\n              \"role\": \"user\"\n          },\n          \"dropdown\": {\n              \"value\": \"opt1\",\n              \"role\": \"user\",\n              \"options\":[\n                \"opt1\",\n                \"opt2\",\n                \"opt3\"\n              ]\n          },\n          \"checkbox\": {  \n              \"value\": true,\n              \"role\": \"user\"\n          },\n          \"date\":{\n              \"value\": \"2022-05-20\",\n              \"role\": \"user\"\n          },\n          \"signature\": {  \n              \"value\": \"\",\n              \"role\": \"user\"\n          }\n      }\n  ```\n\n</details>\n\n## Signing order\n\nSet a signing order for document section sections created from a file.\n\n```json\n\"recipients\": [  \n  {  \n    \"email\": \"josh@example.com\",\n    \"first_name\": \"Josh\",\n    \"last_name\": \"Ron\",\n    \"role\": \"user\",\n    \"signing_order\": 1\n  }\n]\n```\n\n## Error handling\n\n| Error description | Type | Root cause |\n|---|---|---|\n| Document version 1 is not supported. | Validation errors: Form fields | The creation document section is supported only for document version 2 |\n| PDF content hasn't been processed: document is broken or locked | Processing errors: Failed to process document content | Document converter service can’t process PDF. This may be caused by locked PDF or if it’s broken. |\n| Error occurred while parsing PDF field tags. Please try PDF flattening or reach out to support | Processing errors: Field tag / Form field validation error | Doc converter managed to parse PDF and extract tags, but at least 1 of them is invalid (having negative position, for example). Usually we recommend PDF flattening and it helps |\n| No role='{role}' for field tag specified in `recipients` found, roles passed were {roles} | Validation errors: Field tags | Role is invalid. When the role specified in field tag is empty or wasn’t provided in a payload for any recipient |\n| All field tags within PDF must be declared within `fields`  object of the JSON Payload. No field with optId='{optid}' found in fields object, fields passed were {optids} | Validation errors: Field tags | Label is invalid. Occurs when **optId** specified in field tag is empty or no field with **name = optId** was provided in a payload |\n| One of field tags in PDF with type='{field}' doesn't have a role | Validation errors: Field tags | Field tag in PDF has no role. One of field tags in PDF with type=% doesn't have a role. |\n| Role for form field with name='{role}' is not provided in payload | Validation errors: Form fields | Role for form field with ‘name’ is not provided. Occurs when `role` for form field with name=%s  is not provided in payload |\n| Field for form field with name='{name}' is not specified in payload, available names are {names} | Validation errors: Form fields | Field ‘name’ is not specified in payload. Occurs when no field with name = form field name was provided in a payload |\n| No role='{role}' for form field specified in 'recipients' found, roles passed were {roles}\" | Validation errors: Form fields | Failed to resolve field actor for `role` in form field with ‘name’.   Occurs when role from the form field is not found in recipient’s from payload |\n| Failed to download file from link {url}. | Source errors | Error on attempt to download file.   An error has occurred on an attempt to download file using the provided ‘url’ in payload |\n| Failed to download file from link {url} (status code: {status code}) | Source errors | Error with HTTP status code on attempt to download file.   An error has occurred on an attempt to download file using the provided ‘url’ in payload - remote server responded with the HTTP status code |\n| Content type='{type}' is not supported, available types are {types} | Source errors | Content type is not supported.   Content type should be one of the following: PDF, ZIP, doc, docx, RTF |\n| The maximum file size is exceeded, limit is {limit} MB | Source errors | The file size has exceeded the allowed limits. An error occurred while trying to download a file that is too large (limit is 50M) |\n",
-        "parameters": [
-          {
-            "name": "document_id",
-            "description": "Document ID",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
-          },
-          {
-            "name": "merge_field_scope",
-            "description": "Determines how the fields are mapped when creating a section.\n  * document: Default value. The fields of the entire document are updated.\n  * upload: Only the fields from the created section are updated. The merge field is appended with the upload ID.\n",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "document",
-                "upload"
-              ]
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Binary PDF/DocX/RTF File."
-                  },
-                  "data": {
-                    "allOf": [
-                      {
-                        "$ref": "#/components/schemas/UploadSectionRequest"
-                      },
-                      {
-                        "description": "JSON as a multipart/form-data string."
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "OK",
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadSectionResponse"
-                },
-                "examples": {
-                  "Create Document Section from File Upload": {
-                    "value": {
-                      "uuid": "HiNXiDJazzufdxErSr5w6n",
-                      "name": "My Section",
-                      "document_uuid": "Gpzd2nXgFjCSЖzhTucci2E",
-                      "status": "document_sections_upload.UPLOADED",
-                      "date_created": "2024-07-15T08:14:33.050351Z",
-                      "date_modified": "2024-07-15T08:14:33.050351Z",
-                      "info_message": "You need to poll the Document Sections Upload Status method until the status will be changed to document_sections_upload.PROCESSED"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      }
-    },
-    "/public/v1/documents/{document_id}/sections/uploads/{upload_id}": {
-      "get": {
-        "tags": [
-          "Sections"
-        ],
-        "summary": "Section details",
-        "operationId": "sectionDetails",
-        "parameters": [
-          {
-            "name": "document_id",
-            "description": "Document ID",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
-          },
-          {
-            "name": "upload_id",
-            "description": "Upload ID",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "example": "LQ6cUT7xevPLUEgJeF8Zrm"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadSectionStatusResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "409": {
-            "$ref": "#/components/responses/409"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      }
-    },
-    "/public/v1/documents/{document_id}/sections/{section_id}": {
-      "get": {
-        "tags": [
-          "Sections"
-        ],
-        "summary": "Section Info",
-        "operationId": "sectionInfo",
-        "parameters": [
-          {
-            "name": "document_id",
-            "description": "Document ID",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
-          },
-          {
-            "name": "section_id",
-            "description": "Section ID",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "example": "LQ6cUT7xevPLUEgJeF8Zrm"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SectionInfoResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "409": {
-            "$ref": "#/components/responses/409"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Sections"
-        ],
-        "summary": "Delete Section",
-        "operationId": "deleteSection",
-        "parameters": [
-          {
-            "name": "document_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "Specify document ID.",
-            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
-          },
-          {
-            "name": "section_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "description": "Specify section ID.",
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No content"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      }
-    },
     "/public/v1/documents/{document_id}/quotes/{quote_id}": {
       "put": {
         "tags": [
@@ -7879,18 +8177,94 @@
       }
     },
     "/public/v1/workspaces": {
+      "get": {
+        "tags": [
+          "User and Workspace management"
+        ],
+        "operationId": "getWorkspacesList",
+        "summary": "List Workspaces",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Number of elements in page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page of workspaces",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListWorkspacesResponse"
+                },
+                "examples": {
+                  "List Workspaces": {
+                    "value": {
+                      "results": [
+                        {
+                          "id": "QCTETChxCDRWfM2FW4g9fX",
+                          "name": "Workspace",
+                          "owner": "siarhei@pandadoc.com",
+                          "date_created": "2022-05-14T22:22:41.255046Z"
+                        }
+                      ],
+                      "total": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
       "post": {
         "tags": [
           "User and Workspace management"
         ],
         "summary": "Create Workspace",
         "operationId": "createWorkspace",
+        "description": "Create workspaces programmatically.\n\n- You need to be an Org Admin to create a workspace.\n- You will be set as the new workspaces first user, with the Admin role.\n",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateWorkspaceRequest"
+              },
+              "examples": {
+                "Create Workspace": {
+                  "value": {
+                    "name": "A new workspace"
+                  }
+                }
               }
             }
           }
@@ -7902,6 +8276,14 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateWorkspaceResponse"
+                },
+                "examples": {
+                  "Create Workspace": {
+                    "value": {
+                      "id": "5RdKYSewV5vMtik3CmoDMR",
+                      "name": "A new workspace"
+                    }
+                  }
                 }
               }
             }
@@ -7919,59 +8301,6 @@
             "$ref": "#/components/responses/429"
           }
         }
-      },
-      "get": {
-        "tags": [
-          "User and Workspace management"
-        ],
-        "summary": "Get list of workspaces",
-        "operationId": "getWorkspacesList",
-        "parameters": [
-          {
-            "name": "count",
-            "in": "query",
-            "description": "Number of elements in page",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 50
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Page number",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 1,
-              "default": 1
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Page of workspaces",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListWorkspacesResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
       }
     },
     "/public/v1/workspaces/{workspace_id}/deactivate": {
@@ -7979,8 +8308,8 @@
         "tags": [
           "User and Workspace management"
         ],
-        "summary": "Deactivate workspace",
-        "description": "This endpoint deactivates one of your workspaces, removing all the memberships and making it  unavailable for further work, like it had never exist.",
+        "summary": "Deactivate Workspace",
+        "description": "This endpoint deactivates one of your workspaces, removing all the memberships and making it \nunavailable for further work, like it had never exist.\n",
         "operationId": "deactivateWorkspace",
         "parameters": [
           {
@@ -8044,12 +8373,98 @@
       }
     },
     "/public/v1/users": {
+      "get": {
+        "tags": [
+          "User and Workspace management"
+        ],
+        "summary": "List Users",
+        "operationId": "listUsers",
+        "description": "Get a list of all users with membership in your organization, with their contact information, license type, and workspace roles.\n\nYou must be an organization admin to list users.\n",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Number of elements in page.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0,
+              "maximum": 50,
+              "default": 50
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0,
+              "default": 1
+            }
+          },
+          {
+            "name": "show_removed",
+            "in": "query",
+            "description": "Filter option - show users with removed memberships.",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page of users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListUsersResponse"
+                },
+                "examples": {
+                  "List Users": {
+                    "value": {
+                      "total": 1,
+                      "results": [
+                        {
+                          "user_id": "ajnN7eGutJZsRKjQrNuPkh",
+                          "email": "josh@example.com",
+                          "first_name": "Josh",
+                          "last_name": "Doe",
+                          "phone_number": "+14842634627",
+                          "license": "Full",
+                          "is_organization_owner": true,
+                          "workspaces": [
+                            {
+                              "role": "Admin",
+                              "workspace_id": "fERpqZdFaF9dHVAeVxPFaV",
+                              "membership_id": "nPh2PDhFdDqAES9k64h9qX"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
       "post": {
         "tags": [
           "User and Workspace management"
         ],
         "summary": "Create User",
         "operationId": "createUser",
+        "description": "Create users, and assign them roles, licenses, and workspaces.\n\n- You must be an organization admin to create users.\n- We check that the user email domain matches your organization domain.\n- We check that the user email and phone number have a valid format.\n",
         "parameters": [
           {
             "name": "notify_user",
@@ -8074,6 +8489,25 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateUserRequest"
+              },
+              "examples": {
+                "Create User": {
+                  "value": {
+                    "user": {
+                      "email": "test@pandadoc.com",
+                      "first_name": "New",
+                      "last_name": "User",
+                      "phone_number": ""
+                    },
+                    "workspaces": [
+                      {
+                        "workspace_id": "Ab123",
+                        "role": "Collaborator"
+                      }
+                    ],
+                    "license": "Guest"
+                  }
+                }
               }
             }
           }
@@ -8085,6 +8519,20 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateUserResponse"
+                },
+                "examples": {
+                  "Create User": {
+                    "value": {
+                      "workspaces": [
+                        {
+                          "workspace_id": "MwZbjUVD5C3srSSxkpF4Aj",
+                          "role": "Member",
+                          "member_id": "VQDH2hdAPJBhSWmMrYa3zu"
+                        }
+                      ],
+                      "user_id": "KwahvjapLm4RDf6pfyYdjA"
+                    }
+                  }
                 }
               }
             }
@@ -8140,65 +8588,6 @@
             "$ref": "#/components/responses/429"
           }
         }
-      },
-      "get": {
-        "tags": [
-          "User and Workspace management"
-        ],
-        "summary": "Get list of users",
-        "operationId": "listUsers",
-        "parameters": [
-          {
-            "name": "count",
-            "in": "query",
-            "description": "Number of elements in page",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 0,
-              "maximum": 50,
-              "default": 50
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Page number",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 0,
-              "default": 1
-            }
-          },
-          {
-            "name": "show_removed",
-            "in": "query",
-            "description": "Filter option - show users with removed memberships",
-            "schema": {
-              "type": "boolean",
-              "default": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Page of users",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListUsersResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
       }
     },
     "/public/v1/workspaces/{workspace_id}/members": {
@@ -8206,7 +8595,8 @@
         "tags": [
           "User and Workspace management"
         ],
-        "summary": "Add member",
+        "summary": "Add Member to Workspace",
+        "description": "Add an existing user to a workspace.\n- You must be an organization admin or a workspace admin to add members.\n",
         "operationId": "addMember",
         "parameters": [
           {
@@ -8239,6 +8629,14 @@
           "required": true,
           "content": {
             "application/json": {
+              "examples": {
+                "Add Member to Workspace": {
+                  "value": {
+                    "user_id": "2eWSKSvVqmuVCnuUK3iWwD",
+                    "role": "Member"
+                  }
+                }
+              },
               "schema": {
                 "$ref": "#/components/schemas/AddMemberRequest"
               }
@@ -8252,6 +8650,18 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AddMemberResponse"
+                },
+                "examples": {
+                  "Add Member to Workspace": {
+                    "value": {
+                      "member_id": "iMymdDd9XFD3HyxP5VD67Q",
+                      "workspace_id": "2eWSKSvVqmuVCnuUK3iWwD",
+                      "role": "Admin",
+                      "email": "email@example.com",
+                      "first_name": "John",
+                      "last_name": "Doe"
+                    }
+                  }
                 }
               }
             }
@@ -8305,7 +8715,7 @@
         "tags": [
           "User and Workspace management"
         ],
-        "summary": "Remove Member",
+        "summary": "Remove Member from Workspace",
         "operationId": "removeMember",
         "parameters": [
           {
@@ -8388,7 +8798,7 @@
         "tags": [
           "User and Workspace management"
         ],
-        "summary": "Create API key",
+        "summary": "Create Workspace API key",
         "description": "This endpoint allows **Org Admins** to generate a new API key for a user.\n\n> ❗️ Current API-Key will be **disabled**, if an API key already exists in the workspace.\n\n> 📘 \n> - Only an **Org Admin** can generate an API keys.\n> - The API key will be generated for the **Org admin** who makes the request, if the `user_id` is **not provided**.\n> - User must be in a workspace and has the **Admin** role, if you pass `user_id`.\n",
         "operationId": "createApiKey",
         "parameters": [
@@ -9840,24 +10250,28 @@
         }
       },
       "DocumentAttachmentRequest": {
-        "type": "object",
-        "properties": {
-          "file": {
-            "type": "string",
-            "format": "binary",
-            "description": "Binary file to be attached to a document"
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "description": "URL link to the file to be attached to a document",
+                "example": "https://is3-ssl.mzstatic.com/1e7fbd74-d10c-8e3a-63c3-0beb3ea231a5/512x512bb.jpg"
+              }
+            }
           },
-          "source": {
-            "type": "string",
-            "description": "URL link to the file to be attached to a document",
-            "example": "https://is3-ssl.mzstatic.com/1e7fbd74-d10c-8e3a-63c3-0beb3ea231a5/512x512bb.jpg"
-          },
-          "name": {
-            "type": "string",
-            "description": "Optional name to set for uploaded file",
-            "example": "Additional agreement"
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Optional name to set for uploaded file",
+                "example": "Additional agreement"
+              }
+            }
           }
-        }
+        ]
       },
       "DocumentAttachmentResponse": {
         "type": "object",
@@ -12202,12 +12616,12 @@
           },
           "workspace": {
             "type": "string",
-            "description": "A name of the user's current active workspace.",
+            "description": "A unique identifier of the user's current active workspace.",
             "example": "xc4mBZ7dKErXQtJwwD6Ghg"
           },
           "workspace_name": {
             "type": "string",
-            "description": "A unique identifier of the user's current active workspace.",
+            "description": "A name of the user's current active workspace.",
             "example": "PandaDoc"
           },
           "emails_verified": {
@@ -13984,7 +14398,8 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "A new workspace"
+            "example": "A new workspace",
+            "description": "A name for the new workspace."
           }
         },
         "required": [
@@ -14082,10 +14497,12 @@
         "properties": {
           "user_id": {
             "type": "string",
-            "example": "2eWSKSvVqmuVCnuUK3iWwD"
+            "example": "2eWSKSvVqmuVCnuUK3iWwD",
+            "description": "User id."
           },
           "role": {
             "type": "string",
+            "description": "Role for a member.",
             "enum": [
               "Admin",
               "Manager",
@@ -14147,32 +14564,32 @@
               "properties": {
                 "user_id": {
                   "type": "string",
-                  "description": "A unique identifier of the user in the organization",
+                  "description": "A unique identifier of the user in the organization.",
                   "example": "ajnN7eGutJZsRKjQrNuPkh"
                 },
                 "email": {
                   "type": "string",
-                  "description": "A user's email address",
+                  "description": "A user's email address.",
                   "example": "josh@example.com"
                 },
                 "first_name": {
                   "type": "string",
-                  "description": "A user's first name",
+                  "description": "A user's first name.",
                   "example": "Josh"
                 },
                 "last_name": {
                   "type": "string",
-                  "description": "A user's last name",
+                  "description": "A user's last name.",
                   "example": "Doe"
                 },
                 "phone_number": {
                   "type": "string",
-                  "description": "A user's phone number",
+                  "description": "A user's phone number.",
                   "example": "+14842634627"
                 },
                 "license": {
                   "type": "string",
-                  "description": "A user's license in the organization",
+                  "description": "A user's license in the organization.",
                   "example": "Full"
                 },
                 "is_organization_owner": {
@@ -14185,17 +14602,17 @@
                     "properties": {
                       "role": {
                         "type": "string",
-                        "description": "A user's role in workspace",
+                        "description": "A user's role in workspace.",
                         "example": "Admin"
                       },
                       "workspace_id": {
                         "type": "string",
-                        "description": "A user's workspace",
+                        "description": "A user's workspace.",
                         "example": "fERpqZdFaF9dHVAeVxPFaV"
                       },
                       "membership_id": {
                         "type": "string",
-                        "description": "A user's membership id in workspace",
+                        "description": "A user's membership id in workspace.",
                         "example": "vibuun3DXG8QDDLfXm27Ne"
                       }
                     }
