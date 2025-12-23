@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "6.8.0"
+    "version": "6.9.0"
   },
   "servers": [
     {
@@ -406,7 +406,28 @@
                         "email": "josh@example.com",
                         "first_name": "Josh",
                         "last_name": "Ron",
-                        "role": "user"
+                        "role": "user",
+                        "phone": "555-5555-5555",
+                        "signing_order": 1,
+                        "company": "PandaDoc",
+                        "default": false,
+                        "delivery_methods": {
+                          "sms": true,
+                          "email": false
+                        },
+                        "redirect": {
+                          "is_enabled": true,
+                          "url": "https://super.redirect.url/1"
+                        },
+                        "verification_settings": {
+                          "verification_place": "before_open",
+                          "passcode_verification": null,
+                          "phone_verification": null,
+                          "kba_verification": null,
+                          "id_verification": {
+                            "enabled": true
+                          }
+                        }
                       }
                     ],
                     "tokens": [
@@ -1195,7 +1216,15 @@
                           "contact_id": "HzXnuyNraSXMhXchYjUmHJ",
                           "shared_link": "https://app.pandadoc.com/document/15d4b481384b652a298530ddc7023bfc07a67d59",
                           "signature_date": "2024-07-08T15:43:53.800135Z",
-                          "verification_settings": null,
+                          "verification_settings": {
+                            "verification_place": "before_open",
+                            "kba_verification": null,
+                            "passcode_verification": null,
+                            "phone_verification": null,
+                            "id_verification": {
+                              "enabled": true
+                            }
+                          },
                           "type": "recipient"
                         }
                       ],
@@ -1629,9 +1658,11 @@
                           "verification_settings": {
                             "verification_place": "before_open",
                             "passcode_verification": {
-                              "passcode": "SimpleCode1",
-                              "phone_verification": null
-                            }
+                              "passcode": "SimpleCode1"
+                            },
+                            "kba_verification": null,
+                            "id_verification": "null,",
+                            "phone_verification": null
                           },
                           "signature_date": "2021-10-23T21:07:04.147Z"
                         }
@@ -3377,6 +3408,34 @@
                     "type": "string",
                     "description": "The name of the template.",
                     "example": "Template"
+                  },
+                  "folder_uuid": {
+                    "type": "string",
+                    "description": "The ID of the folder where the created template should be stored.",
+                    "example": "EE8yUNg5HztqVAuH85He8V"
+                  },
+                  "owner": {
+                    "type": "object",
+                    "description": "You can set an owner of a template as an `email` or `membership_id`",
+                    "properties": {
+                      "membership_id": {
+                        "type": "string",
+                        "example": "QMDSzwabfFzTgjW6KijHyu"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john.doe@example.com"
+                      }
+                    }
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "nullable": true,
+                    "description": "You can pass arbitrary data in the key-value format to associate custom information with a template. This information is returned in any API requests for the template details by id.",
+                    "example": {
+                      "my_favorite_pet": "Panda"
+                    }
                   }
                 }
               },
@@ -5878,6 +5937,52 @@
           },
           "409": {
             "$ref": "#/components/responses/409"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Sections"
+        ],
+        "summary": "Delete Section",
+        "operationId": "deleteSection",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify document ID.",
+            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
+          },
+          {
+            "name": "section_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify section ID.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -8473,6 +8578,10 @@
           "name": {
             "type": "string",
             "example": "API Sample Document from PandaDoc Template"
+          },
+          "folder_uuid": {
+            "type": "string",
+            "example": "b6RGTSGwJw838L2KZqckpD"
           },
           "date_created": {
             "type": "string",
@@ -11872,6 +11981,32 @@
             "required": [
               "phone_number"
             ]
+          },
+          "kba_verification": {
+            "type": "object",
+            "properties": {
+              "time_limit_sec": {
+                "type": "integer",
+                "example": 120
+              },
+              "score_threshold": {
+                "type": "integer",
+                "example": 80
+              },
+              "max_attempts_count": {
+                "type": "integer",
+                "example": 2
+              }
+            }
+          },
+          "id_verification": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "example": true
+              }
+            }
           }
         }
       },
