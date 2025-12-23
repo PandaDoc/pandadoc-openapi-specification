@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE'
-  version: 6.9.0
+  version: 6.10.0
 servers:
   - url: 'https://api.pandadoc.com'
     description: Public API
@@ -2408,37 +2408,27 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the template.
-                  example: Template
-                folder_uuid:
-                  type: string
-                  description: The ID of the folder where the created template should be stored.
-                  example: EE8yUNg5HztqVAuH85He8V
-                owner:
-                  type: object
-                  description: You can set an owner of a template as an `email` or `membership_id`
-                  properties:
-                    membership_id:
-                      type: string
-                      example: QMDSzwabfFzTgjW6KijHyu
-                    email:
-                      type: string
-                      format: email
-                      example: john.doe@example.com
-                metadata:
-                  type: object
-                  nullable: true
-                  description: You can pass arbitrary data in the key-value format to associate custom information with a template. This information is returned in any API requests for the template details by id.
-                  example:
-                    my_favorite_pet: Panda
+              $ref: '#/components/schemas/CreateTemplateRequest'
             examples:
               Create Template:
                 value:
                   name: Sample Template
+                  folder_uuid: EE8yUNg5HztqVAuH85He8V
+                  owner:
+                    email: john.doe@example.com
+                  metadata:
+                    my_favorite_pet: Panda
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Binary PDF File
+                data:
+                  $ref: '#/components/schemas/CreateTemplateRequest'
+                  description: JSON as a multipart/form-data string.
       responses:
         '201':
           description: OK
@@ -2553,6 +2543,44 @@ paths:
           description: No content
         '400':
           $ref: '#/components/responses/400RequestError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+    get:
+      summary: Get Template Status
+      description: Get status of Template
+      operationId: getTemplateStatus
+      tags:
+        - Templates
+      parameters:
+        - name: id
+          description: Template ID
+          in: path
+          schema:
+            type: string
+          required: true
+          example: EE8yUNg5HztqVAuH85He8V
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateStatusResponse'
+              examples:
+                Template Status:
+                  value:
+                    id: vibuun3DXG8QDDLfXm27Ne
+                    name: API Sample PandaDoc Template
+                    date_created: '2024-07-15T17:44:07.524617Z'
+                    date_modified: '2024-07-15T17:44:07.613821Z'
+                    version: '2'
+                    status: template.PROCESSED
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -9169,6 +9197,58 @@ components:
                     type: string
                     nullable: true
                     example: '2021-10-23T21:07:04.147345Z'
+    CreateTemplateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the template.
+          example: Template name example
+        folder_uuid:
+          type: string
+          description: The ID of the folder where the created template should be stored.
+          example: EE8yUNg5HztqVAuH85He8V
+        owner:
+          type: object
+          description: You can set an owner of a template as an `email` or `membership_id`
+          properties:
+            membership_id:
+              type: string
+              example: QMDSzwabfFzTgjW6KijHyu
+            email:
+              type: string
+              format: email
+              example: john.doe@example.com
+        metadata:
+          type: object
+          nullable: true
+          description: You can pass arbitrary data in the key-value format to associate custom information with a template. This information is returned in any API requests for the template details by id.
+          example:
+            my_favorite_pet: Panda
+    TemplateStatusResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: SkXXMTBsLB5TLPagPTm5yC
+        name:
+          type: string
+          example: API Sample PandaDoc Template
+        date_created:
+          type: string
+          example: '2021-03-10T07:28:47.440256Z'
+        date_modified:
+          type: string
+          example: '2021-03-10T07:28:47.442256Z'
+        version:
+          type: string
+          example: '2'
+        status:
+          type: string
+          enum:
+            - template.PROCESSED
+            - template.UPLOADED
+            - template.ERROR
   responses:
     '401':
       description: Authentication error
