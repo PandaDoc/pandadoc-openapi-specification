@@ -1,13 +1,19 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "description": "PandaDoc Public API documentation",
-    "version": "6.2.0",
     "title": "PandaDoc Public API",
+    "description": "PandaDoc API spans a broad range of functionality to help you build incredible documents automation experiences inside your product.\n\nPandaDoc API is organized around REST. Our API has predictable resource-oriented URLs and uses standard HTTP response codes, authentication, and verbs.\n\n## Getting started\n\nYou can start testing PandaDoc API with a sandbox key on our [Enterprise](https://www.pandadoc.com/pricing/) plan, either active or in trial.\n\nGenerate your [sandbox key](https://developers.pandadoc.com/reference/sandbox-key) on the Developer Dashboard with predefined [rate limits](https://developers.pandadoc.com/reference/limits). Or contact our solutions expert if you work with high-transaction volumes.\n\n## Guides\n\nIf you’re just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you’re most interested in, whether that’s:\n\n- [Create from template](https://developers.pandadoc.com/docs/create-send-document),\n- [Upload and send a local PDF](https://developers.pandadoc.com/docs/upload-and-send-a-local-pdf),\n- or [Listening for changes in document status](https://developers.pandadoc.com/docs/listen-document-status-changes).\n\nWe also recommend you to discover our dynamic content generation on a fly: [Create from a template with content placeholder](https://developers.pandadoc.com/docs/create-with-content-placeholders-from-template).\n",
+    "termsOfService": "https://www.pandadoc.com/master-services-agreement/",
+    "contact": {
+      "name": "PandaDoc API Support",
+      "url": "https://developers.pandadoc.com/",
+      "email": "api-track@pandadoc.com"
+    },
     "license": {
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
-    }
+    },
+    "version": "6.3.0"
   },
   "servers": [
     {
@@ -76,6 +82,7 @@
           "Documents"
         ],
         "summary": "List documents",
+        "description": "> 📘 List by Linked Objects\n>\n> To get a list of documents by their linked objects from external integrated systems.\n> [Use a separate endpoint](https://developers.pandadoc.com/reference/list-documents-by-linked-object)\n\n# Listing Documents Efficiently\n\nIf your workspace contains hundreds of thousands of documents, you may experience higher latency of your requests.\n\n> 👍 Pro tip\n> \n> Using `order_by = date_created` ensures stable performance and quick responses.\n> \n> If you need to order documents by a different field, use the `created_from` and `created_to` parameters to limit the result set, and run requests in batches.\n\n## Usage examples\n\n1. `count=100&order_by=date_created&created_from=2023-08-01T00:00:00.000000Z&created_to=2023-09-01T00:00:00.000000Z`  \n  This request returns only documents created in August. \n2. The next request is for `page = 2` (still listing documents created in August):  \n  `count=100&order_by=date_created&created_from=2023-08-01T00:00:00.000000Z&created_to=2023-09-01T00:00:00.000000Z&page=2`\n3. Once you receive an empty response, it means you listed all the documents created in the provided time range. Continue listing them by setting another month:  \n  `count=100&order_by=date_created&created_from=2023-07-01T00:00:00.000000Z&created_to=2023-08-01T00:00:00.000000Z`  \n  This request lists the documents created in July 2023.\n\n# Caveats\n\n- By default, PandaDoc API lists documents sorted by the `date_status_changed` attribute.\n",
         "operationId": "listDocuments",
         "parameters": [
           {
@@ -238,7 +245,11 @@
             },
             "required": false,
             "description": "Specify the order of documents to return. Use `value` (for example, `date_created`) for ASC and `-value` (for example, `-date_created`) for DESC.",
-            "example": "name"
+            "examples": {
+              "Default order by date_status_changed": {
+                "value": "date_status_changed"
+              }
+            }
           },
           {
             "name": "page",
@@ -307,12 +318,64 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DocumentListResponse"
+                },
+                "examples": {
+                  "Default order by date_status_changed": {
+                    "value": {
+                      "results": [
+                        {
+                          "id": "XjV64iXRJMerjSpk428QSF",
+                          "name": "Sample Document",
+                          "status": "document.draft",
+                          "date_created": "2024-07-02T16:21:35.770196Z",
+                          "date_modified": "2024-07-02T16:21:37.696724Z",
+                          "expiration_date": null,
+                          "version": "2"
+                        },
+                        {
+                          "id": "6NbHUUu6uuYN2tqJvgtf9h",
+                          "name": "Services Invoice",
+                          "status": "document.completed",
+                          "date_created": "2024-01-25T15:35:27.186107Z",
+                          "date_modified": "2024-06-21T15:07:34.192101Z",
+                          "expiration_date": "2024-08-20T15:07:32.869161Z",
+                          "version": "2"
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/400RequestError"
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "detail": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "examples": {
+                  "Non field error": {
+                    "value": {
+                      "type": "request_error",
+                      "detail": {
+                        "non_field_errors": [
+                          "Either template_id or form_id should be added to query."
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -330,6 +393,7 @@
           "Documents"
         ],
         "summary": "Create document",
+        "description": "## Create from a template\n> See the [Create document from template](https://developers.pandadoc.com/docs/create-document-from-template) tutorial for details on how to use this endpoint, as well as a sample template.\n\n## Create from an upload or a URL\n> See the [Create from PDF](https://developers.pandadoc.com/docs/create-document-from-file) tutorial for the usage specifics and sample PDF files.\n>\n> See the [Create from public PDF](https://developers.pandadoc.com/docs/create-and-send-a-document-from-a-publicly-available-pdf) guide for info about roles and fields, as well as PDF examples.\n\nYou have two options to create a document from file:\n\n1. Upload a local file. For this, use the `multipart/form-data` request type.\n2. Send a public URL in the document creation request like this:\n\n```json json\ncurl --request POST 'https://api.pandadoc.com/public/v1/documents' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\n  \"name\": \"My minimal document\",\n  \"url\": \"https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf\",\n  \"recipients\": [\n      {\n      \"email\":\"nobody@example.com\",\n      \"role\": \"user\"\n      }\n  ],\n  \"parse_form_fields\": false\n}'\n```\n**Note**: A file you upload is not stored in your PandaDoc account, so you have to upload it with every request.\n",
         "operationId": "createDocument",
         "parameters": [
           {
@@ -626,6 +690,28 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DocumentCreateResponse"
+                },
+                "examples": {
+                  "Document from Template": {
+                    "value": {
+                      "id": "D3okRfgHRX7NEhavcACReB",
+                      "name": "Document from Template",
+                      "status": "document.uploaded",
+                      "date_created": "2024-07-04T19:27:14.927317Z",
+                      "date_modified": "2024-07-04T19:27:14.927317Z",
+                      "expiration_date": null,
+                      "version": null,
+                      "uuid": "D3okRfgHRX7NEhavcACReB",
+                      "links": [
+                        {
+                          "rel": "status",
+                          "href": "https://api.pandadoc.com/public/v1/documents/D3okRfgHRX7NEhavcACReB",
+                          "type": "GET"
+                        }
+                      ],
+                      "info_message": "You need to poll the Document Status method until the status will be changed to document.draft"
+                    }
+                  }
                 }
               }
             }
@@ -649,16 +735,24 @@
         ],
         "summary": "Document status",
         "operationId": "statusDocument",
+        "description": "It is useful to request document status to ensure a document is in the expected state before calling additional API methods. \n\n### Required Document Statuses\n\nHere are some common methods and the `document.status` required to proceed:\n\n| API Method           | Required Document State |\n| :------------------- | :---------------------- |\n| Send A Document      | `document.draft`        |\n| Get Document Details | `document.draft`        |\n| Embed A Document     | `document.sent`         |\n| Download A Document  | `document.completed`    |\n\n> 📘 Polling vs Webhooks\n> \n> If you are using the `GET` document status endpoint for [**polling**](https://en.wikipedia.org/wiki/Polling_(computer_science)), we also support and recommend using **webhooks** for event-driven needs: <https://developers.pandadoc.com/reference/on-document-status-change>\n\n### Available Document Statuses\n\nThe following is a complete list of all possible document statuses returned:\n\n| Document Status             | Status Description                                                                                                                                                                                                               |\n| :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |\n| `document.uploaded`         | The document has just been created or uploaded. It is in processing and will be in `document.draft` state momentarily.                                                                                                           |\n| `document.draft`            | The document is in a draft state. All aspects of the document can be edited in this state. Our API does not support edits after the document has been created, but it can still be edited manually on <https://app.pandadoc.com> |\n| `document.sent`             | The document has been \"sealed\" and optionally sent. No further document edits can occur except for document recipient(s) filling out or signing the document.                                                                    |\n| `document.viewed`           | Document recipient(s) have viewed the sent document.                                                                                                                                                                             |\n| `document.waiting_approval` | The document has an [automatic approval workflow](https://support.pandadoc.com/hc/en-us/articles/360016122334--Editor-2-0-Approval-workflow) and has not yet been approved.                                                      |\n| `document.rejected`         | The document has an [automatic approval workflow](https://support.pandadoc.com/hc/en-us/articles/360016122334--Editor-2-0-Approval-workflow) and was rejected.                                                                   |\n| `document.approved`         | The document has an [automatic approval workflow](https://support.pandadoc.com/hc/en-us/articles/360016122334--Editor-2-0-Approval-workflow) and was approved.                                                                   |\n| `document.waiting_pay`      | The document has a [Stripe payment](https://support.pandadoc.com/hc/en-us/articles/360017806894--Editor-2-0-Stripe) option and is awaiting payment.                                                                              |\n| `document.paid`             | The document has a [Stripe payment](https://support.pandadoc.com/hc/en-us/articles/360017806894--Editor-2-0-Stripe) option and was paid.                                                                                         |\n| `document.completed`        | The document has been completed by all recipients.                                                                                                                                                                               |\n| `document.voided`           | The document expired and is no longer available for completion or signature.                                                                                                                                                     |\n| `document.declined`         | The document was [manually marked](https://support.pandadoc.com/hc/en-us/articles/360041879753-Manually-change-document-status) as \"Declined\"                                                                                    |\n| `document.external_review`  | The document is reviewed by it's recipient using Suggest Edit feature                                                                                                                                                            |\n",
         "parameters": [
           {
+            "examples": {
+              "Document processing after create": {
+                "value": "fANp5wW5EwY7AkiTkTGekZ"
+              },
+              "Document in draft": {
+                "value": "XjV64iXRJMerjSpk428QSF"
+              }
+            },
             "name": "id",
             "in": "path",
             "schema": {
               "type": "string"
             },
             "required": true,
-            "description": "Specify document ID.",
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+            "description": "Specify document ID."
           }
         ],
         "responses": {
@@ -668,6 +762,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DocumentStatusResponse"
+                },
+                "examples": {
+                  "Document processing after create": {
+                    "value": {
+                      "id": "fANp5wW5EwY7AkiTkTGekZ",
+                      "name": "Document from file",
+                      "status": "document.uploaded",
+                      "date_created": "2024-07-02T16:21:57.510203Z",
+                      "date_modified": "2024-07-02T16:21:57.708251Z",
+                      "expiration_date": null,
+                      "version": null,
+                      "uuid": "fANp5wW5EwY7AkiTkTGekZ"
+                    }
+                  },
+                  "Document in draft": {
+                    "value": {
+                      "id": "XjV64iXRJMerjSpk428QSF",
+                      "name": "Document from template",
+                      "status": "document.draft",
+                      "date_created": "2024-03-19T12:59:52.848666Z",
+                      "date_modified": "2024-03-19T12:59:53.957830Z",
+                      "date_completed": null,
+                      "expiration_date": null,
+                      "version": "2",
+                      "uuid": "XjV64iXRJMerjSpk428QSF"
+                    }
+                  }
                 }
               }
             }
@@ -690,18 +811,23 @@
         "tags": [
           "Documents"
         ],
-        "summary": "Delete document by id",
+        "summary": "Delete document",
         "operationId": "deleteDocument",
+        "description": "Delete a document by ID.\n",
         "parameters": [
           {
+            "examples": {
+              "Delete document": {
+                "value": "BhVzRcxH9Z2LgfPPGXFUBa"
+              }
+            },
             "name": "id",
             "description": "Document ID",
             "in": "path",
             "schema": {
               "type": "string"
             },
-            "required": true,
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+            "required": true
           }
         ],
         "responses": {
@@ -717,18 +843,23 @@
         "tags": [
           "Documents"
         ],
-        "summary": "Update Document only in the draft status",
+        "summary": "Update Document",
         "operationId": "updateDocument",
+        "description": "> 🚧 Document status\n> \n> You can only update a document in the Draft status (`document.draft`). \n> \n> After creating a new document, it usually retains a `document.uploaded` status for 3-5 seconds while the document syncs across PandaDoc servers. When the document is available for further API calls, the document moves to the `document.draft` state. Use [Document Status](https://developers.pandadoc.com/reference/document-status) or Webhooks to check document status.\n",
         "parameters": [
           {
+            "examples": {
+              "Update document": {
+                "value": "BhVzRcxH9Z2LgfPPGXFUBa"
+              }
+            },
             "name": "id",
             "description": "Document ID",
             "in": "path",
             "schema": {
               "type": "string"
             },
-            "required": true,
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+            "required": true
           }
         ],
         "requestBody": {
@@ -770,16 +901,30 @@
         ],
         "summary": "Document status change",
         "operationId": "changeDocumentStatus",
+        "description": "PandaDoc has eight document statuses, but you can manually set your document status to only four:\n\n### Document statuses\n\n- Completed - `document.completed` - API code `2`\n- Expired - `document.voided` - code `11`\n- Paid - `document.paid` - code `10`. **Important**: You can only set it if you have a payment app connected.\n- Declined - `document.declined` - code `12`\n\n> 🚧 Pass a numeric code for the corresponding document status, for example, `2` for `document.completed`.\n\nFind more details in [\\[Editor 2.0\\] Manually change document status](https://support.pandadoc.com/hc/en-us/articles/360041879753--Editor-2-0-Manually-change-document-status) topic.\n\n| Current Status | To Completed: | To Expired: | To Paid: | To Declined: |\n|----------------|---------------|-------------|----------|--------------|\n| Draft          | YES           | NO          | YES      | YES          |\n| Approved       | NO            | NO          | NO       | NO           |\n| Sent           | YES           | YES         | NO       | YES          |\n| Viewed         | YES           | YES         | NO       | YES          |\n| Completed (Auto) | NO          | NO          | NO       | YES          |\n| Waithing for payment | NO      | NO          | YES      | YES          |\n| Paid           | NO            | NO          | NO       | NO           |\n| Expired        | YES           | NO          | YES      | YES          |\n| Declined       | YES           | NO          | YES      | NO           |\n\n> ✅ - from `document.voided` to `document.paid`\n>\n> ❌ - from `document.paid` to `document.voided`\n",
         "parameters": [
           {
+            "examples": {
+              "Mark as Decline": {
+                "value": "iGsFiaV2hEEvQdhr2WAkMk"
+              },
+              "Mark as Completed": {
+                "value": "iGsFiaV2hEEvQdhr2WAkMk"
+              },
+              "Mark as Expired": {
+                "value": "iGsFiaV2hEEvQdhr2WAkMk"
+              },
+              "Mark as Paid": {
+                "value": "iGsFiaV2hEEvQdhr2WAkMk"
+              }
+            },
             "name": "id",
             "in": "path",
             "schema": {
               "type": "string"
             },
             "required": true,
-            "description": "Specify document ID.",
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+            "description": "Specify document ID."
           }
         ],
         "requestBody": {
@@ -788,6 +933,36 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DocumentStatusChangeRequest"
+              },
+              "examples": {
+                "Mark as Decline": {
+                  "value": {
+                    "status": 12,
+                    "note": "Change status to Decline",
+                    "notify_recipients": false
+                  }
+                },
+                "Mark as Completed": {
+                  "value": {
+                    "status": 2,
+                    "note": "Change status to Completed",
+                    "notify_recipients": false
+                  }
+                },
+                "Mark as Expired": {
+                  "value": {
+                    "status": 11,
+                    "note": "Change status to Expired",
+                    "notify_recipients": false
+                  }
+                },
+                "Mark as Paid": {
+                  "value": {
+                    "status": 10,
+                    "note": "Change status to Paid",
+                    "notify_recipients": false
+                  }
+                }
               }
             },
             "multipart/form-data": {
@@ -800,6 +975,7 @@
                     "description": "Binary attachment file"
                   },
                   "data": {
+                    "$ref": "#/components/schemas/DocumentStatusChangeRequest",
                     "type": "object",
                     "description": "JSON as a multipart/form-data string."
                   }
@@ -830,6 +1006,81 @@
         }
       }
     },
+    "/public/v1/documents/{id}/draft": {
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Move Document to Draft",
+        "operationId": "documentRevertToDraft",
+        "description": "Revert your document back to draft to continue editing it.\n\n> 📘 Returning to Draft works for any document status except Removed.\n\n## After you move your document to the Draft status\n\n- `Signature` and `Initials` fields are cleared. All other fields stay filled in.\n- Recipients are **not** notified that the document is back in Draft.\n- You'll need to resend the document so that recipients can sign the updated version.\n",
+        "parameters": [
+          {
+            "examples": {
+              "Move to Draft": {
+                "value": "iGsFiaV2hEEvQdhr2WAkMk"
+              }
+            },
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify document ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "date_created": {
+                      "type": "string"
+                    },
+                    "date_modified": {
+                      "type": "string"
+                    },
+                    "expiration_date": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "version": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "Move to Draft": {
+                    "value": {
+                      "id": "msFYActMfJHqNTKH8YSvF1",
+                      "name": "Document",
+                      "status": "document.draft",
+                      "date_created": "2017-08-06T08:42:13.836022Z",
+                      "date_modified": "2017-09-04T02:21:13.963750Z",
+                      "expiration_date": null,
+                      "version": "2"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/public/v1/documents/{id}/details": {
       "get": {
         "tags": [
@@ -837,16 +1088,24 @@
         ],
         "summary": "Document details",
         "operationId": "detailsDocument",
+        "description": "Get details about a document by its `id`. Details include:\n\n- Basic document information (name, document state, owner, sender, grand total, etc.)\n- Recipients (completion status, signing order, etc.)\n- Fields with values (incl. Collect Files field)\n- Tokens (variables) with values\n- Pricing information (pricing tables, products, quotes, etc.)\n- Metadata\n- Tags\n- Linked objects\n- [Approval flow](https://support.pandadoc.com/hc/en-us/articles/360016122334-Approval-workflow#h_01H4GNY5GSGG38BPYY46XV7GB4) (if present)\n- Timestamps associated with a document. Note that `date_modified` means any changes associated with the recipients and document status, while `content_date_modified` reflects any changes in the document content.\n",
         "parameters": [
           {
+            "examples": {
+              "Document from empty template": {
+                "value": "BhVzRcxH9Z2LgfPPGXFUBa"
+              },
+              "API Sample Document from PandaDoc template": {
+                "value": "PeePkgJLFT2UittjVdEyYG"
+              }
+            },
             "name": "id",
             "description": "Document ID",
             "in": "path",
             "schema": {
               "type": "string"
             },
-            "required": true,
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+            "required": true
           }
         ],
         "responses": {
@@ -856,6 +1115,442 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DocumentDetailsResponse"
+                },
+                "examples": {
+                  "Document from empty template": {
+                    "value": {
+                      "approval_execution": null,
+                      "content_date_modified": "2024-07-05T07:21:42.429978Z",
+                      "linked_objects": [],
+                      "date_completed": null,
+                      "id": "VFU2v7oq3ZiKCHD936eoHg",
+                      "name": "Document from empty Template",
+                      "autonumbering_sequence_name_prefix": null,
+                      "date_created": "2024-07-05T07:21:41.984654Z",
+                      "date_modified": "2024-07-05T07:21:42.409797Z",
+                      "created_by": {
+                        "id": "bgx5MR7LiR3f9MQtt4MWYM",
+                        "email": "siarhei.soroka@pandadoc.com",
+                        "first_name": "Siarhei",
+                        "last_name": "Soroka",
+                        "avatar": "https://avatars.pandadoc-static.com/users/bgx5MR7LiR3f9MQtt4MWYM/avatar.jpeg",
+                        "membership_id": "nYNQTypQfNEnrcVR7VAzWQ"
+                      },
+                      "template": {
+                        "id": "bonjUYEwp8TtHmEnrEy7kZ",
+                        "name": "Sample Template"
+                      },
+                      "expiration_date": null,
+                      "metadata": {
+                        "document__creation_source": "public api",
+                        "document__created_via_public_api": "true"
+                      },
+                      "tokens": [],
+                      "fields": [],
+                      "pricing": {},
+                      "tags": [],
+                      "status": "document.draft",
+                      "recipients": [],
+                      "sent_by": null,
+                      "grand_total": {
+                        "amount": "0",
+                        "currency": "USD"
+                      },
+                      "version": "2"
+                    }
+                  },
+                  "API Sample Document from PandaDoc template": {
+                    "value": {
+                      "id": "7kqXgjFejB2toXxjcC5jfZ",
+                      "name": "API Sample Document from PandaDoc Template",
+                      "autonumbering_sequence_name_prefix": {},
+                      "date_created": "2021-10-23T21:07:04.147Z",
+                      "date_modified": "2021-10-23T21:07:04.147Z",
+                      "date_completed": "2021-10-23T21:07:04.147Z",
+                      "content_date_modified": "2021-10-23T21:07:04.147Z",
+                      "created_by": {
+                        "id": "7kqXgjFejB2toXxjcC5jfZ",
+                        "membership_id": "7kqXgjFejB2toXxjcC5jfZ",
+                        "email": "teset@test.test",
+                        "first_name": "Jhon",
+                        "last_name": "Dow",
+                        "avatar": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+                      },
+                      "template": {
+                        "id": "hryJY9mqYZHjQCYQuSjRQg",
+                        "name": "Upload test"
+                      },
+                      "expiration_date": null,
+                      "metadata": {
+                        "document__created_via_public_api": "true",
+                        "my_favorite_pet": "Panda",
+                        "opp_id": "1234567"
+                      },
+                      "tokens": [
+                        {
+                          "name": "Document.GrandTotal",
+                          "value": "$29.99"
+                        },
+                        {
+                          "name": "Favorite.Pet",
+                          "value": "Panda"
+                        }
+                      ],
+                      "fields": [
+                        {
+                          "uuid": "f9574c3b-5b1e-4479-b2c9-c3ccd92748f3",
+                          "name": "Click to upload a file",
+                          "title": "",
+                          "placeholder": "Click to upload a file",
+                          "value": {
+                            "name": "file_name.pdf",
+                            "url": "https://uploadfields.pandadoc-static.com/collect_files/e7b082c2-395b-43c7-a24c-66bd1bbb5d2f/65af1f23-9d26-4622-8ff0-f406b3be27b8-file_name.pdf"
+                          },
+                          "assigned_to": {
+                            "id": "Fx7CgaVgpGbJBgZ4i5oTx8",
+                            "first_name": "John",
+                            "last_name": "Roe",
+                            "email": "john@example.com",
+                            "recipient_type": "signer",
+                            "has_completed": false,
+                            "role": "",
+                            "roles": [
+                              "singer"
+                            ],
+                            "type": "recipient"
+                          },
+                          "field_id": "CollectFile1",
+                          "type": "collect_file"
+                        },
+                        {
+                          "uuid": "eyGJgkWJfUpRtUCsCFDwGU",
+                          "name": "Favorite.Color",
+                          "merge_field": "Favorite.Color",
+                          "title": "Textfield",
+                          "value": "value",
+                          "assigned_to": {
+                            "id": "Fx7CgaVgpGbJBgZ4i5oTx8",
+                            "first_name": "John",
+                            "last_name": "Roe",
+                            "email": "john@example.com",
+                            "recipient_type": "signer",
+                            "has_completed": false,
+                            "role": "",
+                            "roles": [],
+                            "type": "recipient"
+                          },
+                          "field_id": "text1",
+                          "type": "text"
+                        },
+                        {
+                          "uuid": "M4755SJuoyz5Jzsw4WXTDb",
+                          "name": "Like",
+                          "merge_field": "Like",
+                          "title": "Checkbox",
+                          "value": "value",
+                          "assigned_to": {
+                            "id": "Fx7CgaVgpGbJBgZ4i5oTx8",
+                            "first_name": "John",
+                            "last_name": "Roe",
+                            "email": "john@example.com",
+                            "recipient_type": "signer",
+                            "has_completed": false,
+                            "role": "",
+                            "roles": [
+                              "signer"
+                            ],
+                            "type": "recipient"
+                          },
+                          "field_id": "checkbox1",
+                          "type": "checkbox"
+                        }
+                      ],
+                      "pricing": {
+                        "tables": [
+                          {
+                            "name": "Pricing Table",
+                            "id": "065c5cbc-a065-4843-ba17-028e63779605",
+                            "total": "11500",
+                            "is_included_in_total": true,
+                            "summary": {
+                              "subtotal": "11500",
+                              "total": "11500",
+                              "discount": "0",
+                              "tax": "0"
+                            },
+                            "items": [
+                              {
+                                "id": "string",
+                                "sku": "string",
+                                "qty": "10",
+                                "name": "Annual license",
+                                "cost": "string",
+                                "price": "100",
+                                "description": "1 year subscription",
+                                "custom_fields": {},
+                                "custom_columns": {
+                                  "Images": "",
+                                  "Cost": "",
+                                  "Subtotal": ""
+                                },
+                                "discount": {
+                                  "value": "string",
+                                  "type": "string"
+                                },
+                                "tax_first": {
+                                  "value": "string",
+                                  "type": "string"
+                                },
+                                "tax_second": {
+                                  "value": "string",
+                                  "type": "string"
+                                },
+                                "subtotal": "10000",
+                                "options": {},
+                                "sale_price": "1000",
+                                "taxes": {},
+                                "discounts": {},
+                                "fees": {},
+                                "merged_data": {
+                                  "custom_name": "SomeName",
+                                  "custom_description": "SomeCustomDescription",
+                                  "custom_price": "10.99",
+                                  "custom_qty": "1.00",
+                                  "custom_sku": "Test",
+                                  "custom_tax": {
+                                    "value": "10",
+                                    "type": "percent"
+                                  },
+                                  "custom_fee": {
+                                    "value": "10",
+                                    "type": "percent"
+                                  },
+                                  "custom_discount": {
+                                    "value": "10",
+                                    "type": "percent"
+                                  },
+                                  "custom_text": "Some other",
+                                  "Cost": null,
+                                  "Subtotal": "26.38",
+                                  "fluffiness": "Fluffiness",
+                                  "Other_field": "SomeText"
+                                }
+                              }
+                            ],
+                            "currency": "USD"
+                          }
+                        ],
+                        "quotes": [
+                          {
+                            "id": "4b011d86-286b-4f86-b697-90a6ad3f1489",
+                            "currency": "USD",
+                            "total": "900",
+                            "summary": {
+                              "total": "900",
+                              "subtotal": "1000",
+                              "one_time_subtotal": "500",
+                              "recurring_subtotal": [
+                                {
+                                  "billing_cycle": "monthly",
+                                  "value": "500"
+                                }
+                              ],
+                              "total_qty": "string",
+                              "discounts": {
+                                "property1": {
+                                  "type": "string",
+                                  "value": "string"
+                                },
+                                "property2": {
+                                  "type": "string",
+                                  "value": "string"
+                                }
+                              },
+                              "taxes": {},
+                              "fees": {},
+                              "custom_fields": {
+                                "property1": "string",
+                                "property2": "string"
+                              },
+                              "total_discount": "100",
+                              "total_tax": "string",
+                              "total_fee": "string",
+                              "total_savings": "string",
+                              "total_contract_value": "1900"
+                            },
+                            "sections": [
+                              {
+                                "id": "string",
+                                "name": "string",
+                                "summary": {
+                                  "total": "1000",
+                                  "subtotal": "1000",
+                                  "one_time_subtotal": "500",
+                                  "recurring_subtotal": [
+                                    {
+                                      "billing_cycle": "monthly",
+                                      "value": "500"
+                                    }
+                                  ],
+                                  "total_qty": "string",
+                                  "discounts": {},
+                                  "taxes": {},
+                                  "fees": {},
+                                  "custom_fields": {
+                                    "property1": "string",
+                                    "property2": "string"
+                                  },
+                                  "total_section_value": "1900"
+                                },
+                                "columns": [
+                                  {
+                                    "header": "string",
+                                    "name": "string",
+                                    "merge_name": "string",
+                                    "hidden": "string"
+                                  }
+                                ],
+                                "items": [
+                                  {
+                                    "id": "string",
+                                    "sku": "string",
+                                    "name": "string",
+                                    "description": "string",
+                                    "qty": "1",
+                                    "price": "500",
+                                    "cost": "string",
+                                    "billing_frequency": "string",
+                                    "contract_term": "string",
+                                    "pricing_method": "string",
+                                    "type": "string",
+                                    "reference_type": "string",
+                                    "options": {
+                                      "selected": true,
+                                      "qty_editable": true
+                                    },
+                                    "custom_columns": {
+                                      "property1": "string",
+                                      "property2": "string"
+                                    },
+                                    "discounts": {
+                                      "property1": {
+                                        "type": "string",
+                                        "value": "string"
+                                      },
+                                      "property2": {
+                                        "type": "string",
+                                        "value": "string"
+                                      }
+                                    },
+                                    "taxes": {
+                                      "property1": {
+                                        "type": "string",
+                                        "value": "string"
+                                      },
+                                      "property2": {
+                                        "type": "string",
+                                        "value": "string"
+                                      }
+                                    },
+                                    "fees": {
+                                      "property1": {
+                                        "type": "string",
+                                        "value": "string"
+                                      },
+                                      "property2": {
+                                        "type": "string",
+                                        "value": "string"
+                                      }
+                                    },
+                                    "multipliers": {
+                                      "property1": "string",
+                                      "property2": "string"
+                                    },
+                                    "total": "string",
+                                    "overall_total": "1000"
+                                  }
+                                ],
+                                "total": "1000",
+                                "settings": {
+                                  "optional": true,
+                                  "selected": true,
+                                  "selection_type": "custom"
+                                }
+                              }
+                            ],
+                            "merge_rules": [
+                              {
+                                "id": "string",
+                                "enabled": true,
+                                "action": {
+                                  "type": "string",
+                                  "section_id": "string"
+                                },
+                                "condition": {
+                                  "field_name": "string",
+                                  "type": "string",
+                                  "comparison": [
+                                    {
+                                      "type": "string",
+                                      "value": "string"
+                                    }
+                                  ]
+                                }
+                              }
+                            ],
+                            "settings": {
+                              "selection_type": "custom"
+                            }
+                          }
+                        ],
+                        "total": "11500"
+                      },
+                      "version": "2",
+                      "tags": [
+                        "tag1",
+                        "tag2"
+                      ],
+                      "sent_by": null,
+                      "recipients": [
+                        {
+                          "recipient_type": "CC",
+                          "role": "",
+                          "roles": [
+                            "user"
+                          ],
+                          "last_name": "Dow",
+                          "signing_order": null,
+                          "id": "7kqXgjFejB2toXxjcC5jfZ",
+                          "contact_id": "7kqXgjFejB2toXxjcC5jfZ",
+                          "first_name": "Jhon",
+                          "email": "test@test.com",
+                          "has_completed": true,
+                          "shared_link": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364",
+                          "verification_settings": {
+                            "verification_place": "before_open",
+                            "passcode_verification": {
+                              "passcode": "SimpleCode1",
+                              "phone_verification": null
+                            }
+                          },
+                          "signature_date": "2021-10-23T21:07:04.147Z"
+                        }
+                      ],
+                      "grand_total": {
+                        "amount": "29.99",
+                        "currency": "USD"
+                      },
+                      "linked_objects": [
+                        {
+                          "provider": "hubspot",
+                          "entity_type": "deal",
+                          "entity_id": "18640",
+                          "id": "ea88ed1dc8094dd3a57754aa643a1954"
+                        }
+                      ],
+                      "status": "document.draft"
+                    }
+                  }
                 }
               }
             }
@@ -878,64 +1573,6 @@
         }
       }
     },
-    "/public/v1/documents/{id}/session": {
-      "post": {
-        "tags": [
-          "Documents"
-        ],
-        "summary": "Create a Document Link",
-        "operationId": "createDocumentLink",
-        "parameters": [
-          {
-            "name": "id",
-            "description": "Document ID",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DocumentCreateLinkRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DocumentCreateLinkResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400RequestError"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      }
-    },
     "/public/v1/documents/{id}/send": {
       "post": {
         "tags": [
@@ -943,6 +1580,7 @@
         ],
         "summary": "Send Document",
         "operationId": "sendDocument",
+        "description": "> 🚧 Using the Sandbox Key\n> \n> When you use a [sandbox API key](https://developers.pandadoc.com/reference/sandbox-key) during the free trial period, the sender and recipient email addresses must be from the same organisation (email domain).\n\n## Document State\n\n- You can only send a document in the `document.draft` status.\n- After creating a new document, it usually retains a `document.uploaded` status for 3-5 seconds while the document syncs across PandaDoc servers. When the document is available for further API calls, it moves to the `document.draft` state. Use [Document Status](/reference/document-status) or [Webhooks](/reference/on-document-status-change) to check document status.\n- Moving a document to the `document.sent` status finalizes the document structure, before recipients can complete it.\n- If a template used for the document creation has an approval workflow turned on, the sent document moves to the `document.waiting_approval` status. Once the document is approved, you need to make the call again to move the document to `document.sent` status.\n\n## Send and Silence Notifications\n\n- By default, PandaDoc sends a `document.sent` notification email to the recipient as well as any internal notifications the sender has opted for. This can be bypassed by passing `silent: true`. Using this will suppress sent, viewed, comment and completed document notifications. This is useful when you are using alternative delivery methods such as linking to the document or embedding the document.\n- The `silent: true` parameter disables sent, viewed, comment and completed document email notifications. \"Document Approval\" notification won't be affected by this parameter.\n- When opting to send an email, passing the optional `message` attribute will result in an email like the following. At this time, you cannot customize the email beyond the user avatar. If you wish to perform any additional customization, we recommend generating view session links and using your own email distribution methods.\n\n![Example email. Branding can be changed in workspace settings](https://files.readme.io/cc5a03e-email2.png)\n\n## Select Approver from Group\n\nIf you have previously set up an approval workflow with selectable groups on the UI, you can select a particular approver from this group. Learn more about [selectable groups](https://support.pandadoc.com/hc/en-us/articles/360016122334-Approval-workflow#h_01H4GNY5GSGG38BPYY46XV7GB4).  \nTo set an approver, we recommend to follow these steps:\n\n1. Run the [Document Details](https://developers.pandadoc.com/reference/document-details) request.\n2. Copy the `steps` part from the `approval_execution` section of the response into the `selected_approvers` field of the Send Document payload.\n3. Modify your payload according to business needs: set `is_selected` to true for one approver.\n\n> 📘 **Note**: You can change the selected approver only if you revert your document back to the `document.draft` status.\n",
         "parameters": [
           {
             "name": "id",
@@ -994,6 +1632,85 @@
         }
       }
     },
+    "/public/v1/documents/{id}/session": {
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Create Document Session",
+        "operationId": "createDocumentLink",
+        "description": "Create a document session for a recipient to view and sign a document. This endpoint returns a session ID that can be used to generate a document link for sharing.\n\n> 🚧 Document State\n> \n> You can generate an `id` only for documents in the `sent, waiting for payment, paid, and completed` statuses. In order to move a document to the `sent` status without actually sending any emails to recipients, use the [Send Document](/reference/send-document) endpoint with the `silent`: `true` parameter.\n> \n> If a document is in \"waiting_approval\", \"rejected\", or \"declined\" status, you can't use [Share Document](ref:share-document) call. Share Document endpoint will return HTTP 400 with an error.\n\n> 📘 Generating a Document Link from the returned `id`\n> \n> The `id` this endpoint returns is a session id. Use this URL format to view a document:\n> \n> ```html\n> https://app.pandadoc.com/s/{id}/\n> ```\n\nWhen generating a document link, first we must request a `session ID` per the session endpoint above. Once the `session ID` is generated, it can then be placed in the URL format above for sharing.\n\n> 🚧 Lifetime Parameter\n> \n> We see the `lifetime` parameter often overlooked when generating a `session ID`. Make sure that you provide a `lifetime` value in seconds that is great enough for the recipient(s) to complete the shared document. We recommend values under 1 year for security purposes, e.g.: `\"lifetime\": 31535999`\n",
+        "parameters": [
+          {
+            "examples": {
+              "Signing session": {
+                "value": "ZPeAfcpzr9aiVs5vqUf6jg"
+              }
+            },
+            "name": "id",
+            "description": "Document ID",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentCreateLinkRequest"
+              },
+              "examples": {
+                "Signing session": {
+                  "value": {
+                    "recipient": "test@mail.com",
+                    "lifetime": 900
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentCreateLinkResponse"
+                },
+                "examples": {
+                  "Signing session": {
+                    "value": {
+                      "id": "nPh2PDhFdDqAES9k64h9qX",
+                      "expires_at": "2024-07-01T08:03:57.536427Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
     "/public/v1/documents/{id}/download": {
       "get": {
         "tags": [
@@ -1001,6 +1718,7 @@
         ],
         "summary": "Document download",
         "operationId": "downloadDocument",
+        "description": "Download documents as a PDF.\n",
         "parameters": [
           {
             "name": "id",
@@ -1102,7 +1820,7 @@
           "Documents"
         ],
         "summary": "Download document protected",
-        "description": "Download a signed PDF of a completed document",
+        "description": "> 🚧 Production key only\n> \n> This endpoint only works with a Production key. You'll get a 401 Unauthorized error when trying to use a Sandbox key.\n\nDownload a signed PDF of a completed document\n",
         "operationId": "downloadProtectedDocument",
         "parameters": [
           {
@@ -1162,6 +1880,7 @@
         ],
         "summary": "List Linked Objects",
         "operationId": "listLinkedObjects",
+        "description": "Get a list of linked objects for the document.\n",
         "parameters": [
           {
             "name": "id",
@@ -1571,6 +2290,285 @@
         }
       }
     },
+    "/public/v1/documents/{id}/fields": {
+      "get": {
+        "summary": "List Document Fields",
+        "description": "Return the list of fields for a particular document",
+        "operationId": "listDocumentFields",
+        "tags": [
+          "Document Fields"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fields": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "uuid": {
+                            "type": "string",
+                            "format": "uuid",
+                            "nullable": false
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "value": {},
+                          "field_id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "text",
+                              "signature",
+                              "checkbox",
+                              "date",
+                              "dropdown",
+                              "stamp",
+                              "initials",
+                              "radio_buttons",
+                              "collect_file",
+                              "payment_details"
+                            ]
+                          },
+                          "placeholder": {
+                            "type": "string"
+                          },
+                          "assigned_to": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "first_name": {
+                                "type": "string"
+                              },
+                              "last_name": {
+                                "type": "string"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "phone": {
+                                "type": "string"
+                              },
+                              "recipient_type": {
+                                "type": "string"
+                              },
+                              "has_completed": {
+                                "type": "boolean"
+                              },
+                              "signing_order": {},
+                              "delivery_methods": {},
+                              "redirect": {},
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "layout": {
+                            "$ref": "#/paths/~1public~1v1~1documents~1%7Bid%7D~1fields/post/requestBody/content/application~1json/schema/properties/fields/items/properties/layout"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Document Fields",
+        "description": "Creates fields for a particular document",
+        "operationId": "createDocumentFields",
+        "tags": [
+          "Document Fields"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "field_id": {
+                          "type": "string",
+                          "description": "Optional unique identifier."
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "text",
+                            "signature",
+                            "checkbox",
+                            "date",
+                            "dropdown",
+                            "stamp",
+                            "initials",
+                            "radio_buttons",
+                            "collect_file",
+                            "payment_details"
+                          ]
+                        },
+                        "placeholder": {
+                          "type": "string"
+                        },
+                        "assigned_to": {
+                          "type": "string",
+                          "description": "Optional uuid of a recipient."
+                        },
+                        "layout": {
+                          "type": "object",
+                          "properties": {
+                            "page": {
+                              "type": "integer"
+                            },
+                            "position": {
+                              "type": "object",
+                              "properties": {
+                                "offset_x": {
+                                  "type": "number"
+                                },
+                                "offset_y": {
+                                  "type": "number"
+                                },
+                                "anchor_point": {
+                                  "type": "string",
+                                  "enum": [
+                                    "topleft",
+                                    "topright",
+                                    "bottomleft",
+                                    "bottomright"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "offset_x",
+                                "offset_y",
+                                "anchor_point"
+                              ]
+                            },
+                            "style": {
+                              "type": "object",
+                              "properties": {
+                                "width": {
+                                  "type": "integer"
+                                },
+                                "height": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "width",
+                                "height"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "page",
+                            "position",
+                            "style"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "layout"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fields": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/paths/~1public~1v1~1documents~1%7Bid%7D~1fields/get/responses/200/content/application~1json/schema/properties/fields/items"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
     "/public/v1/documents/{id}/ownership": {
       "patch": {
         "tags": [
@@ -1765,7 +2763,7 @@
         }
       }
     },
-    "/public/v1/documents/{id}/recipients/{recipient_id}": {
+    "/public/v1/documents/{id}/recipients/recipient/{recipient_id}": {
       "patch": {
         "summary": "Edit Document Recipient",
         "description": "Edit document recipient's details",
@@ -1825,7 +2823,9 @@
             "$ref": "#/components/responses/429"
           }
         }
-      },
+      }
+    },
+    "/public/v1/documents/{id}/recipients/{recipient_id}": {
       "delete": {
         "summary": "Delete Document Recipient",
         "description": "Deleted recipient from document",
@@ -2192,6 +3192,61 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Create Template",
+        "operationId": "createTemplate",
+        "parameters": [
+          {
+            "name": "fields",
+            "description": "A comma-separated list of additional fields to include in the response.  Each field must be a valid template property.  Currently, only one additional field, `content_date_modified`, is supported.  For example, `POST /templates?fields=content_date_modified`.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the template.",
+                    "example": "Template"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateListResponse/properties/results/items"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -3693,6 +4748,115 @@
         }
       }
     },
+    "/public/v2/product-catalog/items": {
+      "post": {
+        "tags": [
+          "Product catalog"
+        ],
+        "summary": "Create a new catalog item.",
+        "description": "Create a new catalog item.",
+        "operationId": "createCatalogItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCatalogItemRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully created a new catalog item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCatalogItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/v2/product-catalog/items/{item_uuid}": {
+      "parameters": [
+        {
+          "name": "item_uuid",
+          "in": "path",
+          "description": "Catalog item UUID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Product catalog"
+        ],
+        "summary": "Get Catalog Item",
+        "description": "Get catalog item.",
+        "operationId": "getCatalogItem",
+        "responses": {
+          "200": {
+            "description": "Get Catalog Item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCatalogItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Product catalog"
+        ],
+        "summary": "Update Catalog Item",
+        "description": "Update catalog item.",
+        "operationId": "updateCatalogItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCatalogItemPatchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update Catalog item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCatalogItemResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Product catalog"
+        ],
+        "summary": "Delete Catalog Item",
+        "description": "Delete catalog item.",
+        "operationId": "deleteCatalogItem",
+        "responses": {
+          "200": {
+            "description": "No content"
+          }
+        }
+      }
+    },
     "/public/v2/product-catalog/items/search": {
       "get": {
         "tags": [
@@ -4443,16 +5607,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "example": "A new workspace"
-                  }
-                },
-                "required": [
-                  "name"
-                ]
+                "$ref": "#/components/schemas/CreateWorkspaceRequest"
               }
             }
           }
@@ -4463,17 +5618,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "example": "iMymdDd9XFD3HyxP5VD67Q"
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "A new workspace"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CreateWorkspaceResponse"
                 }
               }
             }
@@ -4486,6 +5631,61 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "User and Workspace management"
+        ],
+        "summary": "Get list of workspaces",
+        "operationId": "getWorkspacesList",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Number of elements in page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page of workspaces",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListWorkspacesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -4523,69 +5723,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "user": {
-                    "type": "object",
-                    "description": "User info",
-                    "properties": {
-                      "email": {
-                        "type": "string",
-                        "example": "email@example.com"
-                      },
-                      "first_name": {
-                        "type": "string",
-                        "example": "John"
-                      },
-                      "last_name": {
-                        "type": "string",
-                        "example": "Doe"
-                      },
-                      "phone_number": {
-                        "type": "string",
-                        "example": "+14842634627"
-                      }
-                    }
-                  },
-                  "workspaces": {
-                    "type": "array",
-                    "description": "Info for adding a user to a workspace(s)",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "workspace_id": {
-                          "type": "string",
-                          "example": "2eWSKSvVqmuVCnuUK3iWwD"
-                        },
-                        "role": {
-                          "type": "string",
-                          "enum": [
-                            "Admin",
-                            "Manager",
-                            "Member",
-                            "Collaborator"
-                          ]
-                        }
-                      }
-                    }
-                  },
-                  "license": {
-                    "type": "string",
-                    "description": "User License",
-                    "enum": [
-                      "Full",
-                      "eSign",
-                      "Read-only",
-                      "Creator",
-                      "Guest"
-                    ]
-                  }
-                },
-                "required": [
-                  "user",
-                  "license",
-                  "workspaces"
-                ]
+                "$ref": "#/components/schemas/CreateUserRequest"
               }
             }
           }
@@ -4596,13 +5734,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user_id": {
-                      "type": "string",
-                      "example": "iMymdDd9XFD3HyxP5VD67Q"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CreateUserResponse"
                 }
               }
             }
@@ -4658,6 +5790,68 @@
             "$ref": "#/components/responses/429"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "User and Workspace management"
+        ],
+        "summary": "Get list of users",
+        "operationId": "listUsers",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "description": "Number of elements in page",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0,
+              "maximum": 50,
+              "default": 50
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0,
+              "default": 1
+            }
+          },
+          {
+            "name": "show_removed",
+            "in": "query",
+            "description": "Filter option - show users with removed memberships",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListUsersResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
       }
     },
     "/public/v1/workspaces/{workspace_id}/members": {
@@ -4699,26 +5893,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "user_id": {
-                    "type": "string",
-                    "example": "2eWSKSvVqmuVCnuUK3iWwD"
-                  },
-                  "role": {
-                    "type": "string",
-                    "enum": [
-                      "Admin",
-                      "Manager",
-                      "Member",
-                      "Collaborator"
-                    ]
-                  }
-                },
-                "required": [
-                  "user_id",
-                  "role"
-                ]
+                "$ref": "#/components/schemas/AddMemberRequest"
               }
             }
           }
@@ -4729,38 +5904,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "member_id": {
-                      "type": "string",
-                      "example": "iMymdDd9XFD3HyxP5VD67Q"
-                    },
-                    "workspace_id": {
-                      "type": "string",
-                      "example": "2eWSKSvVqmuVCnuUK3iWwD"
-                    },
-                    "role": {
-                      "type": "string",
-                      "enum": [
-                        "Admin",
-                        "Manager",
-                        "Member",
-                        "Collaborator"
-                      ]
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "email@example.com"
-                    },
-                    "first_name": {
-                      "type": "string",
-                      "example": "John"
-                    },
-                    "last_name": {
-                      "type": "string",
-                      "example": "Doe"
-                    }
-                  }
+                  "$ref": "#/components/schemas/AddMemberResponse"
                 }
               }
             }
@@ -5014,10 +6158,7 @@
                 "redirect": {
                   "$ref": "#/components/schemas/RecipientRedirect"
                 }
-              },
-              "required": [
-                "email"
-              ]
+              }
             }
           },
           "tokens": {
@@ -5169,10 +6310,7 @@
                             "redirect": {
                               "$ref": "#/components/schemas/RecipientRedirect"
                             }
-                          },
-                          "required": [
-                            "email"
-                          ]
+                          }
                         }
                       }
                     },
@@ -5244,10 +6382,7 @@
                 "redirect": {
                   "$ref": "#/components/schemas/RecipientRedirect"
                 }
-              },
-              "required": [
-                "email"
-              ]
+              }
             }
           },
           "parse_form_fields": {
@@ -5367,10 +6502,7 @@
                 "redirect": {
                   "$ref": "#/components/schemas/RecipientRedirect"
                 }
-              },
-              "required": [
-                "email"
-              ]
+              }
             }
           },
           "tokens": {
@@ -5535,10 +6667,7 @@
                             "redirect": {
                               "$ref": "#/components/schemas/RecipientRedirect"
                             }
-                          },
-                          "required": [
-                            "email"
-                          ]
+                          }
                         }
                       }
                     },
@@ -5703,6 +6832,9 @@
                 },
                 "redirect": {
                   "$ref": "#/components/schemas/RecipientRedirect"
+                },
+                "verification_settings": {
+                  "$ref": "#/components/schemas/RecipientVerificationSettings"
                 }
               }
             }
@@ -5743,6 +6875,17 @@
               ]
             }
           },
+          "tags": {
+            "type": "array",
+            "description": "Mark your document with one or several tags.",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "updated_via_api",
+              "test_document"
+            ]
+          },
           "metadata": {
             "type": "object",
             "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id. If metadata exists in a document then the value will be updated. Otherwise, metadata will be added to the document.",
@@ -5762,7 +6905,14 @@
         "type": "object",
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/DocumentStatusRequestEnum"
+            "type": "integer",
+            "enum": [
+              2,
+              10,
+              11,
+              12
+            ],
+            "example": 12
           },
           "note": {
             "type": "string",
@@ -6098,7 +7248,8 @@
           "lifetime": {
             "type": "number",
             "description": "Provide the number of seconds that a document link should be valid for. Default is 3600 seconds.",
-            "example": 900
+            "example": 900,
+            "default": 3600
           }
         },
         "required": [
@@ -6987,10 +8138,12 @@
                 },
                 "date_created": {
                   "type": "string",
+                  "format": "date-time",
                   "example": "2021-06-17T15:51:13.226974Z"
                 },
                 "date_modified": {
                   "type": "string",
+                  "format": "date-time",
                   "example": "2021-06-17T15:51:13.326974Z"
                 },
                 "version": {
@@ -6999,6 +8152,7 @@
                 },
                 "content_date_modified": {
                   "type": "string",
+                  "format": "date-time",
                   "example": "2021-06-17T15:51:13.426974Z"
                 }
               }
@@ -8464,10 +9618,7 @@
             "nullable": true,
             "example": "75001"
           }
-        },
-        "required": [
-          "email"
-        ]
+        }
       },
       "ContactUpdateRequest": {
         "type": "object",
@@ -8668,7 +9819,8 @@
           "-date_expiration",
           "-date_declined",
           "-status"
-        ]
+        ],
+        "default": "date_status_changed"
       },
       "WebhookSubscriptionPayloadEnum": {
         "type": "string",
@@ -8782,7 +9934,7 @@
             "type": "string",
             "format": "uuid",
             "nullable": true,
-            "example": "c661e488-619e-8001-821febbd3b93"
+            "example": "123e4567-e89b-12d3-a456-426614174000"
           },
           "name": {
             "type": "string",
@@ -8894,7 +10046,7 @@
             "description": "Unique webhook subscription event identifier",
             "format": "uuid",
             "nullable": true,
-            "example": "c661e488-619e-8001-821febbd3b93"
+            "example": "123e4567-e89b-12d3-a456-426614174000"
           },
           "name": {
             "type": "string",
@@ -8932,7 +10084,7 @@
             "description": "Unique webhook subscription event identifier",
             "format": "uuid",
             "nullable": true,
-            "example": "c661e488-619e-8001-821febbd3b93"
+            "example": "123e4567-e89b-12d3-a456-426614174000"
           },
           "name": {
             "type": "string",
@@ -9200,10 +10352,7 @@
                 "redirect": {
                   "$ref": "#/components/schemas/RecipientRedirect"
                 }
-              },
-              "required": [
-                "email"
-              ]
+              }
             }
           },
           "parse_form_fields": {
@@ -9292,10 +10441,7 @@
                 "redirect": {
                   "$ref": "#/components/schemas/RecipientRedirect"
                 }
-              },
-              "required": [
-                "email"
-              ]
+              }
             }
           },
           "tokens": {
@@ -9403,10 +10549,7 @@
                             "redirect": {
                               "$ref": "#/components/schemas/RecipientRedirect"
                             }
-                          },
-                          "required": [
-                            "email"
-                          ]
+                          }
                         }
                       }
                     },
@@ -9482,10 +10625,7 @@
                 "redirect": {
                   "$ref": "#/components/schemas/RecipientRedirect"
                 }
-              },
-              "required": [
-                "email"
-              ]
+              }
             }
           },
           "tokens": {
@@ -9614,10 +10754,7 @@
                             "redirect": {
                               "$ref": "#/components/schemas/RecipientRedirect"
                             }
-                          },
-                          "required": [
-                            "email"
-                          ]
+                          }
                         }
                       }
                     },
@@ -9684,7 +10821,10 @@
             "items": {
               "type": "string"
             },
-            "example": "[\"cKbJ7uay3cEGtsKuGPwYGX\", \"jzjCfYgKQYm2u9ctwN6io4\"]"
+            "example": [
+              "cKbJ7uay3cEGtsKuGPwYGX",
+              "jzjCfYgKQYm2u9ctwN6io4"
+            ]
           },
           "date_created": {
             "type": "string",
@@ -9728,7 +10868,10 @@
             "items": {
               "type": "string"
             },
-            "example": "[\"cKbJ7uay3cEGtsKuGPwYGX\", \"jzjCfYgKQYm2u9ctwN6io4\"]"
+            "example": [
+              "cKbJ7uay3cEGtsKuGPwYGX",
+              "jzjCfYgKQYm2u9ctwN6io4"
+            ]
           },
           "date_created": {
             "type": "string",
@@ -9802,7 +10945,7 @@
             "properties": {
               "passcode": {
                 "type": "string",
-                "pattern": "(?=(?:.*[a-zA-Z]){1,})(?=(?:.*[0-9]){1,})^[\\S]{6,100}$",
+                "pattern": "^(?=(?:.*[a-zA-Z]){1,})(?=(?:.*[0-9]){1,})^[\\S]{6,100}$",
                 "example": "SimpleCode1"
               }
             },
@@ -9854,6 +10997,885 @@
           "sms": {
             "type": "boolean",
             "default": false
+          }
+        }
+      },
+      "CreateWorkspaceRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "A new workspace"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CreateWorkspaceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "iMymdDd9XFD3HyxP5VD67Q"
+          },
+          "name": {
+            "type": "string",
+            "example": "A new workspace"
+          }
+        }
+      },
+      "CreateUserRequest": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "description": "User info",
+            "properties": {
+              "email": {
+                "type": "string",
+                "example": "email@example.com"
+              },
+              "first_name": {
+                "type": "string",
+                "example": "John"
+              },
+              "last_name": {
+                "type": "string",
+                "example": "Doe"
+              },
+              "phone_number": {
+                "type": "string",
+                "example": "+14842634627"
+              }
+            }
+          },
+          "workspaces": {
+            "type": "array",
+            "description": "Info for adding a user to a workspace(s)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workspace_id": {
+                  "type": "string",
+                  "example": "2eWSKSvVqmuVCnuUK3iWwD"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "Admin",
+                    "Manager",
+                    "Member",
+                    "Collaborator"
+                  ]
+                }
+              }
+            }
+          },
+          "license": {
+            "type": "string",
+            "enum": [
+              "Full",
+              "eSign",
+              "Read-only",
+              "Creator",
+              "Guest"
+            ]
+          }
+        },
+        "required": [
+          "user",
+          "license",
+          "workspaces"
+        ]
+      },
+      "CreateUserResponse": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "example": "iMymdDd9XFD3HyxP5VD67Q"
+          }
+        }
+      },
+      "AddMemberRequest": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "example": "2eWSKSvVqmuVCnuUK3iWwD"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "Admin",
+              "Manager",
+              "Member",
+              "Collaborator"
+            ]
+          }
+        },
+        "required": [
+          "user_id",
+          "role"
+        ]
+      },
+      "AddMemberResponse": {
+        "type": "object",
+        "properties": {
+          "member_id": {
+            "type": "string",
+            "example": "iMymdDd9XFD3HyxP5VD67Q"
+          },
+          "workspace_id": {
+            "type": "string",
+            "example": "2eWSKSvVqmuVCnuUK3iWwD"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "Admin",
+              "Manager",
+              "Member",
+              "Collaborator"
+            ]
+          },
+          "email": {
+            "type": "string",
+            "example": "email@example.com"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe"
+          }
+        }
+      },
+      "ListUsersResponse": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "A number of users"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "string",
+                  "description": "A unique identifier of the user in the organization",
+                  "example": "ajnN7eGutJZsRKjQrNuPkh"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "A user's email address",
+                  "example": "josh@example.com"
+                },
+                "first_name": {
+                  "type": "string",
+                  "description": "A user's first name",
+                  "example": "Josh"
+                },
+                "last_name": {
+                  "type": "string",
+                  "description": "A user's last name",
+                  "example": "Doe"
+                },
+                "phone_number": {
+                  "type": "string",
+                  "description": "A user's phone number",
+                  "example": "+14842634627"
+                },
+                "license": {
+                  "type": "string",
+                  "description": "A user's license in the organization",
+                  "example": "Full"
+                },
+                "is_organization_owner": {
+                  "type": "boolean"
+                },
+                "workspaces": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "role": {
+                        "type": "string",
+                        "description": "A user's role in workspace",
+                        "example": "Admin"
+                      },
+                      "workspace_id": {
+                        "type": "string",
+                        "description": "A user's workspace",
+                        "example": "fERpqZdFaF9dHVAeVxPFaV"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ListWorkspacesResponse": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "A number of workspaces"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "A unique identifier of a workspace in a organization",
+                  "example": "ajnN7eGutJZsRKjQrNuPkh"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "A workspace's name",
+                  "example": "Test workspace"
+                },
+                "date_created": {
+                  "type": "string",
+                  "description": "A workspace's date creation",
+                  "example": "2021-06-17T15:51:13.226974Z"
+                },
+                "owner": {
+                  "type": "string",
+                  "format": "email",
+                  "description": "A owner's email address",
+                  "example": "josh@example.com"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ProductCatalogItemRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "category_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "default": "regular",
+            "enum": [
+              "regular",
+              "bundle"
+            ]
+          },
+          "bundle_items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "integer"
+                },
+                "item_or_uuid": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "image_url": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "images": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "is_main": {
+                                "type": "boolean",
+                                "nullable": true
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "src": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "price_configuration": {
+                          "$ref": "#/components/schemas/ProductCatalogItemRequest/properties/price_configuration"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "is_main": {
+                  "type": "boolean"
+                },
+                "order": {
+                  "type": "number"
+                },
+                "src": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "custom_fields": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "price_configuration": {
+            "type": "object",
+            "x-examples": {
+              "example-1": {
+                "currency": "USD",
+                "price": null,
+                "cost": null,
+                "tiers": [
+                  {
+                    "value": 9.99,
+                    "min_qty": 1
+                  },
+                  {
+                    "value": 8.99,
+                    "min_qty": 10
+                  },
+                  {
+                    "value": 5.99,
+                    "min_qty": 100
+                  }
+                ],
+                "pricing_method": 1
+              },
+              "example-2": {
+                "currency": "USD",
+                "price": 59.99,
+                "cost": 60,
+                "tiers": null,
+                "pricing_method": 0
+              }
+            },
+            "properties": {
+              "currency": {
+                "type": "string",
+                "example": "USD"
+              },
+              "price": {
+                "type": "number",
+                "example": 59.99,
+                "nullable": true
+              },
+              "cost": {
+                "type": "number",
+                "nullable": true
+              },
+              "billing_type": {
+                "type": "string"
+              },
+              "billing_cycle": {
+                "type": "string",
+                "nullable": true
+              },
+              "tiers": {
+                "type": "array",
+                "description": "only for volume based pricing",
+                "nullable": true,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "number",
+                      "format": "float",
+                      "minimum": 0,
+                      "example": 9.99
+                    },
+                    "min_qty": {
+                      "type": "number",
+                      "minimum": 1
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "min_qty"
+                  ],
+                  "x-examples": {
+                    "example-1": {
+                      "price": 9.99,
+                      "min_qty": 1
+                    }
+                  }
+                }
+              },
+              "pricing_method": {
+                "type": "integer",
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
+              }
+            },
+            "required": [
+              "currency",
+              "pricing_method"
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "price_configuration"
+        ]
+      },
+      "ProductCatalogItemResponse": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "date_modified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "modified_by": {
+            "type": "string",
+            "nullable": true
+          },
+          "category_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "category_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "default": "regular",
+            "enum": [
+              "regular",
+              "bundle"
+            ]
+          },
+          "bundle_items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "integer"
+                },
+                "item": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "sku": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "image_url": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "images": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "is_main": {
+                                "type": "boolean",
+                                "nullable": true
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "src": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "price": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "currency": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "image_url": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "images": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "is_main": {
+                                "type": "boolean",
+                                "nullable": true
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "src": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "price": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "currency": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default_price_configuration": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductCatalogItemRequest/properties/price_configuration"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "pricing_method": {
+                    "type": "number"
+                  }
+                }
+              }
+            ]
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "sku": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "description": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "custom_fields": {
+                  "type": "array",
+                  "nullable": true,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    }
+                  }
+                },
+                "images": {
+                  "type": "array",
+                  "nullable": true,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "is_main": {
+                        "type": "boolean",
+                        "nullable": true
+                      },
+                      "order": {
+                        "type": "number"
+                      },
+                      "src": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "date_created": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "date_modified": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true
+                },
+                "status": {
+                  "type": "number"
+                },
+                "price_configurations": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/ProductCatalogItemRequest/properties/price_configuration"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "uuid": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "pricing_method": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ProductCatalogItemPatchRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "category_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "default": "regular",
+            "enum": [
+              "regular",
+              "bundle"
+            ]
+          },
+          "bundle_items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "integer"
+                },
+                "item_or_uuid": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "sku": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "image_url": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "images": {
+                          "type": "array",
+                          "nullable": true,
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "is_main": {
+                                "type": "boolean",
+                                "nullable": true
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "src": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "price": {
+                          "type": "number",
+                          "nullable": true
+                        },
+                        "currency": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "product_variant": {
+            "type": "object",
+            "properties": {
+              "sku": {
+                "type": "string",
+                "nullable": true
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "images": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "is_main": {
+                      "type": "boolean"
+                    },
+                    "order": {
+                      "type": "number"
+                    },
+                    "src": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "custom_fields": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  }
+                }
+              },
+              "price_configuration": {
+                "$ref": "#/components/schemas/ProductCatalogItemRequest/properties/price_configuration"
+              }
+            }
           }
         }
       }
