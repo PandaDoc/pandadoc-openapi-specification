@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "6.12.0"
+    "version": "6.13.0"
   },
   "servers": [
     {
@@ -3074,7 +3074,7 @@
     "/public/v1/content-library-items": {
       "get": {
         "summary": "List Content Library Item",
-        "description": "Optionally filter by a search query or tags.",
+        "description": "The endpoint retrieves items from the content library in PandaDoc. This endpoint supports filtering options to narrow down the results, allowing users to search by query, tags, folder, and more.\n\n> ### ⚠️ Please avoid empty values for the parameters\n> API returns \"400\" error when any of the parameters has an empty value. Please remove such a parameter from the request or add a value.\n",
         "operationId": "listContentLibraryItems",
         "tags": [
           "Content Library Items"
@@ -3254,8 +3254,8 @@
     },
     "/public/v1/content-library-items/{id}": {
       "get": {
-        "summary": "Get Content Library Item Status",
-        "description": "Get status of Content Library Item",
+        "summary": "Content Library Item Status",
+        "description": "Requesting the CLI status helps verify that a CLI is in the expected state before invoking additional API methods.\n\n## Available CLI Statuses\n\nThe following is a complete list of all possible CLI statuses returned:\n\n| CLI Status | Status Description |\n|-----------------|--------------------|\n| `cli.UPLOADED`  | The CLI upload process has been initiated and is currently in progress. It will soon transition to the `cli.PROCESSED` state. |\n| `cli.PROCESSED` | The CLI has been successfully uploaded and created. At this stage, all aspects of the CLI are editable. |\n| `cli.ERROR`     | The CLI upload process has failed. Please refer to the error details in the response for more information. |\n",
         "operationId": "statusContentLibraryItem",
         "tags": [
           "Content Library Items"
@@ -3312,8 +3312,8 @@
     },
     "/public/v1/content-library-items/{id}/details": {
       "get": {
-        "summary": "Details Content Library Item",
-        "description": "Return detailed data about a content library item.",
+        "summary": "Content Library Item Details",
+        "description": "Retrieve detailed information about a specific content library item using its ID. The details include:\n\n- **Roles**\n- **All fields with values**\n- **All tokens with values**\n- **Pricing information (pricing tables, products, etc)**\n- **Metadata**\n- **Tags**\n- **Modification Timestamps**: note that `date_modified` means any changes associated with the CLI, while `content_date_modified` logs any changes in CLI content.\n",
         "operationId": "detailsContentLibraryItem",
         "tags": [
           "Content Library Items"
@@ -3795,12 +3795,71 @@
             "$ref": "#/components/responses/429"
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Template Update",
+        "operationId": "updateTemplate",
+        "description": "> 🚧 Template status\n> \n> You can only update a template in the PROCESSED status (`template.PROCESSED`). \n> \n> After creating a new template, it usually retains a `template.uploaded` status for 3-5 seconds while the template syncs across PandaDoc servers. When the template is available for further API calls, the template moves to the `template.PROCESSED` state. Use [Template Status](https://developers.pandadoc.com/reference/template-status) or Webhooks to check template status.\n",
+        "parameters": [
+          {
+            "examples": {
+              "Update template": {
+                "value": "BhVzRcxH9Z2LgfPPGXFUBa"
+              }
+            },
+            "name": "id",
+            "description": "Template ID",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tokens": {
+                    "$ref": "#/components/schemas/CreateTemplateRequest/properties/tokens"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
       }
     },
     "/public/v1/forms": {
       "get": {
-        "summary": "Forms",
-        "description": "List forms.",
+        "summary": "List Forms",
+        "description": "Retrieve a paginated list of forms with optional filtering and sorting options.",
         "operationId": "listForm",
         "tags": [
           "Forms"
@@ -3814,7 +3873,7 @@
               "format": "int32",
               "minimum": 1
             },
-            "description": "Optionally, specify how many forms to return. Default is 50 forms, maximum is 100 forms.",
+            "description": "Specify how many forms to return. Default is 50 forms, maximum is 100 forms.",
             "example": 10
           },
           {
@@ -3825,7 +3884,7 @@
               "format": "int32",
               "minimum": 1
             },
-            "description": "Optionally, specify which page of the dataset to return."
+            "description": "Specify which page of the dataset to return."
           },
           {
             "name": "status",
@@ -3843,7 +3902,7 @@
                 ]
               }
             },
-            "description": "Optionally, specify which status of the forms dataset to return."
+            "description": "Specify which status of the forms dataset to return."
           },
           {
             "name": "order_by",
@@ -3858,7 +3917,7 @@
                 "modified_date"
               ]
             },
-            "description": "Optionally, specify the form dataset order to return."
+            "description": "Specify the form dataset order to return."
           },
           {
             "name": "asc",
@@ -3866,7 +3925,7 @@
             "schema": {
               "type": "boolean"
             },
-            "description": "Optionally, specify sorting the result-set in ascending or descending order."
+            "description": "Specify sorting the result-set in ascending or descending order."
           },
           {
             "name": "name",
@@ -3894,6 +3953,9 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -13316,6 +13378,31 @@
             "description": "You can pass arbitrary data in the key-value format to associate custom information with a template. This information is returned in any API requests for the template details by id.",
             "example": {
               "my_favorite_pet": "Panda"
+            }
+          },
+          "tokens": {
+            "type": "array",
+            "description": "Create or initialize multiple CUSTOM variables with their values using tokens/values list. Template's predefined variables are read-only. Any attempts to do so will be ignored.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Favorite.Pet"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "Panda"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ]
+            },
+            "example": {
+              "name": "Favorite.Pet",
+              "value": "Panda"
             }
           }
         }
