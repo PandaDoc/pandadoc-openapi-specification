@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.3.0"
+    "version": "7.4.0"
   },
   "servers": [
     {
@@ -25,8 +25,8 @@
     "/oauth2/access_token": {
       "post": {
         "summary": "Create/Refresh Access Token",
-        "description": "",
         "operationId": "accessToken",
+        "description": "Create or refresh an access token to make requests on behalf of a user. This endpoint is used to obtain an `access_token` and `refresh_token` for the first time, and to refresh the `access_token` when it expires.\n\n> Before you begin, you need to [create an application](https://developers.pandadoc.com/reference/authentication-process) in the Developer Dashboard to obtain a `client_id` and `client_secret`.\n\n## Create Access Token\nRequests to PandaDoc API with the returned `access_token` can now be made on the user's behalf. Include `access_token` in every request header as follows: `Authorization: Bearer <put your access_token here>`. Each token comes with an expiration date (in seconds).\n\n> 🚧 Invalid Grant?\n> \n> If you receive an `invalid grant` response it is likely because you used the same `code` more than once from the [Authorize a PandaDoc User](ref:authorize-a-user) step above. The `code` parameter is generated for one-time use. A new `code` value must be generated if you wish to change API users, permissions, or simply generate a new `code` value for the same PandaDoc user.\n\n> 📘 expires_in\n> \n> `expires_in` is based in seconds. Currently, a token expires in 31535999 seconds = 1 year.\n\n## Refresh Access Token\nEventually, `access_token` expires and accessing an API method returns **401 unauthorized**. Your application needs to refresh the OAuth2 token with the stored `refresh_token` returned when initially creating an access token.\n\nOnce refreshed, calls on behalf of the originally authorized user can resume immediately. Use the newly returned `access_token` for all future API requests.\n\n> 🚧 Invalid Grant?\n> \n> If you receive an `invalid grant` response, it is likely because your `refresh_token` is invalid.\n",
         "tags": [
           "OAuth 2.0 Authentication"
         ],
@@ -43,6 +43,26 @@
                     "$ref": "#/components/schemas/OAuth2RefreshAccessTokenRequest"
                   }
                 ]
+              },
+              "examples": {
+                "Create Access Token": {
+                  "value": {
+                    "grant_type": "authorization_code",
+                    "client_id": "8f0a1b2c3d4e5f6g7h8i9j",
+                    "client_secret": "k1l2m3n4o5p6q7r8s9t0u",
+                    "code": "v9w8x7y6z5a4b3c2d1e0f",
+                    "scope": "read+write"
+                  }
+                },
+                "Refresh Access Token": {
+                  "value": {
+                    "grant_type": "refresh_token",
+                    "client_id": "89b2d1ea5f7c3b0a19456",
+                    "client_secret": "e7c390f1ba8d2a6b57910c4d3b2a1e0f9d8c7b6a",
+                    "refresh_token": "9a4b5c6d7e8f0g1h2i3j4k5l6m7n8o9p0q1r2s3t",
+                    "scope": "read+write"
+                  }
+                }
               }
             }
           }
@@ -82,28 +102,35 @@
           "Documents"
         ],
         "summary": "List Documents",
-        "description": "> 📘 List by Linked Objects\n>\n> To get a list of documents by their linked objects from external integrated systems.\n> [Use a separate endpoint](https://developers.pandadoc.com/reference/list-documents-by-linked-object)\n\n# Listing Documents Efficiently\n\nIf your workspace contains hundreds of thousands of documents, you may experience higher latency of your requests.\n\n> 👍 Pro tip\n> \n> Using `order_by = date_created` ensures stable performance and quick responses.\n> \n> If you need to order documents by a different field, use the `created_from` and `created_to` parameters to limit the result set, and run requests in batches.\n\n## Usage examples\n\n1. `count=100&order_by=date_created&created_from=2023-08-01T00:00:00.000000Z&created_to=2023-09-01T00:00:00.000000Z`  \n  This request returns only documents created in August. \n2. The next request is for `page = 2` (still listing documents created in August):  \n  `count=100&order_by=date_created&created_from=2023-08-01T00:00:00.000000Z&created_to=2023-09-01T00:00:00.000000Z&page=2`\n3. Once you receive an empty response, it means you listed all the documents created in the provided time range. Continue listing them by setting another month:  \n  `count=100&order_by=date_created&created_from=2023-07-01T00:00:00.000000Z&created_to=2023-08-01T00:00:00.000000Z`  \n  This request lists the documents created in July 2023.\n\n# Caveats\n\n- By default, PandaDoc API lists documents sorted by the `date_status_changed` attribute.\n",
+        "description": "This endpoint will let you list and search for the documents.\n### [Here](https://developers.pandadoc.com/docs/list-search-documents-api) you can find how to filter, search and order documents.\n",
         "operationId": "listDocuments",
         "parameters": [
           {
-            "name": "completed_from",
+            "name": "template_id",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "datetime"
+              "type": "string"
             },
-            "example": "2021-10-27T15:22:23.132757Z",
-            "description": "Return results where the `date_completed` field (ISO 8601) is greater than or equal to this value."
+            "description": "Filters by parent template. This Parameter can't be used with form_id.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           },
           {
-            "name": "completed_to",
+            "name": "form_id",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "datetime"
+              "type": "string"
             },
-            "description": "Return results where the `date_completed` field (ISO 8601) is less than or equal to this value.",
-            "example": "2021-10-27T15:22:23.132757Z"
+            "description": "Filters by parent form. This parameter can't be used with template_id.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "folder_uuid",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters by the folder where the documents are stored.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           },
           {
             "name": "contact_id",
@@ -111,7 +138,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Returns results where 'contact_id' is present in document as recipient or approver",
+            "description": "Filters by recipient or approver with this 'contact_id'.",
             "example": "9FeAY2NB3C9qDdtQRb4tTL"
           },
           {
@@ -120,8 +147,31 @@
             "schema": {
               "type": "integer"
             },
-            "description": "Specify how many document results to return. Default is 50 documents, maximum is 100 documents.",
+            "description": "Limits the size of the response. Default is 50 documents, maximum is 100 documents.",
             "example": 50
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Paginates the search result. Increase value to get the next page of results.",
+            "example": 1
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/DocumentOrderingFieldsEnum"
+            },
+            "description": "Defines the sorting of the result. Use `date_created` for ASC and `-date_created` for DESC sorting.",
+            "examples": {
+              "Default order by date_status_changed": {
+                "value": "date_status_changed"
+              }
+            }
           },
           {
             "name": "created_from",
@@ -130,8 +180,8 @@
               "type": "string",
               "format": "datetime"
             },
-            "description": "Return results where the `date_created` field (ISO 8601) is greater than or equal to this value.",
-            "example": "2021-10-27T15:22:23.132757Z"
+            "description": "Limits results to the documents with the `date_created` greater than or equal to this value.",
+            "example": "2024-10-27T15:22:23.132757Z"
           },
           {
             "name": "created_to",
@@ -140,8 +190,8 @@
               "type": "string",
               "format": "datetime"
             },
-            "description": "Return results where the `date_created` field (ISO 8601) is less than this value.",
-            "example": "2021-10-27T15:22:23.132757Z"
+            "description": "Limits results to the documents with the `date_created` less than this value.",
+            "example": "2024-10-27T15:22:23.132757Z"
           },
           {
             "name": "deleted",
@@ -156,27 +206,29 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "description": "Specify document's ID."
+              "description": "Searches for document by it's id."
             },
             "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           },
           {
-            "name": "folder_uuid",
+            "name": "completed_from",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "datetime"
             },
-            "description": "The UUID of the folder where the documents are stored.",
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+            "example": "2024-10-27T15:22:23.132757Z",
+            "description": "Limits results to the documents with the `date_completed` greater than or equal to this value."
           },
           {
-            "name": "form_id",
+            "name": "completed_to",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "datetime"
             },
-            "description": "Specify the form used for documents creation. This parameter can't be used with template_id.",
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+            "description": "Limits results to the documents with the `date_completed` less than this value.",
+            "example": "2024-10-27T15:22:23.132757Z"
           },
           {
             "name": "membership_id",
@@ -184,7 +236,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Returns results where 'membership_id' is present in document as owner (should be member uuid)",
+            "description": "Filter documents by the owner's 'membership_id'.",
             "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           },
           {
@@ -198,7 +250,7 @@
                 "type": "string"
               }
             },
-            "description": "Specify metadata to filter by in the format of `metadata_{metadata-key}={metadata-value}` such as `metadata_opportunity_id=2181432`. The `metadata_` prefix is always required.",
+            "description": "Filters documents by metadata. Pass metadata in the format of `metadata_{metadata-key}={metadata-value}` such as `metadata_opportunity_id=2181432`. The `metadata_` prefix is always required.",
             "example": [
               "metadata_opportunity_id=2181432",
               "metadata_custom_key=custom_value"
@@ -211,8 +263,8 @@
               "type": "string",
               "format": "datetime"
             },
-            "description": "Return results where the `date_modified` field (iso-8601) is greater than or equal to this value.",
-            "example": "2021-10-27T15:22:23.132757Z"
+            "description": "Limits results to the documents with the `date_modified` greater than or equal to this value.",
+            "example": "2024-10-27T15:22:23.132757Z"
           },
           {
             "name": "modified_to",
@@ -221,31 +273,8 @@
               "type": "string",
               "format": "datetime"
             },
-            "description": "Return results where the `date_modified` field (iso-8601) is less than this value.",
-            "example": "2021-10-27T15:22:23.132757Z"
-          },
-          {
-            "name": "order_by",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/DocumentOrderingFieldsEnum"
-            },
-            "description": "Specify the order of documents to return. Use `value` (for example, `date_created`) for ASC and `-value` (for example, `-date_created`) for DESC.",
-            "examples": {
-              "Default order by date_status_changed": {
-                "value": "date_status_changed"
-              }
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "description": "Specify which page of the dataset to return.",
-            "example": 1
+            "description": "Limits results to the documents with the `date_modified` less than this value.",
+            "example": "2024-10-27T15:22:23.132757Z"
           },
           {
             "name": "q",
@@ -253,7 +282,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Search query. Filter by document reference number (this token is stored on the template level) or name.",
+            "description": "Filters documents by name or reference number (stored on the template level).",
             "example": "Sample Document"
           },
           {
@@ -262,7 +291,7 @@
             "schema": {
               "$ref": "#/components/schemas/DocumentStatusRequestEnum"
             },
-            "description": "Specify the status of documents to return.\n  * 0: document.draft\n  * 1: document.sent\n  * 2: document.completed\n  * 3: document.uploaded\n  * 4: document.error\n  * 5: document.viewed\n  * 6: document.waiting_approval\n  * 7: document.approved\n  * 8: document.rejected\n  * 9: document.waiting_pay\n  * 10: document.paid\n  * 11: document.voided\n  * 12: document.declined\n  * 13: document.external_review\n"
+            "description": "Filters documents by the status.\n  * 0: document.draft\n  * 1: document.sent\n  * 2: document.completed\n  * 3: document.uploaded\n  * 4: document.error\n  * 5: document.viewed\n  * 6: document.waiting_approval\n  * 7: document.approved\n  * 8: document.rejected\n  * 9: document.waiting_pay\n  * 10: document.paid\n  * 11: document.voided\n  * 12: document.declined\n  * 13: document.external_review\n"
           },
           {
             "name": "status__ne",
@@ -270,7 +299,7 @@
             "schema": {
               "$ref": "#/components/schemas/DocumentStatusRequestEnum"
             },
-            "description": "Specify the status of documents to return (exclude).\n  * 0: document.draft\n  * 1: document.sent\n  * 2: document.completed\n  * 3: document.uploaded\n  * 4: document.error\n  * 5: document.viewed\n  * 6: document.waiting_approval\n  * 7: document.approved\n  * 8: document.rejected\n  * 9: document.waiting_pay\n  * 10: document.paid\n  * 11: document.voided\n  * 12: document.declined\n  * 13: document.external_review\n"
+            "description": "Exludes documents with this status.\n  * 0: document.draft\n  * 1: document.sent\n  * 2: document.completed\n  * 3: document.uploaded\n  * 4: document.error\n  * 5: document.viewed\n  * 6: document.waiting_approval\n  * 7: document.approved\n  * 8: document.rejected\n  * 9: document.waiting_pay\n  * 10: document.paid\n  * 11: document.voided\n  * 12: document.declined\n  * 13: document.external_review\n"
           },
           {
             "name": "tag",
@@ -278,17 +307,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Search tag. Filter by document tag.",
+            "description": "Filters documents by tag.",
             "example": "tag_1"
-          },
-          {
-            "name": "template_id",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Specify the template used for documents creation. Parameter can't be used with form_id.",
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           }
         ],
         "responses": {
@@ -1953,8 +1973,8 @@
     },
     "/public/v1/documents/{id}/editing-sessions": {
       "post": {
-        "summary": "Create Document Editing Session",
-        "description": "Create a new editing session for a document. The session contains E-Token.",
+        "summary": "[Beta] Create Document Editing Session\n",
+        "description": "Create a new editing session for a document. The session contains E-Token.\n\n> 🚧 This endpoint is not available by default.\n> Please reach out to your assigned CSM or AM to get it enabled for you.\n",
         "operationId": "createDocumentEditingSession",
         "tags": [
           "Documents"
@@ -2315,10 +2335,130 @@
         }
       }
     },
+    "/public/v1/documents/linked-objects": {
+      "get": {
+        "summary": "List Documents by Linked Object",
+        "description": "Get a list of documents connected to a linked object - an entity from an integration.",
+        "operationId": "listDocumentsByLinkedObject",
+        "tags": [
+          "Document Link to CRM"
+        ],
+        "parameters": [
+          {
+            "name": "entity_id",
+            "in": "query",
+            "description": "You can get entity id from your integration, for example, from a url of a HubSpot deal.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entity_type",
+            "in": "query",
+            "description": "See the available entity types:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "in": "query",
+            "description": "See the available providers:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "-date_created"
+            }
+          },
+          {
+            "name": "owner_ids",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "[]"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Result": {
+                    "value": [
+                      {
+                        "id": "PG4YBFvSp9zW8nQf7zfmqb",
+                        "status": "document.draft",
+                        "date_created": "2023-11-27T14:11:13.198496Z",
+                        "template_id": "5bAoesA6MDF97BG6wfhfZE"
+                      }
+                    ]
+                  }
+                },
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "PG4YBFvSp9zW8nQf7zfmqb"
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "document.draft"
+                      },
+                      "date_created": {
+                        "type": "string",
+                        "example": "2023-11-27T14:11:13.198496Z"
+                      },
+                      "template_id": {
+                        "type": "string",
+                        "example": "5bAoesA6MDF97BG6wfhfZE"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
     "/public/v1/documents/{id}/linked-objects": {
       "get": {
         "tags": [
-          "Documents"
+          "Document Link to CRM"
         ],
         "summary": "List Linked Objects",
         "operationId": "listLinkedObjects",
@@ -2342,6 +2482,20 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LinkedObjectListResponse"
+                },
+                "examples": {
+                  "List Linked Objects": {
+                    "value": {
+                      "linked_objects": [
+                        {
+                          "id": "abb4d3fc-919b-491e-9e08-775036660c0b",
+                          "provider": "pipedrive",
+                          "entity_type": "deal",
+                          "entity_id": "134"
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -2365,10 +2519,11 @@
       },
       "post": {
         "tags": [
-          "Documents"
+          "Document Link to CRM"
         ],
         "summary": "Create Linked Object",
         "operationId": "createLinkedObject",
+        "description": "Create a linked object in the document.\n\n> 🚧 \n> \n> You can only link each document to each CRM once. This ensures the consistent functionality of the [two-way CRM sync](https://support.pandadoc.com/hc/en-us/articles/360021662573-HubSpot-CRM#h_3a3344e8-2a6e-4fd8-86be-0da8c121e4ac).\n> \n> You can, however, link one document to several external systems.\n",
         "parameters": [
           {
             "name": "id",
@@ -2387,6 +2542,15 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/LinkedObjectCreateRequest"
+              },
+              "examples": {
+                "Create Linked Object": {
+                  "value": {
+                    "provider": "pipedrive",
+                    "entity_type": "deal",
+                    "entity_id": 134
+                  }
+                }
               }
             }
           }
@@ -2398,6 +2562,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LinkedObjectCreateResponse"
+                },
+                "examples": {
+                  "Create Linked Object": {
+                    "value": {
+                      "provider": "pipedrive",
+                      "entity_type": "deal",
+                      "entity_id": 134,
+                      "id": "abb4d3fc-919b-491e-9e08-775036660c0b"
+                    }
+                  }
                 }
               }
             }
@@ -2423,10 +2597,11 @@
     "/public/v1/documents/{id}/linked-objects/{linked_object_id}": {
       "delete": {
         "tags": [
-          "Documents"
+          "Document Link to CRM"
         ],
         "summary": "Delete Linked Object",
         "operationId": "deleteLinkedObject",
+        "description": "Delete a linked object associated with a document.",
         "parameters": [
           {
             "name": "id",
@@ -3413,8 +3588,8 @@
     "/public/v1/documents/{id}/recipients": {
       "post": {
         "summary": "Add Document Recipient",
-        "description": "Adds recipient as CC to document",
         "operationId": "addDocumentRecipient",
+        "description": "Add a CC recipient to a document.\n\n> 🚧 Before you start\n> \n> To add a CC recipient, please ensure that:\n> \n> - You have the 'Can Manage Recipients' permission.\n> - This recipient is already created in your contacts. If not, add them using the [Create Contact](https://developers.pandadoc.com/reference/create-contact) endpoint.\n\nTo add a new CC recipient to a document, two parameters must be included in the request body:\n\n- `kind`: Set this parameter to `contact` to specify an individual contact.\n- `id`:  Input the ID of the desired contact.\n\nTo retrieve the contact's ID, use the [List Contacts](https://developers.pandadoc.com/reference/list-contacts) endpoint to access a list of all contacts, and then locate the desired contact by searching using the name or email address within the returned list.\n\n### Document status\n\nYou can add CC recipients in any document status except for the 'Expired' (`document.voided`) and 'Declined' (`document.declined`).\n\n> 📘 Email notification to access the document\n> \n> **Note**: When a document is in one of the following statuses: 'Sent' (`document.sent`), 'Viewed' (`document.viewed`), 'Completed' (`document.completed`), 'Waiting for Payment' (`document.waiting_pay`), or 'Paid' (`document.paid`), any added CC recipient will receive an instant notification at their email address, allowing them access to the document.\n",
         "tags": [
           "Document Recipients"
         ],
@@ -3436,6 +3611,14 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DocumentRecipientCreateRequest"
+              },
+              "examples": {
+                "Add CC Document Recipient": {
+                  "value": {
+                    "id": "pGkLnJUAx99JpXJy5DVD30",
+                    "kind": "contact"
+                  }
+                }
               }
             }
           }
@@ -3447,6 +3630,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DocumentRecipientResponse"
+                },
+                "examples": {
+                  "Add CC Document Recipient": {
+                    "value": {
+                      "recipient_id": "wdNMxCRFqH2DaZDcR2D2Gc"
+                    }
+                  }
                 }
               }
             }
@@ -3469,11 +3659,11 @@
         }
       }
     },
-    "/public/v1/documents/{id}/recipients/recipient/{recipient_id}": {
-      "patch": {
-        "summary": "Edit Document Recipient",
-        "description": "Edit document recipient's details",
-        "operationId": "editDocumentRecipient",
+    "/public/v1/documents/{id}/recipients/{recipient_id}": {
+      "delete": {
+        "summary": "Delete Document Recipient",
+        "operationId": "deleteDocumentRecipient",
+        "description": "Remove a recipient from a document.\n\n> 🚧 Before you start\n> \n> Please ensure that you have the 'Can Manage Recipients' permission.\n\nTo remove a recipient from a document, you must specify their ID in the path parameter (note that this is different from their contact's ID). The recipient's ID can be retrieved via the [Document Details](https://developers.pandadoc.com/reference/document-details) endpoint.\n\n### Document status\n\n- Removing a signer is only possible when the document is in the 'Draft' (`document.draft`) status and this action will unassign all fields associated with that signer.\n- Removing a CC recipient is allowed in any document status except for the 'Expired' (`document.voided`) and 'Declined' (`document.declined`). If a CC recipient is removed, their access will be revoked.\n",
         "tags": [
           "Document Recipients"
         ],
@@ -3499,12 +3689,77 @@
             "example": "tf5dGS3Tmu3cj228ao6fnc"
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/recipients/recipient/{recipient_id}": {
+      "patch": {
+        "summary": "Update Document Recipient",
+        "description": "Modify recipient's personal details.\n\n> 🚧 Before you start\n> \n> To edit a recipient, please ensure that you have the 'Can Edit Document' permission.\n\nUse this endpoint to easily fix typos in a recipient's name or email, or to change any other recipient information in a sent document. \n\n> 📘 Please note that changes made to a recipient within a document will also update their `Contact` information. However, these changes will not update information about this recipient in other documents where they have already been added.\n\n### Document status\n\n- You can edit a signer in the following document statuses:\n  - 'Draft' (`document.draft`),\n  - 'Waiting Approval' (`document.waiting_approval`),\n  - 'Approved' (`document.approved`),\n  - 'Rejected' (`document.rejected`),\n  - 'Sent' (`document.sent`),\n  - 'Viewed' (`document.viewed`), but only until they have signed the document.\n- You can edit a CC recipient in any document status **except**:\n  - 'Expired' (`document.voided`),\n  - 'Declined' (`document.declined`).\n\n> 📘 Updating a recipient's email after sending a document\n> \n> **Note**: If you update a recipient's email address after sending a document, they will receive an instant notification at the new email address, allowing them access to the document. Access via the previous email will be revoked.\n\n### Restrictions for updating a recipient's email\n\n- You cannot change emails of PandaDoc users.\n- You cannot use the email addresses of existing contacts. If you need to use an email from an existing contact, use the [Change Signer](https://developers.pandadoc.com/reference/change-signer) endpoint to replace a signer with this contact.\n",
+        "operationId": "editDocumentRecipient",
+        "tags": [
+          "Document Recipients"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "recipient_id",
+            "in": "path",
+            "description": "Recipient UUID.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "tf5dGS3Tmu3cj228ao6fnc"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DocumentRecipientEditRequest"
+              },
+              "examples": {
+                "Update Document Recipient": {
+                  "value": {
+                    "first_name": "New First Name",
+                    "last_name": "New Last Name",
+                    "phone": "+3511111111111",
+                    "company": "PandaDoc",
+                    "title": "",
+                    "street_address": "",
+                    "city": "",
+                    "state": "",
+                    "postal_code": "",
+                    "country": ""
+                  }
+                }
               }
             }
           }
@@ -3531,60 +3786,11 @@
         }
       }
     },
-    "/public/v1/documents/{id}/recipients/{recipient_id}": {
-      "delete": {
-        "summary": "Delete Document Recipient",
-        "description": "Deleted recipient from document",
-        "operationId": "deleteDocumentRecipient",
-        "tags": [
-          "Document Recipients"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Document UUID",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
-          },
-          {
-            "name": "recipient_id",
-            "in": "path",
-            "description": "Recipient UUID",
-            "schema": {
-              "type": "string"
-            },
-            "required": true,
-            "example": "tf5dGS3Tmu3cj228ao6fnc"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No content"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      }
-    },
     "/public/v1/documents/{id}/recipients/{recipient_id}/reassign": {
       "post": {
-        "summary": "Reassign Document Recipient",
-        "description": "Replace document recipient with another contact",
+        "summary": "Change Signer (Reassign Document Recipient)",
         "operationId": "reassignDocumentRecipient",
+        "description": "Reassign fields to another signer.\n\n> 🚧 Before you start\n> \n> To change a signer in a document, please ensure that:\n> \n> - You have the 'Can Manage Recipients' permission.\n> - New signer is already created in your contacts. If not, add them using the [Create Contact](https://developers.pandadoc.com/reference/create-contact) endpoint.\n\nYou can reassign fields to another signer before the original signer has signed the document. You can choose any person except those recipients who have already signed the document.\n\nThe endpoint path includes the `recipient_id` of the original signer and the request body must include the following two parameters:\n\n- `kind`: Set this parameter to `contact` to specify an individual contact.\n- `id`: Input the ID of the contact you want to use as a replacement for the original signer.\n\nTo retrieve the contact's ID, use the [List Contacts](https://developers.pandadoc.com/reference/list-contacts) endpoint to access a list of all contacts, and then locate the desired contact by searching using the name or email address within the returned list.\n\nOnce you execute the call to change the signer, the original signer will be entirely removed from the document. If you wish to retain the original signer as a CC recipient, you can re-add them using the [Add CC Recipient](https://developers.pandadoc.com/reference/add-new-recipient-cc) endpoint.\n\n> 🚧 Pre-filled fields\n> \n> If you change the signer in a document that has already been sent, the signer's pre-filled fields will be completely reset. In the 'Draft' (`document.draft`) status, pre-filled fields will remain.\n",
         "tags": [
           "Document Recipients"
         ],
@@ -3616,6 +3822,14 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DocumentRecipientCreateRequest"
+              },
+              "examples": {
+                "Change Signer": {
+                  "value": {
+                    "kind": "contact",
+                    "id": "pGkLnJUAx99JpXJy5DVD30"
+                  }
+                }
               }
             }
           }
@@ -3627,6 +3841,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DocumentRecipientResponse"
+                },
+                "examples": {
+                  "Change Signer": {
+                    "value": {
+                      "recipient_id": "XqbbPMNn9SAjX6fyCSSN2X"
+                    }
+                  }
                 }
               }
             }
@@ -3781,8 +4002,8 @@
                         "properties": {
                           "url": {
                             "type": "string",
-                            "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
-                            "description": "Use a URL to specify the PDF. We support only URLs starting with https."
+                            "example": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                            "description": "Secure (HTTPS) and publicly accessible URL to the PDF document."
                           }
                         },
                         "required": [
@@ -4244,14 +4465,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the Content Library Item.",
-                    "example": "CLI name example"
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "example": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                        "description": "Secure (HTTPS) and publicly accessible URL to the PDF document."
+                      }
+                    }
+                  },
+                  {
+                    "$ref": "#/paths/~1public~1v1~1content-library-items%3Fupload/post/requestBody/content/multipart~1form-data/schema/properties/data/allOf/0"
                   }
-                }
+                ]
               },
               "examples": {
                 "Create Content Library Item": {
@@ -4331,7 +4559,14 @@
                   "data": {
                     "allOf": [
                       {
-                        "$ref": "#/paths/~1public~1v1~1content-library-items/post/requestBody/content/application~1json/schema"
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "The name of the Content Library Item.",
+                            "example": "CLI name example"
+                          }
+                        }
                       },
                       {
                         "description": "JSON as a multipart/form-data string."
@@ -4671,7 +4906,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTemplateRequest"
+                "$ref": "#/components/schemas/CreateTemplateFromUrlRequest"
               },
               "examples": {
                 "Create Template": {
@@ -5062,8 +5297,8 @@
     },
     "/public/v1/templates/{id}/editing-sessions": {
       "post": {
-        "summary": "Create Template Editing Session",
-        "description": "Create a new editing session for a template. The session contains E-Token.",
+        "summary": "[Beta] Create Template Editing Session\n",
+        "description": "Create a new editing session for a template. The session contains E-Token.\n\n> 🚧 This endpoint is not available by default.\n> Please reach out to your assigned CSM or AM to get it enabled for you.\n",
         "operationId": "createTemplateEditingSession",
         "tags": [
           "Templates"
@@ -5295,51 +5530,12 @@
       }
     },
     "/public/v1/documents/folders": {
-      "post": {
-        "summary": "Create Documents Folder",
-        "description": "Create a new folder to store your documents.",
-        "operationId": "createDocumentFolder",
-        "tags": [
-          "Folders API"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DocumentsFolderCreateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DocumentsFolderCreateResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      },
       "get": {
         "summary": "List Documents Folders",
-        "description": "Get the list of folders that contain Documents in your account.",
         "operationId": "listDocumentFolders",
+        "description": "Get the list of folders which contain Documents in your account.\n\n> 📘 \n> \n> The root folder is not listed in the response.\n\nFor the full list of folder operations and their limitations, see [Organize Documents and Folders](https://developers.pandadoc.com/docs/organize-folders).\n",
         "tags": [
-          "Folders API"
+          "Folders"
         ],
         "parameters": [
           {
@@ -5357,10 +5553,11 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "minimum": 1
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
             },
-            "description": "Optionally, specify how many folders to return. Default is 50 folders, maximum is 100 folders.",
-            "example": 10
+            "description": "Optionally, specify how many folders to return."
           },
           {
             "name": "page",
@@ -5380,6 +5577,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DocumentsFolderListResponse"
+                },
+                "examples": {
+                  "List Document Folders": {
+                    "value": {
+                      "results": [
+                        {
+                          "uuid": "dHPHDto4urFW2jx5JzaeaB",
+                          "name": "My folder",
+                          "date_created": "2024-07-15T17:19:21.048101Z",
+                          "has_folders": false,
+                          "has_items": false
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -5394,15 +5606,70 @@
             "$ref": "#/components/responses/429"
           }
         }
+      },
+      "post": {
+        "summary": "Create Documents Folder",
+        "operationId": "createDocumentFolder",
+        "description": "Create a new folder to store your documents.\n\nFor the full list of folder operations and their limitations, see [Organize Documents and Folders](https://developers.pandadoc.com/docs/organize-folders).\n",
+        "tags": [
+          "Folders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentsFolderCreateRequest"
+              },
+              "examples": {
+                "Create Document Folder": {
+                  "value": {
+                    "name": "A top level folder"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentsFolderCreateResponse"
+                },
+                "examples": {
+                  "Create Document Folder": {
+                    "value": {
+                      "uuid": "RuyjY9Us5XknaV1LyBnYxc",
+                      "name": "A top level folder",
+                      "date_created": "2024-07-15T17:37:34.523167Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
       }
     },
     "/public/v1/documents/folders/{id}": {
       "put": {
         "summary": "Rename Documents Folder",
-        "description": "Rename Documents Folder.",
         "operationId": "renameDocumentFolder",
+        "description": "Rename Documents Folder.\n\nFor the full list of folder operations and their limitations, see [Organize Documents and Folders](https://developers.pandadoc.com/docs/organize-folders).\n",
         "tags": [
-          "Folders API"
+          "Folders"
         ],
         "parameters": [
           {
@@ -5422,6 +5689,13 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DocumentsFolderRenameRequest"
+              },
+              "examples": {
+                "Rename Documents Folder": {
+                  "value": {
+                    "name": "New folder name"
+                  }
+                }
               }
             }
           }
@@ -5433,6 +5707,15 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DocumentsFolderRenameResponse"
+                },
+                "examples": {
+                  "Rename Documents Folder": {
+                    "value": {
+                      "uuid": "gQxmeyuKitD693xV4WQ7yb",
+                      "name": "New folder name",
+                      "date_created": "2024-07-15T17:27:29.372983Z"
+                    }
+                  }
                 }
               }
             }
@@ -5453,51 +5736,12 @@
       }
     },
     "/public/v1/templates/folders": {
-      "post": {
-        "summary": "Create Templates Folder",
-        "description": "Create a new folder to store your templates.",
-        "operationId": "createTemplateFolder",
-        "tags": [
-          "Folders API"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TemplatesFolderCreateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TemplatesFolderCreateResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "429": {
-            "$ref": "#/components/responses/429"
-          }
-        }
-      },
       "get": {
         "summary": "List Templates Folders",
-        "description": "Get the list of folders that contain Templates in your account.",
+        "description": "Get the list of folders that contain Templates in your account.\n\n> 📘 \n> \n> The root folder is not listed in the response.\n\nFor the full list of folder operations and their limitations, see [Organize Templates and Folders](https://developers.pandadoc.com/docs/organize-folders).\n",
         "operationId": "listTemplateFolders",
         "tags": [
-          "Folders API"
+          "Folders"
         ],
         "parameters": [
           {
@@ -5515,10 +5759,11 @@
             "schema": {
               "type": "integer",
               "format": "int32",
-              "minimum": 1
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
             },
-            "description": "Optionally, specify how many folders to return. Default is 50 folders, maximum is 100 folders.",
-            "example": 10
+            "description": "Optionally, specify how many folders to return."
           },
           {
             "name": "page",
@@ -5538,6 +5783,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TemplatesFolderListResponse"
+                },
+                "examples": {
+                  "Lists Template Folders": {
+                    "value": {
+                      "results": [
+                        {
+                          "uuid": "h3HyGDj6NuiDfKEiY4xSMD",
+                          "name": "A new templates folder",
+                          "date_created": "2024-07-15T17:35:52.981054Z",
+                          "has_folders": true,
+                          "has_items": false
+                        }
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -5552,15 +5812,70 @@
             "$ref": "#/components/responses/429"
           }
         }
+      },
+      "post": {
+        "summary": "Create Templates Folder",
+        "description": "Create a new folder to store your templates.\n\nFor the full list of folder operations and their limitations, see [Organize Templates and Folders](https://developers.pandadoc.com/docs/organize-folders).\n",
+        "operationId": "createTemplateFolder",
+        "tags": [
+          "Folders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplatesFolderCreateRequest"
+              },
+              "examples": {
+                "Create Templates Folder": {
+                  "value": {
+                    "name": "A new templates folder"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplatesFolderCreateResponse"
+                },
+                "examples": {
+                  "Create Templates Folder": {
+                    "value": {
+                      "uuid": "h3HyGDj6NuiDfKEiY4xSMD",
+                      "name": "A new templates folder",
+                      "date_created": "2024-07-15T17:35:52.981054Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
       }
     },
     "/public/v1/templates/folders/{id}": {
       "put": {
         "summary": "Rename Templates Folder",
-        "description": "Rename a templates folder.",
+        "description": "Rename a templates folder.\n\nFor the full list of folder operations and their limitations, see [Organize Templates and Folders](https://developers.pandadoc.com/docs/organize-folders).\n",
         "operationId": "renameTemplateFolder",
         "tags": [
-          "Folders API"
+          "Folders"
         ],
         "parameters": [
           {
@@ -5580,6 +5895,13 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TemplatesFolderRenameRequest"
+              },
+              "examples": {
+                "Rename Templates Folder": {
+                  "value": {
+                    "name": "New Folder Name"
+                  }
+                }
               }
             }
           }
@@ -5591,6 +5913,15 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TemplatesFolderRenameResponse"
+                },
+                "examples": {
+                  "Rename Templates Folders": {
+                    "value": {
+                      "uuid": "h3HyGDj6NuiDfKEiY4xSMD",
+                      "name": "New Folder Name",
+                      "date_created": "2024-07-15T17:35:52.981054Z"
+                    }
+                  }
                 }
               }
             }
@@ -6484,6 +6815,23 @@
             "example": "radQBiBkU7MBk59NSgaGf5"
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lifetime": {
+                    "type": "integer",
+                    "description": "Token lifetime in seconds.",
+                    "default": 3600,
+                    "maximum": 86400
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -7152,12 +7500,30 @@
         ],
         "summary": "Create Notarization Request",
         "operationId": "createNotarizationRequest",
+        "description": "Use this endpoint to connect with a notary, ready to complete online notarizations for your signers within minutes.\n\n> 🚧 Before you start\n> \n> Ensure the following before creating a notarization request:\n> \n> - Install the Notary On-Demand add-on.\n> - Activate a user, typically the org admin, with an API key in the Notary app. For activation, direct them to visit <https://notarize.pandadoc.com>.\n> - Create a document for notarization and get its `document_id`. To create a document, use the [Create Document from Template](https://developers.pandadoc.com/reference/create-document-from-pandadoc-template) or [Create Document from File Upload](https://developers.pandadoc.com/reference/create-document-from-pdf) endpoint.\n\nFor the notarization request, include in the request body:\n\n- `document_id`\n- At least one `invitees`, specifying their `email`, `first_name`, and `last_name`.\n- Optionally, include a `message` for your signers.\n\nAfter the API call is executed, your signers will receive an email invitation for notarization. Alternatively, you can directly share the `notarization_link` with your signers, which is available in the 201 response body.\n\nUpon successful notarization, you will receive an email with a link to the notarized document.\n\n> 📘 Tips\n> \n> - Ensure that signers are added as both invitees in the request body and recipients in the document to avoid inconveniences during notary sessions.\n> - Signers will receive an email with a notary link upon a successful API call; this link is also in the 201 response.\n> - Use the link to connect with commissioned online notaries, available Mon-Fri, 9 AM - 9 PM Central Time, typically responding within 2 minutes.\n> - Please note that a notary will notarize a copy of the original document, so it will not be available in your workspace.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n\n## Solutions for 4xx Response Codes\n\n- **403 Forbidden (Inactive Add-on)**: Ensure the Notary On-Demand add-on is installed.\n- **403 Forbidden (Transactions Limit)**: Purchase additional transactions either through the Notary UI or by contacting the Sales team.\n- **403 Forbidden (User Not Activated)**: Activate a user, typically the org admin, with an API key in the Notary app. For activation, direct them to visit <https://notarize.pandadoc.com>.\n- **429 Too Many Requests:** If you hit the limit, hold your API calls, then send them after waiting for the retry time.\n\nTo learn more about PandaDoc Notary On-Demand, visit our [website](https://notary.pandadoc.com/notary-on-demand/).\n",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateNotarizationRequest"
+              },
+              "examples": {
+                "Create Notarization Request": {
+                  "value": {
+                    "document_id": "D3okRfgHRX7NEhavcACReB",
+                    "invitation": {
+                      "message": "Your session is ready",
+                      "invitees": [
+                        {
+                          "email": "signer@example.com",
+                          "first_name": "test",
+                          "last_name": "test"
+                        }
+                      ]
+                    }
+                  }
+                }
               }
             }
           }
@@ -7169,53 +7535,218 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateNotarizationResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Permission error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "forbidden"
-                    },
-                    "details": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "code": {
-                            "type": "string",
-                            "example": "inactive_addon"
-                          },
-                          "pointer": {
-                            "type": "string",
-                            "nullable": true,
-                            "example": null
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "message": {
-                                "type": "string",
-                                "example": "You do not have Notary On Demand addon or it is inactive."
-                              }
-                            }
-                          }
+                },
+                "examples": {
+                  "Create Notarization Request": {
+                    "value": {
+                      "id": "f75e053a-25e8-40be-8681-fd755ade2a2b",
+                      "name": "test",
+                      "status": "SENT",
+                      "date_created": "2023-04-14T16:33:06.938984Z",
+                      "date_accepted": null,
+                      "created_by": {
+                        "first_name": "test",
+                        "last_name": "test",
+                        "email": "user@example.com",
+                        "id": "nyAnVpY7pZ23FBve8s9xgk"
+                      },
+                      "invitees": [
+                        {
+                          "first_name": "test",
+                          "last_name": "test",
+                          "email": "signer@example.com",
+                          "notarization_link": "https://notarize.pandadoc.com/session-request#/?requestId=f75e053a-25e8-40be-8681-fd755ade2a2b&inviteeId=2fbb4cbf-d461-4421-94cf-eaadcb9627e0"
                         }
-                      }
+                      ]
                     }
                   }
                 }
               }
             }
           },
+          "403": {
+            "$ref": "#/paths/~1public~1v2~1product-catalog~1items/post/responses/403"
+          },
           "429": {
             "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v2/notary/notarization-requests/{session_request_id}\"": {
+      "get": {
+        "tags": [
+          "Notary"
+        ],
+        "summary": "Notarization Request Details",
+        "operationId": "notarizationRequestDetails",
+        "description": "Get details about a notarization request by its `id`.\n\nDetails include:\n\n- Basic notarization request information (status, creator, invitees).\n- Signed documents information with links for downloading.\n- Timestamps associated with a notarization request.\n\n## Available Notarization Request Statuses\n\nThe following is a complete list of all possible notarization request statuses returned:\n\n| Notarization Request Status | Status Description                                                                                                 |\n| :-------------------------- | :----------------------------------------------------------------------------------------------------------------- |\n| SENT                        | Notarization request has been created. Invitees are notified and can start the process of finding a notary.        |\n| WAITING_FOR_NOTARY          | One of the invitees initialised the process of finding a notary.                                                   |\n| ACCEPTED                    | Notarization request has been accepted by the notary. At this time nobody has joined the notarization session yet. |\n| LIVE                        | Notarization session has started.                                                                                  |\n| COMPLETED                   | Notarization session is finished. Documents have been successfully signed and ready for downloading.               |\n| CANCELLED                   | Notarization request has been cancelled by the creator.                                                            |\n\n## Signed documents\n\nSigned documents are the documents that were successfully signed during the notarization session. The signed document's info is available only if the notarization request has `COMPLETED` status, otherwise the returned list will be empty.  \n\nIn case you uploaded several documents for notarization then the `signed_documents` list will contain links for downloading for each document separately (with `SINGLE` document type) and link for the combined document (with `COMBINED` document type accordingly).\n\n> 📘 Document link expires in 1 hour\n> \n> **Note**: The signed document link expires in 1 hour. After this time it will be not possible to download documents using the returned url. In this case you need to call endpoint again since each request generates a new link.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n",
+        "parameters": [
+          {
+            "name": "session_request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Notarization Request ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details about notarization request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "DRAFT",
+                        "SENT",
+                        "WAITING_FOR_NOTARY",
+                        "ACCEPTED",
+                        "LIVE",
+                        "COMPLETED",
+                        "TERMINATED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "date_created": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "date_started": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "date_completed": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "created_by": {
+                      "type": "object",
+                      "properties": {
+                        "userId": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "firstName": {
+                          "type": "string"
+                        },
+                        "lastName": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "invitees": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string",
+                            "format": "email",
+                            "maxLength": 255
+                          },
+                          "first_name": {
+                            "type": "string",
+                            "maxLength": 50,
+                            "nullable": true
+                          },
+                          "last_name": {
+                            "type": "string",
+                            "maxLength": 50,
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "signed_documents": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          },
+                          "document_name": {
+                            "type": "string"
+                          },
+                          "size": {
+                            "type": "number"
+                          },
+                          "document_type": {
+                            "type": "string",
+                            "enum": [
+                              "COMBINED",
+                              "SINGLE"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Notarization Request Details": {
+                    "value": {
+                      "id": "string",
+                      "status": "COMPLETED",
+                      "date_created": "2024-01-25T15:07:10.845Z",
+                      "date_started": "2024-01-25T15:07:10.845Z",
+                      "date_completed": "2024-01-25T15:07:10.845Z",
+                      "created_by": {
+                        "userId": "string",
+                        "email": "string",
+                        "firstName": "string",
+                        "lastName": "string"
+                      },
+                      "invitees": [
+                        {
+                          "id": "string",
+                          "email": "user@example.com",
+                          "first_name": "string",
+                          "last_name": "string"
+                        }
+                      ],
+                      "signed_documents": [
+                        {
+                          "url": "string",
+                          "document_name": "string",
+                          "size": 200,
+                          "document_type": "COMBINED"
+                        },
+                        {
+                          "url": "string",
+                          "document_name": "string",
+                          "size": 100,
+                          "document_type": "SINGLE"
+                        },
+                        {
+                          "url": "string",
+                          "document_name": "string",
+                          "size": 100,
+                          "document_type": "SINGLE"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -7814,6 +8345,47 @@
                 }
               }
             }
+          },
+          "403": {
+            "description": "Permission error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "forbidden"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string",
+                            "example": "inactive_addon"
+                          },
+                          "pointer": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": null
+                          },
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "message": {
+                                "type": "string",
+                                "example": "You do not have Notary On Demand addon or it is inactive."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -7915,6 +8487,9 @@
                 }
               }
             }
+          },
+          "403": {
+            "$ref": "#/paths/~1public~1v2~1product-catalog~1items/post/responses/403"
           }
         }
       },
@@ -8074,6 +8649,9 @@
                 }
               }
             }
+          },
+          "403": {
+            "$ref": "#/paths/~1public~1v2~1product-catalog~1items/post/responses/403"
           }
         }
       },
@@ -8104,6 +8682,9 @@
         "responses": {
           "200": {
             "description": "No content"
+          },
+          "403": {
+            "$ref": "#/paths/~1public~1v2~1product-catalog~1items/post/responses/403"
           }
         }
       }
@@ -8183,6 +8764,7 @@
         ],
         "operationId": "getWorkspacesList",
         "summary": "List Workspaces",
+        "description": "Get a list of all the active workspaces in the organization.\n",
         "parameters": [
           {
             "name": "count",
@@ -8251,7 +8833,7 @@
         ],
         "summary": "Create Workspace",
         "operationId": "createWorkspace",
-        "description": "Create workspaces programmatically.\n\n- You need to be an Org Admin to create a workspace.\n- You will be set as the new workspaces first user, with the Admin role.\n",
+        "description": "Create a workspace in your organization.\n\n- You need to be an Org Admin to create a workspace.\n- You will be added to the new workspace with an Admin role.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -8309,7 +8891,7 @@
           "User and Workspace management"
         ],
         "summary": "Deactivate Workspace",
-        "description": "This endpoint deactivates one of your workspaces, removing all the memberships and making it \nunavailable for further work, like it had never exist.\n",
+        "description": "Deactivate the workspace, remove all the members from it and make it \nunavailable.\n",
         "operationId": "deactivateWorkspace",
         "parameters": [
           {
@@ -8798,8 +9380,8 @@
         "tags": [
           "User and Workspace management"
         ],
-        "summary": "Create Workspace API key",
-        "description": "This endpoint allows **Org Admins** to generate a new API key for a user.\n\n> ❗️ Current API-Key will be **disabled**, if an API key already exists in the workspace.\n\n> 📘 \n> - Only an **Org Admin** can generate an API keys.\n> - The API key will be generated for the **Org admin** who makes the request, if the `user_id` is **not provided**.\n> - User must be in a workspace and has the **Admin** role, if you pass `user_id`.\n",
+        "summary": "Create API Key",
+        "description": "Generate a new API key for the workspace.\n\n> 📘 \n> - Only an **Org Admin** can generate an API keys.\n> - To make another user a key's owner, pass `user_id` of this user. The user should has an **Admin** role in the workspace.\n> - Generating a new key invalidates existing key with the same type. Using this request, you can deactivate the key you're using for the request.\n",
         "operationId": "createApiKey",
         "parameters": [
           {
@@ -8850,7 +9432,8 @@
                     "enum": [
                       "production",
                       "sandbox"
-                    ]
+                    ],
+                    "default": "sandbox"
                   }
                 },
                 "required": [
@@ -8998,16 +9581,16 @@
                 "examples": {
                   "List SMS Opt-out Changelog": {
                     "value": {
-                      "phone_numbers": [
+                      "results": [
                         {
                           "phone_number": "+1234567890",
-                          "opt_out": true,
-                          "timestamp": "2025-01-28T12:00:00Z"
+                          "status": "opt-out",
+                          "opt_out_changed": "2025-01-28T12:00:00Z"
                         },
                         {
                           "phone_number": "+1234567891",
-                          "opt_out": false,
-                          "timestamp": "2025-01-28T12:00:00Z"
+                          "status": "opt-in",
+                          "opt_out_changed": "2025-01-28T12:00:00Z"
                         }
                       ]
                     }
@@ -9036,7 +9619,7 @@
     "schemas": {
       "OAuth2CreateAccessTokenRequest": {
         "type": "object",
-        "title": "OAuth2CreateAccessTokenRequest",
+        "title": "Create Access Token",
         "properties": {
           "grant_type": {
             "type": "string",
@@ -9073,7 +9656,7 @@
       },
       "OAuth2RefreshAccessTokenRequest": {
         "type": "object",
-        "title": "OAuth2RefreshAccessTokenRequests",
+        "title": "Refresh Access Token",
         "properties": {
           "grant_type": {
             "type": "string",
@@ -9180,11 +9763,6 @@
           {
             "type": "object",
             "properties": {
-              "detect_title_variables": {
-                "type": "boolean",
-                "description": "Set this parameter as true if you want to detect title variables in the document.",
-                "example": true
-              },
               "template_uuid": {
                 "type": "string",
                 "description": "The ID of a template you want to use. You can copy it from an in app template url such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.",
@@ -9245,6 +9823,11 @@
                 "items": {
                   "$ref": "#/components/schemas/TableRequest"
                 }
+              },
+              "detect_title_variables": {
+                "type": "boolean",
+                "description": "Set this parameter as true if you want to detect title variables in the document.",
+                "example": true
               },
               "content_placeholders": {
                 "type": "array",
@@ -9344,6 +9927,9 @@
         "allOf": [
           {
             "type": "object",
+            "required": [
+              "name"
+            ],
             "properties": {
               "parse_form_fields": {
                 "type": "boolean",
@@ -9391,34 +9977,31 @@
                     "example": "QMDSzwabfFzTgjW6KijHyu"
                   }
                 },
-                "description": "You can set an owner of a document as an `email` or `membership_id`. Only one of the properties can be passed.",
-                "additionalProperties": {
-                  "type": "string"
-                },
+                "description": "The owner of the document. Pass either `email` or `membership_id` of the user in the workspace.",
                 "example": {
                   "membership_id": "QMDSzwabfFzTgjW6KijHyu"
                 }
               },
               "recipients": {
                 "type": "array",
-                "description": "The list of recipients you're sending the document to. Every object must contain the `email` parameter. The `role`, `first_name` and `last_name` parameters are optional. If the `role` parameter is passed, a person is assigned all fields matching their corresponding role. If a role was not passed, a person receives a read-only link to view the document. If the `first_name` and `last_name` are not passed, the system does this 1. Creates a new contact, if none exists with the given `email`; or 2. Gets the existing contact with the given `email` that already exists.",
+                "description": "The list of recipients to whom the document will be sent. Either `email` or `phone` is required. Specifying the `role` assigns all matching fields to the recipient or group. If `first_name` and `last_name` are not specified, the system looks them up in the workspace contacts list using the `email` or `phone number`. If `first_name` and `last_name` are provided, they override the existing contact's data.",
                 "items": {
                   "$ref": "#/components/schemas/CreateDocumentActor"
                 }
               },
               "tokens": {
                 "type": "array",
-                "description": "You can create a new variables or initialize variable value using tokens/values list.",
+                "description": "Also known as variables. Pass values for the variables in the template to render them into the created document or make them available for insertion later.",
                 "items": {
                   "type": "object",
                   "properties": {
                     "name": {
                       "type": "string",
-                      "example": "Favorite.Pet"
+                      "example": "Client.CompanyName"
                     },
                     "value": {
                       "type": "string",
-                      "example": "Panda"
+                      "example": "PandaDoc"
                     }
                   },
                   "required": [
@@ -9430,15 +10013,15 @@
               "metadata": {
                 "type": "object",
                 "nullable": true,
-                "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id.",
+                "description": "You can pass any data in a key-value format to associate it with a document. Searching by metadata is available in the List Documents endpoint and is also included in the Document Details response.",
                 "example": {
-                  "opp_id": "1234567",
-                  "my_favorite_pet": "Panda"
+                  "lead_id": "1234567",
+                  "lead_source": "PandaDoc"
                 }
               },
               "tags": {
                 "type": "array",
-                "description": "Mark your document with one or several tags.",
+                "description": "Mark your document with one or more tags. Tags are displayed in the UI, and you can filter by tags in the List Documents endpoint.",
                 "items": {
                   "type": "string"
                 },
@@ -9485,8 +10068,8 @@
                 "properties": {
                   "url": {
                     "type": "string",
-                    "example": "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png",
-                    "description": "Use a URL to specify the PDF. We support only URLs starting with https."
+                    "example": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                    "description": "Secure (HTTPS) and publicly accessible URL to the PDF document."
                   }
                 },
                 "required": [
@@ -10347,7 +10930,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "2eWSKSvVqmuVCnuUK3iWwD"
+            "example": "2eWSKSvVqmuVCnuUK3iWwD",
+            "description": "Contact uuid."
           },
           "kind": {
             "type": "string",
@@ -10355,7 +10939,7 @@
               "contact",
               "contact_group"
             ],
-            "example": "contact"
+            "default": "contact"
           }
         },
         "required": [
@@ -10369,7 +10953,8 @@
           "email": {
             "type": "string",
             "nullable": true,
-            "example": "user01@pandadoc.com"
+            "example": "user01@pandadoc.com",
+            "description": "You cannot use the email of another contact when updating a recipient contact."
           },
           "phone": {
             "type": "string",
@@ -10744,12 +11329,12 @@
         "properties": {
           "provider": {
             "type": "string",
-            "description": "CRM name (lowercase). See the list above.",
+            "description": "CRM name (lowercase).\n\nSee the list of available providers:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n",
             "example": "pipedrive"
           },
           "entity_type": {
             "type": "string",
-            "description": "Entity type. The system validates if the type is supported. See the list for each CRM above.",
+            "description": "Entity type.\n\nSee the available entity types:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n",
             "example": "deal"
           },
           "entity_id": {
@@ -10773,12 +11358,12 @@
           },
           "provider": {
             "type": "string",
-            "description": "CRM name (lowercase). See the list above.",
+            "description": "CRM name (lowercase).\n\nSee the list of available providers:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n",
             "example": "pipedrive"
           },
           "entity_type": {
             "type": "string",
-            "description": "Entity type. The system validates if the type is supported. See the list for each CRM above.",
+            "description": "Entity type.\n\nSee the available entity types:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n",
             "example": "deal"
           },
           "entiry_id": {
@@ -11273,7 +11858,7 @@
           "name": {
             "type": "string",
             "description": "Provide a new name for the folder.",
-            "example": "Another document folder"
+            "example": "Another document folder'"
           }
         },
         "required": [
@@ -11428,7 +12013,8 @@
           },
           "query_params_string": {
             "type": "string",
-            "example": "since=-1d&to=now"
+            "example": "since=-1d&to=now",
+            "nullable": true
           },
           "query_params_object": {
             "type": "object",
@@ -13641,7 +14227,8 @@
           "CONNECT_ERROR",
           "TIMEOUT_ERROR"
         ],
-        "example": "TIMEOUT_ERROR"
+        "example": "TIMEOUT_ERROR",
+        "nullable": true
       },
       "WebhookEventHttpStatusCodeGroupEnum": {
         "type": "integer",
@@ -13804,14 +14391,16 @@
           "document_id": {
             "type": "string",
             "maxLength": 50,
-            "example": "8DstGmLJDBXBKrh3wnqzpe"
+            "example": "8DstGmLJDBXBKrh3wnqzpe",
+            "description": "ID of the Document for notarization."
           },
           "invitation": {
             "type": "object",
             "properties": {
               "message": {
                 "type": "string",
-                "example": "Some message"
+                "example": "Some message",
+                "description": "Optional message for invitation email."
               },
               "invitees": {
                 "type": "array",
@@ -14295,9 +14884,10 @@
       "RecipientVerificationSettings": {
         "type": "object",
         "nullable": true,
+        "description": "To set up recipient verification, fill in verification_place and specify the type: passcode_verification, phone_verification, kba_verification or id_verification.\n- For passcode_verification, provide the passcode.\n- For phone_verification, provide the phone_number.\n- For kba_verification and id_verification, set the enabled parameter to true.\n",
         "properties": {
           "verification_place": {
-            "description": "Place when a recipient must enter the verification passcode.",
+            "description": "Specifies when a recipient must complete the verification process:\n- `before_open` (before opening the document),\n- `before_sign` (before signing the document).\n",
             "type": "string",
             "enum": [
               "before_open",
@@ -14306,7 +14896,7 @@
           },
           "passcode_verification": {
             "type": "object",
-            "description": "A passcode.",
+            "description": "Sets the passcode.",
             "properties": {
               "passcode": {
                 "type": "string",
@@ -14317,10 +14907,12 @@
             },
             "required": [
               "passcode"
-            ]
+            ],
+            "nullable": true
           },
           "phone_verification": {
             "type": "object",
+            "description": "Sets the phone number to send a passcode to.",
             "properties": {
               "phone_number": {
                 "type": "string",
@@ -14335,6 +14927,7 @@
           },
           "kba_verification": {
             "type": "object",
+            "description": "Sets the KBA verification.",
             "properties": {
               "time_limit_sec": {
                 "type": "integer",
@@ -14352,6 +14945,7 @@
           },
           "id_verification": {
             "type": "object",
+            "description": "Sets the ID verification.",
             "properties": {
               "enabled": {
                 "type": "boolean",
@@ -14363,15 +14957,17 @@
       },
       "RecipientRedirect": {
         "type": "object",
-        "nullable": false,
         "properties": {
           "is_enabled": {
             "type": "boolean",
-            "example": true
+            "default": false
           },
           "url": {
             "type": "string",
-            "example": "https://example.com"
+            "nullable": true,
+            "default": null,
+            "example": "https://example.com",
+            "description": "A URL to redirect to after the document is signed."
           }
         },
         "required": [
@@ -14489,6 +15085,23 @@
           "user_id": {
             "type": "string",
             "example": "iMymdDd9XFD3HyxP5VD67Q"
+          },
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workspace_id": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "member_id": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -15516,6 +16129,23 @@
             ]
           }
         }
+      },
+      "CreateTemplateFromUrlRequest": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "example": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                "description": "Secure (HTTPS) and publicly accessible URL to the PDF document."
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreateTemplateRequest"
+          }
+        ]
       },
       "TemplateStatusResponse": {
         "type": "object",
