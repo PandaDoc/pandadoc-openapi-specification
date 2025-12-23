@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: 'https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE'
-  version: 7.1.0
+  version: 7.2.0
 servers:
   - url: 'https://api.pandadoc.com'
     description: Public API
@@ -1401,7 +1401,7 @@ paths:
           $ref: '#/components/responses/409'
         '429':
           $ref: '#/components/responses/429'
-  '/public/v1/documents/{id}/editing-session':
+  '/public/v1/documents/{id}/editing-sessions':
     post:
       summary: Create Document Editing Session
       description: Create a new editing session for a document. The session contains E-Token.
@@ -1915,14 +1915,14 @@ paths:
   '/public/v1/documents/{id}/fields':
     get:
       summary: List Document Fields
-      description: Return the list of fields for a particular document
+      description: Return the list of fields for a particular document.
       operationId: listDocumentFields
       tags:
         - Document Fields
       parameters:
         - name: id
           in: path
-          description: Document UUID
+          description: Document UUID.
           schema:
             type: string
           required: true
@@ -1993,6 +1993,43 @@ paths:
                         section_uuid:
                           type: string
                           format: uuid
+              examples:
+                List Document Fields:
+                  value:
+                    fields:
+                      - uuid: d6948f39-612a-4626-a439-ca9e0cbbda7c
+                        name: Text
+                        title: ''
+                        value: ''
+                        assigned_to:
+                          id: ''
+                          first_name: ''
+                          last_name: ''
+                          email: ''
+                          phone: ''
+                          recipient_type: null
+                          has_completed: false
+                          signing_order: null
+                          delivery_methods: {}
+                          redirect: {}
+                          type: recipient
+                        field_id: text_d6948f39-612a-4626-a439-ca9e0cbbda7c
+                        type: text
+                        settings:
+                          required: true
+                          placeholder: Enter value
+                          masked: false
+                          multiline: true
+                        layout:
+                          page: 1
+                          position:
+                            offset_x: '1'
+                            offset_y: '1'
+                            anchor_point: topleft
+                          style:
+                            width: 1
+                            height: 1
+                        merge_field: null
         '401':
           $ref: '#/components/responses/401'
         '404':
@@ -2003,14 +2040,14 @@ paths:
           $ref: '#/components/responses/429'
     post:
       summary: Create Document Fields
-      description: Creates fields for a particular document
+      description: Creates fields for a particular document.
       operationId: createDocumentFields
       tags:
         - Document Fields
       parameters:
         - name: id
           in: path
-          description: Document UUID
+          description: Document UUID.
           schema:
             type: string
           required: true
@@ -2024,12 +2061,22 @@ paths:
               properties:
                 fields:
                   type: array
+                  description: An array of fields to place on a document.
                   items:
                     type: object
                     properties:
                       field_id:
                         type: string
                         description: Optional unique identifier.
+                      merge_field:
+                        type: string
+                        description: |
+                          Use this to dynamically populate this field with data from your CRM or API. Supported field types:
+                            * text
+                            * checkbox
+                            * date
+                            * dropdown
+                            * radio_buttons
                       type:
                         type: string
                         enum:
@@ -2088,6 +2135,20 @@ paths:
                     required:
                       - type
                       - layout
+            examples:
+              Create Document Fields:
+                value:
+                  fields:
+                    - type: text
+                      layout:
+                        page: 1
+                        position:
+                          offset_x: 1
+                          offset_y: 1
+                          anchor_point: topleft
+                        style:
+                          width: 1
+                          height: 1
       responses:
         '200':
           description: OK
@@ -2100,6 +2161,43 @@ paths:
                     type: array
                     items:
                       $ref: '#/paths/~1public~1v1~1documents~1%7Bid%7D~1fields/get/responses/200/content/application~1json/schema/properties/fields/items'
+              examples:
+                Create Document Fields:
+                  value:
+                    fields:
+                      - uuid: d6948f39-612a-4626-a439-ca9e0cbbda7c
+                        name: Text
+                        title: ''
+                        value: ''
+                        assigned_to:
+                          id: ''
+                          first_name: ''
+                          last_name: ''
+                          email: ''
+                          phone: ''
+                          recipient_type: null
+                          has_completed: false
+                          signing_order: null
+                          delivery_methods: {}
+                          redirect: {}
+                          type: recipient
+                        field_id: text_d6948f39-612a-4626-a439-ca9e0cbbda7c
+                        type: text
+                        settings:
+                          required: true
+                          placeholder: Enter value
+                          masked: false
+                          multiline: true
+                        layout:
+                          page: 1
+                          position:
+                            offset_x: '1'
+                            offset_y: '1'
+                            anchor_point: topleft
+                          style:
+                            width: 1
+                            height: 1
+                        merge_field: null
         '400':
           $ref: '#/components/responses/400ValidationError'
         '401':
@@ -2429,6 +2527,9 @@ paths:
         - Content Library Items
       summary: Create Content Library Item
       operationId: createContentLibraryItem
+      description: |
+        This API endpoint allows users to create an empty item in the content library.
+        No actual content or data is required to be provided in the initial creation.
       requestBody:
         required: true
         content:
@@ -2444,7 +2545,49 @@ paths:
               Create Content Library Item:
                 value:
                   name: CLI name example
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentLibraryResponse'
+              examples:
+                Create Content Library Item:
+                  value:
+                    id: va9aNuj3uX2w9M7uytn967
+                    name: Sample CLI
+                    date_created: '2024-07-08T14:41:42.625906Z'
+                    date_modified: '2024-07-08T14:41:42.700084Z'
+                    version: '2'
+                    status: cli.PROCESSED
+        '400':
+          $ref: '#/components/responses/400ValidationError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '429':
+          $ref: '#/components/responses/429'
+  /public/v1/content-library-items?upload:
+    post:
+      tags:
+        - Content Library Items
+      summary: Create Content Library Item from File Upload
+      operationId: createContentLibraryItemFromUpload
+      description: |
+        This asynchronous endpoint allows users to create a new CLI by uploading a file.
+        The uploaded file is processed in the background to generate the CLI.
+        The maximum allowable file size for upload is 100 MB.
+        Once the file is uploaded, the processing will happen asynchronously, and users need to check the status of the CLI creation.
+      requestBody:
+        required: true
+        content:
           multipart/form-data:
+            examples:
+              Create Content Library Item:
+                value:
+                  data: '{"name": "Sample CLI"}'
             schema:
               type: object
               properties:
@@ -2460,11 +2603,11 @@ paths:
         '201':
           description: OK
           content:
-            application/json:
+            multipart/form-data:
               schema:
                 $ref: '#/components/schemas/ContentLibraryResponse'
               examples:
-                Create Template:
+                Create Content Library Item:
                   value:
                     id: va9aNuj3uX2w9M7uytn967
                     name: Sample CLI
@@ -2705,6 +2848,55 @@ paths:
                     email: john.doe@example.com
                   metadata:
                     my_favorite_pet: Panda
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateListResponse/properties/results/items'
+              examples:
+                Create Template:
+                  value:
+                    id: va9aNuj3uX2w9M7uytn967
+                    name: Sample Template
+                    date_created: '2024-07-08T14:41:42.625906Z'
+                    date_modified: '2024-07-08T14:41:42.700084Z'
+                    version: '2'
+        '400':
+          $ref: '#/components/responses/400ValidationError'
+        '401':
+          $ref: '#/components/responses/401'
+        '429':
+          $ref: '#/components/responses/429'
+  /public/v1/templates?upload:
+    post:
+      tags:
+        - Templates
+      summary: Create Template from File Upload
+      operationId: createTemplateWithUpload
+      description: |
+        This asynchronous endpoint allows users to create a new template by uploading a file.
+
+        The uploaded file is processed in the background to generate the template.
+        The maximum allowable file size for upload is 100 MB.
+
+        Once the file is uploaded, the processing will happen asynchronously, and users need to check [the status of the template](https://developers.pandadoc.com/reference/template-status) creation.
+      parameters:
+        - name: fields
+          description: A comma-separated list of additional fields to include in the response.
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - content_date_modified
+          style: form
+          explode: false
+      requestBody:
+        required: true
+        content:
           multipart/form-data:
             schema:
               type: object
@@ -2712,7 +2904,7 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: Binary PDF File
+                  description: Binary PDF/DocX/RTF File.
                 data:
                   allOf:
                     - $ref: '#/components/schemas/CreateTemplateRequest'
@@ -2721,7 +2913,7 @@ paths:
         '201':
           description: OK
           content:
-            application/json:
+            multipart/form-data:
               schema:
                 $ref: '#/components/schemas/TemplateListResponse/properties/results/items'
               examples:
@@ -2840,19 +3032,30 @@ paths:
         '429':
           $ref: '#/components/responses/429'
     get:
-      summary: Get Template Status
-      description: Get status of Template
+      summary: Template Status
+      description: |
+        ## Available Template Statuses
+
+        The following is a complete list of all possible template statuses returned:
+
+        | Template Status      | Status Description                                                                                                                      |
+        | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+        | `template.UPLOADED`  | The template upload process has been initiated and is currently in progress. It will soon transition to the `template.PROCESSED` state. |
+        | `template.PROCESSED` | The template has been successfully uploaded and created. At this stage, all aspects of the template are editable.                       |
+        | `template.ERROR`     | The template upload process has failed. Please refer to the error details in the response for more information.                         |
       operationId: statusTemplate
       tags:
         - Templates
       parameters:
-        - name: id
+        - examples:
+            Template Status:
+              value: vibuun3DXG8QDDLfXm27Ne
+          name: id
           description: Template ID
           in: path
           schema:
             type: string
           required: true
-          example: EE8yUNg5HztqVAuH85He8V
       responses:
         '200':
           description: OK
@@ -2915,7 +3118,7 @@ paths:
           $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
-  '/public/v1/templates/{id}/editing-session':
+  '/public/v1/templates/{id}/editing-sessions':
     post:
       summary: Create Template Editing Session
       description: Create a new editing session for a template. The session contains E-Token.
@@ -3276,7 +3479,7 @@ paths:
   /public/v1/logs:
     get:
       summary: List API Log
-      description: 'Get the list of all logs within the selected workspace. Optionally filter by date, page, and `#` of items per page.'
+      description: 'Get the list of all logs within the selected workspace.\ Optionally filter by date, page, and `#` of items per page.'
       operationId: listLogs
       tags:
         - API Logs
@@ -3285,6 +3488,7 @@ paths:
           in: query
           schema:
             type: string
+            default: '-90d'
           description: Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as "-90d" (for past 90 days).
           example: '-7d'
         - name: to
@@ -3299,6 +3503,7 @@ paths:
             type: integer
             format: int32
             minimum: 1
+            default: 100
           description: The amount of items on each page.
           example: 10
         - name: page
@@ -3307,7 +3512,8 @@ paths:
             type: integer
             format: int32
             minimum: 1
-          description: Page number of the results returned.
+            default: 1
+          description: Returns page of the results by number.
         - name: statuses
           in: query
           style: form
@@ -3322,10 +3528,14 @@ paths:
                 - 300
                 - 400
                 - 500
-          description: 'Returns only the predefined status codes. Allows 1xx, 2xx, 3xx, 4xx, and 5xx.'
-          example:
-            - 400
-            - 500
+          description: Returns only the predefined status codes.
+          examples:
+            Default:
+              value:
+                - 400
+                - 500
+            List API Logs 2XX:
+              value: 200
         - name: methods
           in: query
           style: form
@@ -3365,6 +3575,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/APILogListResponse'
+              examples:
+                List API Logs:
+                  value:
+                    results:
+                      - id: AZC86i5PYKMjoyFBAw9e
+                        url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/
+                        method: POST
+                        status: 200
+                        request_time: '2024-07-15T18:59:38.000'
+                        response_time: '2024-07-15T18:59:39.000'
+                      - id: AZC86ewVMUHWrVijestF
+                        url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/details
+                        method: GET
+                        status: 200
+                        request_time: '2024-07-15T18:59:22.000'
+                        response_time: '2024-07-15T18:59:22.000'
+                      - id: AZC86RrndoYcdqXPVw-l
+                        url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/wdNMxCRFqH2DaZDcRDXkGc/
+                        method: DELETE
+                        status: 204
+                        request_time: '2024-07-15T18:58:19.000'
+                        response_time: '2024-07-15T18:58:20.000'
+                List API Logs 2XX:
+                  value:
+                    results:
+                      - id: AXp2jrHMK2MKv_lRqmQ
+                        url: /public/v1/logs
+                        method: GET
+                        status: 200
+                        request_time: '2021-07-05T12:05:00.389'
+                        response_time: '2021-07-05T12:05:00.827'
+                      - id: AXp2iQACarAbusgUW4jY
+                        url: /public/v1/logs
+                        method: GET
+                        status: 200
+                        request_time: '2021-07-05T11:58:47.070'
+                        response_time: '2021-07-05T11:58:47.588'
+                      - id: AXpip7PGK5MpUv_lQsuj
+                        url: /public/v1/documents
+                        method: POST
+                        status: 201
+                        request_time: '2021-07-01T15:19:54.607'
+                        response_time: '2021-07-01T15:19:55.404'
         '400':
           $ref: '#/components/responses/400RequestError'
         '401':
@@ -3373,7 +3626,7 @@ paths:
           $ref: '#/components/responses/429'
   '/public/v1/logs/{id}':
     get:
-      summary: Details API Log
+      summary: API Log Details
       description: Returns details of the specific API log event.
       operationId: detailsLog
       tags:
@@ -3382,10 +3635,12 @@ paths:
         - name: id
           in: path
           description: Log event id.
-          example: AXp2jrHMK2MKv_lRqmQ
           schema:
             type: string
           required: true
+          examples:
+            Log Event ID:
+              value: AZC86i5PYKMjQjMMMw9e
       responses:
         '200':
           description: OK
@@ -3393,6 +3648,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/APILogDetailsResponse'
+              examples:
+                API Logs Details:
+                  value:
+                    id: AZC86i5PYKMjQjMMMw9e
+                    url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/
+                    method: POST
+                    status: 200
+                    request_time: '2024-07-15T18:59:38.000'
+                    response_time: '2024-07-15T18:59:39.000'
+                    request_body:
+                      id: xNVQVHShdgxHTTPVJ3CWCC
+                      kind: contact
+                    query_params_string: null
+                    query_params_object: null
+                    response_body:
+                      recipient_id: PsPqdRm4dt4thxnYMqttwY
+                    token_type: API_KEY
+                    application: null
+                    key: 9cf111111c3bd477ab9bb4123453b7f5d6502cd8
+                    request_id: 284b1456-1111-4ba9-1111-0d82418205f5
+                    user_email: siarhei@pandadoc.com
+                    user_id: Hzpt4yyQ3A5qHTTPdZQxpH
         '401':
           $ref: '#/components/responses/401'
         '404':
@@ -3743,13 +4020,36 @@ paths:
     get:
       tags:
         - Webhook subscriptions
-      summary: Get all webhook subscriptions
+      summary: List Webhook Subscriptions
       operationId: listWebhookSubscriptions
       responses:
         '200':
           description: List webhook subscriptions
           content:
             application/json:
+              examples:
+                List Webhook Subscriptions:
+                  value:
+                    items:
+                      - uuid: 65fc1ec8-fb9c-4986-9d95-e2cf07e504bc
+                        name: PandaDoc
+                        url: 'https://pandadoc.com/webhooks'
+                        status: ACTIVE
+                        active: true
+                        payload:
+                          - pricing
+                          - metadata
+                          - tokens
+                          - products
+                          - fields
+                        triggers:
+                          - document_deleted
+                          - document_updated
+                          - document_state_changed
+                          - recipient_completed
+                          - document_creation_failed
+                        shared_key: fhLyGE8umJ2MHuDUsJoPLG
+                        workspace_id: nzJyEf2JCG2od4DUYSIpDe
               schema:
                 $ref: '#/components/schemas/WebhookSubscriptionListResponse'
         '401':
@@ -3759,12 +4059,36 @@ paths:
     post:
       tags:
         - Webhook subscriptions
-      summary: Create webhook subscription
+      summary: Create Webhook Subscription
       operationId: createWebhookSubscription
       requestBody:
         required: true
         content:
           application/json:
+            examples:
+              Create Webhook Subscription:
+                description: |
+                  You can use https://pandadoc.requestcatcher.com/ to test your webhooks
+                  Important Security Note
+                  Please be aware that requestcatcher is not a secure service.
+                  All requests sent to it can be viewed by anyone who knows the URL.
+                  Do not use it to catch sensitive data in a production environment.
+                value:
+                  name: PandaDoc
+                  url: webhooks_subscription_url
+                  active: true
+                  payload:
+                    - fields
+                    - products
+                    - metadata
+                    - tokens
+                    - pricing
+                  triggers:
+                    - document_deleted
+                    - recipient_completed
+                    - document_updated
+                    - document_state_changed
+                    - document_creation_failed
             schema:
               $ref: '#/components/schemas/WebhookSubscriptionCreateRequest'
       responses:
@@ -3772,6 +4096,28 @@ paths:
           description: Webhook subscription created
           content:
             application/json:
+              examples:
+                Create Webhook Subscription:
+                  value:
+                    uuid: d173751d-0057-4d5c-ab75-49a670a4ca68
+                    name: PandaDoc
+                    url: 'https://pandadoc.com/webhooks'
+                    status: ACTIVE
+                    active: true
+                    payload:
+                      - fields
+                      - pricing
+                      - tokens
+                      - metadata
+                      - products
+                    triggers:
+                      - document_state_changed
+                      - recipient_completed
+                      - document_updated
+                      - document_creation_failed
+                      - document_deleted
+                    shared_key: GCQsdCMoVCcmXZo8yHiNIA
+                    workspace_id: fQ2pg3hcWgiPpa3JvfBHn2
               schema:
                 $ref: '#/components/schemas/WebhookSubscriptionItemResponse'
         '400':
@@ -3786,10 +4132,15 @@ paths:
     get:
       tags:
         - Webhook subscriptions
-      summary: Get webhook subscription by uuid
+      summary: Webhook Subscription Details
+      description: |
+        Get webhook subscription by uuid
       operationId: detailsWebhookSubscription
       parameters:
-        - name: id
+        - examples:
+            Get Webhook Subscription:
+              value: 4fb6506c-02a0-427e-b445-b9e9ff0c822f
+          name: id
           in: path
           description: Webhook subscription uuid
           required: true
@@ -3801,6 +4152,28 @@ paths:
           description: Get webhook subscription by uuid
           content:
             application/json:
+              examples:
+                Get Webhook Subscription:
+                  value:
+                    uuid: 4fb6506c-02a0-427e-b445-b9e9ff0c822f
+                    name: PandaDoc
+                    url: 'https://pandadoc.com/webhooks'
+                    status: ACTIVE
+                    active: true
+                    payload:
+                      - fields
+                      - pricing
+                      - tokens
+                      - metadata
+                      - products
+                    triggers:
+                      - document_state_changed
+                      - recipient_completed
+                      - document_updated
+                      - document_creation_failed
+                      - document_deleted
+                    shared_key: GCQsdCMoVCcmXZo8yHiNGA
+                    workspace_id: fQ2pg3hcWgiPpa3JvfBhn2
               schema:
                 $ref: '#/components/schemas/WebhookSubscriptionItemResponse'
         '401':
@@ -3814,10 +4187,13 @@ paths:
     patch:
       tags:
         - Webhook subscriptions
-      summary: Update webhook subscription
+      summary: Update Webhook Subscription
       operationId: updateWebhookSubscription
       parameters:
-        - name: id
+        - examples:
+            Update Webhook Subscription:
+              value: d173751d-0057-4d5c-ab75-49a670a4ca68
+          name: id
           in: path
           description: Webhook subscription uuid
           required: true
@@ -3828,6 +4204,24 @@ paths:
         required: true
         content:
           application/json:
+            examples:
+              Update Webhook Subscriptions:
+                value:
+                  name: PandaDoc
+                  url: 'https://pandadoc.com/webhooks'
+                  active: true
+                  payload:
+                    - fields
+                    - products
+                    - metadata
+                    - tokens
+                    - pricing
+                  triggers:
+                    - document_deleted
+                    - recipient_completed
+                    - document_updated
+                    - document_state_changed
+                    - document_creation_failed
             schema:
               $ref: '#/components/schemas/WebhookSubscriptionPatchRequest'
       responses:
@@ -3835,6 +4229,28 @@ paths:
           description: Webhook subscription updated
           content:
             application/json:
+              examples:
+                Update Webhook Subscription:
+                  value:
+                    uuid: d173751d-0057-4d5c-ab75-49a670a4ca68
+                    name: PandaDoc
+                    url: 'https://pandadoc.com/webhooks'
+                    status: ACTIVE
+                    active: true
+                    payload:
+                      - products
+                      - metadata
+                      - fields
+                      - pricing
+                      - tokens
+                    triggers:
+                      - document_creation_failed
+                      - document_deleted
+                      - document_state_changed
+                      - document_updated
+                      - recipient_completed
+                    shared_key: GCQsdCMoVCcmXZo8yHiNGI
+                    workspace_id: fQ2pg3hcWgiPpa3JvfBPn2
               schema:
                 $ref: '#/components/schemas/WebhookSubscriptionItemResponse'
         '400':
@@ -3850,12 +4266,12 @@ paths:
     delete:
       tags:
         - Webhook subscriptions
-      summary: Delete webhook subscription
+      summary: Delete Webhook Subscription
       operationId: deleteWebhookSubscription
       parameters:
         - name: id
           in: path
-          description: Webhook subscription uuid
+          description: Webhook subscription uuid.
           required: true
           schema:
             type: string
@@ -3875,10 +4291,13 @@ paths:
     patch:
       tags:
         - Webhook subscriptions
-      summary: Regenerate webhook subscription shared key
+      summary: Update Webhook Subscription Shared Key
       operationId: updateWebhookSubscriptionSharedKey
       parameters:
-        - name: id
+        - examples:
+            Update Webhook Subscription Shared Key:
+              value: d173751d-0057-4d5c-ab75-49a670a4ca68
+          name: id
           in: path
           description: Webhook subscription uuid
           required: true
@@ -3890,6 +4309,10 @@ paths:
           description: Webhook subscription shared key regenerated
           content:
             application/json:
+              examples:
+                Update Webhook Subscription Shared Key:
+                  value:
+                    shared_key: DgwSJeYa2h5SCmzVZws2UM
               schema:
                 $ref: '#/components/schemas/WebhookSubscriptionSharedKeyResponse'
         '401':
@@ -3904,12 +4327,12 @@ paths:
     get:
       tags:
         - Webhook events
-      summary: Get webhook event page
+      summary: List Webhook Events
       operationId: listWebhookEvent
       parameters:
         - name: count
           in: query
-          description: Number of element in page
+          description: Specify how many event results to return.
           required: true
           schema:
             type: integer
@@ -3917,7 +4340,7 @@ paths:
             minimum: 0
         - name: page
           in: query
-          description: Page number
+          description: Specify which page of the dataset to return.
           required: true
           schema:
             type: integer
@@ -3925,42 +4348,63 @@ paths:
             minimum: 0
         - name: since
           in: query
-          description: 'Filter option: all events from specified timestamp'
+          description: Return results where the event creation time is greater than or equal to this value.
           schema:
+            example: '2022-06-01T00:00:00Z'
             type: string
             format: date-time
         - name: to
           in: query
-          description: 'Filter option: all events up to specified timestamp'
+          description: Return results where the event creation time is less than this value.
           schema:
+            example: '2022-06-01T00:00:00Z'
             type: string
             format: date-time
         - name: type
           in: query
-          description: 'Filter option: all events of type'
+          description: Returns results by the specified event types.
           schema:
             type: array
             items:
               $ref: '#/components/schemas/WebhookEventTriggerEnum'
         - name: http_status_code
           in: query
-          description: 'Filter option: all events of http status code'
+          description: Returns results with the specified HTTP status codes.
           schema:
             type: array
             items:
               $ref: '#/components/schemas/WebhookEventHttpStatusCodeGroupEnum'
         - name: error
           in: query
-          description: 'Filter option: all events with following error'
+          description: Returns results with the following errors.
           schema:
             type: array
             items:
               $ref: '#/components/schemas/WebhookEventErrorEnum'
       responses:
         '200':
-          description: Page of webhook events
+          description: Page of webhook events.
           content:
             application/json:
+              examples:
+                List Webhook Events:
+                  value:
+                    items:
+                      - uuid: 6680b700-cbb8-4ab9-bf99-15d1cb4ab9f2
+                        name: TEST
+                        type: document_state_changed
+                        error: null
+                        http_status_code: 200
+                        delivery_time: '2022-03-31T10:59:14.234658Z'
+                      - uuid: 2b97b5ee-01e2-4cd9-9ff8-f28c4376bcb2
+                        name: TEST
+                        type: document_state_changed
+                        error: null
+                        http_status_code: 200
+                        delivery_time: '2022-03-31T10:59:05.265944Z'
+                Empty:
+                  value:
+                    items: []
               schema:
                 $ref: '#/components/schemas/WebhookEventPageResponse'
         '401':
@@ -3971,21 +4415,36 @@ paths:
     get:
       tags:
         - Webhook events
-      summary: Get webhook event by uuid
+      summary: Webhook Event Details
       operationId: detailsWebhookEvent
       parameters:
         - name: id
           in: path
-          description: Webhook event uuid
+          description: Webhook event uuid.
           required: true
           schema:
             type: string
             format: uuid
       responses:
         '200':
-          description: Get webhook event by uuid
+          description: Get webhook event by uuid.
           content:
             application/json:
+              examples:
+                Webhook Event details:
+                  value:
+                    uuid: 8b61d111-5e0b-406d-a150-e8305fc7e9rrr
+                    name: My document
+                    type: document_state_changed
+                    error: null
+                    url: 'https://webhook.example.pandadoc.com'
+                    signature: f70111adccaa0111e89ae0a111a04c16f5c5d3d111bff018a111d22dcd28c2bb
+                    http_status_code: 404
+                    delivery_time: '2024-07-31T16:06:12.707814Z'
+                    request_body: '[{"event":"document_state_changed","data":{"id":"aahcZhiB6pKRbjagoZrrrr","name":"Document from PandaDoc Template","date_created":"2024-07-31T16:06:09.114744Z","date_modified":"2024-07-31T16:06:09.157758Z","expiration_date":null,"autonumbering_sequence_name":null,"created_by":{"id":"FA5QAu8UGA3oVDQZuPL7rr","email":"test@pandadoc.com","first_name":"FirstName","last_name":"LastName","avatar":null,"membership_id":"RyMNXBjBPRppw56TfYBrrr"},"tags":["created_via_api"],"status":"document.draft","recipients":[{"type":"recipient","id":"TM2nqhKYgPmJA9hUPDKHrr","first_name":"Josh","last_name":"Ron","email":"josh@example.com","phone":"","recipient_type":"CC","has_completed":false,"role":"","roles":[],"signing_order":null,"contact_id":"DrNfkrquTcXH83cgF5ZGrr","shared_link":""}],"sent_by":null,"grand_total":{"amount":"0.00","currency":"EUR"},"template":{"id":"7Xfnrk7dTaWJ78wNUrg3rr","name":"Sample Template"},"version":"2","linked_objects":[]}}]'
+                    response_body: '{"success":true}'
+                    response_headers: '[cache-control:"no-cache, private", content-type:"application/json", date:"Wed, 31 Jul 2024 16:06:12 GMT", server:"nginx", transfer-encoding:"chunked", vary:"Accept-Encoding"]'
+                    event_time: '2024-07-31T16:06:10.781000Z'
               schema:
                 $ref: '#/components/schemas/WebhookEventDetailsResponse'
         '401':
@@ -4040,101 +4499,45 @@ paths:
                               example: You do not have Notary On Demand addon or it is inactive.
         '429':
           $ref: '#/components/responses/429'
-  /public/v2/product-catalog/items:
-    post:
-      tags:
-        - Product catalog
-      summary: Create a new catalog item.
-      description: Create a new catalog item.
-      operationId: createCatalogItem
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProductCatalogItemRequest'
-      responses:
-        '200':
-          description: Successfully created a new catalog item
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductCatalogItemResponse'
-  '/public/v2/product-catalog/items/{item_uuid}':
-    parameters:
-      - name: item_uuid
-        in: path
-        description: Catalog item UUID
-        required: true
-        schema:
-          type: string
-          format: uuid
-    get:
-      tags:
-        - Product catalog
-      summary: Get Catalog Item
-      description: Get catalog item.
-      operationId: getCatalogItem
-      responses:
-        '200':
-          description: Get Catalog Item
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductCatalogItemResponse'
-    patch:
-      tags:
-        - Product catalog
-      summary: Update Catalog Item
-      description: Update catalog item.
-      operationId: updateCatalogItem
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProductCatalogItemPatchRequest'
-      responses:
-        '200':
-          description: Update Catalog item
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProductCatalogItemResponse'
-    delete:
-      tags:
-        - Product catalog
-      summary: Delete Catalog Item
-      description: Delete catalog item.
-      operationId: deleteCatalogItem
-      responses:
-        '200':
-          description: No content
   /public/v2/product-catalog/items/search:
     get:
       tags:
         - Product catalog
-      summary: Search catalog items
+      summary: List Catalog Items Search
       operationId: searchCatalogItems
+      description: |
+        This method searches for items in your [product catalog](https://support.pandadoc.com/hc/en-us/articles/8241999336471-Product-Catalog).
+
+        Use the `query` parameter to search in title, SKU, description, category name, custom fields name and value. You can also search for items by their type, billing type, and category id.
+
+        Order search results, in both ascending and descending order, by these item properties:
+
+        - SKU
+        - Name
+        - Price
+        - Modification date
+
+        Use the `exclude_uuids` parameter to exclude particular uuids from the search request.
       parameters:
         - name: page
           in: query
-          description: page number
+          description: Page number.
           schema:
             type: number
         - name: per_page
           in: query
-          description: items per page
+          description: Items per page.
           schema:
             type: number
         - name: query
           in: query
-          description: what we search for
+          description: |
+            Search query. Searches the following fields: Title, SKU, description, category name, custom fields name and value.
           schema:
             type: string
         - name: order_by
           in: query
-          description: how to order the search listing
+          description: Ordering principle for displaying search results.
           schema:
             type: string
             enum:
@@ -4148,7 +4551,7 @@ paths:
               - '-date_modified'
         - name: types
           in: query
-          description: filter by catalog item types
+          description: Filter by catalog item types.
           schema:
             type: array
             items:
@@ -4158,7 +4561,7 @@ paths:
                 - bundle
         - name: billing_types
           in: query
-          description: filter by billing types
+          description: Filter by billing types.
           schema:
             type: array
             items:
@@ -4168,14 +4571,14 @@ paths:
                 - recurring
         - name: exclude_uuids
           in: query
-          description: exclude uuids
+          description: A list of item uuids to be excluded from search.
           schema:
             type: array
             items:
               type: string
         - name: category_id
           in: query
-          description: category id
+          description: Category id.
           schema:
             type: string
         - name: no_category
@@ -4187,6 +4590,170 @@ paths:
           description: Paginated catalog items
           content:
             application/json:
+              examples:
+                List Catalog Items:
+                  value:
+                    items:
+                      - billing_cycle: null
+                        billing_type: one_time
+                        bundle_items_count: 0
+                        workspace_id: n7SK7prHeoWJsmb9VkrPve
+                        category_id: 0ac5f88a-bdd6-4836-304d-28d042b8d3a2
+                        category_name: Sample product
+                        created_by: FA5QAu8UGA3oVDQZuPL75B
+                        currency: USD
+                        custom_fields: []
+                        date_created: '2023-02-01T10:55:07+00:00'
+                        date_modified: '2023-02-01T10:55:07+00:00'
+                        description: 'Its exceptionally effective vacuum brewing method extracts all precious oils of your favorite coffee. In addition, the brewing time and temperature are perfectly calibrated, ensuring a perfect cup of coffee with each brew.'
+                        image_src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/81361512-488e-42c8-8c13-5e61b8a27638/1.jpeg'
+                        images:
+                          - src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/81361512-488e-42c8-8c13-5e61b8a27638/1.jpeg'
+                            order: 0
+                            is_main: true
+                          - src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/a0aca18e-8074-4698-aadb-3f41c1bd6a88/2.jpeg'
+                            order: 1
+                            is_main: false
+                        max_tier_value: null
+                        min_tier_value: null
+                        modified_by: FA5QAu8UGA3oVDQZuPL75B
+                        price: 250
+                        pricing_method: 0
+                        sku: coffee_maker
+                        title: Siphon vacuum coffee maker
+                        type: regular
+                        uuid: 1725f759-3a1c-64e3-2daa-f67eafa589d7
+                        highlights: null
+                        tiers: null
+                        cost: 100
+                      - billing_cycle: null
+                        billing_type: one_time
+                        bundle_items_count: 0
+                        workspace_id: n7SK7prHeoWJsmb9VkrPve
+                        category_id: 0ac5f88a-bdd6-4836-304d-28d042b8d3a2
+                        category_name: Sample product
+                        created_by: FA5QAu8UGA3oVDQZuPL75B
+                        currency: USD
+                        custom_fields: []
+                        date_created: '2023-02-01T10:55:07+00:00'
+                        date_modified: '2023-02-01T10:55:07+00:00'
+                        description: 'Double-layer Filter: Dual layers of 304 stainless steel allow fine oils from coffee powder to infuse themselves into your coffee, creating a richer, fuller flavor and no coffee ground deposits'
+                        image_src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/b593eb9a-74cd-40a0-8c38-6a9d39248d3d/3.jpeg'
+                        images:
+                          - src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/b593eb9a-74cd-40a0-8c38-6a9d39248d3d/3.jpeg'
+                            order: 0
+                            is_main: true
+                          - src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/ea09bd4a-c619-4b3e-8f99-f1a2180a97a8/4.jpeg'
+                            order: 1
+                            is_main: false
+                          - src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6e6312f8-787d-4453-8772-ac81f481be00/5.jpeg'
+                            order: 2
+                            is_main: false
+                        max_tier_value: null
+                        min_tier_value: null
+                        modified_by: FA5QAu8UGA3oVDQZuPL75B
+                        price: 100
+                        pricing_method: 0
+                        sku: coffee_brewer
+                        title: Jittermaster coffee brewer
+                        type: regular
+                        uuid: 06cb0ce9-094b-1f38-2fe6-0a9d226cd22c
+                        highlights: null
+                        tiers: null
+                        cost: 50
+                      - billing_cycle: null
+                        billing_type: one_time
+                        bundle_items_count: 0
+                        workspace_id: n7SK7prHeoWJsmb9VkrPve
+                        category_id: 0ac5f88a-bdd6-4836-304d-28d042b8d3a2
+                        category_name: Sample product
+                        created_by: FA5QAu8UGA3oVDQZuPL75B
+                        currency: USD
+                        custom_fields: []
+                        date_created: '2023-02-01T10:55:07+00:00'
+                        date_modified: '2023-03-17T14:19:12+00:00'
+                        description: <p>Meticulously crafted in Italy these classic glass coffee mugs or tea cups will complete any barware collection. Contemporary sleek drinking glasses designed to enhance any décor.</p>
+                        image_src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6267265d-2b29-4471-8181-c7544e35a69a/6.jpeg'
+                        images:
+                          - src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6267265d-2b29-4471-8181-c7544e35a69a/6.jpeg'
+                            order: 0
+                            is_main: true
+                        max_tier_value: 30
+                        min_tier_value: 20
+                        modified_by: FA5QAu8UGA3oVDQZuPL75B
+                        price: null
+                        pricing_method: 1
+                        sku: coffee_mug_v2
+                        title: Coffee Magic Mug
+                        type: regular
+                        uuid: ff137b79-e7f6-5710-17d3-c9ea81dac6b6
+                        highlights: null
+                        tiers:
+                          - value: 30
+                            min_qty: 1
+                          - value: 20
+                            min_qty: 21
+                        cost: 5
+                      - billing_cycle: 1
+                        billing_type: recurring
+                        bundle_items_count: 0
+                        workspace_id: n7SK7prHeoWJsmb9VkrPve
+                        category_id: 0ac5f88a-bdd6-4836-304d-28d042b8d3a2
+                        category_name: Sample product
+                        created_by: FA5QAu8UGA3oVDQZuPL75B
+                        currency: USD
+                        custom_fields: []
+                        date_created: '2023-02-01T10:55:07+00:00'
+                        date_modified: '2023-02-01T10:55:07+00:00'
+                        description: Enjoy a new light roast coffee each month. Box of white chocolate. Up to 20% off retail prices. Pause or cancel anytime.
+                        image_src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/e818970c-5aa8-4645-941f-04ab0ab5b9b0/7.png'
+                        images:
+                          - src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/e818970c-5aa8-4645-941f-04ab0ab5b9b0/7.png'
+                            order: 0
+                            is_main: true
+                        max_tier_value: null
+                        min_tier_value: null
+                        modified_by: FA5QAu8UGA3oVDQZuPL75B
+                        price: 19
+                        pricing_method: 0
+                        sku: light_coffee
+                        title: Light Roast Collection
+                        type: regular
+                        uuid: 646ebcc2-58ba-8eb1-faaa-a93e4542b37b
+                        highlights: null
+                        tiers: null
+                        cost: 5
+                      - billing_cycle: 1
+                        billing_type: recurring
+                        bundle_items_count: 0
+                        workspace_id: n7SK7prHeoWJsmb9VkrPve
+                        category_id: 0ac5f88a-bdd6-4836-304d-28d042b8d3a2
+                        category_name: Sample product
+                        created_by: FA5QAu8UGA3oVDQZuPL75B
+                        currency: USD
+                        custom_fields: []
+                        date_created: '2023-02-01T10:55:07+00:00'
+                        date_modified: '2023-02-01T10:55:07+00:00'
+                        description: Enjoy a new dark roast coffee each month. Box of white chocolate. Up to 20% off retail prices. Pause or cancel anytime.
+                        image_src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6cb41994-5a6e-4253-bc4c-f5e90bb9d7f8/8.png'
+                        images:
+                          - src: 'https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6cb41994-5a6e-4253-bc4c-f5e90bb9d7f8/8.png'
+                            order: 0
+                            is_main: true
+                        max_tier_value: null
+                        min_tier_value: null
+                        modified_by: FA5QAu8UGA3oVDQZuPL75B
+                        price: 19
+                        pricing_method: 0
+                        sku: dark_coffee
+                        title: Dark Roast Collection
+                        type: regular
+                        uuid: 0d80ccaf-37e1-ce94-c339-d1f0405c3a62
+                        highlights: null
+                        tiers: null
+                        cost: 5
+                    has_more_items: false
+                    total: 5
               schema:
                 type: object
                 properties:
@@ -4306,12 +4873,414 @@ paths:
           $ref: '#/components/responses/403'
         '429':
           $ref: '#/components/responses/429'
+  /public/v2/product-catalog/items:
+    post:
+      tags:
+        - Product catalog
+      summary: Create Catalog Item
+      description: Create a new catalog item.
+      operationId: createCatalogItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              Create Catalog item:
+                value:
+                  type: regular
+                  title: New Product
+                  category_id: null
+                  sku: ''
+                  description: null
+                  price_configuration:
+                    currency: EUR
+                    price: 1
+                    cost: null
+                    pricing_method: 0
+                    tiers: null
+                    billing_type: one_time
+                    billing_cycle: null
+                  custom_fields: []
+                  images: []
+                  bundle_items: []
+            schema:
+              $ref: '#/components/schemas/ProductCatalogItemRequest'
+      responses:
+        '200':
+          description: Successfully created a new catalog item
+          content:
+            application/json:
+              examples:
+                Created Catalog item:
+                  value:
+                    uuid: ea90c56c-1350-41e0-97d1-3b3be0764f9c
+                    title: New Product
+                    date_created: '2024-07-18T13:11:42.326997'
+                    date_modified: '2024-07-18T13:11:42.326997'
+                    created_by: FA5QAu8UGA3oVDQZuPL75B
+                    modified_by: FA5QAu8UGA3oVDQZuPL75B
+                    default_price_configuration:
+                      uuid: 71b0660f-f6a4-413a-a9cb-dd1f4d93754e
+                      price: 1
+                      cost: null
+                      currency: EUR
+                      pricing_method: 0
+                      tiers: null
+                      billing_cycle: null
+                      billing_type: one_time
+                    variants:
+                      - uuid: ff6ae8fd-a31f-485b-8437-5ff72fe40d97
+                        sku: '211813902327'
+                        description: null
+                        custom_fields: []
+                        images: []
+                        date_created: '2024-07-18T13:11:42.326997'
+                        date_modified: '2024-07-18T13:11:42.326997'
+                        status: 0
+                        price_configurations:
+                          - uuid: 71b0660f-f6a4-413a-a9cb-dd1f4d93754e
+                            price: 1
+                            cost: null
+                            currency: EUR
+                            pricing_method: 0
+                            tiers: null
+                            billing_cycle: null
+                            billing_type: one_time
+                    category_id: null
+                    category_name: null
+                    type: regular
+                    bundle_items: null
+              schema:
+                $ref: '#/components/schemas/ProductCatalogItemResponse'
+  '/public/v2/product-catalog/items/{item_uuid}':
+    parameters:
+      - name: item_uuid
+        in: path
+        description: Catalog item UUID
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Product catalog
+      summary: Catalog Item Details
+      description: Get catalog item.
+      operationId: getCatalogItem
+      parameters:
+        - name: item_uuid
+          in: path
+          description: Catalog item UUID
+          required: true
+          examples:
+            Catalog Items Details:
+              value: 2e39c7e0-acb0-4ff2-b4cd-ea3141f95db8
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Get Catalog Item
+          content:
+            application/json:
+              examples:
+                Catalog Items Details:
+                  value:
+                    uuid: 2e39c7e0-acb0-4ff2-b4cd-ea3141f95db8
+                    title: New Product
+                    date_created: '2024-07-18T13:15:13.542219'
+                    date_modified: '2024-07-18T13:15:13.542219'
+                    created_by: FA5QAu8UGA3oVDQZuPL75B
+                    modified_by: FA5QAu8UGA3oVDQZuPL75B
+                    default_price_configuration:
+                      uuid: 99dc088e-c42a-483f-8b07-01a482d3e85d
+                      price: 1
+                      cost: null
+                      currency: EUR
+                      pricing_method: 0
+                      tiers: null
+                      billing_cycle: null
+                      billing_type: one_time
+                    variants:
+                      - uuid: f5a99f07-8cbb-46b2-beb2-5d4c52d3fb4e
+                        sku: '211814113542'
+                        description: null
+                        custom_fields: []
+                        images: []
+                        date_created: '2024-07-18T13:15:13.542219'
+                        date_modified: '2024-07-18T13:15:13.542219'
+                        status: 0
+                        price_configurations:
+                          - uuid: 99dc088e-c42a-483f-8b07-01a482d3e85d
+                            price: 1
+                            cost: null
+                            currency: EUR
+                            pricing_method: 0
+                            tiers: null
+                            billing_cycle: null
+                            billing_type: one_time
+                    category_id: null
+                    category_name: null
+                    type: regular
+                    bundle_items: null
+              schema:
+                $ref: '#/components/schemas/ProductCatalogItemResponse'
+    patch:
+      tags:
+        - Product catalog
+      summary: Update Catalog Item
+      description: Update catalog item.
+      operationId: updateCatalogItem
+      parameters:
+        - name: item_uuid
+          in: path
+          description: Catalog item UUID
+          required: true
+          examples:
+            Update Catalog Item:
+              value: 2e39c7e0-acb0-4ff2-b4cd-ea3141f95db8
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              Update Catalog Item:
+                value:
+                  type: regular
+                  title: New name
+                  category_id: null
+                  product_variant:
+                    sku: '211813881147'
+                    description: <p>New description</p>
+                    custom_fields:
+                      - name: Field
+                        value: Value
+                    price_configuration:
+                      price: 99
+                      currency: USD
+                      cost: 1
+                      pricing_method: 1
+                      tiers:
+                        - min_qty: 1
+                          value: 10
+                        - min_qty: 2
+                          value: 8
+                      billing_type: one_time
+                      billing_cycle: null
+                    images: []
+                  bundle_items: []
+            schema:
+              $ref: '#/components/schemas/ProductCatalogItemPatchRequest'
+      responses:
+        '200':
+          description: Update Catalog item
+          content:
+            application/json:
+              examples:
+                Update Catalog item:
+                  value:
+                    uuid: 2e39c7e0-acb0-4ff2-b4cd-ea3141f95db8
+                    title: New name
+                    date_created: '2024-07-18T13:15:13.542219'
+                    date_modified: '2024-07-18T13:19:21.692454'
+                    created_by: FA5QAu8UGA3oVDQZuPL75B
+                    modified_by: FA5QAu8UGA3oVDQZuPL75B
+                    default_price_configuration:
+                      uuid: 99dc088e-c42a-483f-8b07-01a482d3e85d
+                      price: 99
+                      cost: 1
+                      currency: USD
+                      pricing_method: 1
+                      tiers:
+                        - min_qty: 1
+                          value: 10
+                        - min_qty: 2
+                          value: 8
+                      billing_cycle: null
+                      billing_type: one_time
+                    variants:
+                      - uuid: f5a99f07-8cbb-46b2-beb2-5d4c52d3fb4e
+                        sku: '211813881147'
+                        description: <p>New description</p>
+                        custom_fields:
+                          - name: Field
+                            value: Value
+                        images: []
+                        date_created: '2024-07-18T13:15:13.542219'
+                        date_modified: '2024-07-18T13:19:21.692454'
+                        status: 0
+                        price_configurations:
+                          - uuid: 99dc088e-c42a-483f-8b07-01a482d3e85d
+                            price: 99
+                            cost: 1
+                            currency: USD
+                            pricing_method: 1
+                            tiers:
+                              - min_qty: 1
+                                value: 10
+                              - min_qty: 2
+                                value: 8
+                            billing_cycle: null
+                            billing_type: one_time
+                    category_id: null
+                    category_name: null
+                    type: regular
+                    bundle_items: null
+              schema:
+                $ref: '#/components/schemas/ProductCatalogItemResponse'
+    delete:
+      tags:
+        - Product catalog
+      summary: Delete Catalog Item
+      description: Delete catalog item.
+      operationId: deleteCatalogItem
+      parameters:
+        - name: item_uuid
+          in: path
+          description: Catalog item UUID
+          required: true
+          examples:
+            Delete Catalog Item:
+              value: 2e39c7e0-acb0-4ff2-b4cd-ea3141f95db8
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: No content
+  '/public/v1/documents/{document_id}/sections':
+    get:
+      tags:
+        - Sections
+      summary: List Document Sections
+      operationId: listSections
+      description: |
+        Retrieve information about the sections within a document.
+      parameters:
+        - examples:
+            List Document Sections:
+              value: BhVzRcxH9Z2LgfPPGXFUBa
+          name: document_id
+          description: Document ID
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadSectionListResponse'
+              examples:
+                List Document Sections:
+                  value:
+                    results:
+                      - uuid: fGE5F6rAeBSPokHMBt8Pbm
+                        name: '[DEV] Test Template with HTML Tags'
+                      - uuid: MBMsxWgditbvUAgSKXR8kA
+                        name: Sample Document from PDF with Field Tags
+                      - uuid: JKmXhd9e4ZwNMyaEYFJEkK
+                        name: Sample Document from PDF with Form Fields
+        '400':
+          $ref: '#/components/responses/400RequestError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '429':
+          $ref: '#/components/responses/429'
   '/public/v1/documents/{document_id}/sections/uploads':
     post:
       tags:
         - Sections
-      summary: Upload section
+      summary: Create Document Section
       operationId: uploadSection
+      description: "With this endpoint, you can add a new section to an existing PandaDoc document (create a bundle).\n\nYou can upload a section to the document using a PandaDoc template or a file by URL.\n\n> ⏱️ Document Section creation is a non-blocking (asynchronous) operation\n> \n> The document creation process may take some time.\n> \n> With a successful request, you receive a response with the created upload ID and status `document_sections_upload.uploaded`. After processing completes on our servers, usually a few seconds, the document moves to the `document_sections_upload.PROCESSED` status.\n\n## Using a PandaDoc template\n\n<details>\n\n  > \U0001F6A7 Current Version Limitations\n  > \n  > Images in sections are currently not supported.\n\n  > \U0001F4D8 Pricing tables note\n  > \n  > Each pricing table must have a unique name to populate it with data correctly.\n\n  A PandaDoc template is a document template created and edited in the PandaDoc web application. Our [help center](https://support.pandadoc.com/hc/en-us/articles/360041230753-Save-time-with-templates) has further information on PandaDoc templates. \n\n  If you don't have any PandaDoc Template yet, you can easily create one by clicking [Copy a Sample PandaDoc template](https://app.pandadoc.com/get-this-template/?pt=public_template&pub=eiC3a6qBVfEfbw7VCYgaeN). This will open the PandaDoc application in a new tab, copy the sample template into your account, and create a new document from the template.\n</details>\n\n## Using a File by URL\n\n<details>\n  \n  Using this endpoint you can add a section to the existing document. The section is created from a file you upload. The file can be a PDF, DocX, or RTF.\n\n  > \U0001F4D8 We've prepared two samples that you can use to test the request.\n  > Download them here:\n  >\n  > - [Download a Sample PDF with Form Fields](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf) \n  > - [Download a Sample PDF with Field Tags](https://5132871.fs1.hubspotusercontent-na1.net/hubfs/5132871/SamplePandaDocPdf_FieldTags_updated.pdf)\n\n  > ❗️ Limitations\n  > \n  > * This method does not support multiple documents.\n  > * The maximum supported file size is 50 MB. API returns \"413 Request entity too large\" in case of bigger files.\n  > * PandaDoc does not support creating document from a PDF with encrypted files (to check whether a file is encrypted or not, try Get info -> Secure: Password Encrypted).\n\n  ### PDF Form Fields\n\n  PandaDoc recognizes PDF form fields. To enable this feature, pass the optional `parse_form_fields` value as `true` when making a create document section API call. We support Text fields, Dropdowns, and Signature fields.\n\n  If you would like to pass additional parameters to configure PDF form fields, use the PDF field name as an optId. You can use a PDF editor such as Adobe Acrobat, Foxit to get and edit field names in your PDF.\n\n  [**Download a Sample PDF with Form Fields**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf)\n\n  ### PDF/DocX/RTF Field Tags\n\n  This parsing format allows a word processor such as [Microsoft Word](https://support.office.com/en-us/article/Save-as-PDF-d85416c5-7d77-4fd6-a216-6f4bf7c7c110?ui=en-US&rs=en-US&ad=US) or [Google Docs](https://support.google.com/drive/answer/2423534?co=GENIE.Platform%3DDesktop&hl=en) to prepare a document and save it in PDF, DocX or RTF format.\n\n  Within the text, PandaDoc parses field tags. A field tag starts and ends with brackets. The field tag includes basic information on how to create a form field in the PandaDoc document. The request JSON object `optId` can also extend this information for even greater control.\n\n  Here is an example of how the field tag in a PDF/DocX/RTF  is converted to a text field in the PandaDoc document:\n\n  ![](https://files.readme.io/38afedf-ex3.png \"ex3.png\")\n\n  [**Download a Sample PDF with Field Tags**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FieldTags.pdf)\n\n  #### PDF Field Tag Key\n\n  ![](https://files.readme.io/a81fbf1-field-tag-structure.png \"field-tag-structure.png\")\n\n  | Number | Key         | Description                                                                                                                                                                                                                                                                               | Example                           |\n  | :----- | :---------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- |\n  | 1      | `fieldType` | Field type from the table documented below                                                                                                                                                                                                                                                | `signature`, or `s` for shorthand |\n  | 2      | `*`         | Optional `*` denotes the field is not required                                                                                                                                                                                                                                            | `*`                               |\n  | 3      | `role`      | Role name. Associate the field tag with a recipient role. Roles must be assigned to recipients in the request body. In this case we are using role `s1` to keep the length short and denote the concept of \"signer 1\". `s1` would be the value passed as role in a recipient JSON object. | `s1`                              |\n  | 4      | `optId`     | Optional field Id. Specify more information about the field tag within the post request by using this id.                                                                                                                                                                                 | `sigBox17`                        |\n  | 5      | `_____`     | Use underscores to widen the field if desired. The form fields in PandaDoc will scale to the length and size of your field tag.                                                                                                                                                           | `_____`                           |\n\n  > \U0001F6A7 Role names restrictions\n  > \n  > Underscores are not supported in role names for a file with a Field Tag.\n\n  #### PDF/DocX/RTF Field Tag Supported Types\n\n  | Field Type  | Short Notation | Is PandaDoc Field |\n  | :---------- | :------------- | :---------------- |\n  | `textfield` | `t`            | Field             |\n  | `checkbox`  | `c`            | Field             |\n  | `signature` | `s`            | Field             |\n  | `date`      | `d`            | Field             |\n  | `initials`  | `i`            | Field             |\n  | `dropdown`  | `dd`           | Field             |\n\n  ```json Field Tags Example\n  \"fields\": {  \n    \"textfield\": {  \n        \"value\": \"Jane\",\n        \"role\": \"user\"\n    },\n    \"dropdown\": {\n        \"value\": \"opt1\",\n        \"role\": \"user\",\n        \"options\":[\n          \"opt1\",\n          \"opt2\",\n          \"opt3\"\n        ]\n    },\n    \"checkbox\": {  \n        \"value\": true,\n        \"role\": \"user\"\n    },\n    \"date\":{\n        \"value\": \"2022-05-20\",\n        \"role\": \"user\"\n    },\n    \"signature\": {  \n        \"value\": \"\",\n        \"role\": \"user\"\n    }\n  }\n  ```\n\n  > \U0001F4D8 Fields in PandaDoc\n  > \n  > The following article explains how to use Fields: [Everything you need to know about Fields](https://support.pandadoc.com/hc/en-us/articles/360040595714--Editor-2-0-Fields)\n\n  ### Signing order\n\n  Set a signing order for document section sections created from a file.\n\n  ```json\n  \"recipients\": [  \n    {  \n      \"email\": \"josh@example.com\",\n      \"first_name\": \"Josh\",\n      \"last_name\": \"Ron\",\n      \"role\": \"user\",\n      \"signing_order\": 1\n    }\n  ]\n  ```\n\n  > \U0001F4D8 Signing order in PandaDoc\n  >\n  > https://support.pandadoc.com/en/articles/9714771-signing-order: [How to use signing order](https://support.pandadoc.com/en/articles/9714771-signing-order)\n\n  ### Error handling\n\n  | Error description | Type | Root cause |\n  |---|---|---|\n  | Document version 1 is not supported. | Validation errors: Form fields | The creation document section is supported only for document version 2 |\n  | PDF content hasn't been processed: document is broken or locked | Processing errors: Failed to process document content | Document converter service can’t process PDF. This may be caused by locked PDF or if it’s broken. |\n  | Error occurred while parsing PDF field tags. Please try PDF flattening or reach out to support | Processing errors: Field tag / Form field validation error | Doc converter managed to parse PDF and extract tags, but at least 1 of them is invalid (having negative position, for example). Usually we recommend PDF flattening and it helps |\n  | No role='{role}' for field tag specified in `recipients` found, roles passed were {roles} | Validation errors: Field tags | Role is invalid. When the role specified in field tag is empty or wasn’t provided in a payload for any recipient |\n  | All field tags within PDF must be declared within `fields`\_ object of the JSON Payload. No field with optId='{optid}' found in fields object, fields passed were {optids} | Validation errors: Field tags | Label is invalid. Occurs when **optId** specified in field tag is empty or no field with **name = optId** was provided in a payload |\n  | One of field tags in PDF with type='{field}' doesn't have a role | Validation errors: Field tags | Field tag in PDF has no role. One of field tags in PDF with type=% doesn't have a role. |\n  | Role for form field with name='{role}' is not provided in payload | Validation errors: Form fields | Role for form field with ‘name’ is not provided. Occurs when `role` for form field with name=%s\_ is not provided in payload |\n  | Field for form field with name='{name}' is not specified in payload, available names are {names} | Validation errors: Form fields | Field ‘name’ is not specified in payload. Occurs when no field with name = form field name was provided in a payload |\n  | No role='{role}' for form field specified in 'recipients' found, roles passed were {roles}\" | Validation errors: Form fields | Failed to resolve field actor for `role` in form field with ‘name’.\_ \_Occurs when role from the form field is not found in recipient’s from payload |\n  | Failed to download file from link {url}. | Source errors | Error on attempt to download file.\_  An error has occurred on an attempt to download file using the provided ‘url’ in payload |\n  | Failed to download file from link {url} (status code: {status code}) | Source errors | Error with HTTP status code on attempt to download file.\_  An error has occurred on an attempt to download file using the provided ‘url’ in payload - remote server responded with the HTTP status code |\n  | Content type='{type}' is not supported, available types are {types} | Source errors | Content type is not supported.\_  Content type should be one of the following: PDF, ZIP, doc, docx, RTF |\n  | The maximum file size is exceeded, limit is {limit} MB | Source errors | The file size has exceeded the allowed limits. An error occurred while trying to download a file that is too large (limit is 50M) |\n    \n  </details>\n"
+      parameters:
+        - examples:
+            Create Document Section from Template:
+              value: CFz2UnLXDck3UJkeGGEuB3
+          name: document_id
+          description: Document ID
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: merge_field_scope
+          description: |
+            Determines how the fields are mapped when creating a section.
+              * document: Default value. The fields of the entire document are updated.
+              * upload: Only the fields from the created section are updated. The merge field is appended with the upload ID.
+          in: query
+          schema:
+            type: string
+            enum:
+              - document
+              - upload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - allOf:
+                    - $ref: '#/components/schemas/UploadSectionByTemplateRequest'
+                    - title: From PandaDoc Template
+                - allOf:
+                    - $ref: '#/components/schemas/UploadSectionRequest'
+                    - title: From File By Url
+                      properties:
+                        url:
+                          type: string
+                          example: 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
+                          description: Use a URL to specify the PDF. We support only URLs starting with https.
+                      required:
+                        - url
+            examples:
+              Create Document Section From Template:
+                value:
+                  name: New section from template
+                  template_uuid: hryJY9mqYZHjQCYQuSjRQg
+                  recipients:
+                    - role: Client
+                      email: client@pandadoc.com
+                    - role: Sender
+                      email: sender@pandadoc.com
+      responses:
+        '201':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadSectionResponse'
+              examples:
+                Create Document Section From Template:
+                  value:
+                    uuid: LQ6cUT7xevPLUEgJeF8Zrm
+                    document_uuid: CFz2UnLXDck3UJkeGGEuB3
+                    status: document_sections_upload.UPLOADED
+                    name: 'null'
+                    date_created: '2023-08-28T15:48:09.379860Z'
+                    date_modified: '2023-08-28T15:48:09.379860Z'
+                    info_message: You need to poll the Document Sections Upload Status method until the status will be changed to document_sections_upload.PROCESSED
+        '400':
+          $ref: '#/components/responses/400ValidationError'
+        '401':
+          $ref: '#/components/responses/401'
+        '429':
+          $ref: '#/components/responses/429'
+  '/public/v1/documents/{document_id}/sections/uploads?upload':
+    post:
+      tags:
+        - Sections
+      summary: Create Document Section from File Upload
+      operationId: uploadSectionWithUpload
+      description: "With this endpoint, you can add a new section to an existing PandaDoc document (create a bundle). The section is created from a file you upload. The file can be a PDF, DocX, or RTF.\n\n> \U0001F4D8 We've prepared two samples that you can use to test the request.\n> Download them here:\n>\n> - [Download a Sample PDF with Form Fields](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf) \n> - [Download a Sample PDF with Field Tags](https://5132871.fs1.hubspotusercontent-na1.net/hubfs/5132871/SamplePandaDocPdf_FieldTags_updated.pdf)\n\n\n> \U0001F6A7 Usage specifics\n> \n> 1. This method uses a `multipart/form-data` request type instead of the `application/json` typically found in the PandaDoc API. This is to accommodate the upload of the included document.\n> 2. You can send a URL instead of a file in the document creation request.  \n>    In this case, you need to use the `application/json` content type and add the URL parameter in the body request. As an example, see [Create from public PDF](https://developers.pandadoc.com/docs/create-and-send-a-document-from-a-publicly-available-pdf) guide for more details.\n> 3. A file you upload is not stored in your PandaDoc account, so you have to upload it with every request.\n\n> ❗️ Limitations\n> \n> 1. This method does not support multiple documents.\n> 2. The maximum supported file size is 50 MB. API returns \"413 Request entity too large\" in case of bigger files.\n> 3. PandaDoc does not support creating document from a PDF with encrypted files (to check whether a file is encrypted or not, try Get info -> Secure: Password Encrypted).\n\n> ⏱️ Document Section creation is a non-blocking (asynchronous) operation\n> \n> The document creation process may take some time.\n> \n> With a successful request, you receive a response with the created upload ID and status `document_sections_upload.uploaded`. After processing completes on our servers, usually a few seconds, the document moves to the `document_sections_upload.PROCESSED` status.\n\n## PDF Form Fields\n\nPandaDoc recognizes PDF form fields. To enable this feature, pass the optional `parse_form_fields` value as `true` when making a create document section API call. We support Text fields, Dropdowns, and Signature fields.\n\nIf you would like to pass additional parameters to configure PDF form fields, use the PDF field name as an optId. You can use a PDF editor such as Adobe Acrobat, Foxit to get and edit field names in your PDF.\n\n[**Download a Sample PDF with Form Fields**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FormFields.pdf)\n\n## PDF/DocX/RTF Field Tags\n\nThis parsing format allows a word processor such as [Microsoft Word](https://support.office.com/en-us/article/Save-as-PDF-d85416c5-7d77-4fd6-a216-6f4bf7c7c110?ui=en-US&rs=en-US&ad=US) or [Google Docs](https://support.google.com/drive/answer/2423534?co=GENIE.Platform%3DDesktop&hl=en) to prepare a document and save it in PDF, DocX or RTF format.\n\nWithin the text, PandaDoc parses field tags. A field tag starts and ends with brackets. The field tag includes basic information on how to create a form field in the PandaDoc document. The request JSON object `optId` can also extend this information for even greater control.\n\nHere is an example of how the field tag in a PDF/DocX/RTF  is converted to a text field in the PandaDoc document:\n\n![](https://files.readme.io/38afedf-ex3.png \"ex3.png\")\n\n[**Download a Sample PDF with Field Tags**](https://cdn2.hubspot.net/hubfs/2127247/public-templates/SamplePandaDocPdf_FieldTags.pdf)\n\n<details>\n\n  ### PDF Field Tag Key\n\n  ![](https://files.readme.io/a81fbf1-field-tag-structure.png \"field-tag-structure.png\")\n\n  | Number | Key         | Description                                                                                                                                                                                                                                                                               | Example                           |\n  | :----- | :---------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------- |\n  | 1      | `fieldType` | Field type from the table documented below                                                                                                                                                                                                                                                | `signature`, or `s` for shorthand |\n  | 2      | `*`         | Optional `*` denotes the field is not required                                                                                                                                                                                                                                            | `*`                               |\n  | 3      | `role`      | Role name. Associate the field tag with a recipient role. Roles must be assigned to recipients in the request body. In this case we are using role `s1` to keep the length short and denote the concept of \"signer 1\". `s1` would be the value passed as role in a recipient JSON object. | `s1`                              |\n  | 4      | `optId`     | Optional field Id. Specify more information about the field tag within the post request by using this id.                                                                                                                                                                                 | `sigBox17`                        |\n  | 5      | `_____`     | Use underscores to widen the field if desired. The form fields in PandaDoc will scale to the length and size of your field tag.                                                                                                                                                           | `_____`                           |\n\n  > \U0001F6A7 Role names restrictions\n  > \n  > Underscores are not supported in role names for a file with a Field Tag.\n\n  ### PDF/DocX/RTF Field Tag Supported Types\n\n  | Field Type  | Short Notation | Is PandaDoc Field |\n  | :---------- | :------------- | :---------------- |\n  | `textfield` | `t`            | Field             |\n  | `checkbox`  | `c`            | Field             |\n  | `signature` | `s`            | Field             |\n  | `date`      | `d`            | Field             |\n  | `initials`  | `i`            | Field             |\n  | `dropdown`  | `dd`           | Field             |\n\n  > \U0001F4D8 Fields in PandaDoc\n  > \n  > The following article explains how to use Fields: [Everything you need to know about Fields](https://support.pandadoc.com/hc/en-us/articles/360040595714--Editor-2-0-Fields)\n\n  ```json Field Tags Example\n  \"fields\": {  \n          \"textfield\": {  \n              \"value\": \"Jane\",\n              \"role\": \"user\"\n          },\n          \"dropdown\": {\n              \"value\": \"opt1\",\n              \"role\": \"user\",\n              \"options\":[\n                \"opt1\",\n                \"opt2\",\n                \"opt3\"\n              ]\n          },\n          \"checkbox\": {  \n              \"value\": true,\n              \"role\": \"user\"\n          },\n          \"date\":{\n              \"value\": \"2022-05-20\",\n              \"role\": \"user\"\n          },\n          \"signature\": {  \n              \"value\": \"\",\n              \"role\": \"user\"\n          }\n      }\n  ```\n\n</details>\n\n## Signing order\n\nSet a signing order for document section sections created from a file.\n\n```json\n\"recipients\": [  \n  {  \n    \"email\": \"josh@example.com\",\n    \"first_name\": \"Josh\",\n    \"last_name\": \"Ron\",\n    \"role\": \"user\",\n    \"signing_order\": 1\n  }\n]\n```\n\n## Error handling\n\n| Error description | Type | Root cause |\n|---|---|---|\n| Document version 1 is not supported. | Validation errors: Form fields | The creation document section is supported only for document version 2 |\n| PDF content hasn't been processed: document is broken or locked | Processing errors: Failed to process document content | Document converter service can’t process PDF. This may be caused by locked PDF or if it’s broken. |\n| Error occurred while parsing PDF field tags. Please try PDF flattening or reach out to support | Processing errors: Field tag / Form field validation error | Doc converter managed to parse PDF and extract tags, but at least 1 of them is invalid (having negative position, for example). Usually we recommend PDF flattening and it helps |\n| No role='{role}' for field tag specified in `recipients` found, roles passed were {roles} | Validation errors: Field tags | Role is invalid. When the role specified in field tag is empty or wasn’t provided in a payload for any recipient |\n| All field tags within PDF must be declared within `fields`\_ object of the JSON Payload. No field with optId='{optid}' found in fields object, fields passed were {optids} | Validation errors: Field tags | Label is invalid. Occurs when **optId** specified in field tag is empty or no field with **name = optId** was provided in a payload |\n| One of field tags in PDF with type='{field}' doesn't have a role | Validation errors: Field tags | Field tag in PDF has no role. One of field tags in PDF with type=% doesn't have a role. |\n| Role for form field with name='{role}' is not provided in payload | Validation errors: Form fields | Role for form field with ‘name’ is not provided. Occurs when `role` for form field with name=%s\_ is not provided in payload |\n| Field for form field with name='{name}' is not specified in payload, available names are {names} | Validation errors: Form fields | Field ‘name’ is not specified in payload. Occurs when no field with name = form field name was provided in a payload |\n| No role='{role}' for form field specified in 'recipients' found, roles passed were {roles}\" | Validation errors: Form fields | Failed to resolve field actor for `role` in form field with ‘name’.\_ \_Occurs when role from the form field is not found in recipient’s from payload |\n| Failed to download file from link {url}. | Source errors | Error on attempt to download file.\_  An error has occurred on an attempt to download file using the provided ‘url’ in payload |\n| Failed to download file from link {url} (status code: {status code}) | Source errors | Error with HTTP status code on attempt to download file.\_  An error has occurred on an attempt to download file using the provided ‘url’ in payload - remote server responded with the HTTP status code |\n| Content type='{type}' is not supported, available types are {types} | Source errors | Content type is not supported.\_  Content type should be one of the following: PDF, ZIP, doc, docx, RTF |\n| The maximum file size is exceeded, limit is {limit} MB | Source errors | The file size has exceeded the allowed limits. An error occurred while trying to download a file that is too large (limit is 50M) |\n"
       parameters:
         - name: document_id
           description: Document ID
@@ -4333,93 +5302,7 @@ paths:
               - upload
       requestBody:
         required: true
-        description: |
-          Use a PandaDoc template or an existing PDF to upload a section.
-          See the creation request examples [by template](/schemas/UploadSectionByTemplateRequest)
-          and [by pdf](/schemas/UploadSectionByPdfRequest)
         content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UploadSectionRequest'
-            examples:
-              Full API Sample:
-                summary: Full API Sample Upload Section from PandaDoc Template
-                value:
-                  template_uuid: hryJY9mqYZHjQCYQuSjRQg
-                  recipients:
-                    - email: josh@example.com
-                      first_name: Josh
-                      last_name: Ron
-                      role: user
-                  fields:
-                    Favorite.Color:
-                      value: PandaDoc green
-                    Delivery:
-                      value: Same Day Delivery
-                    Like:
-                      value: true
-                    Date:
-                      value: '2019-12-31T00:00:00.000Z'
-                  pricing_tables:
-                    - name: Pricing Table 1
-                      data_merge: true
-                      options:
-                        Tax:
-                          type: percent
-                          name: Tax
-                          value: 10
-                      sections:
-                        - title: Sample Section
-                          default: true
-                          rows:
-                            - options:
-                                optional: true
-                                optional_selected: true
-                                qty_editable: true
-                              data:
-                                Name: Toy Panda
-                                Description: Fluffy!
-                                Price: 10
-                                QTY: 3
-                                Tax:
-                                  value: 20
-                                  type: percent
-                              custom_fields:
-                                Fluffiness: 5 / 5
-                  content_placeholders:
-                    - block_id: '{block_id}'
-                      content_library_items:
-                        - id: '{cli_id}'
-                          pricing_tables:
-                            - name: Pricing Table 1
-                              data_merge: false
-                              options:
-                                discount:
-                                  type: absolute
-                                  name: Discount
-                                  value: 2.26
-                              sections:
-                                - title: Sample Section
-                                  default: true
-                                  rows:
-                                    - options:
-                                        optional: true
-                                        optional_selected: true
-                                        qty_editable: true
-                                      data:
-                                        name: Placeholder Panda
-                                        price: 10
-                                        qty: 3
-                        - id: '{cli_id_2}'
-                          recipients:
-                            - email: john@example.com
-                              first_name: John
-                              last_name: Roe
-                              role: Signer
-                              signing_order: 2
-                          fields:
-                            Date:
-                              value: '2019-12-31T00:00:00.000Z'
           multipart/form-data:
             schema:
               type: object
@@ -4427,17 +5310,28 @@ paths:
                 file:
                   type: string
                   format: binary
-                  description: Binary PDF File
+                  description: Binary PDF/DocX/RTF File.
                 data:
-                  type: object
-                  description: JSON as a multipart/form-data string.
+                  allOf:
+                    - $ref: '#/components/schemas/UploadSectionRequest'
+                    - description: JSON as a multipart/form-data string.
       responses:
         '201':
           description: OK
           content:
-            application/json:
+            multipart/form-data:
               schema:
                 $ref: '#/components/schemas/UploadSectionResponse'
+              examples:
+                Create Document Section from File Upload:
+                  value:
+                    uuid: HiNXiDJazzufdxErSr5w6n
+                    name: My Section
+                    document_uuid: Gpzd2nXgFjCSЖzhTucci2E
+                    status: document_sections_upload.UPLOADED
+                    date_created: '2024-07-15T08:14:33.050351Z'
+                    date_modified: '2024-07-15T08:14:33.050351Z'
+                    info_message: You need to poll the Document Sections Upload Status method until the status will be changed to document_sections_upload.PROCESSED
         '400':
           $ref: '#/components/responses/400ValidationError'
         '401':
@@ -4480,35 +5374,6 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
-        '429':
-          $ref: '#/components/responses/429'
-  '/public/v1/documents/{document_id}/sections':
-    get:
-      tags:
-        - Sections
-      summary: List sections
-      operationId: listSections
-      parameters:
-        - name: document_id
-          description: Document ID
-          in: path
-          schema:
-            type: string
-          required: true
-          example: BhVzRcxH9Z2LgfPPGXFUBa
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UploadSectionListResponse'
-        '400':
-          $ref: '#/components/responses/400RequestError'
-        '401':
-          $ref: '#/components/responses/401'
-        '403':
-          $ref: '#/components/responses/403'
         '429':
           $ref: '#/components/responses/429'
   '/public/v1/documents/{document_id}/sections/{section_id}':
@@ -5044,6 +5909,78 @@ paths:
           $ref: '#/components/responses/403'
         '429':
           $ref: '#/components/responses/429'
+  /public/v1/sms-opt-outs:
+    get:
+      summary: Recent SMS Opt-out
+      operationId: listRecentSmsOptOuts
+      description: "Retrieves a list of the most recent SMS opt-out changes for each phone numbers used in your workspace.\n\n> \U0001F4D8 You can filter results by time range using `timestamp_from` and `timestamp_to`.\n"
+      tags:
+        - Communication Preferences
+      parameters:
+        - name: timestamp_from
+          in: query
+          description: |
+            The start of the timestamp. 
+
+            If no timestamp is provided, 1 hour before the current time will be used.
+          schema:
+            type: string
+            format: date-time
+            example: '2025-01-28T00:00:00Z'
+        - name: timestamp_to
+          in: query
+          description: |
+            The end of the timestamp range. 
+
+            If no timestamp is provided the current time will be used.
+          schema:
+            type: string
+            format: date-time
+            example: '2025-01-28T23:59:59Z'
+      responses:
+        '200':
+          description: 'A list of phone numbers, their SMS current opt-out statuses and timestamp of the last change.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        phone_number:
+                          type: string
+                          example: '+1234567890'
+                        status:
+                          type: string
+                          enum:
+                            - opt-in
+                            - opt-out
+                          example: opt-out
+                        opt_out_changed:
+                          type: string
+                          format: date-time
+                          example: '2025-01-28T12:00:00Z'
+              examples:
+                List SMS Opt-out Changelog:
+                  value:
+                    phone_numbers:
+                      - phone_number: '+1234567890'
+                        opt_out: true
+                        timestamp: '2025-01-28T12:00:00Z'
+                      - phone_number: '+1234567891'
+                        opt_out: false
+                        timestamp: '2025-01-28T12:00:00Z'
+        '400':
+          $ref: '#/components/responses/400RequestError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '429':
+          $ref: '#/components/responses/429'
 components:
   schemas:
     OAuth2CreateAccessTokenRequest:
@@ -5156,9 +6093,7 @@ components:
                 example: '2'
     DocumentCreateByTemplateRequest:
       allOf:
-        - $ref: '#/components/schemas/DocumentCreateByPdfRequest/allOf/0'
         - type: object
-          title: DocumentCreateByTemplateRequest
           properties:
             detect_title_variables:
               type: boolean
@@ -5183,6 +6118,7 @@ components:
               description: You can pass a list of images to image blocks (one image in one block) for replacement.
               items:
                 type: object
+                nullable: true
                 properties:
                   urls:
                     type: array
@@ -5219,7 +6155,8 @@ components:
                       properties:
                         id:
                           type: string
-                          example: 9d9k7VtSQ5KCXfsUQv4GxE
+                          description: Content library item id
+                          example: hryJY9mqYZHjQCYQuSjRQg
                         fields:
                           type: object
                         pricing_tables:
@@ -5260,14 +6197,32 @@ components:
                         - id
                   block_id:
                     type: string
+                    description: Content placeholder block id
                     example: Content Placeholder 1
                 required:
                   - block_id
           required:
             - template_uuid
             - recipients
+        - $ref: '#/components/schemas/DocumentCreateByPdfRequest/allOf/1'
     DocumentCreateByPdfRequest:
       allOf:
+        - type: object
+          properties:
+            parse_form_fields:
+              type: boolean
+              description: Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags.
+            fields:
+              type: object
+              description: |
+                If you are creating a document from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are creating a document from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: "value": "".
+              example:
+                Like:
+                  value: true
+                Delivery:
+                  value: Same Day Delivery
+                Date:
+                  value: '2019-12-31T00:00:00.000Z'
         - type: object
           properties:
             name:
@@ -5328,35 +6283,11 @@ components:
                 - created_via_api
                 - test_document
                 - created_from_source
-        - type: object
-          title: DocumentCreateByPDFRequest
-          properties:
-            url:
-              type: string
-              example: 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
-              description: Use a URL to specify the PDF. We support only URLs starting with https.
-            parse_form_fields:
-              type: boolean
-              description: Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags.
-            fields:
-              type: object
-              description: |
-                If you are creating a document from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are creating a document from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: "value": "".
-              example:
-                Like:
-                  value: true
-                Delivery:
-                  value: Same Day Delivery
-                Date:
-                  value: '2019-12-31T00:00:00.000Z'
-          required:
-            - url
-            - recipients
     DocumentCreateRequest:
       oneOf:
         - allOf:
             - type: object
-              title: DocumentCreateRequestFromPandaDocTemplate
+              title: From PandaDoc Template
               description: Use a PandaDoc template to create a document.
               properties:
                 template_uuid:
@@ -5365,134 +6296,10 @@ components:
                   example: hryJY9mqYZHjQCYQuSjRQg
               required:
                 - template_uuid
-            - $ref: '#/components/schemas/DocumentCreateByPdfRequest/allOf/0'
-            - type: object
-              properties:
-                detect_title_variables:
-                  type: boolean
-                  description: Set this parameter as true if you want to detect title variables in the document.
-                fields:
-                  type: object
-                  additionalProperties:
-                    type: object
-                    properties:
-                      value:
-                        type: string
-                        example: some value
-                      role:
-                        type: string
-                      required:
-                        type: boolean
-                    required:
-                      - value
-                      - role
-                  nullable: true
-                  description: You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled. The key of the object is the field name.
-                  example:
-                    Like:
-                      value: 'true'
-                      role: Client
-                    Delivery:
-                      value: Same Dav Delivery
-                      role: Sender
-                    Favorite.Color:
-                      value: PandaDoc green
-                      role: Client
-                    Date:
-                      value: '2019-12-31T00:00:00.000Z'
-                      role: Client
-                images:
-                  type: array
-                  description: You can pass a list of images to image blocks (one image in one block) for replacement.
-                  items:
-                    type: object
-                    nullable: true
-                    properties:
-                      urls:
-                        type: array
-                        items:
-                          type: string
-                        example:
-                          - 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
-                      name:
-                        type: string
-                        example: Image 1
-                    required:
-                      - urls
-                      - name
-                pricing_tables:
-                  type: array
-                  description: 'Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.'
-                  items:
-                    $ref: '#/components/schemas/PricingTableRequest'
-                tables:
-                  type: array
-                  description: 'Information to construct or populate a table can be passed when creating a document. Keep in mind that this is an array, so multiple table objects can be passed to a document.'
-                  items:
-                    $ref: '#/components/schemas/TableRequest'
-                content_placeholders:
-                  type: array
-                  description: 'You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.'
-                  items:
-                    type: object
-                    properties:
-                      block_id:
-                        type: string
-                        description: Content placeholder block id
-                        example: Content Placeholder 1
-                      content_library_items:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                              description: Content library item id
-                              example: hryJY9mqYZHjQCYQuSjRQg
-                            pricing_tables:
-                              type: array
-                              items:
-                                $ref: '#/components/schemas/PricingTableRequest'
-                            fields:
-                              type: object
-                            recipients:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  email:
-                                    type: string
-                                    nullable: true
-                                    example: josh@example.com
-                                  phone:
-                                    type: string
-                                    nullable: true
-                                    example: '+14842634627'
-                                  delivery_methods:
-                                    $ref: '#/components/schemas/RecipientDeliveryMethods'
-                                  first_name:
-                                    type: string
-                                    example: Josh
-                                  last_name:
-                                    type: string
-                                    example: Ron
-                                  role:
-                                    type: string
-                                    example: user
-                                  signing_order:
-                                    type: integer
-                                    example: 1
-                                    nullable: true
-                                  redirect:
-                                    $ref: '#/components/schemas/RecipientRedirect'
-                          required:
-                            - id
-                parse_form_fields:
-                  type: boolean
-                  description: Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags.
+            - $ref: '#/components/schemas/DocumentCreateByTemplateRequest'
         - allOf:
             - type: object
-              title: DocumentCreateRequestFromFileByUrl
+              title: From File By Url
               description: Use a URL to create a document.
               properties:
                 url:
@@ -5501,8 +6308,7 @@ components:
                   description: Use a URL to specify the PDF. We support only URLs starting with https.
               required:
                 - url
-            - $ref: '#/components/schemas/DocumentCreateByPdfRequest/allOf/0'
-            - $ref: '#/components/schemas/DocumentCreateRequest/oneOf/0/allOf/2'
+            - $ref: '#/components/schemas/DocumentCreateByPdfRequest'
     DocumentCreateResponse:
       type: object
       properties:
@@ -5643,6 +6449,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TableRequest'
+        images:
+          type: array
+          description: You can pass a list of images to image blocks (one image in one block) for replacement.
+          items:
+            type: object
+            properties:
+              urls:
+                type: array
+                items:
+                  type: string
+                example:
+                  - 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
+              name:
+                type: string
+                example: Image 1
+            required:
+              - urls
+              - name
     DocumentStatusChangeRequest:
       type: object
       properties:
@@ -7890,25 +8714,32 @@ components:
             role:
               type: string
               example: user
+              description: A recipient's role in the document from the template. A recipient will be added in CC if a role parameter is not provided.
             signing_order:
               type: integer
               example: 1
+              description: |
+                Set a signing order for a recipient. Learn more: https://developers.pandadoc.com/docs/set-signing-order
         - type: object
           properties:
             email:
               type: string
               nullable: true
               example: josh@example.com
+              description: A recipient's email address.
             phone:
               type: string
               nullable: true
               example: '+14842634627'
+              description: A recipient's phone number.
             first_name:
               type: string
               example: Josh
+              description: A recipient's first name. We automatically take the first name from contact data if this field is missed.
             last_name:
               type: string
               example: Ron
+              description: A recipient's last name. We automatically take the last name from contact data if this field is missed.
         - type: object
           properties:
             delivery_methods:
@@ -8320,20 +9151,28 @@ components:
         name:
           type: string
           nullable: false
+          description: Set a name for the Webhooks subscription.
           example: My Subscription
         url:
           type: string
           format: url
           nullable: false
+          description: Set the Webhooks subscription URL.
           example: 'https://example.com'
+        active:
+          type: boolean
+          default: true
+          description: Set the status of the Webhooks subscription.
         payload:
           type: array
           nullable: true
+          description: Set a payload structure.
           items:
             $ref: '#/components/schemas/WebhookSubscriptionPayloadEnum'
         triggers:
           type: array
           nullable: true
+          description: Set trigger events for the Webhooks subscription.
           items:
             $ref: '#/components/schemas/WebhookSubscriptionTriggerEnum'
       required:
@@ -8346,24 +9185,29 @@ components:
         name:
           type: string
           nullable: false
+          description: Set a new name for the Webhooks subscription.
           example: My Subscription
         url:
           type: string
           format: url
           nullable: false
+          description: Set the new Webhooks subscription URL.
           example: 'https://example.com'
         active:
           type: boolean
           nullable: false
           default: true
+          description: Set the status of the Webhooks subscription.
           example: true
         payload:
           type: array
           nullable: true
+          description: Set a new payload structure.
           items:
             $ref: '#/components/schemas/WebhookSubscriptionPayloadEnum'
         triggers:
           type: array
+          description: Set trigger events for the Webhooks subscription.
           nullable: true
           items:
             $ref: '#/components/schemas/WebhookSubscriptionTriggerEnum'
@@ -8663,53 +9507,18 @@ components:
                 type: string
                 example: 'https://notarize.pandadoc.com/session-request#/?requestId=f75e053a-25e8-40be-8681-fd755ade2a2b&inviteeId=2fbb4cbf-d461-4421-94cf-eaadcb9627e0'
     UploadSectionByPdfRequest:
-      allOf:
-        - $ref: '#/components/schemas/UploadSectionRequest/allOf/0'
-        - type: object
-          properties:
-            url:
-              type: string
-              example: 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
-              description: Use a URL to specify the PDF. We support only URLs starting with https.
-            parse_form_fields:
-              type: boolean
-              description: Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags.
-            fields:
-              type: object
-              description: |
-                If you are upload a section from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are upload a section from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: "value": "".
-              example:
-                Like:
-                  value: true
-                Delivery:
-                  value: Same Day Delivery
-                Date:
-                  value: '2019-12-31T00:00:00.000Z'
-          required:
-            - url
-            - recipients
+      $ref: '#/components/schemas/UploadSectionRequest'
     UploadSectionByTemplateRequest:
       allOf:
-        - $ref: '#/components/schemas/UploadSectionRequest/allOf/0'
         - type: object
           properties:
             template_uuid:
               type: string
               description: 'The ID of a template you want to use. You can copy it from an in app template url such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.'
               example: hryJY9mqYZHjQCYQuSjRQg
-            fields:
-              type: object
-              description: You can pass a list of fields/values to pre-fill fields used in a template. Note that the Signature field can't be pre-filled.
-              example:
-                Like:
-                  value: 'true'
-                Delivery:
-                  value: Same Day Delivery
-                Date:
-                  value: '2019-12-31T00:00:00.000Z'
             pricing_tables:
               type: array
-              description: 'Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document. Make sure that "Automatically add products to this table" is enabled in the PandaDoc template pricing tables you wish to populate via API.'
+              description: 'Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document. Make sure that "Automatically add products to this table" is enabled in the PandaDoc template pricing tables you wish to populate via API. Each pricing table must have a unique name to populate it with data correctly.'
               items:
                 $ref: '#/components/schemas/PricingTableRequest'
             content_placeholders:
@@ -8769,11 +9578,39 @@ components:
                     example: Content Placeholder 1
                 required:
                   - block_id
+            fields:
+              type: object
+              description: 'You can pass a list of fields/values to pre-fill fields used in a template. Note that the Signature field can''t be pre-filled. Field values with the same merge id will override field values of the whole document by default, unless you set the merge_field_scope=upload query parameter.'
+              example:
+                Like:
+                  value: 'true'
+                Delivery:
+                  value: Same Day Delivery
+                Date:
+                  value: '2019-12-31T00:00:00.000Z'
           required:
             - template_uuid
-            - recipients
+        - $ref: '#/components/schemas/UploadSectionRequest/allOf/1'
     UploadSectionRequest:
       allOf:
+        - type: object
+          properties:
+            parse_form_fields:
+              type: boolean
+              description: Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags.
+            fields:
+              type: object
+              description: |
+                If you are upload a section from a PDF with field tags, you can pass a list of the fields you'd like to pre-fill in the document. If you are upload a section from a PDF with form fields, list all the fields and provide the `role` parameter so that the fields are assigned to document recipients. You can provide empty value for the field so that it's not pre-filled: "value": "". Please note Signature field can't be pre-filled.
+              example:
+                Like:
+                  value: true
+                Delivery:
+                  value: Same Day Delivery
+                Date:
+                  value: '2019-12-31T00:00:00.000Z'
+          required:
+            - recipients
         - type: object
           properties:
             name:
@@ -8787,7 +9624,8 @@ components:
                 $ref: '#/components/schemas/CreateDocumentActor'
             tokens:
               type: array
-              description: You can pass a list of tokens/values to pre-fill tokens used in a template. Name is a token name in a template. Value is a real value you would like to replace a token with.
+              description: |
+                You may pass a list of tokens/values to pre-fill tokens (variables) used in a template. Name is a token (variable) name in a template. Value is a real value you would like to replace a token (variable) with.
               items:
                 type: object
                 properties:
@@ -8809,94 +9647,8 @@ components:
                 - created_via_api
                 - test_document
                 - created_from_source
-        - type: object
-          properties:
-            template_uuid:
-              type: string
-              description: 'ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.'
-              example: hryJY9mqYZHjQCYQuSjRQg
-            fields:
-              type: object
-              nullable: true
-              description: You can pass a list of fields/values to pre-fill fields used in a template. Please note Signature field can't be pre-filled.
-              example:
-                Like:
-                  value: 'true'
-                Delivery:
-                  value: Same Dav Delivery
-                Favorite.Color:
-                  value: PandaDoc green
-                Date:
-                  value: '2019-12-31T00:00:00.000Z'
-            pricing_tables:
-              type: array
-              description: 'Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document.'
-              items:
-                $ref: '#/components/schemas/PricingTableRequest'
-            content_placeholders:
-              type: array
-              description: 'You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.'
-              items:
-                type: object
-                properties:
-                  block_id:
-                    type: string
-                    description: Content placeholder block id
-                    example: Content Placeholder 1
-                  content_library_items:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          description: Content library item id
-                          example: hryJY9mqYZHjQCYQuSjRQg
-                        pricing_tables:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/PricingTableRequest'
-                        fields:
-                          type: object
-                        recipients:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              email:
-                                type: string
-                                nullable: true
-                                example: josh@example.com
-                              phone:
-                                type: string
-                                nullable: true
-                                example: '+14842634627'
-                              delivery_methods:
-                                $ref: '#/components/schemas/RecipientDeliveryMethods'
-                              first_name:
-                                type: string
-                                example: Josh
-                              last_name:
-                                type: string
-                                example: Ron
-                              role:
-                                type: string
-                                example: user
-                              signing_order:
-                                type: integer
-                                example: 1
-                                nullable: true
-                              redirect:
-                                $ref: '#/components/schemas/RecipientRedirect'
-                      required:
-                        - id
-            url:
-              type: string
-              example: 'https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png'
-              description: Use a URL to specify the PDF. We support only URLs starting with https.
-            parse_form_fields:
-              type: boolean
-              description: Set this parameter as true if you create a document from a PDF with form fields and as false if you upload a PDF with field tags.
+          required:
+            - recipients
     UploadSectionListResponse:
       type: object
       properties:
@@ -8925,13 +9677,6 @@ components:
           example: cKbJ7uay3cEGtsKuGPwYGX
         status:
           $ref: '#/components/schemas/UploadSectionStatusEnum'
-        sections_uuids:
-          type: array
-          items:
-            type: string
-          example:
-            - cKbJ7uay3cEGtsKuGPwYGX
-            - jzjCfYgKQYm2u9ctwN6io4
         date_created:
           type: string
           example: '2021-10-08T11:06:32.337395Z'
@@ -9009,18 +9754,20 @@ components:
       nullable: true
       properties:
         verification_place:
-          description: Verification place
+          description: Place when a recipient must enter the verification passcode.
           type: string
           enum:
             - before_open
             - before_sign
         passcode_verification:
           type: object
+          description: A passcode.
           properties:
             passcode:
               type: string
               pattern: '^(?=(?:.*[a-zA-Z]){1,})(?=(?:.*[0-9]){1,})^[\S]{6,100}$'
               example: SimpleCode1
+              description: Document passcode.
           required:
             - passcode
         phone_verification:
@@ -9030,6 +9777,7 @@ components:
               type: string
               pattern: '^\+[1-9]\d{0,4}\d{2,14}$'
               example: '+1234567890'
+              description: A phone number to send a passcode to.
           required:
             - phone_number
         kba_verification:
@@ -9816,7 +10564,7 @@ components:
           example: EE8yUNg5HztqVAuH85He8V
         owner:
           type: object
-          description: You can set an owner of a template as an `email` or `membership_id`
+          description: You can set an owner of a template as an `email` or `membership_id`.
           properties:
             membership_id:
               type: string
