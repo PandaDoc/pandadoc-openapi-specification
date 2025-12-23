@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "6.6.0"
+    "version": "6.7.0"
   },
   "servers": [
     {
@@ -6042,6 +6042,75 @@
           },
           "403": {
             "$ref": "#/components/responses/403"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/workspaces/{workspace_id}/deactivate": {
+      "post": {
+        "tags": [
+          "User and Workspace management"
+        ],
+        "summary": "Deactivate workspace",
+        "description": "This endpoint deactivates one of your workspaces, removing all the memberships and making it  unavailable for further work, like it had never exist.",
+        "operationId": "deactivateWorkspace",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "examples": {
+              "Deactivate workspace": {
+                "value": "BhVzRcxH9Z2LgfPPGXFUBa"
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "examples": {
+                "Deactivate workspace": {
+                  "value": {}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workspace was deactivated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "Deactivate workspace": {
+                    "value": {}
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           },
           "429": {
             "$ref": "#/components/responses/429"
