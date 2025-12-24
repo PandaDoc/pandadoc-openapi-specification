@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.5.0"
+    "version": "7.6.0"
   },
   "servers": [
     {
@@ -1395,6 +1395,8 @@
                         }
                       ],
                       "pricing": {},
+                      "tables": [],
+                      "images": [],
                       "tags": [
                         "tag1"
                       ],
@@ -1482,6 +1484,8 @@
                       },
                       "tokens": [],
                       "fields": [],
+                      "tables": [],
+                      "images": [],
                       "pricing": {},
                       "tags": [],
                       "status": "document.draft",
@@ -1498,7 +1502,7 @@
                     "value": {
                       "id": "7kqXgjFejB2toXxjcC5jfZ",
                       "name": "API Sample Document from PandaDoc Template",
-                      "autonumbering_sequence_name_prefix": {},
+                      "autonumbering_sequence_name_prefix": null,
                       "date_created": "2021-10-23T21:07:04.147Z",
                       "date_modified": "2021-10-23T21:07:04.147Z",
                       "date_completed": "2021-10-23T21:07:04.147Z",
@@ -1842,6 +1846,16 @@
                         ],
                         "total": "11500"
                       },
+                      "tables": [
+                        {
+                          "name": "Table 1"
+                        }
+                      ],
+                      "images": [
+                        {
+                          "name": "Image 1"
+                        }
+                      ],
                       "version": "2",
                       "tags": [
                         "tag1",
@@ -3578,6 +3592,65 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/documents/{id}/append-content-library-item": {
+      "post": {
+        "tags": [
+          "Documents",
+          "Content Library Items"
+        ],
+        "summary": "Append Content Library Item to a document",
+        "operationId": "appendContentLibraryItemToDocument",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Specify document id.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppendCLIDataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppendCLIDataResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -7500,7 +7573,7 @@
         ],
         "summary": "Create Notarization Request",
         "operationId": "createNotarizationRequest",
-        "description": "Use this endpoint to connect with a notary, ready to complete online notarizations for your signers within minutes.\n\n> 🚧 Before you start\n> \n> Ensure the following before creating a notarization request:\n> \n> - Install the Notary On-Demand add-on.\n> - Activate a user, typically the org admin, with an API key in the Notary app. For activation, direct them to visit <https://notarize.pandadoc.com>.\n> - Create a document for notarization and get its `document_id`. To create a document, use the [Create Document from Template](https://developers.pandadoc.com/reference/create-document-from-pandadoc-template) or [Create Document from File Upload](https://developers.pandadoc.com/reference/create-document-from-pdf) endpoint.\n\nFor the notarization request, include in the request body:\n\n- `document_id`\n- At least one `invitees`, specifying their `email`, `first_name`, and `last_name`.\n- Optionally, include a `message` for your signers.\n\nAfter the API call is executed, your signers will receive an email invitation for notarization. Alternatively, you can directly share the `notarization_link` with your signers, which is available in the 201 response body.\n\nUpon successful notarization, you will receive an email with a link to the notarized document.\n\n> 📘 Tips\n> \n> - Ensure that signers are added as both invitees in the request body and recipients in the document to avoid inconveniences during notary sessions.\n> - Signers will receive an email with a notary link upon a successful API call; this link is also in the 201 response.\n> - Use the link to connect with commissioned online notaries, available Mon-Fri, 9 AM - 9 PM Central Time, typically responding within 2 minutes.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n\n## Solutions for 4xx Response Codes\n\n- **403 Forbidden (Inactive Add-on)**: Ensure the Notary On-Demand add-on is installed.\n- **403 Forbidden (Transactions Limit)**: Purchase additional transactions either through the Notary UI or by contacting the Sales team.\n- **403 Forbidden (User Not Activated)**: Activate a user, typically the org admin, with an API key in the Notary app. For activation, direct them to visit <https://notarize.pandadoc.com>.\n- **429 Too Many Requests:** If you hit the limit, hold your API calls, then send them after waiting for the retry time.\n\nTo learn more about PandaDoc Notary On-Demand, visit our [website](https://notary.pandadoc.com/notary-on-demand/).\n",
+        "description": "Use this endpoint to connect with a notary, ready to complete online notarizations for your signers within minutes.\n\n> 🚧 Before you start\n> \n> Ensure the following before creating a notarization request:\n> \n> - Install the Notary On-Demand add-on.\n> - Create a document for notarization and get its `document_id`. To create a document, use the [Create Document from Template](https://developers.pandadoc.com/reference/create-document-from-pandadoc-template) or [Create Document from File Upload](https://developers.pandadoc.com/reference/create-document-from-pdf) endpoint.\n\nFor the notarization request, include in the request body:\n\n- `document_id`\n- At least one `invitees`, specifying their `email`, `first_name`, and `last_name`.\n- Optionally, include a `message` for your signers.\n\nAfter the API call is executed, your signers will receive an email invitation for notarization. Alternatively, you can directly share the `notarization_link` with your signers, which is available in the 201 response body.\n\nUpon successful notarization, you will receive an email with a link to the notarized document.\n\n> 📘 Tips\n> \n> - Ensure that signers are added as both invitees in the request body and recipients in the document to avoid inconveniences during notary sessions.\n> - Signers will receive an email with a notary link upon a successful API call; this link is also in the 201 response.\n> - Use the link to connect with commissioned online notaries, available Mon-Fri, 9 AM - 9 PM Central Time, typically responding within 2 minutes.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n\n## Solutions for 4xx Response Codes\n\n- **403 Forbidden (Inactive Add-on)**: Ensure the Notary On-Demand add-on is installed.\n- **403 Forbidden (Transactions Limit)**: Purchase additional transactions either through the Notary UI or by contacting the Sales team.\n- **429 Too Many Requests:** If you hit the limit, hold your API calls, then send them after waiting for the retry time.\n\nTo learn more about PandaDoc Notary On-Demand, visit our [website](https://notary.pandadoc.com/notary-on-demand/).\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -7580,7 +7653,7 @@
         ],
         "summary": "Notarization Request Details",
         "operationId": "notarizationRequestDetails",
-        "description": "Get details about a notarization request by its `id`.\n\nDetails include:\n\n- Basic notarization request information (status, creator, invitees).\n- Signed documents information with links for downloading.\n- Timestamps associated with a notarization request.\n\n## Available Notarization Request Statuses\n\nThe following is a complete list of all possible notarization request statuses returned:\n\n| Notarization Request Status | Status Description                                                                                                 |\n| :-------------------------- | :----------------------------------------------------------------------------------------------------------------- |\n| SENT                        | Notarization request has been created. Invitees are notified and can start the process of finding a notary.        |\n| WAITING_FOR_NOTARY          | One of the invitees initialised the process of finding a notary.                                                   |\n| ACCEPTED                    | Notarization request has been accepted by the notary. At this time nobody has joined the notarization session yet. |\n| LIVE                        | Notarization session has started.                                                                                  |\n| COMPLETED                   | Notarization session is finished. Documents have been successfully signed and ready for downloading.               |\n| CANCELLED                   | Notarization request has been cancelled by the creator.                                                            |\n\n## Signed documents\n\nSigned documents are the documents that were successfully signed during the notarization session. The signed document's info is available only if the notarization request has `COMPLETED` status, otherwise the returned list will be empty.  \n\nIn case you uploaded several documents for notarization then the `signed_documents` list will contain links for downloading for each document separately (with `SINGLE` document type) and link for the combined document (with `COMBINED` document type accordingly).\n\n> 📘 Document link expires in 1 hour\n> \n> **Note**: The signed document link expires in 1 hour. After this time it will be not possible to download documents using the returned url. In this case you need to call endpoint again since each request generates a new link.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n",
+        "description": "Get details about a notarization request by its `id`.\n\nDetails include:\n\n- Basic notarization request information (status, creator, invitees).\n- Signed documents information with links for downloading.\n- Notarization session recording information with link for downloading.\n- Timestamps associated with a notarization request.\n\n## Available Notarization Request Statuses\n\nThe following is a complete list of all possible notarization request statuses returned:\n\n| Notarization Request Status | Status Description                                                                                                 |\n| :-------------------------- | :----------------------------------------------------------------------------------------------------------------- |\n| SENT                        | Notarization request has been created. Invitees are notified and can start the process of finding a notary.        |\n| WAITING_FOR_NOTARY          | One of the invitees initialised the process of finding a notary.                                                   |\n| ACCEPTED                    | Notarization request has been accepted by the notary. At this time nobody has joined the notarization session yet. |\n| LIVE                        | Notarization session has started.                                                                                  |\n| COMPLETED                   | Notarization session is finished. Documents have been successfully signed and ready for downloading.               |\n| CANCELLED                   | Notarization request has been cancelled by the creator.                                                            |\n\n## Signed documents\n\nSigned documents are the documents that were successfully signed during the notarization session. The signed document's info is available only if the notarization request has `COMPLETED` status, otherwise the returned list will be empty.  \n\nIn case you uploaded several documents for notarization then the `signed_documents` list will contain links for downloading for each document separately (with `SINGLE` document type) and link for the combined document (with `COMBINED` document type accordingly).\n\n## Recording\n\nRecording is the video of the notarization session. The recording info is available only if the notarization request has `COMPLETED` status and recording is available, otherwise the returned object will be empty.\n\n> 📘 Links expire in 1 hour\n> \n> **Note**: The signed document and recording links expire in 1 hour. After this time it will be not possible to download files using the returned urls. In this case you need to call endpoint again since each request generates a new link.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n",
         "parameters": [
           {
             "name": "session_request_id",
@@ -7602,10 +7675,14 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "A unique identifier of the notarization request.",
+                      "example": "0b2256a2-5803-4ae9-b1b8-595f48e37173"
                     },
                     "status": {
                       "type": "string",
+                      "description": "Current status of the notarization request.",
+                      "example": "SENT",
                       "enum": [
                         "DRAFT",
                         "SENT",
@@ -7617,34 +7694,53 @@
                         "CANCELLED"
                       ]
                     },
+                    "document_id": {
+                      "type": "string",
+                      "description": "A unique identifier of the document for notarization.",
+                      "example": "D3okRfgHRX7NEhavcACReB"
+                    },
                     "date_created": {
                       "type": "string",
-                      "format": "date-time"
+                      "format": "date-time",
+                      "description": "A date when a notarization request was created.",
+                      "example": "2025-01-13T10:25:53.800367Z"
                     },
                     "date_started": {
                       "type": "string",
                       "format": "date-time",
-                      "nullable": true
+                      "nullable": true,
+                      "description": "A date when a notarization session was started.",
+                      "example": "2025-01-13T10:25:53.800367Z"
                     },
                     "date_completed": {
                       "type": "string",
                       "format": "date-time",
-                      "nullable": true
+                      "nullable": true,
+                      "description": "A date when a notarization session was completed.",
+                      "example": "2025-01-13T10:25:53.800367Z"
                     },
                     "created_by": {
                       "type": "object",
                       "properties": {
                         "userId": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "A unique identifier of the user who created a notarization request.",
+                          "example": "nyAnVpY7pZ23FBve8s9xgk"
                         },
                         "email": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "A user's email address.",
+                          "example": "josh@example.com"
                         },
                         "firstName": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "A user's first name.",
+                          "example": "Josh"
                         },
                         "lastName": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "A user's last name.",
+                          "example": "Ron"
                         }
                       }
                     },
@@ -7654,22 +7750,30 @@
                         "type": "object",
                         "properties": {
                           "id": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "A unique identifier of the invitee.",
+                            "example": "nyAnVpY7pZ23FBve8s9xgk"
                           },
                           "email": {
                             "type": "string",
                             "format": "email",
-                            "maxLength": 255
+                            "maxLength": 255,
+                            "description": "A invitee's email address.",
+                            "example": "josh@example.com"
                           },
                           "first_name": {
                             "type": "string",
                             "maxLength": 50,
-                            "nullable": true
+                            "nullable": true,
+                            "description": "A invitee's first name.",
+                            "example": "Josh"
                           },
                           "last_name": {
                             "type": "string",
                             "maxLength": 50,
-                            "nullable": true
+                            "nullable": true,
+                            "description": "A invitee's last name.",
+                            "example": "Ron"
                           }
                         }
                       }
@@ -7680,21 +7784,47 @@
                         "type": "object",
                         "properties": {
                           "url": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "Secure URL to download signed PDF document."
                           },
                           "document_name": {
-                            "type": "string"
+                            "type": "string",
+                            "description": "A signer document name.",
+                            "example": "example.pdf"
                           },
                           "size": {
-                            "type": "number"
+                            "type": "number",
+                            "description": "A signer document size in bytes.",
+                            "example": "523107"
                           },
                           "document_type": {
                             "type": "string",
+                            "description": "A type of the signed document.",
+                            "example": "SINGLE",
                             "enum": [
                               "COMBINED",
                               "SINGLE"
                             ]
                           }
+                        }
+                      }
+                    },
+                    "recording": {
+                      "type": "object",
+                      "nullable": true,
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "Secure URL to download video recording of the notarization session."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the video recording file."
+                        },
+                        "size": {
+                          "type": "number",
+                          "description": "Size of the video recording file in bytes.",
+                          "example": 5242880
                         }
                       }
                     }
@@ -7705,6 +7835,7 @@
                     "value": {
                       "id": "string",
                       "status": "COMPLETED",
+                      "document_id": "D3okRfgHRX7NEhavcACReB",
                       "date_created": "2024-01-25T15:07:10.845Z",
                       "date_started": "2024-01-25T15:07:10.845Z",
                       "date_completed": "2024-01-25T15:07:10.845Z",
@@ -7741,7 +7872,12 @@
                           "size": 100,
                           "document_type": "SINGLE"
                         }
-                      ]
+                      ],
+                      "recording": {
+                        "url": "string",
+                        "name": "string",
+                        "size": 5242880
+                      }
                     }
                   }
                 }
@@ -10556,64 +10692,79 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "Document ID.",
             "example": "7kqXgjFejB2toXxjcC5jfZ"
           },
           "name": {
             "type": "string",
+            "description": "Document name.",
             "example": "API Sample Document from PandaDoc Template"
           },
           "autonumbering_sequence_name_prefix": {},
           "date_created": {
             "type": "string",
+            "description": "Document creation date.",
             "example": "2021-10-23T21:07:04.147345Z"
           },
           "date_modified": {
             "type": "string",
+            "description": "Document modification date.",
             "example": "2021-10-23T21:07:04.147345Z"
           },
           "date_completed": {
             "type": "string",
+            "description": "Document completion date.",
             "example": "2021-10-23T21:07:04.147345Z",
             "nullable": true
           },
           "content_date_modified": {
             "type": "string",
+            "description": "Document content modification date.",
             "example": "2021-10-23T21:07:04.147345Z"
           },
           "date_sent": {
             "type": "string",
+            "description": "Document sent date.",
             "nullable": true,
             "example": "2021-10-23T21:07:04.147345Z"
           },
           "ref_number": {
             "type": "string",
+            "description": "Document reference number.",
             "example": "MTMJR-FEUQB-ECEWW-3WVZP"
           },
           "created_by": {
             "type": "object",
+            "description": "Document creator details.",
             "properties": {
               "id": {
                 "type": "string",
+                "description": "Creator ID.",
                 "example": "7kqXgjFejB2toXxjcC5jfZ"
               },
               "membership_id": {
                 "type": "string",
+                "description": "Creator membership ID.",
                 "example": "7kqXgjFejB2toXxjcC5jfZ"
               },
               "email": {
                 "type": "string",
+                "description": "Creator email.",
                 "example": "teset@test.test"
               },
               "first_name": {
                 "type": "string",
+                "description": "Creator first name.",
                 "example": "Jhon"
               },
               "last_name": {
                 "type": "string",
+                "description": "Creator last name.",
                 "example": "Dow"
               },
               "avatar": {
                 "type": "string",
+                "description": "Creator avatar URL.",
                 "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg",
                 "nullable": true
               }
@@ -10621,21 +10772,30 @@
           },
           "template": {
             "type": "object",
+            "description": "Document template details.",
             "nullable": true,
             "properties": {
               "id": {
                 "type": "string",
+                "description": "Template ID.",
                 "example": "hryJY9mqYZHjQCYQuSjRQg"
               },
               "name": {
                 "type": "string",
+                "description": "Template name.",
                 "example": "Upload test"
               }
             }
           },
-          "expiration_date": {},
+          "expiration_date": {
+            "type": "string",
+            "description": "Document expiration date.",
+            "example": "2021-10-23T21:07:04.147345Z",
+            "nullable": true
+          },
           "metadata": {
             "type": "object",
+            "description": "Document metadata.",
             "example": {
               "document__created_via_public_api": "true",
               "my_favorite_pet": "Panda",
@@ -10644,6 +10804,7 @@
           },
           "tokens": {
             "type": "array",
+            "description": "Document tokens.",
             "items": {
               "type": "object"
             },
@@ -10660,6 +10821,7 @@
           },
           "fields": {
             "type": "array",
+            "description": "Document fields.",
             "items": {
               "$ref": "#/components/schemas/Field"
             },
@@ -10742,12 +10904,40 @@
           "pricing": {
             "$ref": "#/components/schemas/PricingResponse"
           },
+          "tables": {
+            "type": "array",
+            "description": "Document tables.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Table name."
+                }
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "description": "Document images.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Image name."
+                }
+              }
+            }
+          },
           "version": {
             "type": "string",
+            "description": "Document version.",
             "example": "2"
           },
           "tags": {
             "type": "array",
+            "description": "Document tags.",
             "items": {
               "type": "string"
             },
@@ -10756,12 +10946,14 @@
               "tag2"
             ]
           },
-          "sent_by": {},
+          "sent_by": {
+            "description": "Document sent by."
+          },
           "recipients": {
             "type": "array",
+            "description": "Document recipients.",
             "items": {
               "type": "object",
-              "description": "Actor",
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/DocumentDetailsRecipient"
@@ -10781,36 +10973,44 @@
           },
           "grand_total": {
             "type": "object",
+            "description": "Document grand total.",
             "properties": {
               "amount": {
                 "type": "string",
+                "description": "Total amount.",
                 "example": "29.99"
               },
               "currency": {
                 "type": "string",
+                "description": "Currency type.",
                 "example": "USD"
               }
             }
           },
           "linked_objects": {
             "type": "array",
+            "description": "Document linked objects.",
             "items": {
               "type": "object",
               "properties": {
                 "provider": {
                   "type": "string",
+                  "description": "Linked object provider.",
                   "example": "hubspot"
                 },
                 "entity_type": {
                   "type": "string",
+                  "description": "Linked object entity type.",
                   "example": "deal"
                 },
                 "entity_id": {
                   "type": "string",
+                  "description": "Linked object entity ID.",
                   "example": "18640"
                 },
                 "id": {
                   "type": "string",
+                  "description": "Linked object ID.",
                   "example": "ea88ed1dc8094dd3a57754aa643a1954"
                 }
               }
@@ -10818,6 +11018,7 @@
           },
           "status": {
             "type": "string",
+            "description": "Document status.",
             "example": "document.draft"
           }
         }
@@ -10876,12 +11077,17 @@
           "sender": {
             "type": "object",
             "description": "You can set a sender of a document as an `email` or `membership_id`",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "example": {
-              "membership_id": "QMDSzwabfFzTgjW6KijHyu",
-              "email": "john.doe@example.com"
+            "properties": {
+              "membership_id": {
+                "type": "string",
+                "description": "Membership ID.",
+                "example": "QMDSzwabfFzTgjW6KijHyu"
+              },
+              "email": {
+                "type": "string",
+                "description": "Email.",
+                "example": "john.doe@example.com"
+              }
             }
           },
           "forwarding_settings": {
@@ -11527,6 +11733,86 @@
           "recipient_id": {
             "type": "string",
             "example": "2eWSKSvVqmuVCnuUK3iWwD"
+          }
+        }
+      },
+      "AppendCLIDataRequest": {
+        "type": "object",
+        "properties": {
+          "cli": {
+            "type": "object",
+            "description": "Settings to append a CLI to a document, with ability to change some parameters",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "QYCPtavst3DqqBK72ZRtbF",
+                "description": "CLI ID to append to the first section."
+              },
+              "pages": {
+                "type": "array",
+                "description": "The list of the CLI's pages you want to change in a result document",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "example": 1,
+                      "minimum": 0,
+                      "description": "The index of the CLI's page you want to change in a result document during appending the CLI"
+                    },
+                    "name": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "Page 1",
+                      "description": "The name you want to apply to the CLI's page in a result document during appending the CLI"
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      },
+      "AppendCLIDataResponse": {
+        "type": "object",
+        "properties": {
+          "cli": {
+            "type": "object",
+            "description": "Settings of the appended to a document CLI. Name property can be different from what you passed if there were collisions",
+            "properties": {
+              "uuid": {
+                "type": "string",
+                "example": "QYCPtavst3DqqBK72ZRtbF",
+                "description": "CLI ID appended to the first section."
+              },
+              "pages": {
+                "type": "array",
+                "description": "The list of the CLI's pages you have changed in a result document",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "example": 1,
+                      "minimum": 0,
+                      "description": "The index of the CLI's page you have changed in a result document during appending the CLI"
+                    },
+                    "name": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "Page 1",
+                      "description": "The real name in the page. It can be different from the one you passed if there were collisions (e.g. you appended the same CLI twice with the same names)"
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "uuid"
+            ]
           }
         }
       },
@@ -14662,14 +14948,17 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "A unique identifier of the notarization request.",
             "example": "f75e053a-25e8-40be-8681-fd755ade2a2b"
           },
           "name": {
             "type": "string",
+            "description": "A name of the notarization request.",
             "example": "test"
           },
           "status": {
             "type": "string",
+            "description": "Current status of the notarization request.",
             "enum": [
               "DRAFT",
               "SENT",
@@ -14685,31 +14974,37 @@
           "date_created": {
             "type": "string",
             "format": "date-time",
+            "description": "A date when a notarization request was created.",
             "example": "2023-04-14T16:33:06.938984Z"
           },
           "date_accepted": {
             "type": "string",
             "format": "date-time",
             "nullable": true,
-            "example": null
+            "description": "A date when a notarization session was accepted by notary.",
+            "example": "2023-04-14T16:33:06.938984Z"
           },
           "created_by": {
             "type": "object",
             "properties": {
               "user_id": {
                 "type": "string",
+                "description": "A unique identifier of the user who created a notarization request.",
                 "example": "nyAnVpY7pZ23FBve8s9xgk"
               },
               "email": {
                 "type": "string",
+                "description": "A user's email address.",
                 "example": "email@gmail.com"
               },
               "first_name": {
                 "type": "string",
+                "description": "A user's first name.",
                 "example": "John"
               },
               "last_name": {
                 "type": "string",
+                "description": "A user's last name.",
                 "example": "Smith"
               }
             }
@@ -14720,26 +15015,32 @@
               "type": "object",
               "properties": {
                 "id": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "A unique identifier of the invitee.",
+                  "example": "nyAnVpY7pZ23FBve8s9xgk"
                 },
                 "email": {
                   "type": "string",
                   "format": "email",
                   "maxLength": 255,
+                  "description": "A invitee's email address.",
                   "example": "email@gmail.com"
                 },
                 "first_name": {
                   "type": "string",
                   "maxLength": 50,
+                  "description": "A invitee's first name.",
                   "example": "John"
                 },
                 "last_name": {
                   "type": "string",
                   "maxLength": 50,
+                  "description": "A invitee's last name.",
                   "example": "Smith"
                 },
                 "notarization_link": {
                   "type": "string",
+                  "description": "A secure link to join a notarization request.",
                   "example": "https://notarize.pandadoc.com/session-request#/?requestId=f75e053a-25e8-40be-8681-fd755ade2a2b&inviteeId=2fbb4cbf-d461-4421-94cf-eaadcb9627e0"
                 }
               }
