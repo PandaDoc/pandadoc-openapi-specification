@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.8.0"
+    "version": "7.9.0"
   },
   "servers": [
     {
@@ -3778,61 +3778,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "count": {
-                      "type": "integer",
-                      "description": "Total number of audit trail entries available."
-                    },
-                    "results": {
-                      "type": "array",
-                      "description": "List of audit trail entries returned for the current page.",
-                      "items": {
-                        "type": "object",
-                        "description": "Represents a single audit trail event for a document.",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "Unique identifier of the audit trail entry."
-                          },
-                          "user": {
-                            "type": "object",
-                            "description": "The user who triggered the action.",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "description": "Unique identifier of the user."
-                              },
-                              "email": {
-                                "type": "string",
-                                "format": "email",
-                                "description": "User's email address."
-                              }
-                            }
-                          },
-                          "action": {
-                            "type": "integer",
-                            "description": "Numeric code representing the type of action performed.\nPossible values:\n\n| Integer Value | String Representation |\n|---------------|---------------------------------------------|\n| 1 | new document |\n| 2 | new revision |\n| 3 | approval request |\n| 4 | approved |\n| 5 | rejected |\n| 6 | sent |\n| 7 | completed by all |\n| 8 | viewed |\n| 9 | completed |\n| 10 | waiting pay |\n| 11 | paid |\n| 12 | forwarded |\n| 13 | expired |\n| 14 | bank account submitted |\n| 15 | bank account verified |\n| 16 | payment submitted |\n| 17 | payment failed |\n| 18 | completed manually |\n| 19 | expired manually |\n| 20 | paid manually |\n| 21 | approval deleted |\n| 22 | approval forced |\n| 23 | reassigned |\n| 24 | recipient edited |\n| 25 | recipient added |\n| 26 | recipient deleted |\n| 27 | declined manually |\n| 28 | approval step skipped |\n| 29 | suggest edits |\n| 43 | declined |\n| 44 | partly paid |\n| 45 | partly paid manually |\n| 47 | recipient verification with kba passed |\n| 48 | recipient verification with id passed |\n| 49 | recipient verification with text sms passed |\n| 50 | recipient verification with passcode passed |\n| 51 | recipient verification with kba failed |\n| 52 | recipient verification with id failed |\n| 53 | recipient verification with text sms failed |\n| 54 | recipient verification with passcode failed |\n| 55 | recipient signed with QES |\n| 56 | QES completed |\n| 57 | recipient QES attempt started |\n| 58 | recipient QES attempt expired |\n| 59 | Optional item in quote selected |\n| 60 | Optional item in quote deselected |\n| 61 | Item quantity in quote changed |\n| 62 | Item quantity in pricing table changed |\n| 63 | Optional item in pricing table selected |\n| 64 | Optional item in pricing table deselected |\n| 65 | Section item in pricing table selected (one of) |\n| 66 | Optional section in quote selected |\n| 67 | Optional section in quote deselected |\n| 68 | Section quantity in quote changed |\n"
-                          },
-                          "reason": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "Optional reason or explanation for the action."
-                          },
-                          "date_created": {
-                            "type": "string",
-                            "format": "date-time",
-                            "description": "Timestamp when the action was performed (in ISO 8601 format)."
-                          },
-                          "ip_address": {
-                            "type": "string",
-                            "nullable": true,
-                            "description": "The IP address from which the action was performed. If a sandbox API key is used, this will be \"hidden\"."
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/DocumentAuditTrailResponse"
                 },
                 "examples": {
                   "List Audit Trail": {
@@ -5155,6 +5101,7 @@
         "summary": "Add DSV Named Items to a Document",
         "description": "Adds one or more named items to the specified document by ID. \nThese items define the document's structure and hierarchy (e.g., sections or headings) \nfor display or navigation purposes within the Document Structure View (DSV).\n",
         "operationId": "addDsvNamedItems",
+        "x-internal": true,
         "parameters": [
           {
             "name": "document_id",
@@ -5190,39 +5137,7 @@
                 }
               },
               "schema": {
-                "type": "object",
-                "required": [
-                  "items"
-                ],
-                "properties": {
-                  "items": {
-                    "type": "array",
-                    "description": "List of named items representing structural elements of the document.",
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "name",
-                        "level",
-                        "page_name"
-                      ],
-                      "properties": {
-                        "name": {
-                          "type": "string",
-                          "description": "The display name of the item (e.g., \"Introduction\", \"Chapter 1\")."
-                        },
-                        "level": {
-                          "type": "integer",
-                          "minimum": 0,
-                          "description": "Hierarchical level of the item. \nLevel 0 is the highest (top-level), with increasing numbers for nested structures.\n"
-                        },
-                        "page_name": {
-                          "type": "string",
-                          "description": "Internal reference or identifier for the page this item is associated with."
-                        }
-                      }
-                    }
-                  }
-                }
+                "$ref": "#/components/schemas/AddDsvNamedItemsRequest"
               }
             }
           }
@@ -5256,58 +5171,7 @@
                   }
                 },
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "results": {
-                      "type": "array",
-                      "description": "List of DSV named items that were created.",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid",
-                            "description": "Unique identifier for the created DSV item."
-                          },
-                          "name": {
-                            "type": "string",
-                            "description": "The display name of the item."
-                          },
-                          "level": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "description": "The hierarchy level of the item."
-                          },
-                          "page_name": {
-                            "type": "string",
-                            "description": "Internal reference name for the page."
-                          },
-                          "page_uuid": {
-                            "type": "string",
-                            "format": "uuid",
-                            "description": "UUID of the associated page."
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "name",
-                          "level",
-                          "page_name",
-                          "page_uuid"
-                        ]
-                      }
-                    },
-                    "count": {
-                      "type": "number",
-                      "format": "integer",
-                      "minimum": 0,
-                      "description": "Total number of items created."
-                    }
-                  },
-                  "required": [
-                    "results",
-                    "count"
-                  ]
+                  "$ref": "#/components/schemas/AddDsvNamedItemsResponse"
                 }
               }
             }
@@ -9259,21 +9123,7 @@
                   }
                 },
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/ProductCatalogSearchCatalogItemResponse"
-                      }
-                    },
-                    "has_more_items": {
-                      "type": "boolean"
-                    },
-                    "total": {
-                      "type": "number"
-                    }
-                  }
+                  "$ref": "#/components/schemas/ListCatalogItemsSearchResponse"
                 }
               }
             }
@@ -12316,7 +12166,7 @@
         "properties": {
           "reminders": {
             "type": "array",
-            "description": "A list of reminders to be sent to specified recipients.",
+            "description": "A list of reminders to be sent to specified recipients.\nUse this field to specify which recipients should receive a reminder and through which delivery methods.\n\nEach email reminder contains document sender in the From field, \nensuring the recipient always sees consistent sender details and branding.\n",
             "items": {
               "type": "object",
               "properties": {
@@ -12327,6 +12177,28 @@
                 },
                 "delivery_methods": {
                   "$ref": "#/components/schemas/RecipientDeliveryMethods"
+                },
+                "email_customization": {
+                  "type": "object",
+                  "description": "Optional customization settings for the reminder email.\nDefines the subject and body text used when sending the reminder via email.\n**This object is processed only if** `delivery_methods.email` is set to `true`.\n",
+                  "example": {
+                    "subject": "Reminder: Please sign the document \"Service Agreement\"",
+                    "message": "This is a friendly reminder to review and sign the document \"Service Agreement\".\nPlease click the link below to access the document.\nThank you,\nThe Tech Solutions Team\n"
+                  },
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "description": "Subject line of the reminder email sent to the recipient.\n",
+                      "example": "Reminder: Please sign the document \"Service Agreement\"",
+                      "maxLength": 78
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Custom message body of the reminder email. Can include friendly or contextual\ntext encouraging the recipient to complete the signing process.\n\nSupports **Markdown** syntax for rich text formatting (e.g., bold, italics, links, and line breaks).\n",
+                      "example": "**Reminder:** Please review and sign the document *\"Service Agreement\"*.\n\nThank you,  \n**The Tech Solutions Team**\n",
+                      "maxLength": 5000
+                    }
+                  }
                 }
               }
             }
@@ -12405,10 +12277,33 @@
                         "Can't send reminder. Email delivery method is not selected for recipient",
                         "Can't send email reminder. Recipient's mailbox is unreachable",
                         "Can't send email reminder to the Recipient with no email",
-                        "Can't send SMS reminder to the Recipient more than once every 24 hours",
-                        "Can't send reminder. The document does not contain a recipient with the specified recipient ID"
+                        "Can't send email reminder to the Recipient more than once every 24 hours",
+                        "Can't send reminder. The document does not contain a recipient with the specified recipient ID",
+                        "Can’t send reminder. Email message contains potentially malicious links and could not be processed"
                       ],
                       "description": "Detailed explanation of why the reminder could not be sent, if applicable."
+                    }
+                  }
+                },
+                "email_customization": {
+                  "type": "object",
+                  "description": "Optional customization settings for the reminder email.\nDefines the subject and body text used when sending the reminder via email.\n",
+                  "example": {
+                    "subject": "Reminder: Please sign the document \"Service Agreement\"",
+                    "message": "This is a friendly reminder to review and sign the document \"Service Agreement\".\nPlease click the link below to access the document.\nThank you,\nThe Tech Solutions Team\n"
+                  },
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "description": "Subject line of the reminder email sent to the recipient.\n",
+                      "example": "Reminder: Please sign the document \"Service Agreement\"",
+                      "maxLength": 78
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Custom message body of the reminder email. Can include friendly or contextual\ntext encouraging the recipient to complete the signing process.\n\nSupports **Markdown** syntax for rich text formatting (e.g., bold, italics, links, and line breaks).\n",
+                      "example": "**Reminder:** Please review and sign the document *\"Service Agreement\"*.\n\nThank you,  \n**The Tech Solutions Team**\n",
+                      "maxLength": 5000
                     }
                   }
                 }
@@ -18444,6 +18339,152 @@
           "layout"
         ]
       },
+      "DocumentAuditTrailResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Total number of audit trail entries available."
+          },
+          "results": {
+            "type": "array",
+            "description": "List of audit trail entries returned for the current page.",
+            "items": {
+              "type": "object",
+              "description": "Represents a single audit trail event for a document.",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier of the audit trail entry."
+                },
+                "user": {
+                  "type": "object",
+                  "description": "The user who triggered the action.",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique identifier of the user."
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email",
+                      "description": "User's email address."
+                    }
+                  }
+                },
+                "action": {
+                  "type": "integer",
+                  "description": "Numeric code representing the type of action performed.\nPossible values:\n\n| Integer Value | String Representation |\n|---------------|---------------------------------------------|\n| 1 | new document |\n| 2 | new revision |\n| 3 | approval request |\n| 4 | approved |\n| 5 | rejected |\n| 6 | sent |\n| 7 | completed by all |\n| 8 | viewed |\n| 9 | completed |\n| 10 | waiting pay |\n| 11 | paid |\n| 12 | forwarded |\n| 13 | expired |\n| 14 | bank account submitted |\n| 15 | bank account verified |\n| 16 | payment submitted |\n| 17 | payment failed |\n| 18 | completed manually |\n| 19 | expired manually |\n| 20 | paid manually |\n| 21 | approval deleted |\n| 22 | approval forced |\n| 23 | reassigned |\n| 24 | recipient edited |\n| 25 | recipient added |\n| 26 | recipient deleted |\n| 27 | declined manually |\n| 28 | approval step skipped |\n| 29 | suggest edits |\n| 43 | declined |\n| 44 | partly paid |\n| 45 | partly paid manually |\n| 47 | recipient verification with kba passed |\n| 48 | recipient verification with id passed |\n| 49 | recipient verification with text sms passed |\n| 50 | recipient verification with passcode passed |\n| 51 | recipient verification with kba failed |\n| 52 | recipient verification with id failed |\n| 53 | recipient verification with text sms failed |\n| 54 | recipient verification with passcode failed |\n| 55 | recipient signed with QES |\n| 56 | QES completed |\n| 57 | recipient QES attempt started |\n| 58 | recipient QES attempt expired |\n| 59 | Optional item in quote selected |\n| 60 | Optional item in quote deselected |\n| 61 | Item quantity in quote changed |\n| 62 | Item quantity in pricing table changed |\n| 63 | Optional item in pricing table selected |\n| 64 | Optional item in pricing table deselected |\n| 65 | Section item in pricing table selected (one of) |\n| 66 | Optional section in quote selected |\n| 67 | Optional section in quote deselected |\n| 68 | Section quantity in quote changed |\n"
+                },
+                "reason": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "Optional reason or explanation for the action."
+                },
+                "date_created": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Timestamp when the action was performed (in ISO 8601 format)."
+                },
+                "ip_address": {
+                  "type": "string",
+                  "nullable": true,
+                  "description": "The IP address from which the action was performed. If a sandbox API key is used, this will be \"hidden\"."
+                }
+              }
+            }
+          }
+        }
+      },
+      "AddDsvNamedItemsRequest": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "List of named items representing structural elements of the document.",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "level",
+                "page_name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The display name of the item (e.g., \"Introduction\", \"Chapter 1\")."
+                },
+                "level": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Hierarchical level of the item. \nLevel 0 is the highest (top-level), with increasing numbers for nested structures.\n"
+                },
+                "page_name": {
+                  "type": "string",
+                  "description": "Internal reference or identifier for the page this item is associated with."
+                }
+              }
+            }
+          }
+        }
+      },
+      "AddDsvNamedItemsResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "description": "List of DSV named items that were created.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Unique identifier for the created DSV item."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The display name of the item."
+                },
+                "level": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "The hierarchy level of the item."
+                },
+                "page_name": {
+                  "type": "string",
+                  "description": "Internal reference name for the page."
+                },
+                "page_uuid": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "UUID of the associated page."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "level",
+                "page_name",
+                "page_uuid"
+              ]
+            }
+          },
+          "count": {
+            "type": "number",
+            "format": "integer",
+            "minimum": 0,
+            "description": "Total number of items created."
+          }
+        },
+        "required": [
+          "results",
+          "count"
+        ]
+      },
       "ContentLibraryItemCreateRequest": {
         "type": "object",
         "properties": {
@@ -18801,8 +18842,27 @@
           },
           "highlights": {
             "type": "object",
-            "additionalProperties": true,
+            "additionalProperties": {
+              "type": "object"
+            },
             "nullable": true
+          }
+        }
+      },
+      "ListCatalogItemsSearchResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCatalogSearchCatalogItemResponse"
+            }
+          },
+          "has_more_items": {
+            "type": "boolean"
+          },
+          "total": {
+            "type": "number"
           }
         }
       },
@@ -19219,6 +19279,29 @@
                 },
                 "details": {
                   "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "pointer": {
+                        "type": "string",
+                        "description": "JSON Pointer.",
+                        "nullable": true
+                      },
+                      "data": {
+                        "description": "Details data.",
+                        "type": "object",
+                        "nullable": true,
+                        "minProperties": 0,
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "code"
+                    ]
+                  },
                   "example": []
                 }
               }
@@ -19238,6 +19321,29 @@
                 },
                 "details": {
                   "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "pointer": {
+                        "type": "string",
+                        "description": "JSON Pointer.",
+                        "nullable": true
+                      },
+                      "data": {
+                        "description": "Details data.",
+                        "type": "object",
+                        "nullable": true,
+                        "minProperties": 0,
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "code"
+                    ]
+                  },
                   "example": []
                 }
               }
@@ -19257,6 +19363,29 @@
                 },
                 "details": {
                   "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "pointer": {
+                        "type": "string",
+                        "description": "JSON Pointer.",
+                        "nullable": true
+                      },
+                      "data": {
+                        "description": "Details data.",
+                        "type": "object",
+                        "nullable": true,
+                        "minProperties": 0,
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "code"
+                    ]
+                  },
                   "example": []
                 }
               }
@@ -19276,6 +19405,29 @@
                 },
                 "details": {
                   "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "pointer": {
+                        "type": "string",
+                        "description": "JSON Pointer.",
+                        "nullable": true
+                      },
+                      "data": {
+                        "description": "Details data.",
+                        "type": "object",
+                        "nullable": true,
+                        "minProperties": 0,
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "code"
+                    ]
+                  },
                   "example": []
                 }
               }
@@ -19295,6 +19447,29 @@
                 },
                 "details": {
                   "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string"
+                      },
+                      "pointer": {
+                        "type": "string",
+                        "description": "JSON Pointer.",
+                        "nullable": true
+                      },
+                      "data": {
+                        "description": "Details data.",
+                        "type": "object",
+                        "nullable": true,
+                        "minProperties": 0,
+                        "additionalProperties": true
+                      }
+                    },
+                    "required": [
+                      "code"
+                    ]
+                  },
                   "example": []
                 }
               }
