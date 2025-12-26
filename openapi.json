@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.10.0"
+    "version": "7.11.0"
   },
   "servers": [
     {
@@ -11699,6 +11699,30 @@
                   "type": "string",
                   "description": "Linked object ID.",
                   "example": "ea88ed1dc8094dd3a57754aa643a1954"
+                },
+                "children": {
+                  "type": "array",
+                  "description": "Linked object children array.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "entity_type": {
+                        "type": "string",
+                        "description": "Linked object child entity type.",
+                        "example": "child-deal"
+                      },
+                      "entity_id": {
+                        "type": "string",
+                        "description": "Linked object child entity ID.",
+                        "example": "19640"
+                      },
+                      "id": {
+                        "type": "string",
+                        "description": "Linked object child ID.",
+                        "example": "ea88ed1dc8094dd3a57754aa643a1954"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -12800,6 +12824,7 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "Linked object identifier (link_id).",
             "example": "abb4d3fc-919b-491e-9e08-775036660c0b"
           },
           "provider": {
@@ -12812,10 +12837,16 @@
             "description": "Entity type.\n\nSee the available entity types:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n",
             "example": "deal"
           },
-          "entiry_id": {
+          "entity_id": {
             "type": "string",
             "description": "Entity unique identifier. The system validates if the entity exists.",
             "example": "9372"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinkedObjectChild"
+            }
           }
         }
       },
@@ -18059,6 +18090,27 @@
             "type": "string",
             "nullable": true,
             "example": "2021-10-23T21:07:04.147345Z"
+          }
+        }
+      },
+      "LinkedObjectChild": {
+        "type": "object",
+        "description": "Child entity reference in a hierarchical chain structure that provides essential metadata and direct access links for lazy-loading the complete object by ID.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Linked object identifier (link_id).",
+            "example": "abb4d3fc-919b-491e-9e08-775036660c0b"
+          },
+          "entity_type": {
+            "type": "string",
+            "description": "Entity type.\n\nSee the available entity types:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n",
+            "example": "deal"
+          },
+          "entity_id": {
+            "type": "string",
+            "description": "Entity unique identifier. The system validates if the entity exists.",
+            "example": "9372"
           }
         }
       },
