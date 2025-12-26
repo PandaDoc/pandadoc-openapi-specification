@@ -13,12 +13,126 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.7.0"
+    "version": "7.8.0"
   },
   "servers": [
     {
       "url": "https://api.pandadoc.com",
       "description": "Public API"
+    }
+  ],
+  "security": [
+    {
+      "apiKey": []
+    },
+    {
+      "oauth2": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "OAuth 2.0 Authentication",
+      "description": "Operations for creating and refreshing access tokens for user authentication."
+    },
+    {
+      "name": "Documents",
+      "description": "Operations for managing documents, including appending content library items and creating document sessions for embedded signing."
+    },
+    {
+      "name": "Document Reminders",
+      "description": "Operations for configuring document reminders."
+    },
+    {
+      "name": "Document Link to CRM",
+      "description": "Operations for managing links between documents and CRM entities."
+    },
+    {
+      "name": "Document Attachments",
+      "description": "Operations for managing document attachments, such as downloading them."
+    },
+    {
+      "name": "Document Fields",
+      "description": "Operations for retrieving and managing fields within a document."
+    },
+    {
+      "name": "Document Audit Trail",
+      "description": "Operations for retrieving the full audit trail of a document, including user actions and metadata."
+    },
+    {
+      "name": "Document Settings",
+      "description": "Operations for retrieving and managing document settings, such as language."
+    },
+    {
+      "name": "Document Recipients",
+      "description": "Operations for managing recipients in documents, including adding, editing, reassigning, and deleting recipients."
+    },
+    {
+      "name": "Document Sections (Bundles)",
+      "description": "Operations for managing document sections, including retrieving details and upload statuses."
+    },
+    {
+      "name": "Document Structure View",
+      "description": "Operations related to managing the structure and hierarchy of documents within the Document Structure View (DSV)."
+    },
+    {
+      "name": "Content Library Items",
+      "description": "Operations for managing content library items, including retrieving details, checking status, and creating items via file upload."
+    },
+    {
+      "name": "Templates",
+      "description": "Operations for managing templates, including listing, creating, and deleting templates."
+    },
+    {
+      "name": "Template Settings",
+      "description": "Operations for managing template settings, such as retrieving and updating settings."
+    },
+    {
+      "name": "Forms",
+      "description": "Operations for managing and retrieving forms, including filtering and sorting options."
+    },
+    {
+      "name": "Folders",
+      "description": "Operations for managing and organizing document folders."
+    },
+    {
+      "name": "API Logs",
+      "description": "Operations related to API logs."
+    },
+    {
+      "name": "Contacts",
+      "description": "Operations related to managing and retrieving contact details."
+    },
+    {
+      "name": "Members",
+      "description": "Operations for managing and retrieving details about workspace members."
+    },
+    {
+      "name": "Webhook subscriptions",
+      "description": "Operations for managing webhook subscriptions, including listing, retrieving details, and updating shared keys."
+    },
+    {
+      "name": "Webhook events",
+      "description": "Operations related to webhook events."
+    },
+    {
+      "name": "Notary",
+      "description": "Operations for creating and managing notarization requests."
+    },
+    {
+      "name": "Product catalog",
+      "description": "Operations for managing product catalog items, including creation and retrieval."
+    },
+    {
+      "name": "Quotes",
+      "description": "Operations for updating and managing quotes within documents."
+    },
+    {
+      "name": "User and Workspace management",
+      "description": "Operations for managing users and workspaces."
+    },
+    {
+      "name": "Communication Preferences",
+      "description": "Operations for managing communication preferences, including SMS opt-out settings."
     }
   ],
   "paths": {
@@ -1108,7 +1222,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AutoReminders"
+                "$ref": "#/components/schemas/UpdateDocumentAutoRemindersRequest"
               },
               "examples": {
                 "Enable Auto Reminders": {
@@ -1135,7 +1249,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoReminders"
+                  "$ref": "#/components/schemas/UpdateDocumentAutoRemindersResponse"
                 },
                 "examples": {
                   "Enabled Auto Reminders": {
@@ -1165,7 +1279,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/paths/~1public~1v1~1documents~1%7Bdocument_id%7D~1auto-reminders/get/responses/400/content/application~1json/schema"
+                  "$ref": "#/components/schemas/DocumentAutoRemindersResponse400"
                 }
               }
             }
@@ -1239,18 +1353,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "example": "request_error"
-                    },
-                    "detail": {
-                      "description": "Reason why auto reminder settings could not be retrieved.",
-                      "type": "string",
-                      "example": "Can't get or modify auto-reminders setup. Document is completed, paid, declined or expired"
-                    }
-                  }
+                  "$ref": "#/components/schemas/DocumentAutoRemindersResponse400"
                 }
               }
             }
@@ -3200,21 +3303,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "allOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "file": {
-                        "type": "string",
-                        "format": "binary",
-                        "description": "Binary file to be attached to a document"
-                      }
-                    }
-                  },
-                  {
-                    "$ref": "#/components/schemas/DocumentAttachmentMetadata"
-                  }
-                ]
+                "$ref": "#/components/schemas/DocumentAttachmentCreateFromFile"
               }
             }
           }
@@ -3723,7 +3812,7 @@
                           },
                           "action": {
                             "type": "integer",
-                            "description": "Numeric code representing the type of action performed.\nPossible values:\n\n| Integer Value | String Representation |\n|---------------|---------------------------------------------|\n| 1 | new document |\n| 2 | new revision |\n| 3 | approval request |\n| 4 | approved |\n| 5 | rejected |\n| 6 | sent |\n| 7 | completed by all |\n| 8 | viewed |\n| 9 | completed |\n| 10 | waiting pay |\n| 11 | paid |\n| 12 | forwarded |\n| 13 | expired |\n| 14 | bank account submitted |\n| 15 | bank account verified |\n| 16 | payment submitted |\n| 17 | payment failed |\n| 18 | completed manually |\n| 19 | expired manually |\n| 20 | paid manually |\n| 21 | approval deleted |\n| 22 | approval forced |\n| 23 | reassigned |\n| 24 | recipient edited |\n| 25 | recipient added |\n| 26 | recipient deleted |\n| 27 | declined manually |\n| 28 | approval step skipped |\n| 29 | suggest edits |\n| 43 | declined |\n| 44 | partly paid |\n| 45 | partly paid manually |\n| 47 | recipient verification with kba passed |\n| 48 | recipient verification with id passed |\n| 49 | recipient verification with text sms passed |\n| 50 | recipient verification with passcode passed |\n| 51 | recipient verification with kba failed |\n| 52 | recipient verification with id failed |\n| 53 | recipient verification with text sms failed |\n| 54 | recipient verification with passcode failed |\n| 55 | recipient signed with QES |\n| 56 | QES completed |\n| 57 | recipient QES attempt started |\n| 58 | recipient QES attempt expired |\n"
+                            "description": "Numeric code representing the type of action performed.\nPossible values:\n\n| Integer Value | String Representation |\n|---------------|---------------------------------------------|\n| 1 | new document |\n| 2 | new revision |\n| 3 | approval request |\n| 4 | approved |\n| 5 | rejected |\n| 6 | sent |\n| 7 | completed by all |\n| 8 | viewed |\n| 9 | completed |\n| 10 | waiting pay |\n| 11 | paid |\n| 12 | forwarded |\n| 13 | expired |\n| 14 | bank account submitted |\n| 15 | bank account verified |\n| 16 | payment submitted |\n| 17 | payment failed |\n| 18 | completed manually |\n| 19 | expired manually |\n| 20 | paid manually |\n| 21 | approval deleted |\n| 22 | approval forced |\n| 23 | reassigned |\n| 24 | recipient edited |\n| 25 | recipient added |\n| 26 | recipient deleted |\n| 27 | declined manually |\n| 28 | approval step skipped |\n| 29 | suggest edits |\n| 43 | declined |\n| 44 | partly paid |\n| 45 | partly paid manually |\n| 47 | recipient verification with kba passed |\n| 48 | recipient verification with id passed |\n| 49 | recipient verification with text sms passed |\n| 50 | recipient verification with passcode passed |\n| 51 | recipient verification with kba failed |\n| 52 | recipient verification with id failed |\n| 53 | recipient verification with text sms failed |\n| 54 | recipient verification with passcode failed |\n| 55 | recipient signed with QES |\n| 56 | QES completed |\n| 57 | recipient QES attempt started |\n| 58 | recipient QES attempt expired |\n| 59 | Optional item in quote selected |\n| 60 | Optional item in quote deselected |\n| 61 | Item quantity in quote changed |\n| 62 | Item quantity in pricing table changed |\n| 63 | Optional item in pricing table selected |\n| 64 | Optional item in pricing table deselected |\n| 65 | Section item in pricing table selected (one of) |\n| 66 | Optional section in quote selected |\n| 67 | Optional section in quote deselected |\n| 68 | Section quantity in quote changed |\n"
                           },
                           "reason": {
                             "type": "string",
@@ -5338,21 +5427,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "allOf": [
-                  {
-                    "type": "object",
-                    "properties": {
-                      "url": {
-                        "type": "string",
-                        "example": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                        "description": "Secure (HTTPS) and publicly accessible URL to the PDF document."
-                      }
-                    }
-                  },
-                  {
-                    "$ref": "#/paths/~1public~1v1~1content-library-items%3Fupload/post/requestBody/content/multipart~1form-data/schema/properties/data/allOf/0"
-                  }
-                ]
+                "$ref": "#/components/schemas/ContentLibraryItemCreateFromUrlRequest"
               },
               "examples": {
                 "Create Content Library Item": {
@@ -5434,14 +5509,7 @@
                   "data": {
                     "allOf": [
                       {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string",
-                            "description": "The name of the Content Library Item.",
-                            "example": "CLI name example"
-                          }
-                        }
+                        "$ref": "#/components/schemas/ContentLibraryItemCreateRequest"
                       },
                       {
                         "description": "JSON as a multipart/form-data request."
@@ -5820,7 +5888,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TemplateListResponse/properties/results/items"
+                  "$ref": "#/components/schemas/TemplateCreateResponse"
                 },
                 "examples": {
                   "Create Template": {
@@ -5893,7 +5961,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TemplateListResponse/properties/results/items"
+                  "$ref": "#/components/schemas/TemplateCreateResponse"
                 },
                 "examples": {
                   "Create Template": {
@@ -8620,61 +8688,13 @@
             }
           },
           "400": {
-            "description": "Bad Request error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "bad_request"
-                    },
-                    "details": {
-                      "type": "array",
-                      "example": []
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/400BadRequestV2"
           },
           "403": {
-            "description": "Permission error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "forbidden"
-                    },
-                    "details": {
-                      "type": "array",
-                      "example": []
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           },
           "429": {
-            "description": "Too many requests error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "too_many_requests"
-                    },
-                    "details": {
-                      "type": "array",
-                      "example": []
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/429TooManyRequestsV2"
           }
         }
       }
@@ -8773,10 +8793,10 @@
             }
           },
           "403": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/403"
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           },
           "429": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/429"
+            "$ref": "#/components/responses/429TooManyRequestsV2"
           }
         }
       }
@@ -8808,163 +8828,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "A unique identifier of the notarization request.",
-                      "example": "0b2256a2-5803-4ae9-b1b8-595f48e37173"
-                    },
-                    "status": {
-                      "type": "string",
-                      "description": "Current status of the notarization request.",
-                      "example": "SENT",
-                      "enum": [
-                        "DRAFT",
-                        "SENT",
-                        "WAITING_FOR_NOTARY",
-                        "ACCEPTED",
-                        "LIVE",
-                        "COMPLETED",
-                        "INCOMPLETE",
-                        "CANCELLED"
-                      ]
-                    },
-                    "document_id": {
-                      "type": "string",
-                      "description": "A unique identifier of the document for notarization.",
-                      "example": "D3okRfgHRX7NEhavcACReB"
-                    },
-                    "date_created": {
-                      "type": "string",
-                      "format": "date-time",
-                      "description": "A date when a notarization request was created.",
-                      "example": "2025-01-13T10:25:53.800367Z"
-                    },
-                    "date_started": {
-                      "type": "string",
-                      "format": "date-time",
-                      "nullable": true,
-                      "description": "A date when a notarization session was started.",
-                      "example": "2025-01-13T10:25:53.800367Z"
-                    },
-                    "date_completed": {
-                      "type": "string",
-                      "format": "date-time",
-                      "nullable": true,
-                      "description": "A date when a notarization session was completed.",
-                      "example": "2025-01-13T10:25:53.800367Z"
-                    },
-                    "created_by": {
-                      "type": "object",
-                      "properties": {
-                        "user_id": {
-                          "type": "string",
-                          "description": "A unique identifier of the user who created a notarization request.",
-                          "example": "nyAnVpY7pZ23FBve8s9xgk"
-                        },
-                        "email": {
-                          "type": "string",
-                          "description": "A user's email address.",
-                          "example": "josh@example.com"
-                        },
-                        "first_name": {
-                          "type": "string",
-                          "description": "A user's first name.",
-                          "example": "Josh"
-                        },
-                        "last_name": {
-                          "type": "string",
-                          "description": "A user's last name.",
-                          "example": "Ron"
-                        }
-                      }
-                    },
-                    "invitees": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "A unique identifier of the invitee.",
-                            "example": "nyAnVpY7pZ23FBve8s9xgk"
-                          },
-                          "email": {
-                            "type": "string",
-                            "format": "email",
-                            "maxLength": 255,
-                            "description": "A invitee's email address.",
-                            "example": "josh@example.com"
-                          },
-                          "first_name": {
-                            "type": "string",
-                            "maxLength": 50,
-                            "nullable": true,
-                            "description": "A invitee's first name.",
-                            "example": "Josh"
-                          },
-                          "last_name": {
-                            "type": "string",
-                            "maxLength": 50,
-                            "nullable": true,
-                            "description": "A invitee's last name.",
-                            "example": "Ron"
-                          }
-                        }
-                      }
-                    },
-                    "signed_documents": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "url": {
-                            "type": "string",
-                            "description": "Secure URL to download signed PDF document."
-                          },
-                          "document_name": {
-                            "type": "string",
-                            "description": "A signer document name.",
-                            "example": "example.pdf"
-                          },
-                          "size": {
-                            "type": "number",
-                            "description": "A signer document size in bytes.",
-                            "example": 523107
-                          },
-                          "document_type": {
-                            "type": "string",
-                            "description": "A type of the signed document.",
-                            "example": "SINGLE",
-                            "enum": [
-                              "COMBINED",
-                              "SINGLE"
-                            ]
-                          }
-                        }
-                      }
-                    },
-                    "recording": {
-                      "type": "object",
-                      "nullable": true,
-                      "properties": {
-                        "url": {
-                          "type": "string",
-                          "description": "Secure URL to download video recording of the notarization session."
-                        },
-                        "name": {
-                          "type": "string",
-                          "description": "Name of the video recording file."
-                        },
-                        "size": {
-                          "type": "number",
-                          "description": "Size of the video recording file in bytes.",
-                          "example": 5242880
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/NotarizationRequestDetailsResponse"
                 },
                 "examples": {
                   "Notarization Request Details": {
@@ -9047,16 +8911,16 @@
             "description": "No content"
           },
           "400": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/400"
+            "$ref": "#/components/responses/400BadRequestV2"
           },
           "403": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/403"
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           },
           "404": {
-            "$ref": "#/paths/~1public~1beta~1documents~1%7Bdocument_id%7D~1docx-export-tasks/post/responses/404"
+            "$ref": "#/components/responses/404NotFoundV2"
           },
           "429": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/429"
+            "$ref": "#/components/responses/429TooManyRequestsV2"
           }
         }
       }
@@ -9400,148 +9264,7 @@
                     "items": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "billing_cycle": {
-                            "type": "integer",
-                            "nullable": true
-                          },
-                          "billing_type": {
-                            "type": "string"
-                          },
-                          "bundle_items_count": {
-                            "type": "integer"
-                          },
-                          "workspace_id": {
-                            "type": "string"
-                          },
-                          "category_id": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "category_name": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "created_by": {
-                            "type": "string"
-                          },
-                          "cost": {
-                            "type": "number",
-                            "nullable": true
-                          },
-                          "currency": {
-                            "type": "string"
-                          },
-                          "custom_fields": {
-                            "type": "array",
-                            "nullable": true,
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "name": {
-                                  "type": "string"
-                                },
-                                "value": {
-                                  "type": "string",
-                                  "nullable": true
-                                }
-                              }
-                            }
-                          },
-                          "date_created": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "date_modified": {
-                            "type": "string",
-                            "format": "date-time",
-                            "nullable": true
-                          },
-                          "description": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "image_src": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "images": {
-                            "type": "array",
-                            "nullable": true,
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "is_main": {
-                                  "type": "boolean",
-                                  "nullable": true
-                                },
-                                "order": {
-                                  "type": "number"
-                                },
-                                "src": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          },
-                          "max_tier_value": {
-                            "type": "number",
-                            "nullable": true
-                          },
-                          "min_tier_value": {
-                            "type": "number",
-                            "nullable": true
-                          },
-                          "modified_by": {
-                            "type": "string"
-                          },
-                          "price": {
-                            "type": "number",
-                            "nullable": true
-                          },
-                          "pricing_method": {
-                            "type": "integer"
-                          },
-                          "sku": {
-                            "type": "string"
-                          },
-                          "title": {
-                            "type": "string"
-                          },
-                          "tiers": {
-                            "type": "array",
-                            "nullable": true,
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "min_qty": {
-                                  "type": "number"
-                                },
-                                "value": {
-                                  "type": "number"
-                                }
-                              }
-                            }
-                          },
-                          "type": {
-                            "type": "string",
-                            "default": "regular",
-                            "enum": [
-                              "regular",
-                              "bundle"
-                            ]
-                          },
-                          "uuid": {
-                            "type": "string",
-                            "format": "uuid"
-                          },
-                          "highlights": {
-                            "type": "object",
-                            "additionalProperties": true,
-                            "nullable": true
-                          }
-                        }
+                        "$ref": "#/components/schemas/ProductCatalogSearchCatalogItemResponse"
                       }
                     },
                     "has_more_items": {
@@ -9556,32 +9279,16 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/400"
+            "$ref": "#/components/responses/400BadRequestV2"
           },
           "401": {
-            "description": "Authentication error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "unauthorized"
-                    },
-                    "details": {
-                      "type": "array",
-                      "example": []
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/401AuthErrorV2"
           },
           "403": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/403"
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           },
           "429": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/429"
+            "$ref": "#/components/responses/429TooManyRequestsV2"
           }
         }
       }
@@ -9689,7 +9396,7 @@
             }
           },
           "403": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/403"
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           }
         }
       }
@@ -9796,7 +9503,7 @@
             }
           },
           "403": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/403"
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           }
         }
       },
@@ -9959,7 +9666,7 @@
             }
           },
           "403": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/403"
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           }
         }
       },
@@ -9993,7 +9700,7 @@
             "description": "No content"
           },
           "403": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/403"
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           }
         }
       }
@@ -10437,42 +10144,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "example": "request_error"
-                    },
-                    "detail": {
-                      "type": "object",
-                      "example": {
-                        "email": [
-                          "User already exists",
-                          "User email should have the same email domain as org admin.",
-                          "Enter a valid email address."
-                        ],
-                        "role": [
-                          "Role is not a valid choice.",
-                          "This field is required."
-                        ],
-                        "license": [
-                          "Unable to add more licenses.",
-                          "License is not a valid choice.",
-                          "This field is required."
-                        ],
-                        "workspace_id": [
-                          "This field is required.",
-                          "Workspace with uuid {uuid} not found."
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/400BadRequestUserRequestError"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -10568,33 +10240,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "example": "request_error"
-                    },
-                    "detail": {
-                      "type": "object",
-                      "example": {
-                        "user_id": [
-                          "User doesn't exist",
-                          "Member already exists",
-                          "This field is required"
-                        ],
-                        "role": [
-                          "Role is not a valid choice",
-                          "This field is required"
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/400BadRequestMemberRequestError"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -10646,23 +10292,7 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "example": "request_error"
-                    },
-                    "detail": {
-                      "type": "string",
-                      "example": "Owner can not be removed."
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/400BadRequestMemberRemoveError"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -10671,23 +10301,7 @@
             "$ref": "#/components/responses/403"
           },
           "404": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "example": "request_error"
-                    },
-                    "detail": {
-                      "type": "string",
-                      "example": "This member or workspace does not exist."
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/404BadRequestMemberRemoveError"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -10899,38 +10513,22 @@
                   }
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/DocxExportTaskResponse/allOf/0"
+                  "$ref": "#/components/schemas/DocumentDocxExport"
                 }
               }
             }
           },
           "401": {
-            "$ref": "#/paths/~1public~1v2~1product-catalog~1items~1search/get/responses/401"
+            "$ref": "#/components/responses/401AuthErrorV2"
           },
           "403": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/403"
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           },
           "404": {
-            "description": "Not found error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "code": {
-                      "type": "string",
-                      "example": "not_found"
-                    },
-                    "details": {
-                      "type": "array",
-                      "example": []
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/404NotFoundV2"
           },
           "429": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/429"
+            "$ref": "#/components/responses/429TooManyRequestsV2"
           }
         }
       }
@@ -10996,16 +10594,16 @@
             }
           },
           "401": {
-            "$ref": "#/paths/~1public~1v2~1product-catalog~1items~1search/get/responses/401"
+            "$ref": "#/components/responses/401AuthErrorV2"
           },
           "403": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/403"
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           },
           "404": {
-            "$ref": "#/paths/~1public~1beta~1documents~1%7Bdocument_id%7D~1docx-export-tasks/post/responses/404"
+            "$ref": "#/components/responses/404NotFoundV2"
           },
           "429": {
-            "$ref": "#/paths/~1public~1v2~1notary~1notaries/get/responses/429"
+            "$ref": "#/components/responses/429TooManyRequestsV2"
           }
         }
       }
@@ -11147,12 +10745,6 @@
         "required": [
           "enabled"
         ]
-      },
-      "UpdateDocumentAutoRemindersRequest": {
-        "$ref": "#/components/schemas/AutoReminders"
-      },
-      "UpdateDocumentAutoRemindersResponse": {
-        "$ref": "#/components/schemas/AutoReminders"
       },
       "DocumentAutoRemindersResponse": {
         "type": "object",
@@ -11791,59 +11383,11 @@
             "type": "array",
             "description": "The list of recipients you're sending the document to. The ID or email are required. If the ID is passed, an existing recipient will be updated. If the email is passed, a new recipient will be added to CC.",
             "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/UpdateDocumentRecipient"
-                },
-                {
-                  "$ref": "#/components/schemas/UpdateDocumentRecipientGroup"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "type",
-                "mapping": {
-                  "recipient": "#/components/schemas/UpdateDocumentRecipient",
-                  "recipient_group": "#/components/schemas/UpdateDocumentRecipientGroup"
-                }
-              }
+              "$ref": "#/components/schemas/UpdateDocumentActor"
             }
           },
           "fields": {
-            "type": "object",
-            "description": "Set specific values to the fields. This object maps merge field names to their corresponding values.\n\nEach key represents a merge field name, and each value is an object containing the data to populate that field with. The structure allows you to pre-populate various field types including text inputs, checkboxes, dropdowns, and date fields.\n\n**Key Points:**\n- Keys must match the exact merge field names from your template or file.\n- Values must be wrapped in an object with a `value` property.\n- Supported value types: string, number, boolean.\n- Date fields should use RFC 3339 format (e.g., '2019-12-31T00:00:00.000Z').\n- Signature fields cannot be pre-filled.\n\n**Example Usage:**\n- Text field: `\"CustomerName\": {\"value\": \"John Doe\"}`\n- Checkbox: `\"AgreeToTerms\": {\"value\": true}`\n- Date field: `\"DeliveryDate\": {\"value\": \"2019-12-31T00:00:00.000Z\"}`\n",
-            "example": {
-              "Like": {
-                "value": true
-              },
-              "Delivery": {
-                "value": "Same Day Delivery"
-              },
-              "Date": {
-                "value": "2019-12-31T00:00:00.000Z"
-              }
-            },
-            "additionalProperties": {
-              "type": "object",
-              "properties": {
-                "value": {
-                  "description": "The value to pre-fill the field with. The type of the value depends on the field type in the template.\nFor example, for a checkbox field, you can pass a boolean value, and for a date field, you can pass a date string in RFC 3339 format (e.g., 2019-12-31T00:00:00.000Z).\n",
-                  "oneOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "value"
-              ]
-            }
+            "$ref": "#/components/schemas/DocumentUpdateRequestField"
           },
           "tokens": {
             "type": "array",
@@ -13572,36 +13116,7 @@
           "results": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "example": "iMymdDd9XFD3HyxP5VD67Q"
-                },
-                "name": {
-                  "type": "string",
-                  "example": "Blank"
-                },
-                "date_created": {
-                  "type": "string",
-                  "format": "date-time",
-                  "example": "2021-06-17T15:51:13.226974Z"
-                },
-                "date_modified": {
-                  "type": "string",
-                  "format": "date-time",
-                  "example": "2021-06-17T15:51:13.326974Z"
-                },
-                "version": {
-                  "type": "string",
-                  "example": "2"
-                },
-                "content_date_modified": {
-                  "type": "string",
-                  "format": "date-time",
-                  "example": "2021-06-17T15:51:13.426974Z"
-                }
-              }
+              "$ref": "#/components/schemas/TemplateCreateResponse"
             }
           }
         }
@@ -16075,15 +15590,7 @@
         }
       },
       "AssignedToRecipientRedirectSettings": {
-        "type": "object",
-        "properties": {
-          "is_enabled": {
-            "type": "boolean"
-          },
-          "url": {
-            "type": "string"
-          }
-        }
+        "$ref": "#/components/schemas/RecipientRedirectSettings"
       },
       "RecipientsGroupAssignedTo": {
         "title": "Recipient Group",
@@ -16743,9 +16250,6 @@
             }
           }
         }
-      },
-      "UploadSectionByPdfRequest": {
-        "$ref": "#/components/schemas/UploadSectionRequest"
       },
       "UploadSectionByTemplateRequest": {
         "allOf": [
@@ -17530,45 +17034,7 @@
                       "type": "string"
                     },
                     {
-                      "type": "object",
-                      "properties": {
-                        "uuid": {
-                          "type": "string"
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "description": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "image_url": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "images": {
-                          "type": "array",
-                          "nullable": true,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "is_main": {
-                                "type": "boolean",
-                                "nullable": true
-                              },
-                              "order": {
-                                "type": "number"
-                              },
-                              "src": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        },
-                        "price_configuration": {
-                          "$ref": "#/components/schemas/ProductCatalogItemPriceConfiguration"
-                        }
-                      }
+                      "$ref": "#/components/schemas/ProductCatalogCatalogCustomBundleItem"
                     }
                   ]
                 }
@@ -17672,98 +17138,10 @@
                 "item": {
                   "anyOf": [
                     {
-                      "type": "object",
-                      "properties": {
-                        "uuid": {
-                          "type": "string"
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "sku": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "description": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "image_url": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "images": {
-                          "type": "array",
-                          "nullable": true,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "is_main": {
-                                "type": "boolean",
-                                "nullable": true
-                              },
-                              "order": {
-                                "type": "number"
-                              },
-                              "src": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        },
-                        "price": {
-                          "type": "number",
-                          "nullable": true
-                        },
-                        "currency": {
-                          "type": "string"
-                        }
-                      }
+                      "$ref": "#/components/schemas/ProductCatalogCatalogItemInBundle"
                     },
                     {
-                      "type": "object",
-                      "properties": {
-                        "uuid": {
-                          "type": "string"
-                        },
-                        "title": {
-                          "type": "string"
-                        },
-                        "description": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "image_url": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "images": {
-                          "type": "array",
-                          "nullable": true,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "is_main": {
-                                "type": "boolean",
-                                "nullable": true
-                              },
-                              "order": {
-                                "type": "number"
-                              },
-                              "src": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        },
-                        "price": {
-                          "type": "number",
-                          "nullable": true
-                        },
-                        "currency": {
-                          "type": "string"
-                        }
-                      }
+                      "$ref": "#/components/schemas/ProductCatalogCustomCatalogItemInBundle"
                     }
                   ]
                 }
@@ -17913,50 +17291,7 @@
                       "type": "string"
                     },
                     {
-                      "type": "object",
-                      "properties": {
-                        "title": {
-                          "type": "string"
-                        },
-                        "sku": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "description": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "image_url": {
-                          "type": "string",
-                          "nullable": true
-                        },
-                        "images": {
-                          "type": "array",
-                          "nullable": true,
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "is_main": {
-                                "type": "boolean",
-                                "nullable": true
-                              },
-                              "order": {
-                                "type": "number"
-                              },
-                              "src": {
-                                "type": "string"
-                              }
-                            }
-                          }
-                        },
-                        "price": {
-                          "type": "number",
-                          "nullable": true
-                        },
-                        "currency": {
-                          "type": "string"
-                        }
-                      }
+                      "$ref": "#/components/schemas/ProductCatalogCustomBundleItemNoId"
                     }
                   ]
                 }
@@ -18072,29 +17407,7 @@
             "description": "only for volume based pricing",
             "nullable": true,
             "items": {
-              "type": "object",
-              "properties": {
-                "value": {
-                  "type": "number",
-                  "format": "float",
-                  "minimum": 0,
-                  "example": 9.99
-                },
-                "min_qty": {
-                  "type": "number",
-                  "minimum": 1
-                }
-              },
-              "required": [
-                "value",
-                "min_qty"
-              ],
-              "x-examples": {
-                "example-1": {
-                  "price": 9.99,
-                  "min_qty": 1
-                }
-              }
+              "$ref": "#/components/schemas/ProductCatalogItemPriceTier"
             }
           },
           "pricing_method": {
@@ -18242,41 +17555,7 @@
               "members": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "description": "Recipient Group Member",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "example": "4b011d86-286b-4f86-b697-90a6ad3f1489"
-                    },
-                    "first_name": {
-                      "type": "string",
-                      "example": "Jhon"
-                    },
-                    "last_name": {
-                      "type": "string",
-                      "example": "Dow"
-                    },
-                    "email": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": "test@test.com"
-                    },
-                    "shared_link": {
-                      "type": "string",
-                      "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
-                    },
-                    "avatar": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
-                    },
-                    "signature_date": {
-                      "type": "string",
-                      "nullable": true,
-                      "example": "2021-10-23T21:07:04.147345Z"
-                    }
-                  }
+                  "$ref": "#/components/schemas/DocumentDetailsRecipientGroupMember"
                 }
               }
             }
@@ -18606,131 +17885,7 @@
           "fields": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "uuid": {
-                  "type": "string",
-                  "format": "uuid",
-                  "nullable": false
-                },
-                "name": {
-                  "type": "string"
-                },
-                "title": {
-                  "type": "string"
-                },
-                "value": {},
-                "field_id": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "text",
-                    "signature",
-                    "checkbox",
-                    "date",
-                    "dropdown",
-                    "stamp",
-                    "initials",
-                    "radio_buttons",
-                    "collect_file",
-                    "payment_details"
-                  ]
-                },
-                "placeholder": {
-                  "type": "string"
-                },
-                "assigned_to": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "first_name": {
-                      "type": "string"
-                    },
-                    "last_name": {
-                      "type": "string"
-                    },
-                    "email": {
-                      "type": "string"
-                    },
-                    "phone": {
-                      "type": "string"
-                    },
-                    "recipient_type": {
-                      "type": "string"
-                    },
-                    "has_completed": {
-                      "type": "boolean"
-                    },
-                    "signing_order": {},
-                    "delivery_methods": {},
-                    "redirect": {},
-                    "type": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "layout": {
-                  "type": "object",
-                  "properties": {
-                    "page": {
-                      "type": "integer"
-                    },
-                    "position": {
-                      "type": "object",
-                      "properties": {
-                        "offset_x": {
-                          "type": "number"
-                        },
-                        "offset_y": {
-                          "type": "number"
-                        },
-                        "anchor_point": {
-                          "type": "string",
-                          "enum": [
-                            "topleft",
-                            "topright",
-                            "bottomleft",
-                            "bottomright"
-                          ]
-                        }
-                      },
-                      "required": [
-                        "offset_x",
-                        "offset_y",
-                        "anchor_point"
-                      ]
-                    },
-                    "style": {
-                      "type": "object",
-                      "properties": {
-                        "width": {
-                          "type": "integer"
-                        },
-                        "height": {
-                          "type": "integer"
-                        }
-                      },
-                      "required": [
-                        "width",
-                        "height"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "page",
-                    "position",
-                    "style"
-                  ]
-                },
-                "section_uuid": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              }
+              "$ref": "#/components/schemas/DocumentFieldsField"
             }
           }
         }
@@ -18742,46 +17897,7 @@
             "type": "array",
             "description": "An array of fields to place on a document.",
             "items": {
-              "type": "object",
-              "properties": {
-                "field_id": {
-                  "type": "string",
-                  "description": "Optional unique identifier."
-                },
-                "merge_field": {
-                  "type": "string",
-                  "description": "Use this to dynamically populate this field with data from your CRM or API. Supported field types:\n  * text\n  * checkbox\n  * date\n  * dropdown\n  * radio_buttons\n"
-                },
-                "type": {
-                  "type": "string",
-                  "enum": [
-                    "text",
-                    "signature",
-                    "checkbox",
-                    "date",
-                    "dropdown",
-                    "stamp",
-                    "initials",
-                    "radio_buttons",
-                    "collect_file",
-                    "payment_details"
-                  ]
-                },
-                "placeholder": {
-                  "type": "string"
-                },
-                "assigned_to": {
-                  "type": "string",
-                  "description": "Optional uuid of a recipient."
-                },
-                "layout": {
-                  "$ref": "#/components/schemas/ListDocumentFieldsResponse/properties/fields/items/properties/layout"
-                }
-              },
-              "required": [
-                "type",
-                "layout"
-              ]
+              "$ref": "#/components/schemas/DocumentFieldsFieldCreate"
             }
           }
         }
@@ -18792,7 +17908,7 @@
           "fields": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ListDocumentFieldsResponse/properties/fields/items"
+              "$ref": "#/components/schemas/DocumentFieldsField"
             }
           }
         }
@@ -18902,35 +18018,7 @@
       "DocxExportTaskResponse": {
         "allOf": [
           {
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Export task id.",
-                "type": "string",
-                "example": "nPh2PDhFdDqAES9k64h9qX"
-              },
-              "document_id": {
-                "description": "Document id.",
-                "type": "string",
-                "example": "BhVzRcxH9Z2LgfPPGXFUBa"
-              },
-              "status": {
-                "description": "| **Status**    | **Description**                                                                             |\n|---------------|---------------------------------------------------------------------------------------------|\n| **created**   | The export task has been created, but the process has not started.                          |\n| **processing**| The export task is in progress.                                                             |\n| **done**      | The export task is completed, and the response contains URLs for downloading the documents. |\n| **error**     | An error occurred during the execution of the export task.                                  |\n",
-                "type": "string",
-                "enum": [
-                  "created",
-                  "processing",
-                  "done",
-                  "error"
-                ],
-                "example": "created"
-              }
-            },
-            "required": [
-              "id",
-              "document_id",
-              "status"
-            ]
+            "$ref": "#/components/schemas/DocumentDocxExport"
           },
           {
             "type": "object",
@@ -18987,6 +18075,982 @@
               "ro-RO",
               "bg-BG"
             ]
+          }
+        }
+      },
+      "UpdateDocumentActor": {
+        "anyOf": [
+          {
+            "$ref": "#/components/schemas/UpdateDocumentRecipient"
+          },
+          {
+            "$ref": "#/components/schemas/UpdateDocumentRecipientGroup"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "recipient": "#/components/schemas/UpdateDocumentRecipient",
+            "recipient_group": "#/components/schemas/UpdateDocumentRecipientGroup"
+          }
+        }
+      },
+      "DocumentUpdateRequestField": {
+        "type": "object",
+        "description": "Set specific values to the fields. This object maps merge field names to their corresponding values.\n\nEach key represents a merge field name, and each value is an object containing the data to populate that field with. The structure allows you to pre-populate various field types including text inputs, checkboxes, dropdowns, and date fields.\n\n**Key Points:**\n- Keys must match the exact merge field names from your template or file.\n- Values must be wrapped in an object with a `value` property.\n- Supported value types: string, number, boolean.\n- Date fields should use RFC 3339 format (e.g., '2019-12-31T00:00:00.000Z').\n- Signature fields cannot be pre-filled.\n\n**Example Usage:**\n- Text field: `\"CustomerName\": {\"value\": \"John Doe\"}`\n- Checkbox: `\"AgreeToTerms\": {\"value\": true}`\n- Date field: `\"DeliveryDate\": {\"value\": \"2019-12-31T00:00:00.000Z\"}`\n",
+        "example": {
+          "Like": {
+            "value": true
+          },
+          "Delivery": {
+            "value": "Same Day Delivery"
+          },
+          "Date": {
+            "value": "2019-12-31T00:00:00.000Z"
+          }
+        },
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "The value to pre-fill the field with. The type of the value depends on the field type in the template.\nFor example, for a checkbox field, you can pass a boolean value, and for a date field, you can pass a date string in RFC 3339 format (e.g., 2019-12-31T00:00:00.000Z).\n",
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "required": [
+            "value"
+          ]
+        }
+      },
+      "DocumentAutoRemindersResponse400": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "request_error"
+          },
+          "detail": {
+            "description": "Reason why auto reminder settings could not be retrieved.",
+            "type": "string",
+            "example": "Can't get or modify auto-reminders setup. Document is completed, paid, declined or expired"
+          }
+        }
+      },
+      "UpdateDocumentAutoRemindersRequest": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Toggles auto-reminders for the document. \nIf `true`, reminders are scheduled based on the configuration.\n"
+          },
+          "delivery_method": {
+            "type": "string",
+            "enum": [
+              "email",
+              "sms"
+            ],
+            "description": "The method used to deliver reminders (e.g., email, SMS).\n"
+          },
+          "initial_delay_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 180,
+            "description": "Number of days to wait after sending the document before the first reminder is sent.\n"
+          },
+          "is_recurring": {
+            "type": "boolean",
+            "description": "If `true`, reminders will be sent repeatedly at specified intervals after the initial reminder.\n"
+          },
+          "recurrence_frequency_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 180,
+            "description": "Number of days between recurring reminders, applicable if `is_recurring` is `true`.\n"
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      },
+      "UpdateDocumentAutoRemindersResponse": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Toggles auto-reminders for the document. \nIf `true`, reminders are scheduled based on the configuration.\n"
+          },
+          "delivery_method": {
+            "type": "string",
+            "enum": [
+              "email",
+              "sms"
+            ],
+            "description": "The method used to deliver reminders (e.g., email, SMS).\n"
+          },
+          "initial_delay_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 180,
+            "description": "Number of days to wait after sending the document before the first reminder is sent.\n"
+          },
+          "is_recurring": {
+            "type": "boolean",
+            "description": "If `true`, reminders will be sent repeatedly at specified intervals after the initial reminder.\n"
+          },
+          "recurrence_frequency_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 180,
+            "description": "Number of days between recurring reminders, applicable if `is_recurring` is `true`.\n"
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      },
+      "DocumentDetailsRecipientGroupMember": {
+        "type": "object",
+        "description": "Recipient Group Member",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "4b011d86-286b-4f86-b697-90a6ad3f1489"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "Jhon"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Dow"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true,
+            "example": "test@test.com"
+          },
+          "shared_link": {
+            "type": "string",
+            "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+          },
+          "signature_date": {
+            "type": "string",
+            "nullable": true,
+            "example": "2021-10-23T21:07:04.147345Z"
+          }
+        }
+      },
+      "DocumentAttachmentCreateFromFile": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "file": {
+                "type": "string",
+                "format": "binary",
+                "description": "Binary file to be attached to a document"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/DocumentAttachmentMetadata"
+          }
+        ]
+      },
+      "DocumentFieldsLayout": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "position": {
+            "type": "object",
+            "properties": {
+              "offset_x": {
+                "type": "number"
+              },
+              "offset_y": {
+                "type": "number"
+              },
+              "anchor_point": {
+                "type": "string",
+                "enum": [
+                  "topleft",
+                  "topright",
+                  "bottomleft",
+                  "bottomright"
+                ]
+              }
+            },
+            "required": [
+              "offset_x",
+              "offset_y",
+              "anchor_point"
+            ]
+          },
+          "style": {
+            "type": "object",
+            "properties": {
+              "width": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "width",
+              "height"
+            ]
+          }
+        },
+        "required": [
+          "page",
+          "position",
+          "style"
+        ]
+      },
+      "DocumentFieldsField": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": false
+          },
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "value": {},
+          "field_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "signature",
+              "checkbox",
+              "date",
+              "dropdown",
+              "stamp",
+              "initials",
+              "radio_buttons",
+              "collect_file",
+              "payment_details"
+            ]
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "assigned_to": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "first_name": {
+                "type": "string"
+              },
+              "last_name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              },
+              "recipient_type": {
+                "type": "string"
+              },
+              "has_completed": {
+                "type": "boolean"
+              },
+              "signing_order": {},
+              "delivery_methods": {},
+              "redirect": {},
+              "type": {
+                "type": "string"
+              }
+            }
+          },
+          "layout": {
+            "$ref": "#/components/schemas/DocumentFieldsLayout"
+          },
+          "section_uuid": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "DocumentFieldsFieldCreate": {
+        "type": "object",
+        "properties": {
+          "field_id": {
+            "type": "string",
+            "description": "Optional unique identifier."
+          },
+          "merge_field": {
+            "type": "string",
+            "description": "Use this to dynamically populate this field with data from your CRM or API. Supported field types:\n  * text\n  * checkbox\n  * date\n  * dropdown\n  * radio_buttons\n"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "signature",
+              "checkbox",
+              "date",
+              "dropdown",
+              "stamp",
+              "initials",
+              "radio_buttons",
+              "collect_file",
+              "payment_details"
+            ]
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "assigned_to": {
+            "type": "string",
+            "description": "Optional uuid of a recipient."
+          },
+          "layout": {
+            "$ref": "#/components/schemas/DocumentFieldsLayout"
+          }
+        },
+        "required": [
+          "type",
+          "layout"
+        ]
+      },
+      "ContentLibraryItemCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the Content Library Item.",
+            "example": "CLI name example"
+          }
+        }
+      },
+      "ContentLibraryItemCreateFromUrlRequest": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "example": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                "description": "Secure (HTTPS) and publicly accessible URL to the PDF document."
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ContentLibraryItemCreateRequest"
+          }
+        ]
+      },
+      "TemplateCreateResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "iMymdDd9XFD3HyxP5VD67Q"
+          },
+          "name": {
+            "type": "string",
+            "example": "Blank"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-06-17T15:51:13.226974Z"
+          },
+          "date_modified": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-06-17T15:51:13.326974Z"
+          },
+          "version": {
+            "type": "string",
+            "example": "2"
+          },
+          "content_date_modified": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-06-17T15:51:13.426974Z"
+          }
+        }
+      },
+      "NotarizationRequestDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier of the notarization request.",
+            "example": "0b2256a2-5803-4ae9-b1b8-595f48e37173"
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the notarization request.",
+            "example": "SENT",
+            "enum": [
+              "DRAFT",
+              "SENT",
+              "WAITING_FOR_NOTARY",
+              "ACCEPTED",
+              "LIVE",
+              "COMPLETED",
+              "INCOMPLETE",
+              "CANCELLED"
+            ]
+          },
+          "document_id": {
+            "type": "string",
+            "description": "A unique identifier of the document for notarization.",
+            "example": "D3okRfgHRX7NEhavcACReB"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "A date when a notarization request was created.",
+            "example": "2025-01-13T10:25:53.800367Z"
+          },
+          "date_started": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "A date when a notarization session was started.",
+            "example": "2025-01-13T10:25:53.800367Z"
+          },
+          "date_completed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "A date when a notarization session was completed.",
+            "example": "2025-01-13T10:25:53.800367Z"
+          },
+          "created_by": {
+            "type": "object",
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "A unique identifier of the user who created a notarization request.",
+                "example": "nyAnVpY7pZ23FBve8s9xgk"
+              },
+              "email": {
+                "type": "string",
+                "description": "A user's email address.",
+                "example": "josh@example.com"
+              },
+              "first_name": {
+                "type": "string",
+                "description": "A user's first name.",
+                "example": "Josh"
+              },
+              "last_name": {
+                "type": "string",
+                "description": "A user's last name.",
+                "example": "Ron"
+              }
+            }
+          },
+          "invitees": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "A unique identifier of the invitee.",
+                  "example": "nyAnVpY7pZ23FBve8s9xgk"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "maxLength": 255,
+                  "description": "A invitee's email address.",
+                  "example": "josh@example.com"
+                },
+                "first_name": {
+                  "type": "string",
+                  "maxLength": 50,
+                  "nullable": true,
+                  "description": "A invitee's first name.",
+                  "example": "Josh"
+                },
+                "last_name": {
+                  "type": "string",
+                  "maxLength": 50,
+                  "nullable": true,
+                  "description": "A invitee's last name.",
+                  "example": "Ron"
+                }
+              }
+            }
+          },
+          "signed_documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "Secure URL to download signed PDF document."
+                },
+                "document_name": {
+                  "type": "string",
+                  "description": "A signer document name.",
+                  "example": "example.pdf"
+                },
+                "size": {
+                  "type": "number",
+                  "description": "A signer document size in bytes.",
+                  "example": 523107
+                },
+                "document_type": {
+                  "type": "string",
+                  "description": "A type of the signed document.",
+                  "example": "SINGLE",
+                  "enum": [
+                    "COMBINED",
+                    "SINGLE"
+                  ]
+                }
+              }
+            }
+          },
+          "recording": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "Secure URL to download video recording of the notarization session."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the video recording file."
+              },
+              "size": {
+                "type": "number",
+                "description": "Size of the video recording file in bytes.",
+                "example": 5242880
+              }
+            }
+          }
+        }
+      },
+      "ProductCatalogSearchCatalogItemResponse": {
+        "type": "object",
+        "properties": {
+          "billing_cycle": {
+            "type": "integer",
+            "nullable": true
+          },
+          "billing_type": {
+            "type": "string"
+          },
+          "bundle_items_count": {
+            "type": "integer"
+          },
+          "workspace_id": {
+            "type": "string"
+          },
+          "category_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "category_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "number",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string"
+          },
+          "custom_fields": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "date_modified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "image_src": {
+            "type": "string",
+            "nullable": true
+          },
+          "images": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "is_main": {
+                  "type": "boolean",
+                  "nullable": true
+                },
+                "order": {
+                  "type": "number"
+                },
+                "src": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "max_tier_value": {
+            "type": "number",
+            "nullable": true
+          },
+          "min_tier_value": {
+            "type": "number",
+            "nullable": true
+          },
+          "modified_by": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "nullable": true
+          },
+          "pricing_method": {
+            "type": "integer"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "tiers": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "min_qty": {
+                  "type": "number"
+                },
+                "value": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "type": {
+            "type": "string",
+            "default": "regular",
+            "enum": [
+              "regular",
+              "bundle"
+            ]
+          },
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "highlights": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        }
+      },
+      "ProductCatalogItemPriceTier": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "example": 9.99
+          },
+          "min_qty": {
+            "type": "number",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "value",
+          "min_qty"
+        ],
+        "x-examples": {
+          "example-1": {
+            "price": 9.99,
+            "min_qty": 1
+          }
+        }
+      },
+      "ProductCatalogCatalogCustomBundleItem": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "image_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "images": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "is_main": {
+                  "type": "boolean",
+                  "nullable": true
+                },
+                "order": {
+                  "type": "number"
+                },
+                "src": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "price_configuration": {
+            "$ref": "#/components/schemas/ProductCatalogItemPriceConfiguration"
+          }
+        }
+      },
+      "ProductCatalogCatalogItemInBundle": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "image_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "images": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "is_main": {
+                  "type": "boolean",
+                  "nullable": true
+                },
+                "order": {
+                  "type": "number"
+                },
+                "src": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "price": {
+            "type": "number",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductCatalogCustomCatalogItemInBundle": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "image_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "images": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "is_main": {
+                  "type": "boolean",
+                  "nullable": true
+                },
+                "order": {
+                  "type": "number"
+                },
+                "src": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "price": {
+            "type": "number",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductCatalogCustomBundleItemNoId": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "image_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "images": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "is_main": {
+                  "type": "boolean",
+                  "nullable": true
+                },
+                "order": {
+                  "type": "number"
+                },
+                "src": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "price": {
+            "type": "number",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "DocumentDocxExport": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Export task id.",
+            "type": "string",
+            "example": "nPh2PDhFdDqAES9k64h9qX"
+          },
+          "document_id": {
+            "description": "Document id.",
+            "type": "string",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          "status": {
+            "description": "| **Status**    | **Description**                                                                             |\n|---------------|---------------------------------------------------------------------------------------------|\n| **created**   | The export task has been created, but the process has not started.                          |\n| **processing**| The export task is in progress.                                                             |\n| **done**      | The export task is completed, and the response contains URLs for downloading the documents. |\n| **error**     | An error occurred during the execution of the export task.                                  |\n",
+            "type": "string",
+            "enum": [
+              "created",
+              "processing",
+              "done",
+              "error"
+            ],
+            "example": "created"
+          }
+        },
+        "required": [
+          "id",
+          "document_id",
+          "status"
+        ]
+      },
+      "RecipientRedirectSettings": {
+        "type": "object",
+        "properties": {
+          "is_enabled": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string"
           }
         }
       }
@@ -19142,6 +19206,206 @@
             }
           }
         }
+      },
+      "400BadRequestV2": {
+        "description": "Bad Request error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "example": "bad_request"
+                },
+                "details": {
+                  "type": "array",
+                  "example": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "401AuthErrorV2": {
+        "description": "Authentication error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "example": "unauthorized"
+                },
+                "details": {
+                  "type": "array",
+                  "example": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "403PermissionDeniedV2": {
+        "description": "Permission error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "example": "forbidden"
+                },
+                "details": {
+                  "type": "array",
+                  "example": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "404NotFoundV2": {
+        "description": "Not found error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "example": "not_found"
+                },
+                "details": {
+                  "type": "array",
+                  "example": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "429TooManyRequestsV2": {
+        "description": "Too many requests error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "example": "too_many_requests"
+                },
+                "details": {
+                  "type": "array",
+                  "example": []
+                }
+              }
+            }
+          }
+        }
+      },
+      "400BadRequestUserRequestError": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "request_error"
+                },
+                "detail": {
+                  "type": "object",
+                  "example": {
+                    "email": [
+                      "User already exists",
+                      "User email should have the same email domain as org admin.",
+                      "Enter a valid email address."
+                    ],
+                    "role": [
+                      "Role is not a valid choice.",
+                      "This field is required."
+                    ],
+                    "license": [
+                      "Unable to add more licenses.",
+                      "License is not a valid choice.",
+                      "This field is required."
+                    ],
+                    "workspace_id": [
+                      "This field is required.",
+                      "Workspace with uuid {uuid} not found."
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400BadRequestMemberRequestError": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "request_error"
+                },
+                "detail": {
+                  "type": "object",
+                  "example": {
+                    "user_id": [
+                      "User doesn't exist",
+                      "Member already exists",
+                      "This field is required"
+                    ],
+                    "role": [
+                      "Role is not a valid choice",
+                      "This field is required"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400BadRequestMemberRemoveError": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "request_error"
+                },
+                "detail": {
+                  "type": "string",
+                  "example": "Owner can not be removed."
+                }
+              }
+            }
+          }
+        }
+      },
+      "404BadRequestMemberRemoveError": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "request_error"
+                },
+                "detail": {
+                  "type": "string",
+                  "example": "This member or workspace does not exist."
+                }
+              }
+            }
+          }
+        }
       }
     },
     "securitySchemes": {
@@ -19167,119 +19431,5 @@
         "description": "Send the authenticating user to the PandaDoc OAuth2 request URL. We recommend a button or a link titled\n\"Connect to PandaDoc\" if you are connecting users from a custom application. Users will see the \"Authorize Application\" screen.\nWhen the user clicks \"Authorize\", PandaDoc redirects the user back to your site with an authorization code inside the URL.\n\nhttps://app.pandadoc.com/oauth2/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read+write&response_type=code\n\n`client_id` and `redirect_uri` values should match your application settings.\n"
       }
     }
-  },
-  "security": [
-    {
-      "apiKey": []
-    },
-    {
-      "oauth2": []
-    }
-  ],
-  "tags": [
-    {
-      "name": "OAuth 2.0 Authentication",
-      "description": "Operations for creating and refreshing access tokens for user authentication."
-    },
-    {
-      "name": "Documents",
-      "description": "Operations for managing documents, including appending content library items and creating document sessions for embedded signing."
-    },
-    {
-      "name": "Document Reminders",
-      "description": "Operations for configuring document reminders."
-    },
-    {
-      "name": "Document Link to CRM",
-      "description": "Operations for managing links between documents and CRM entities."
-    },
-    {
-      "name": "Document Attachments",
-      "description": "Operations for managing document attachments, such as downloading them."
-    },
-    {
-      "name": "Document Fields",
-      "description": "Operations for retrieving and managing fields within a document."
-    },
-    {
-      "name": "Document Audit Trail",
-      "description": "Operations for retrieving the full audit trail of a document, including user actions and metadata."
-    },
-    {
-      "name": "Document Settings",
-      "description": "Operations for retrieving and managing document settings, such as language."
-    },
-    {
-      "name": "Document Recipients",
-      "description": "Operations for managing recipients in documents, including adding, editing, reassigning, and deleting recipients."
-    },
-    {
-      "name": "Document Sections (Bundles)",
-      "description": "Operations for managing document sections, including retrieving details and upload statuses."
-    },
-    {
-      "name": "Document Structure View",
-      "description": "Operations related to managing the structure and hierarchy of documents within the Document Structure View (DSV)."
-    },
-    {
-      "name": "Content Library Items",
-      "description": "Operations for managing content library items, including retrieving details, checking status, and creating items via file upload."
-    },
-    {
-      "name": "Templates",
-      "description": "Operations for managing templates, including listing, creating, and deleting templates."
-    },
-    {
-      "name": "Template Settings",
-      "description": "Operations for managing template settings, such as retrieving and updating settings."
-    },
-    {
-      "name": "Forms",
-      "description": "Operations for managing and retrieving forms, including filtering and sorting options."
-    },
-    {
-      "name": "Folders",
-      "description": "Operations for managing and organizing document folders."
-    },
-    {
-      "name": "API Logs",
-      "description": "Operations related to API logs."
-    },
-    {
-      "name": "Contacts",
-      "description": "Operations related to managing and retrieving contact details."
-    },
-    {
-      "name": "Members",
-      "description": "Operations for managing and retrieving details about workspace members."
-    },
-    {
-      "name": "Webhook subscriptions",
-      "description": "Operations for managing webhook subscriptions, including listing, retrieving details, and updating shared keys."
-    },
-    {
-      "name": "Webhook events",
-      "description": "Operations related to webhook events."
-    },
-    {
-      "name": "Notary",
-      "description": "Operations for creating and managing notarization requests."
-    },
-    {
-      "name": "Product catalog",
-      "description": "Operations for managing product catalog items, including creation and retrieval."
-    },
-    {
-      "name": "Quotes",
-      "description": "Operations for updating and managing quotes within documents."
-    },
-    {
-      "name": "User and Workspace management",
-      "description": "Operations for managing users and workspaces."
-    },
-    {
-      "name": "Communication Preferences",
-      "description": "Operations for managing communication preferences, including SMS opt-out settings."
-    }
-  ]
+  }
 }
