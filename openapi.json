@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.9.0"
+    "version": "7.10.0"
   },
   "servers": [
     {
@@ -140,6 +140,7 @@
       "post": {
         "summary": "Create/Refresh Access Token",
         "operationId": "accessToken",
+        "security": [],
         "description": "Create or refresh an access token to make requests on behalf of a user. This endpoint is used to obtain an `access_token` and `refresh_token` for the first time, and to refresh the `access_token` when it expires.\nThis endpoint is part of OAuth 2.0 implementation. You need to configure OAuth App to obtain `client_id` and `client_secret`. Read more about [OAuth 2.0 implementation](https://developers.pandadoc.com/reference/authentication-process).\nMake sure you're sending the header `Content-Type: application/x-www-form-urlencoded`. \n\n## Create Access Token\nAs a result of the OAuth 2.0 user authentication process, you should get a `code` that can be exchanged for an `access_token`. Use this endpoint to do this exchange, and to refresh the token later.\n\n> 🚧 Invalid Grant?\n> \n> If you receive an `invalid grant` response it is likely because you used the same `code` more than once from the [Authorize a PandaDoc User](ref:authorize-a-user) step above. The `code` parameter is generated for one-time use. A new `code` value must be generated if you wish to change API users, permissions, or simply generate a new `code` value for the same PandaDoc user.\n\n> 📘 expires_in\n> \n> `expires_in` is based in seconds. Currently, a token expires in 31535999 seconds = 1 year.\n\n## Refresh Access Token\nEventually, `access_token` expires and accessing an API method returns **401 unauthorized**. Your application needs to refresh the OAuth2 token with the stored `refresh_token` returned when initially creating an access token.\n\nOnce refreshed, calls on behalf of the originally authorized user can resume immediately. Use the newly returned `access_token` for all future API requests.\n\n> 🚧 Invalid Grant?\n> \n> If you receive an `invalid grant` response, it is likely because your `refresh_token` is invalid.\n",
         "tags": [
           "OAuth 2.0 Authentication"
@@ -2511,7 +2512,7 @@
                       "id": "ce9825e5-3210-4a8f-1230-f32b643295d2",
                       "email": "john.doe@pandadoc.com",
                       "expires_at": "2025-01-10T00:09:09.612651Z",
-                      "key": "985b695b56eaaa571e9bb8e522afd5bd335c32d7",
+                      "token": "985b695b56eaaa571e9bb8e522afd5bd335c32d7",
                       "document_id": "pSgK5XYZjyg3zXYZxsoUWg"
                     }
                   }
@@ -5914,7 +5915,37 @@
                           "id": "UDhBsFhy4857fsdBJ11FuL",
                           "name": "Client",
                           "signing_order": null,
-                          "preassigned_person": null
+                          "preassigned_person": {
+                            "email": "john@example.com",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "type": "preassigned contact",
+                            "placeholder_name": null,
+                            "placeholder_source": null
+                          }
+                        },
+                        {
+                          "id": "2mN5HBcG8JdKpQwXrLfYvT",
+                          "name": "Manager",
+                          "signing_order": "1",
+                          "preassigned_person": {
+                            "email": null,
+                            "type": "preassigned contact group",
+                            "placeholder_name": null,
+                            "placeholder_source": null,
+                            "members": [
+                              {
+                                "email": "alice@example.com",
+                                "first_name": "Alice",
+                                "last_name": "Johnson"
+                              },
+                              {
+                                "email": "bob@example.com",
+                                "first_name": "Bob",
+                                "last_name": "Smith"
+                              }
+                            ]
+                          }
                         }
                       ],
                       "version": "2",
@@ -6151,7 +6182,7 @@
                       "id": "ce9825e5-3210-4a8f-1230-f32b643295d2",
                       "email": "john.doe@pandadoc.com",
                       "expires_at": "2025-01-10T00:09:09.612651Z",
-                      "key": "985b695b56eaaa571e9bb8e522afd5bd335c32d7",
+                      "token": "985b695b56eaaa571e9bb8e522afd5bd335c32d7",
                       "template_id": "a53a2f96b91d47f99ee33f"
                     }
                   }
@@ -6921,14 +6952,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "integer",
-                "enum": [
-                  100,
-                  200,
-                  300,
-                  400,
-                  500
-                ]
+                "$ref": "#/components/schemas/ApiLogStatusEnum"
               }
             },
             "description": "Returns only the predefined status codes.",
@@ -6954,14 +6978,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string",
-                "enum": [
-                  "GET",
-                  "POST",
-                  "PUT",
-                  "PATCH",
-                  "DELETE"
-                ]
+                "$ref": "#/components/schemas/ApiLogMethodEnum"
               }
             },
             "description": "Returns only the predefined HTTP methods. Allows GET, POST, PUT, PATCH, and DELETE.",
@@ -6983,11 +7000,7 @@
             "name": "environment_type",
             "in": "query",
             "schema": {
-              "type": "string",
-              "enum": [
-                "PRODUCTION",
-                "SANDBOX"
-              ]
+              "$ref": "#/components/schemas/ApiLogEnvironmentTypeEnum"
             },
             "description": "Returns logs for production/sandbox.",
             "example": "PRODUCTION"
@@ -8665,7 +8678,7 @@
         }
       }
     },
-    "/public/v2/notary/notarization-requests/{session_request_id}\"": {
+    "/public/v2/notary/notarization-requests/{session_request_id}": {
       "get": {
         "tags": [
           "Notary"
@@ -8851,11 +8864,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string",
-                "enum": [
-                  "regular",
-                  "bundle"
-                ]
+                "$ref": "#/components/schemas/ProductCatalogTypeEnum"
               }
             },
             "example": [
@@ -10568,12 +10577,7 @@
             "description": "Toggles auto-reminders for the document. \nIf `true`, reminders are scheduled based on the configuration.\n"
           },
           "delivery_method": {
-            "type": "string",
-            "enum": [
-              "email",
-              "sms"
-            ],
-            "description": "The method used to deliver reminders (e.g., email, SMS).\n"
+            "$ref": "#/components/schemas/DocumentDeliveryMethodEnum"
           },
           "initial_delay_days": {
             "type": "integer",
@@ -11345,15 +11349,7 @@
         "type": "object",
         "properties": {
           "status": {
-            "type": "integer",
-            "enum": [
-              2,
-              10,
-              11,
-              12
-            ],
-            "example": 12,
-            "description": "Number code for the target document status. See notes for the codes corresponding to each status."
+            "$ref": "#/components/schemas/DocumentStatusChangeRequestStatusEnum"
           },
           "note": {
             "type": "string",
@@ -12083,12 +12079,7 @@
             "description": "Contact uuid."
           },
           "kind": {
-            "type": "string",
-            "enum": [
-              "contact",
-              "contact_group"
-            ],
-            "default": "contact"
+            "$ref": "#/components/schemas/RecipientKindEnum"
           }
         },
         "required": [
@@ -12443,15 +12434,7 @@
                         "example": 42.42
                       },
                       "billing_frequency": {
-                        "type": "string",
-                        "nullable": true,
-                        "enum": [
-                          "weekly",
-                          "monthly",
-                          "annually",
-                          "quarterly",
-                          "semiannualy"
-                        ]
+                        "$ref": "#/components/schemas/QuoteUpdateRequestBillingFrequencyEnum"
                       },
                       "contract_term": {
                         "type": "integer",
@@ -12517,12 +12500,7 @@
                           "type": "object",
                           "properties": {
                             "type": {
-                              "type": "string",
-                              "nullable": false,
-                              "enum": [
-                                "percent",
-                                "flat"
-                              ]
+                              "$ref": "#/components/schemas/QuoteUpdateRequestDiscountTypeEnum"
                             },
                             "value": {
                               "type": "number",
@@ -12539,12 +12517,7 @@
                           "type": "object",
                           "properties": {
                             "type": {
-                              "type": "string",
-                              "nullable": false,
-                              "enum": [
-                                "percent",
-                                "flat"
-                              ]
+                              "$ref": "#/components/schemas/QuoteUpdateRequestDiscountTypeEnum"
                             },
                             "value": {
                               "type": "number",
@@ -12561,12 +12534,7 @@
                           "type": "object",
                           "properties": {
                             "type": {
-                              "type": "string",
-                              "nullable": false,
-                              "enum": [
-                                "percent",
-                                "flat"
-                              ]
+                              "$ref": "#/components/schemas/QuoteUpdateRequestDiscountTypeEnum"
                             },
                             "value": {
                               "type": "number",
@@ -12600,13 +12568,7 @@
                       "nullable": false
                     },
                     "selection_type": {
-                      "type": "string",
-                      "enum": [
-                        "custom",
-                        "single",
-                        "multiple"
-                      ],
-                      "nullable": false
+                      "$ref": "#/components/schemas/QuoteUpdateRequestSettingsSelectionTypeTypeEnum"
                     }
                   },
                   "nullable": false
@@ -12619,12 +12581,7 @@
             "description": "Quote settings. Denotes whether a quote is optional or selected, and selection type inside the section - single, multiple, or custom.",
             "properties": {
               "selection_type": {
-                "type": "string",
-                "enum": [
-                  "custom",
-                  "single",
-                  "multiple"
-                ]
+                "$ref": "#/components/schemas/QuoteUpdateRequestSettingsSelectionTypeTypeEnum"
               }
             },
             "nullable": false
@@ -13156,17 +13113,53 @@
                       "nullable": true,
                       "example": "jane@example.com"
                     },
+                    "first_name": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "Jane"
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "nullable": true,
+                      "example": "Doe"
+                    },
                     "type": {
                       "type": "string",
                       "example": "preassigned contact"
                     },
                     "placeholder_name": {
                       "type": "string",
+                      "nullable": true,
                       "example": "Employee"
                     },
                     "placeholder_source": {
                       "type": "string",
+                      "nullable": true,
                       "example": "bamboohr"
+                    },
+                    "members": {
+                      "type": "array",
+                      "description": "List of contacts in the group. Only present for type \"preassigned contact group\".",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "email": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "alice@example.com"
+                          },
+                          "first_name": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "Alice"
+                          },
+                          "last_name": {
+                            "type": "string",
+                            "nullable": true,
+                            "example": "Johnson"
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -15093,19 +15086,7 @@
             "example": "FieldId1"
           },
           "type": {
-            "type": "string",
-            "enum": [
-              "checkbox",
-              "collect_file",
-              "date",
-              "dropdown",
-              "initials",
-              "payment_details",
-              "radio_buttons",
-              "signature",
-              "stamp",
-              "text"
-            ]
+            "$ref": "#/components/schemas/FieldTypeEnum"
           }
         }
       },
@@ -16503,12 +16484,7 @@
         "description": "To set up recipient verification, fill in verification_place and specify the type: passcode_verification, phone_verification, kba_verification or id_verification.\n- For passcode_verification, provide the passcode.\n- For phone_verification, provide the phone_number.\n- For kba_verification and id_verification, set the enabled parameter to true.\n",
         "properties": {
           "verification_place": {
-            "description": "Specifies when a recipient must complete the verification process:\n- `before_open` (before opening the document),\n- `before_sign` (before signing the document).\n",
-            "type": "string",
-            "enum": [
-              "before_open",
-              "before_sign"
-            ]
+            "$ref": "#/components/schemas/RecipientVerificationPlaceEnum"
           },
           "passcode_verification": {
             "type": "object",
@@ -16665,26 +16641,13 @@
                   "example": "2eWSKSvVqmuVCnuUK3iWwD"
                 },
                 "role": {
-                  "type": "string",
-                  "enum": [
-                    "Admin",
-                    "Manager",
-                    "Member",
-                    "Collaborator"
-                  ]
+                  "$ref": "#/components/schemas/WorkspaceMemberRoleEnum"
                 }
               }
             }
           },
           "license": {
-            "type": "string",
-            "enum": [
-              "Full",
-              "eSign",
-              "Read-only",
-              "Creator",
-              "Guest"
-            ]
+            "$ref": "#/components/schemas/UserLicenseEnum"
           }
         },
         "required": [
@@ -16728,14 +16691,7 @@
             "description": "User id."
           },
           "role": {
-            "type": "string",
-            "description": "Role for a member.",
-            "enum": [
-              "Admin",
-              "Manager",
-              "Member",
-              "Collaborator"
-            ]
+            "$ref": "#/components/schemas/WorkspaceMemberRoleEnum"
           }
         },
         "required": [
@@ -16755,13 +16711,7 @@
             "example": "2eWSKSvVqmuVCnuUK3iWwD"
           },
           "role": {
-            "type": "string",
-            "enum": [
-              "Admin",
-              "Manager",
-              "Member",
-              "Collaborator"
-            ]
+            "$ref": "#/components/schemas/WorkspaceMemberRoleEnum"
           },
           "email": {
             "type": "string",
@@ -16907,12 +16857,7 @@
             "nullable": true
           },
           "type": {
-            "type": "string",
-            "default": "regular",
-            "enum": [
-              "regular",
-              "bundle"
-            ]
+            "$ref": "#/components/schemas/ProductCatalogTypeEnum"
           },
           "bundle_items": {
             "type": "array",
@@ -17014,12 +16959,7 @@
             "nullable": true
           },
           "type": {
-            "type": "string",
-            "default": "regular",
-            "enum": [
-              "regular",
-              "bundle"
-            ]
+            "$ref": "#/components/schemas/ProductCatalogTypeEnum"
           },
           "bundle_items": {
             "type": "array",
@@ -17164,12 +17104,7 @@
             "nullable": true
           },
           "type": {
-            "type": "string",
-            "default": "regular",
-            "enum": [
-              "regular",
-              "bundle"
-            ]
+            "$ref": "#/components/schemas/ProductCatalogTypeEnum"
           },
           "bundle_items": {
             "type": "array",
@@ -17306,12 +17241,7 @@
             }
           },
           "pricing_method": {
-            "type": "integer",
-            "enum": [
-              0,
-              1,
-              2
-            ]
+            "$ref": "#/components/schemas/ProductCatalogPricingMethodEnum"
           }
         },
         "required": [
@@ -17658,7 +17588,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Internal id of the editing session. Not a token.",
+            "description": "Internal id of the editing session. Don't use it, it's not a token.",
             "example": "ce9825e5-3210-4a8f-1230-f32b643295d2"
           },
           "email": {
@@ -17681,7 +17611,7 @@
           },
           "token": {
             "type": "string",
-            "description": "Token for the embedded editor, aka E-Token.",
+            "description": "Token for the embedded editor, aka E-Token. Use it for your Embedding.",
             "example": "985b695b56eaaa571e9bb8e522afd5bd335c32d7"
           }
         }
@@ -17694,12 +17624,7 @@
             "example": "2eWSKSvVqmuVCnuUK3iWwD"
           },
           "type": {
-            "type": "string",
-            "enum": [
-              "production",
-              "sandbox"
-            ],
-            "default": "sandbox"
+            "$ref": "#/components/schemas/ApiKeyTypeEnum"
           }
         },
         "required": [
@@ -17715,13 +17640,7 @@
             "example": "ajnN7eGutJZsRKjQrNuPkh"
           },
           "type": {
-            "type": "string",
-            "enum": [
-              "production",
-              "sandbox"
-            ],
-            "description": "A type of created key.",
-            "example": "production"
+            "$ref": "#/components/schemas/ApiKeyTypeEnum"
           },
           "workspace_id": {
             "type": "string",
@@ -17883,27 +17802,7 @@
         "description": "Document settings response.",
         "properties": {
           "language": {
-            "type": "string",
-            "description": "Document language code (e.g., 'en-US', 'fr-FR').",
-            "enum": [
-              "en-US",
-              "fr-FR",
-              "it-IT",
-              "es-ES",
-              "nl-NL",
-              "de-DE",
-              "pt-BR",
-              "pt-PT",
-              "pl-PL",
-              "sv-SE",
-              "cs-CZ",
-              "da-DK",
-              "el-GR",
-              "hu-HU",
-              "nb-NO",
-              "ro-RO",
-              "bg-BG"
-            ]
+            "$ref": "#/components/schemas/DocumentLanguageEnum"
           }
         },
         "required": [
@@ -17949,29 +17848,17 @@
         "description": "Document settings update request.",
         "properties": {
           "language": {
-            "type": "string",
-            "description": "New language code (e.g., 'en-US', 'fr-FR').",
-            "enum": [
-              "en-US",
-              "fr-FR",
-              "it-IT",
-              "es-ES",
-              "nl-NL",
-              "de-DE",
-              "pt-BR",
-              "pt-PT",
-              "pl-PL",
-              "sv-SE",
-              "cs-CZ",
-              "da-DK",
-              "el-GR",
-              "hu-HU",
-              "nb-NO",
-              "ro-RO",
-              "bg-BG"
-            ]
+            "$ref": "#/components/schemas/DocumentLanguageEnum"
           }
         }
+      },
+      "RecipientVerificationPlaceEnum": {
+        "description": "Specifies when a recipient must complete the verification process:\n- `before_open` (before opening the document),\n- `before_sign` (before signing the document).\n",
+        "type": "string",
+        "enum": [
+          "before_open",
+          "before_sign"
+        ]
       },
       "UpdateDocumentActor": {
         "anyOf": [
@@ -18027,6 +17914,14 @@
           ]
         }
       },
+      "DocumentDeliveryMethodEnum": {
+        "type": "string",
+        "enum": [
+          "email",
+          "sms"
+        ],
+        "description": "The method used to deliver reminders (e.g., email, SMS).\n"
+      },
       "DocumentAutoRemindersResponse400": {
         "type": "object",
         "properties": {
@@ -18049,12 +17944,7 @@
             "description": "Toggles auto-reminders for the document. \nIf `true`, reminders are scheduled based on the configuration.\n"
           },
           "delivery_method": {
-            "type": "string",
-            "enum": [
-              "email",
-              "sms"
-            ],
-            "description": "The method used to deliver reminders (e.g., email, SMS).\n"
+            "$ref": "#/components/schemas/DocumentDeliveryMethodEnum"
           },
           "initial_delay_days": {
             "type": "integer",
@@ -18085,12 +17975,7 @@
             "description": "Toggles auto-reminders for the document. \nIf `true`, reminders are scheduled based on the configuration.\n"
           },
           "delivery_method": {
-            "type": "string",
-            "enum": [
-              "email",
-              "sms"
-            ],
-            "description": "The method used to deliver reminders (e.g., email, SMS).\n"
+            "$ref": "#/components/schemas/DocumentDeliveryMethodEnum"
           },
           "initial_delay_days": {
             "type": "integer",
@@ -18112,6 +17997,33 @@
         "required": [
           "enabled"
         ]
+      },
+      "DocumentStatusChangeRequestStatusEnum": {
+        "type": "integer",
+        "enum": [
+          2,
+          10,
+          11,
+          12
+        ],
+        "example": 12,
+        "description": "Number code for the target document status. See notes for the codes corresponding to each status."
+      },
+      "FieldTypeEnum": {
+        "type": "string",
+        "enum": [
+          "checkbox",
+          "collect_file",
+          "date",
+          "dropdown",
+          "initials",
+          "payment_details",
+          "radio_buttons",
+          "signature",
+          "stamp",
+          "text"
+        ],
+        "example": "payment_details"
       },
       "DocumentDetailsRecipientGroupMember": {
         "type": "object",
@@ -18167,6 +18079,16 @@
           }
         ]
       },
+      "DocumentFieldAnchorPointEnum": {
+        "type": "string",
+        "enum": [
+          "topleft",
+          "topright",
+          "bottomleft",
+          "bottomright"
+        ],
+        "example": "topleft"
+      },
       "DocumentFieldsLayout": {
         "type": "object",
         "properties": {
@@ -18183,13 +18105,7 @@
                 "type": "number"
               },
               "anchor_point": {
-                "type": "string",
-                "enum": [
-                  "topleft",
-                  "topright",
-                  "bottomleft",
-                  "bottomright"
-                ]
+                "$ref": "#/components/schemas/DocumentFieldAnchorPointEnum"
               }
             },
             "required": [
@@ -18239,19 +18155,7 @@
             "type": "string"
           },
           "type": {
-            "type": "string",
-            "enum": [
-              "text",
-              "signature",
-              "checkbox",
-              "date",
-              "dropdown",
-              "stamp",
-              "initials",
-              "radio_buttons",
-              "collect_file",
-              "payment_details"
-            ]
+            "$ref": "#/components/schemas/FieldTypeEnum"
           },
           "placeholder": {
             "type": "string"
@@ -18309,19 +18213,7 @@
             "description": "Use this to dynamically populate this field with data from your CRM or API. Supported field types:\n  * text\n  * checkbox\n  * date\n  * dropdown\n  * radio_buttons\n"
           },
           "type": {
-            "type": "string",
-            "enum": [
-              "text",
-              "signature",
-              "checkbox",
-              "date",
-              "dropdown",
-              "stamp",
-              "initials",
-              "radio_buttons",
-              "collect_file",
-              "payment_details"
-            ]
+            "$ref": "#/components/schemas/FieldTypeEnum"
           },
           "placeholder": {
             "type": "string"
@@ -18395,6 +18287,38 @@
             }
           }
         }
+      },
+      "DocumentLanguageEnum": {
+        "type": "string",
+        "description": "Document language code (e.g., 'en-US', 'fr-FR').",
+        "enum": [
+          "en-US",
+          "fr-FR",
+          "it-IT",
+          "es-ES",
+          "nl-NL",
+          "de-DE",
+          "pt-BR",
+          "pt-PT",
+          "pl-PL",
+          "sv-SE",
+          "cs-CZ",
+          "da-DK",
+          "el-GR",
+          "hu-HU",
+          "nb-NO",
+          "ro-RO",
+          "bg-BG"
+        ]
+      },
+      "RecipientKindEnum": {
+        "type": "string",
+        "enum": [
+          "contact",
+          "contact_group"
+        ],
+        "default": "contact",
+        "example": "contact"
       },
       "AddDsvNamedItemsRequest": {
         "type": "object",
@@ -18543,6 +18467,33 @@
             "example": "2021-06-17T15:51:13.426974Z"
           }
         }
+      },
+      "ApiLogStatusEnum": {
+        "type": "integer",
+        "enum": [
+          100,
+          200,
+          300,
+          400,
+          500
+        ]
+      },
+      "ApiLogMethodEnum": {
+        "type": "string",
+        "enum": [
+          "GET",
+          "POST",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      },
+      "ApiLogEnvironmentTypeEnum": {
+        "type": "string",
+        "enum": [
+          "PRODUCTION",
+          "SANDBOX"
+        ]
       },
       "NotarizationRequestDetailsResponse": {
         "type": "object",
@@ -18703,6 +18654,15 @@
           }
         }
       },
+      "ProductCatalogTypeEnum": {
+        "type": "string",
+        "default": "regular",
+        "enum": [
+          "regular",
+          "bundle"
+        ],
+        "example": "regular"
+      },
       "ProductCatalogSearchCatalogItemResponse": {
         "type": "object",
         "properties": {
@@ -18829,12 +18789,7 @@
             }
           },
           "type": {
-            "type": "string",
-            "default": "regular",
-            "enum": [
-              "regular",
-              "bundle"
-            ]
+            "$ref": "#/components/schemas/ProductCatalogTypeEnum"
           },
           "uuid": {
             "type": "string",
@@ -18890,6 +18845,14 @@
             "min_qty": 1
           }
         }
+      },
+      "ProductCatalogPricingMethodEnum": {
+        "type": "integer",
+        "enum": [
+          0,
+          1,
+          2
+        ]
       },
       "ProductCatalogCatalogCustomBundleItem": {
         "type": "object",
@@ -19072,6 +19035,74 @@
           }
         }
       },
+      "QuoteUpdateRequestBillingFrequencyEnum": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "weekly",
+          "monthly",
+          "annually",
+          "quarterly",
+          "semiannualy"
+        ]
+      },
+      "QuoteUpdateRequestDiscountTypeEnum": {
+        "type": "string",
+        "enum": [
+          "percent",
+          "flat"
+        ]
+      },
+      "QuoteUpdateRequestSettingsSelectionTypeTypeEnum": {
+        "type": "string",
+        "enum": [
+          "custom",
+          "single",
+          "multiple"
+        ]
+      },
+      "WorkspaceMemberRoleEnum": {
+        "type": "string",
+        "description": "Role for a member.",
+        "enum": [
+          "Admin",
+          "Manager",
+          "Member",
+          "Collaborator"
+        ],
+        "example": "Member"
+      },
+      "UserLicenseEnum": {
+        "type": "string",
+        "enum": [
+          "Full",
+          "eSign",
+          "Read-only",
+          "Creator",
+          "Guest"
+        ]
+      },
+      "ApiKeyTypeEnum": {
+        "type": "string",
+        "enum": [
+          "production",
+          "sandbox"
+        ],
+        "description": "A type of API key.",
+        "default": "sandbox",
+        "example": "sandbox"
+      },
+      "DocumentDocxExportStatusEnum": {
+        "description": "| **Status**    | **Description**                                                                             |\n|---------------|---------------------------------------------------------------------------------------------|\n| **created**   | The export task has been created, but the process has not started.                          |\n| **processing**| The export task is in progress.                                                             |\n| **done**      | The export task is completed, and the response contains URLs for downloading the documents. |\n| **error**     | An error occurred during the execution of the export task.                                  |\n",
+        "type": "string",
+        "enum": [
+          "created",
+          "processing",
+          "done",
+          "error"
+        ],
+        "example": "created"
+      },
       "DocumentDocxExport": {
         "type": "object",
         "properties": {
@@ -19086,15 +19117,7 @@
             "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           },
           "status": {
-            "description": "| **Status**    | **Description**                                                                             |\n|---------------|---------------------------------------------------------------------------------------------|\n| **created**   | The export task has been created, but the process has not started.                          |\n| **processing**| The export task is in progress.                                                             |\n| **done**      | The export task is completed, and the response contains URLs for downloading the documents. |\n| **error**     | An error occurred during the execution of the export task.                                  |\n",
-            "type": "string",
-            "enum": [
-              "created",
-              "processing",
-              "done",
-              "error"
-            ],
-            "example": "created"
+            "$ref": "#/components/schemas/DocumentDocxExportStatusEnum"
           }
         },
         "required": [
