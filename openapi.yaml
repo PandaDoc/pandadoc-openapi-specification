@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.9.0
+  version: 7.10.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -94,6 +94,7 @@ paths:
     post:
       summary: Create/Refresh Access Token
       operationId: accessToken
+      security: []
       description: |
         Create or refresh an access token to make requests on behalf of a user. This endpoint is used to obtain an `access_token` and `refresh_token` for the first time, and to refresh the `access_token` when it expires.
         This endpoint is part of OAuth 2.0 implementation. You need to configure OAuth App to obtain `client_id` and `client_secret`. Read more about [OAuth 2.0 implementation](https://developers.pandadoc.com/reference/authentication-process).
@@ -1957,7 +1958,7 @@ paths:
                     id: ce9825e5-3210-4a8f-1230-f32b643295d2
                     email: john.doe@pandadoc.com
                     expires_at: '2025-01-10T00:09:09.612651Z'
-                    key: 985b695b56eaaa571e9bb8e522afd5bd335c32d7
+                    token: 985b695b56eaaa571e9bb8e522afd5bd335c32d7
                     document_id: pSgK5XYZjyg3zXYZxsoUWg
               schema:
                 allOf:
@@ -4388,7 +4389,28 @@ paths:
                       - id: UDhBsFhy4857fsdBJ11FuL
                         name: Client
                         signing_order: null
-                        preassigned_person: null
+                        preassigned_person:
+                          email: john@example.com
+                          first_name: John
+                          last_name: Doe
+                          type: preassigned contact
+                          placeholder_name: null
+                          placeholder_source: null
+                      - id: 2mN5HBcG8JdKpQwXrLfYvT
+                        name: Manager
+                        signing_order: '1'
+                        preassigned_person:
+                          email: null
+                          type: preassigned contact group
+                          placeholder_name: null
+                          placeholder_source: null
+                          members:
+                            - email: alice@example.com
+                              first_name: Alice
+                              last_name: Johnson
+                            - email: bob@example.com
+                              first_name: Bob
+                              last_name: Smith
                     version: '2'
                     content_placeholders: []
                     tables:
@@ -4566,7 +4588,7 @@ paths:
                     id: ce9825e5-3210-4a8f-1230-f32b643295d2
                     email: john.doe@pandadoc.com
                     expires_at: '2025-01-10T00:09:09.612651Z'
-                    key: 985b695b56eaaa571e9bb8e522afd5bd335c32d7
+                    token: 985b695b56eaaa571e9bb8e522afd5bd335c32d7
                     template_id: a53a2f96b91d47f99ee33f
               schema:
                 allOf:
@@ -5097,13 +5119,7 @@ paths:
           schema:
             type: array
             items:
-              type: integer
-              enum:
-                - 100
-                - 200
-                - 300
-                - 400
-                - 500
+              $ref: '#/components/schemas/ApiLogStatusEnum'
           description: Returns only the predefined status codes.
           examples:
             Default:
@@ -5120,13 +5136,7 @@ paths:
           schema:
             type: array
             items:
-              type: string
-              enum:
-                - GET
-                - POST
-                - PUT
-                - PATCH
-                - DELETE
+              $ref: '#/components/schemas/ApiLogMethodEnum'
           description: Returns only the predefined HTTP methods. Allows GET, POST, PUT, PATCH, and DELETE.
           example:
             - GET
@@ -5140,10 +5150,7 @@ paths:
         - name: environment_type
           in: query
           schema:
-            type: string
-            enum:
-              - PRODUCTION
-              - SANDBOX
+            $ref: '#/components/schemas/ApiLogEnvironmentTypeEnum'
           description: Returns logs for production/sandbox.
           example: PRODUCTION
       responses:
@@ -6378,7 +6385,7 @@ paths:
           $ref: '#/components/responses/403PermissionDeniedV2'
         '429':
           $ref: '#/components/responses/429TooManyRequestsV2'
-  /public/v2/notary/notarization-requests/{session_request_id}":
+  /public/v2/notary/notarization-requests/{session_request_id}:
     get:
       tags:
         - Notary
@@ -6572,10 +6579,7 @@ paths:
           schema:
             type: array
             items:
-              type: string
-              enum:
-                - regular
-                - bundle
+              $ref: '#/components/schemas/ProductCatalogTypeEnum'
           example:
             - regular
         - name: billing_types
@@ -7796,12 +7800,7 @@ components:
             Toggles auto-reminders for the document. 
             If `true`, reminders are scheduled based on the configuration.
         delivery_method:
-          type: string
-          enum:
-            - email
-            - sms
-          description: |
-            The method used to deliver reminders (e.g., email, SMS).
+          $ref: '#/components/schemas/DocumentDeliveryMethodEnum'
         initial_delay_days:
           type: integer
           minimum: 1
@@ -8383,14 +8382,7 @@ components:
       type: object
       properties:
         status:
-          type: integer
-          enum:
-            - 2
-            - 10
-            - 11
-            - 12
-          example: 12
-          description: Number code for the target document status. See notes for the codes corresponding to each status.
+          $ref: '#/components/schemas/DocumentStatusChangeRequestStatusEnum'
         note:
           type: string
           description: Provide “private notes” regarding the manual status change.
@@ -8934,11 +8926,7 @@ components:
           example: 2eWSKSvVqmuVCnuUK3iWwD
           description: Contact uuid.
         kind:
-          type: string
-          enum:
-            - contact
-            - contact_group
-          default: contact
+          $ref: '#/components/schemas/RecipientKindEnum'
       required:
         - id
         - kind
@@ -9248,14 +9236,7 @@ components:
                       description: Item cost. If you create an item without providing a value, it will have the default value.
                       example: 42.42
                     billing_frequency:
-                      type: string
-                      nullable: true
-                      enum:
-                        - weekly
-                        - monthly
-                        - annually
-                        - quarterly
-                        - semiannualy
+                      $ref: '#/components/schemas/QuoteUpdateRequestBillingFrequencyEnum'
                     contract_term:
                       type: integer
                       nullable: true
@@ -9306,11 +9287,7 @@ components:
                         type: object
                         properties:
                           type:
-                            type: string
-                            nullable: false
-                            enum:
-                              - percent
-                              - flat
+                            $ref: '#/components/schemas/QuoteUpdateRequestDiscountTypeEnum'
                           value:
                             type: number
                             nullable: false
@@ -9322,11 +9299,7 @@ components:
                         type: object
                         properties:
                           type:
-                            type: string
-                            nullable: false
-                            enum:
-                              - percent
-                              - flat
+                            $ref: '#/components/schemas/QuoteUpdateRequestDiscountTypeEnum'
                           value:
                             type: number
                             nullable: false
@@ -9338,11 +9311,7 @@ components:
                         type: object
                         properties:
                           type:
-                            type: string
-                            nullable: false
-                            enum:
-                              - percent
-                              - flat
+                            $ref: '#/components/schemas/QuoteUpdateRequestDiscountTypeEnum'
                           value:
                             type: number
                             nullable: false
@@ -9364,23 +9333,14 @@ components:
                     type: boolean
                     nullable: false
                   selection_type:
-                    type: string
-                    enum:
-                      - custom
-                      - single
-                      - multiple
-                    nullable: false
+                    $ref: '#/components/schemas/QuoteUpdateRequestSettingsSelectionTypeTypeEnum'
                 nullable: false
         settings:
           type: object
           description: Quote settings. Denotes whether a quote is optional or selected, and selection type inside the section - single, multiple, or custom.
           properties:
             selection_type:
-              type: string
-              enum:
-                - custom
-                - single
-                - multiple
+              $ref: '#/components/schemas/QuoteUpdateRequestSettingsSelectionTypeTypeEnum'
           nullable: false
     DocumentRecipientResponse:
       type: object
@@ -9778,15 +9738,43 @@ components:
                     type: string
                     nullable: true
                     example: jane@example.com
+                  first_name:
+                    type: string
+                    nullable: true
+                    example: Jane
+                  last_name:
+                    type: string
+                    nullable: true
+                    example: Doe
                   type:
                     type: string
                     example: preassigned contact
                   placeholder_name:
                     type: string
+                    nullable: true
                     example: Employee
                   placeholder_source:
                     type: string
+                    nullable: true
                     example: bamboohr
+                  members:
+                    type: array
+                    description: List of contacts in the group. Only present for type "preassigned contact group".
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          nullable: true
+                          example: alice@example.com
+                        first_name:
+                          type: string
+                          nullable: true
+                          example: Alice
+                        last_name:
+                          type: string
+                          nullable: true
+                          example: Johnson
         version:
           type: string
           example: '2'
@@ -11168,18 +11156,7 @@ components:
           type: string
           example: FieldId1
         type:
-          type: string
-          enum:
-            - checkbox
-            - collect_file
-            - date
-            - dropdown
-            - initials
-            - payment_details
-            - radio_buttons
-            - signature
-            - stamp
-            - text
+          $ref: '#/components/schemas/FieldTypeEnum'
     Checkbox:
       title: Checkbox
       allOf:
@@ -12177,14 +12154,7 @@ components:
         - For kba_verification and id_verification, set the enabled parameter to true.
       properties:
         verification_place:
-          description: |
-            Specifies when a recipient must complete the verification process:
-            - `before_open` (before opening the document),
-            - `before_sign` (before signing the document).
-          type: string
-          enum:
-            - before_open
-            - before_sign
+          $ref: '#/components/schemas/RecipientVerificationPlaceEnum'
         passcode_verification:
           type: object
           description: Sets the passcode.
@@ -12298,20 +12268,9 @@ components:
                 type: string
                 example: 2eWSKSvVqmuVCnuUK3iWwD
               role:
-                type: string
-                enum:
-                  - Admin
-                  - Manager
-                  - Member
-                  - Collaborator
+                $ref: '#/components/schemas/WorkspaceMemberRoleEnum'
         license:
-          type: string
-          enum:
-            - Full
-            - eSign
-            - Read-only
-            - Creator
-            - Guest
+          $ref: '#/components/schemas/UserLicenseEnum'
       required:
         - user
         - license
@@ -12341,13 +12300,7 @@ components:
           example: 2eWSKSvVqmuVCnuUK3iWwD
           description: User id.
         role:
-          type: string
-          description: Role for a member.
-          enum:
-            - Admin
-            - Manager
-            - Member
-            - Collaborator
+          $ref: '#/components/schemas/WorkspaceMemberRoleEnum'
       required:
         - user_id
         - role
@@ -12361,12 +12314,7 @@ components:
           type: string
           example: 2eWSKSvVqmuVCnuUK3iWwD
         role:
-          type: string
-          enum:
-            - Admin
-            - Manager
-            - Member
-            - Collaborator
+          $ref: '#/components/schemas/WorkspaceMemberRoleEnum'
         email:
           type: string
           example: email@example.com
@@ -12473,11 +12421,7 @@ components:
           type: string
           nullable: true
         type:
-          type: string
-          default: regular
-          enum:
-            - regular
-            - bundle
+          $ref: '#/components/schemas/ProductCatalogTypeEnum'
         bundle_items:
           type: array
           nullable: true
@@ -12545,11 +12489,7 @@ components:
           type: string
           nullable: true
         type:
-          type: string
-          default: regular
-          enum:
-            - regular
-            - bundle
+          $ref: '#/components/schemas/ProductCatalogTypeEnum'
         bundle_items:
           type: array
           nullable: true
@@ -12640,11 +12580,7 @@ components:
           type: string
           nullable: true
         type:
-          type: string
-          default: regular
-          enum:
-            - regular
-            - bundle
+          $ref: '#/components/schemas/ProductCatalogTypeEnum'
         bundle_items:
           type: array
           nullable: true
@@ -12735,11 +12671,7 @@ components:
           items:
             $ref: '#/components/schemas/ProductCatalogItemPriceTier'
         pricing_method:
-          type: integer
-          enum:
-            - 0
-            - 1
-            - 2
+          $ref: '#/components/schemas/ProductCatalogPricingMethodEnum'
       required:
         - currency
         - pricing_method
@@ -12979,7 +12911,7 @@ components:
       properties:
         id:
           type: string
-          description: Internal id of the editing session. Not a token.
+          description: Internal id of the editing session. Don't use it, it's not a token.
           example: ce9825e5-3210-4a8f-1230-f32b643295d2
         email:
           type: string
@@ -12998,7 +12930,7 @@ components:
           example: 985b695b56eaaa571e9bb8e522afd5bd335c32d7
         token:
           type: string
-          description: Token for the embedded editor, aka E-Token.
+          description: Token for the embedded editor, aka E-Token. Use it for your Embedding.
           example: 985b695b56eaaa571e9bb8e522afd5bd335c32d7
     CreateApiKeyRequest:
       type: object
@@ -13007,11 +12939,7 @@ components:
           type: string
           example: 2eWSKSvVqmuVCnuUK3iWwD
         type:
-          type: string
-          enum:
-            - production
-            - sandbox
-          default: sandbox
+          $ref: '#/components/schemas/ApiKeyTypeEnum'
       required:
         - type
     CreateApiKeyResponse:
@@ -13022,12 +12950,7 @@ components:
           description: A unique identifier of the user.
           example: ajnN7eGutJZsRKjQrNuPkh
         type:
-          type: string
-          enum:
-            - production
-            - sandbox
-          description: A type of created key.
-          example: production
+          $ref: '#/components/schemas/ApiKeyTypeEnum'
         workspace_id:
           type: string
           description: A unique identifier of the workspace.
@@ -13138,26 +13061,7 @@ components:
       description: Document settings response.
       properties:
         language:
-          type: string
-          description: Document language code (e.g., 'en-US', 'fr-FR').
-          enum:
-            - en-US
-            - fr-FR
-            - it-IT
-            - es-ES
-            - nl-NL
-            - de-DE
-            - pt-BR
-            - pt-PT
-            - pl-PL
-            - sv-SE
-            - cs-CZ
-            - da-DK
-            - el-GR
-            - hu-HU
-            - nb-NO
-            - ro-RO
-            - bg-BG
+          $ref: '#/components/schemas/DocumentLanguageEnum'
       required:
         - language
     DocxExportTaskResponse:
@@ -13187,26 +13091,16 @@ components:
       description: Document settings update request.
       properties:
         language:
-          type: string
-          description: New language code (e.g., 'en-US', 'fr-FR').
-          enum:
-            - en-US
-            - fr-FR
-            - it-IT
-            - es-ES
-            - nl-NL
-            - de-DE
-            - pt-BR
-            - pt-PT
-            - pl-PL
-            - sv-SE
-            - cs-CZ
-            - da-DK
-            - el-GR
-            - hu-HU
-            - nb-NO
-            - ro-RO
-            - bg-BG
+          $ref: '#/components/schemas/DocumentLanguageEnum'
+    RecipientVerificationPlaceEnum:
+      description: |
+        Specifies when a recipient must complete the verification process:
+        - `before_open` (before opening the document),
+        - `before_sign` (before signing the document).
+      type: string
+      enum:
+        - before_open
+        - before_sign
     UpdateDocumentActor:
       anyOf:
         - $ref: '#/components/schemas/UpdateDocumentRecipient'
@@ -13254,6 +13148,13 @@ components:
               - type: number
         required:
           - value
+    DocumentDeliveryMethodEnum:
+      type: string
+      enum:
+        - email
+        - sms
+      description: |
+        The method used to deliver reminders (e.g., email, SMS).
     DocumentAutoRemindersResponse400:
       type: object
       properties:
@@ -13273,12 +13174,7 @@ components:
             Toggles auto-reminders for the document. 
             If `true`, reminders are scheduled based on the configuration.
         delivery_method:
-          type: string
-          enum:
-            - email
-            - sms
-          description: |
-            The method used to deliver reminders (e.g., email, SMS).
+          $ref: '#/components/schemas/DocumentDeliveryMethodEnum'
         initial_delay_days:
           type: integer
           minimum: 1
@@ -13306,12 +13202,7 @@ components:
             Toggles auto-reminders for the document. 
             If `true`, reminders are scheduled based on the configuration.
         delivery_method:
-          type: string
-          enum:
-            - email
-            - sms
-          description: |
-            The method used to deliver reminders (e.g., email, SMS).
+          $ref: '#/components/schemas/DocumentDeliveryMethodEnum'
         initial_delay_days:
           type: integer
           minimum: 1
@@ -13330,6 +13221,29 @@ components:
             Number of days between recurring reminders, applicable if `is_recurring` is `true`.
       required:
         - enabled
+    DocumentStatusChangeRequestStatusEnum:
+      type: integer
+      enum:
+        - 2
+        - 10
+        - 11
+        - 12
+      example: 12
+      description: Number code for the target document status. See notes for the codes corresponding to each status.
+    FieldTypeEnum:
+      type: string
+      enum:
+        - checkbox
+        - collect_file
+        - date
+        - dropdown
+        - initials
+        - payment_details
+        - radio_buttons
+        - signature
+        - stamp
+        - text
+      example: payment_details
     DocumentDetailsRecipientGroupMember:
       type: object
       description: Recipient Group Member
@@ -13367,6 +13281,14 @@ components:
               format: binary
               description: Binary file to be attached to a document
         - $ref: '#/components/schemas/DocumentAttachmentMetadata'
+    DocumentFieldAnchorPointEnum:
+      type: string
+      enum:
+        - topleft
+        - topright
+        - bottomleft
+        - bottomright
+      example: topleft
     DocumentFieldsLayout:
       type: object
       properties:
@@ -13380,12 +13302,7 @@ components:
             offset_y:
               type: number
             anchor_point:
-              type: string
-              enum:
-                - topleft
-                - topright
-                - bottomleft
-                - bottomright
+              $ref: '#/components/schemas/DocumentFieldAnchorPointEnum'
           required:
             - offset_x
             - offset_y
@@ -13419,18 +13336,7 @@ components:
         field_id:
           type: string
         type:
-          type: string
-          enum:
-            - text
-            - signature
-            - checkbox
-            - date
-            - dropdown
-            - stamp
-            - initials
-            - radio_buttons
-            - collect_file
-            - payment_details
+          $ref: '#/components/schemas/FieldTypeEnum'
         placeholder:
           type: string
         assigned_to:
@@ -13476,18 +13382,7 @@ components:
               * dropdown
               * radio_buttons
         type:
-          type: string
-          enum:
-            - text
-            - signature
-            - checkbox
-            - date
-            - dropdown
-            - stamp
-            - initials
-            - radio_buttons
-            - collect_file
-            - payment_details
+          $ref: '#/components/schemas/FieldTypeEnum'
         placeholder:
           type: string
         assigned_to:
@@ -13599,6 +13494,34 @@ components:
                 type: string
                 nullable: true
                 description: The IP address from which the action was performed. If a sandbox API key is used, this will be "hidden".
+    DocumentLanguageEnum:
+      type: string
+      description: Document language code (e.g., 'en-US', 'fr-FR').
+      enum:
+        - en-US
+        - fr-FR
+        - it-IT
+        - es-ES
+        - nl-NL
+        - de-DE
+        - pt-BR
+        - pt-PT
+        - pl-PL
+        - sv-SE
+        - cs-CZ
+        - da-DK
+        - el-GR
+        - hu-HU
+        - nb-NO
+        - ro-RO
+        - bg-BG
+    RecipientKindEnum:
+      type: string
+      enum:
+        - contact
+        - contact_group
+      default: contact
+      example: contact
     AddDsvNamedItemsRequest:
       type: object
       required:
@@ -13707,6 +13630,27 @@ components:
           type: string
           format: date-time
           example: '2021-06-17T15:51:13.426974Z'
+    ApiLogStatusEnum:
+      type: integer
+      enum:
+        - 100
+        - 200
+        - 300
+        - 400
+        - 500
+    ApiLogMethodEnum:
+      type: string
+      enum:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+    ApiLogEnvironmentTypeEnum:
+      type: string
+      enum:
+        - PRODUCTION
+        - SANDBOX
     NotarizationRequestDetailsResponse:
       type: object
       properties:
@@ -13831,6 +13775,13 @@ components:
               type: number
               description: Size of the video recording file in bytes.
               example: 5242880
+    ProductCatalogTypeEnum:
+      type: string
+      default: regular
+      enum:
+        - regular
+        - bundle
+      example: regular
     ProductCatalogSearchCatalogItemResponse:
       type: object
       properties:
@@ -13921,11 +13872,7 @@ components:
               value:
                 type: number
         type:
-          type: string
-          default: regular
-          enum:
-            - regular
-            - bundle
+          $ref: '#/components/schemas/ProductCatalogTypeEnum'
         uuid:
           type: string
           format: uuid
@@ -13963,6 +13910,12 @@ components:
         example-1:
           price: 9.99
           min_qty: 1
+    ProductCatalogPricingMethodEnum:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
     ProductCatalogCatalogCustomBundleItem:
       type: object
       properties:
@@ -14088,6 +14041,66 @@ components:
           nullable: true
         currency:
           type: string
+    QuoteUpdateRequestBillingFrequencyEnum:
+      type: string
+      nullable: true
+      enum:
+        - weekly
+        - monthly
+        - annually
+        - quarterly
+        - semiannualy
+    QuoteUpdateRequestDiscountTypeEnum:
+      type: string
+      enum:
+        - percent
+        - flat
+    QuoteUpdateRequestSettingsSelectionTypeTypeEnum:
+      type: string
+      enum:
+        - custom
+        - single
+        - multiple
+    WorkspaceMemberRoleEnum:
+      type: string
+      description: Role for a member.
+      enum:
+        - Admin
+        - Manager
+        - Member
+        - Collaborator
+      example: Member
+    UserLicenseEnum:
+      type: string
+      enum:
+        - Full
+        - eSign
+        - Read-only
+        - Creator
+        - Guest
+    ApiKeyTypeEnum:
+      type: string
+      enum:
+        - production
+        - sandbox
+      description: A type of API key.
+      default: sandbox
+      example: sandbox
+    DocumentDocxExportStatusEnum:
+      description: |
+        | **Status**    | **Description**                                                                             |
+        |---------------|---------------------------------------------------------------------------------------------|
+        | **created**   | The export task has been created, but the process has not started.                          |
+        | **processing**| The export task is in progress.                                                             |
+        | **done**      | The export task is completed, and the response contains URLs for downloading the documents. |
+        | **error**     | An error occurred during the execution of the export task.                                  |
+      type: string
+      enum:
+        - created
+        - processing
+        - done
+        - error
+      example: created
     DocumentDocxExport:
       type: object
       properties:
@@ -14100,20 +14113,7 @@ components:
           type: string
           example: BhVzRcxH9Z2LgfPPGXFUBa
         status:
-          description: |
-            | **Status**    | **Description**                                                                             |
-            |---------------|---------------------------------------------------------------------------------------------|
-            | **created**   | The export task has been created, but the process has not started.                          |
-            | **processing**| The export task is in progress.                                                             |
-            | **done**      | The export task is completed, and the response contains URLs for downloading the documents. |
-            | **error**     | An error occurred during the execution of the export task.                                  |
-          type: string
-          enum:
-            - created
-            - processing
-            - done
-            - error
-          example: created
+          $ref: '#/components/schemas/DocumentDocxExportStatusEnum'
       required:
         - id
         - document_id
