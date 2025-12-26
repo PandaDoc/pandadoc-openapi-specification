@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.8.0
+  version: 7.9.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -2825,106 +2825,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                    description: Total number of audit trail entries available.
-                  results:
-                    type: array
-                    description: List of audit trail entries returned for the current page.
-                    items:
-                      type: object
-                      description: Represents a single audit trail event for a document.
-                      properties:
-                        id:
-                          type: string
-                          description: Unique identifier of the audit trail entry.
-                        user:
-                          type: object
-                          description: The user who triggered the action.
-                          properties:
-                            id:
-                              type: string
-                              description: Unique identifier of the user.
-                            email:
-                              type: string
-                              format: email
-                              description: User's email address.
-                        action:
-                          type: integer
-                          description: |
-                            Numeric code representing the type of action performed.
-                            Possible values:
-
-                            | Integer Value | String Representation |
-                            |---------------|---------------------------------------------|
-                            | 1 | new document |
-                            | 2 | new revision |
-                            | 3 | approval request |
-                            | 4 | approved |
-                            | 5 | rejected |
-                            | 6 | sent |
-                            | 7 | completed by all |
-                            | 8 | viewed |
-                            | 9 | completed |
-                            | 10 | waiting pay |
-                            | 11 | paid |
-                            | 12 | forwarded |
-                            | 13 | expired |
-                            | 14 | bank account submitted |
-                            | 15 | bank account verified |
-                            | 16 | payment submitted |
-                            | 17 | payment failed |
-                            | 18 | completed manually |
-                            | 19 | expired manually |
-                            | 20 | paid manually |
-                            | 21 | approval deleted |
-                            | 22 | approval forced |
-                            | 23 | reassigned |
-                            | 24 | recipient edited |
-                            | 25 | recipient added |
-                            | 26 | recipient deleted |
-                            | 27 | declined manually |
-                            | 28 | approval step skipped |
-                            | 29 | suggest edits |
-                            | 43 | declined |
-                            | 44 | partly paid |
-                            | 45 | partly paid manually |
-                            | 47 | recipient verification with kba passed |
-                            | 48 | recipient verification with id passed |
-                            | 49 | recipient verification with text sms passed |
-                            | 50 | recipient verification with passcode passed |
-                            | 51 | recipient verification with kba failed |
-                            | 52 | recipient verification with id failed |
-                            | 53 | recipient verification with text sms failed |
-                            | 54 | recipient verification with passcode failed |
-                            | 55 | recipient signed with QES |
-                            | 56 | QES completed |
-                            | 57 | recipient QES attempt started |
-                            | 58 | recipient QES attempt expired |
-                            | 59 | Optional item in quote selected |
-                            | 60 | Optional item in quote deselected |
-                            | 61 | Item quantity in quote changed |
-                            | 62 | Item quantity in pricing table changed |
-                            | 63 | Optional item in pricing table selected |
-                            | 64 | Optional item in pricing table deselected |
-                            | 65 | Section item in pricing table selected (one of) |
-                            | 66 | Optional section in quote selected |
-                            | 67 | Optional section in quote deselected |
-                            | 68 | Section quantity in quote changed |
-                        reason:
-                          type: string
-                          nullable: true
-                          description: Optional reason or explanation for the action.
-                        date_created:
-                          type: string
-                          format: date-time
-                          description: Timestamp when the action was performed (in ISO 8601 format).
-                        ip_address:
-                          type: string
-                          nullable: true
-                          description: The IP address from which the action was performed. If a sandbox API key is used, this will be "hidden".
+                $ref: '#/components/schemas/DocumentAuditTrailResponse'
               examples:
                 List Audit Trail:
                   summary: A paginated audit trail list
@@ -3897,6 +3798,7 @@ paths:
         These items define the document's structure and hierarchy (e.g., sections or headings) 
         for display or navigation purposes within the Document Structure View (DSV).
       operationId: addDsvNamedItems
+      x-internal: true
       parameters:
         - name: document_id
           in: path
@@ -3920,32 +3822,7 @@ paths:
                       level: 0
                       page_name: page_name_2
             schema:
-              type: object
-              required:
-                - items
-              properties:
-                items:
-                  type: array
-                  description: List of named items representing structural elements of the document.
-                  items:
-                    type: object
-                    required:
-                      - name
-                      - level
-                      - page_name
-                    properties:
-                      name:
-                        type: string
-                        description: The display name of the item (e.g., "Introduction", "Chapter 1").
-                      level:
-                        type: integer
-                        minimum: 0
-                        description: |
-                          Hierarchical level of the item. 
-                          Level 0 is the highest (top-level), with increasing numbers for nested structures.
-                      page_name:
-                        type: string
-                        description: Internal reference or identifier for the page this item is associated with.
+              $ref: '#/components/schemas/AddDsvNamedItemsRequest'
       responses:
         '200':
           description: Successfully created DSV named items.
@@ -3967,46 +3844,7 @@ paths:
                         page_uuid: 4ae4e8ef-f2e8-4fe3-a47f-0833af49f31f
                     count: 2
               schema:
-                type: object
-                properties:
-                  results:
-                    type: array
-                    description: List of DSV named items that were created.
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          format: uuid
-                          description: Unique identifier for the created DSV item.
-                        name:
-                          type: string
-                          description: The display name of the item.
-                        level:
-                          type: integer
-                          minimum: 0
-                          description: The hierarchy level of the item.
-                        page_name:
-                          type: string
-                          description: Internal reference name for the page.
-                        page_uuid:
-                          type: string
-                          format: uuid
-                          description: UUID of the associated page.
-                      required:
-                        - id
-                        - name
-                        - level
-                        - page_name
-                        - page_uuid
-                  count:
-                    type: number
-                    format: integer
-                    minimum: 0
-                    description: Total number of items created.
-                required:
-                  - results
-                  - count
+                $ref: '#/components/schemas/AddDsvNamedItemsResponse'
   /public/v1/content-library-items:
     get:
       summary: List Content Library Item
@@ -6943,16 +6781,7 @@ paths:
                     has_more_items: false
                     total: 5
               schema:
-                type: object
-                properties:
-                  items:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ProductCatalogSearchCatalogItemResponse'
-                  has_more_items:
-                    type: boolean
-                  total:
-                    type: number
+                $ref: '#/components/schemas/ListCatalogItemsSearchResponse'
         '400':
           $ref: '#/components/responses/400BadRequestV2'
         '401':
@@ -9168,7 +8997,12 @@ components:
       properties:
         reminders:
           type: array
-          description: A list of reminders to be sent to specified recipients.
+          description: |
+            A list of reminders to be sent to specified recipients.
+            Use this field to specify which recipients should receive a reminder and through which delivery methods.
+
+            Each email reminder contains document sender in the From field, 
+            ensuring the recipient always sees consistent sender details and branding.
           items:
             type: object
             properties:
@@ -9178,6 +9012,39 @@ components:
                 description: Unique identifier of the recipient to receive the reminder.
               delivery_methods:
                 $ref: '#/components/schemas/RecipientDeliveryMethods'
+              email_customization:
+                type: object
+                description: |
+                  Optional customization settings for the reminder email.
+                  Defines the subject and body text used when sending the reminder via email.
+                  **This object is processed only if** `delivery_methods.email` is set to `true`.
+                example:
+                  subject: 'Reminder: Please sign the document "Service Agreement"'
+                  message: |
+                    This is a friendly reminder to review and sign the document "Service Agreement".
+                    Please click the link below to access the document.
+                    Thank you,
+                    The Tech Solutions Team
+                properties:
+                  subject:
+                    type: string
+                    description: |
+                      Subject line of the reminder email sent to the recipient.
+                    example: 'Reminder: Please sign the document "Service Agreement"'
+                    maxLength: 78
+                  message:
+                    type: string
+                    description: |
+                      Custom message body of the reminder email. Can include friendly or contextual
+                      text encouraging the recipient to complete the signing process.
+
+                      Supports **Markdown** syntax for rich text formatting (e.g., bold, italics, links, and line breaks).
+                    example: |
+                      **Reminder:** Please review and sign the document *"Service Agreement"*.
+
+                      Thank you,  
+                      **The Tech Solutions Team**
+                    maxLength: 5000
     DocumentSendManualReminder200Response:
       type: object
       properties:
@@ -9239,9 +9106,42 @@ components:
                       - Can't send reminder. Email delivery method is not selected for recipient
                       - Can't send email reminder. Recipient's mailbox is unreachable
                       - Can't send email reminder to the Recipient with no email
-                      - Can't send SMS reminder to the Recipient more than once every 24 hours
+                      - Can't send email reminder to the Recipient more than once every 24 hours
                       - Can't send reminder. The document does not contain a recipient with the specified recipient ID
+                      - Can’t send reminder. Email message contains potentially malicious links and could not be processed
                     description: Detailed explanation of why the reminder could not be sent, if applicable.
+              email_customization:
+                type: object
+                description: |
+                  Optional customization settings for the reminder email.
+                  Defines the subject and body text used when sending the reminder via email.
+                example:
+                  subject: 'Reminder: Please sign the document "Service Agreement"'
+                  message: |
+                    This is a friendly reminder to review and sign the document "Service Agreement".
+                    Please click the link below to access the document.
+                    Thank you,
+                    The Tech Solutions Team
+                properties:
+                  subject:
+                    type: string
+                    description: |
+                      Subject line of the reminder email sent to the recipient.
+                    example: 'Reminder: Please sign the document "Service Agreement"'
+                    maxLength: 78
+                  message:
+                    type: string
+                    description: |
+                      Custom message body of the reminder email. Can include friendly or contextual
+                      text encouraging the recipient to complete the signing process.
+
+                      Supports **Markdown** syntax for rich text formatting (e.g., bold, italics, links, and line breaks).
+                    example: |
+                      **Reminder:** Please review and sign the document *"Service Agreement"*.
+
+                      Thank you,  
+                      **The Tech Solutions Team**
+                    maxLength: 5000
           required:
             - recipient_id
     DocumentSendManualReminder409Response:
@@ -13598,6 +13498,175 @@ components:
       required:
         - type
         - layout
+    DocumentAuditTrailResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of audit trail entries available.
+        results:
+          type: array
+          description: List of audit trail entries returned for the current page.
+          items:
+            type: object
+            description: Represents a single audit trail event for a document.
+            properties:
+              id:
+                type: string
+                description: Unique identifier of the audit trail entry.
+              user:
+                type: object
+                description: The user who triggered the action.
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier of the user.
+                  email:
+                    type: string
+                    format: email
+                    description: User's email address.
+              action:
+                type: integer
+                description: |
+                  Numeric code representing the type of action performed.
+                  Possible values:
+
+                  | Integer Value | String Representation |
+                  |---------------|---------------------------------------------|
+                  | 1 | new document |
+                  | 2 | new revision |
+                  | 3 | approval request |
+                  | 4 | approved |
+                  | 5 | rejected |
+                  | 6 | sent |
+                  | 7 | completed by all |
+                  | 8 | viewed |
+                  | 9 | completed |
+                  | 10 | waiting pay |
+                  | 11 | paid |
+                  | 12 | forwarded |
+                  | 13 | expired |
+                  | 14 | bank account submitted |
+                  | 15 | bank account verified |
+                  | 16 | payment submitted |
+                  | 17 | payment failed |
+                  | 18 | completed manually |
+                  | 19 | expired manually |
+                  | 20 | paid manually |
+                  | 21 | approval deleted |
+                  | 22 | approval forced |
+                  | 23 | reassigned |
+                  | 24 | recipient edited |
+                  | 25 | recipient added |
+                  | 26 | recipient deleted |
+                  | 27 | declined manually |
+                  | 28 | approval step skipped |
+                  | 29 | suggest edits |
+                  | 43 | declined |
+                  | 44 | partly paid |
+                  | 45 | partly paid manually |
+                  | 47 | recipient verification with kba passed |
+                  | 48 | recipient verification with id passed |
+                  | 49 | recipient verification with text sms passed |
+                  | 50 | recipient verification with passcode passed |
+                  | 51 | recipient verification with kba failed |
+                  | 52 | recipient verification with id failed |
+                  | 53 | recipient verification with text sms failed |
+                  | 54 | recipient verification with passcode failed |
+                  | 55 | recipient signed with QES |
+                  | 56 | QES completed |
+                  | 57 | recipient QES attempt started |
+                  | 58 | recipient QES attempt expired |
+                  | 59 | Optional item in quote selected |
+                  | 60 | Optional item in quote deselected |
+                  | 61 | Item quantity in quote changed |
+                  | 62 | Item quantity in pricing table changed |
+                  | 63 | Optional item in pricing table selected |
+                  | 64 | Optional item in pricing table deselected |
+                  | 65 | Section item in pricing table selected (one of) |
+                  | 66 | Optional section in quote selected |
+                  | 67 | Optional section in quote deselected |
+                  | 68 | Section quantity in quote changed |
+              reason:
+                type: string
+                nullable: true
+                description: Optional reason or explanation for the action.
+              date_created:
+                type: string
+                format: date-time
+                description: Timestamp when the action was performed (in ISO 8601 format).
+              ip_address:
+                type: string
+                nullable: true
+                description: The IP address from which the action was performed. If a sandbox API key is used, this will be "hidden".
+    AddDsvNamedItemsRequest:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          description: List of named items representing structural elements of the document.
+          items:
+            type: object
+            required:
+              - name
+              - level
+              - page_name
+            properties:
+              name:
+                type: string
+                description: The display name of the item (e.g., "Introduction", "Chapter 1").
+              level:
+                type: integer
+                minimum: 0
+                description: |
+                  Hierarchical level of the item. 
+                  Level 0 is the highest (top-level), with increasing numbers for nested structures.
+              page_name:
+                type: string
+                description: Internal reference or identifier for the page this item is associated with.
+    AddDsvNamedItemsResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          description: List of DSV named items that were created.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: Unique identifier for the created DSV item.
+              name:
+                type: string
+                description: The display name of the item.
+              level:
+                type: integer
+                minimum: 0
+                description: The hierarchy level of the item.
+              page_name:
+                type: string
+                description: Internal reference name for the page.
+              page_uuid:
+                type: string
+                format: uuid
+                description: UUID of the associated page.
+            required:
+              - id
+              - name
+              - level
+              - page_name
+              - page_uuid
+        count:
+          type: number
+          format: integer
+          minimum: 0
+          description: Total number of items created.
+      required:
+        - results
+        - count
     ContentLibraryItemCreateRequest:
       type: object
       properties:
@@ -13862,8 +13931,20 @@ components:
           format: uuid
         highlights:
           type: object
-          additionalProperties: true
+          additionalProperties:
+            type: object
           nullable: true
+    ListCatalogItemsSearchResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductCatalogSearchCatalogItemResponse'
+        has_more_items:
+          type: boolean
+        total:
+          type: number
     ProductCatalogItemPriceTier:
       type: object
       properties:
@@ -14151,6 +14232,23 @@ components:
                 example: bad_request
               details:
                 type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    pointer:
+                      type: string
+                      description: JSON Pointer.
+                      nullable: true
+                    data:
+                      description: Details data.
+                      type: object
+                      nullable: true
+                      minProperties: 0
+                      additionalProperties: true
+                  required:
+                    - code
                 example: []
     401AuthErrorV2:
       description: Authentication error
@@ -14163,6 +14261,23 @@ components:
                 example: unauthorized
               details:
                 type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    pointer:
+                      type: string
+                      description: JSON Pointer.
+                      nullable: true
+                    data:
+                      description: Details data.
+                      type: object
+                      nullable: true
+                      minProperties: 0
+                      additionalProperties: true
+                  required:
+                    - code
                 example: []
     403PermissionDeniedV2:
       description: Permission error
@@ -14175,6 +14290,23 @@ components:
                 example: forbidden
               details:
                 type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    pointer:
+                      type: string
+                      description: JSON Pointer.
+                      nullable: true
+                    data:
+                      description: Details data.
+                      type: object
+                      nullable: true
+                      minProperties: 0
+                      additionalProperties: true
+                  required:
+                    - code
                 example: []
     404NotFoundV2:
       description: Not found error
@@ -14187,6 +14319,23 @@ components:
                 example: not_found
               details:
                 type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    pointer:
+                      type: string
+                      description: JSON Pointer.
+                      nullable: true
+                    data:
+                      description: Details data.
+                      type: object
+                      nullable: true
+                      minProperties: 0
+                      additionalProperties: true
+                  required:
+                    - code
                 example: []
     429TooManyRequestsV2:
       description: Too many requests error
@@ -14199,6 +14348,23 @@ components:
                 example: too_many_requests
               details:
                 type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    pointer:
+                      type: string
+                      description: JSON Pointer.
+                      nullable: true
+                    data:
+                      description: Details data.
+                      type: object
+                      nullable: true
+                      minProperties: 0
+                      additionalProperties: true
+                  required:
+                    - code
                 example: []
     400BadRequestUserRequestError:
       description: Bad Request
