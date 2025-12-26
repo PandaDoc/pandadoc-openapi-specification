@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.14.0
+  version: 7.15.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -8239,6 +8239,11 @@ components:
                   - type: boolean
                   - type: string
                   - type: number
+              role:
+                type: string
+                description: |
+                  Assign this field to a recipient role. The role must be present in the `recipients` list.
+                example: user
             required:
               - value
         images:
@@ -8454,6 +8459,11 @@ components:
                   - type: boolean
                   - type: string
                   - type: number
+              role:
+                type: string
+                description: |
+                  Assign this field to a recipient role. The role must be present in the `recipients` list.
+                example: user
             required:
               - value
         name:
@@ -14264,6 +14274,25 @@ components:
               detail:
                 type: string
                 example: You do not have permission to perform this action.
+              info_message:
+                type: string
+                description: Human-readable explanation of the permission error.
+                example: You are not allowed to send documents outside of your organization
+              links:
+                type: array
+                description: Optional links related to the error (e.g. a status endpoint).
+                items:
+                  type: object
+                  properties:
+                    rel:
+                      type: string
+                      example: status
+                    href:
+                      type: string
+                      example: https://api.pandadoc.com/public/v1/documents/RsXrKarV524iCpjci9CMGa
+                    type:
+                      type: string
+                      example: POST
     '404':
       description: Not found
       content:
