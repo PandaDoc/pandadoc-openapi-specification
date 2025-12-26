@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.13.0
+  version: 7.14.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -2868,7 +2868,7 @@ paths:
         - Document Settings
       summary: Get document settings
       description: |
-        Retrieves the settings for a specified document. Only the language and qualified_electronic_signature fields are currently supported.
+        Retrieves the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).
       operationId: documentSettingsGet
       parameters:
         - name: document_id
@@ -2891,12 +2891,13 @@ paths:
                   value:
                     language: en-US
                     qualified_electronic_signature: true
+                    expires_in: 30
     patch:
       tags:
         - Document Settings
       summary: Update document settings
       description: |
-        Updates the settings for a specified document. Only the language and qualified_electronic_signature fields are currently supported.
+        Updates the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).
       operationId: documentSettingsUpdate
       parameters:
         - name: document_id
@@ -2914,9 +2915,11 @@ paths:
               $ref: '#/components/schemas/UpdateDocumentSettingsRequest'
             examples:
               example-1:
-                summary: Update language
+                summary: Update document settings
                 value:
                   language: fr-FR
+                  qualified_electronic_signature: true
+                  expires_in: 60
       responses:
         '200':
           description: Successfully updated document settings.
@@ -2929,6 +2932,8 @@ paths:
                   summary: Updated document settings
                   value:
                     language: fr-FR
+                    qualified_electronic_signature: true
+                    expires_in: 60
   /public/v1/documents/{id}/ownership:
     patch:
       tags:
@@ -4658,7 +4663,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DocumentSettingsResponse'
+                $ref: '#/components/schemas/TemplateSettingsResponse'
               examples:
                 example-1:
                   summary: Template settings
@@ -4684,7 +4689,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateDocumentSettingsRequest'
+              $ref: '#/components/schemas/UpdateTemplateSettingsRequest'
             examples:
               example-1:
                 summary: Update language
@@ -4696,7 +4701,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DocumentSettingsResponse'
+                $ref: '#/components/schemas/TemplateSettingsResponse'
               examples:
                 example-1:
                   summary: Updated template settings
@@ -10886,9 +10891,15 @@ components:
             Indicates whether the document requires a Qualified Electronic Signature (QES)
             during the signing process. If `true`, signers must complete the document using
             a third-party qualified electronic signature provider according to supported verification rules.
+        expires_in:
+          type: integer
+          format: int32
+          description: |
+            Document expiration in days. If not explicitly set, defaults to the system default expiration.
       required:
         - language
         - qualified_electronic_signature
+        - expires_in
     UpdateDocumentSettingsRequest:
       type: object
       description: Document settings update request.
@@ -10901,6 +10912,12 @@ components:
             Indicates whether the document requires a Qualified Electronic Signature (QES)
             during the signing process. If `true`, signers must complete the document using
             a third-party qualified electronic signature provider according to supported verification rules.
+        expires_in:
+          type: integer
+          format: int32
+          minimum: 1
+          description: |
+            Document expiration in days. Minimum is 1 day.
     DocumentTransferOwnershipRequest:
       type: object
       properties:
@@ -12029,6 +12046,20 @@ components:
       properties:
         tokens:
           $ref: '#/components/schemas/Tokens'
+    TemplateSettingsResponse:
+      type: object
+      description: Template settings response.
+      properties:
+        language:
+          $ref: '#/components/schemas/DocumentLanguageEnum'
+      required:
+        - language
+    UpdateTemplateSettingsRequest:
+      type: object
+      description: Template settings update request.
+      properties:
+        language:
+          $ref: '#/components/schemas/DocumentLanguageEnum'
     FormListResponse:
       type: object
       properties:

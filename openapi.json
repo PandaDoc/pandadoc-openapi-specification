@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.13.0"
+    "version": "7.14.0"
   },
   "servers": [
     {
@@ -3839,7 +3839,7 @@
           "Document Settings"
         ],
         "summary": "Get document settings",
-        "description": "Retrieves the settings for a specified document. Only the language and qualified_electronic_signature fields are currently supported.\n",
+        "description": "Retrieves the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).\n",
         "operationId": "documentSettingsGet",
         "parameters": [
           {
@@ -3866,7 +3866,8 @@
                     "summary": "Document settings",
                     "value": {
                       "language": "en-US",
-                      "qualified_electronic_signature": true
+                      "qualified_electronic_signature": true,
+                      "expires_in": 30
                     }
                   }
                 }
@@ -3880,7 +3881,7 @@
           "Document Settings"
         ],
         "summary": "Update document settings",
-        "description": "Updates the settings for a specified document. Only the language and qualified_electronic_signature fields are currently supported.\n",
+        "description": "Updates the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).\n",
         "operationId": "documentSettingsUpdate",
         "parameters": [
           {
@@ -3903,9 +3904,11 @@
               },
               "examples": {
                 "example-1": {
-                  "summary": "Update language",
+                  "summary": "Update document settings",
                   "value": {
-                    "language": "fr-FR"
+                    "language": "fr-FR",
+                    "qualified_electronic_signature": true,
+                    "expires_in": 60
                   }
                 }
               }
@@ -3924,7 +3927,9 @@
                   "example-1": {
                     "summary": "Updated document settings",
                     "value": {
-                      "language": "fr-FR"
+                      "language": "fr-FR",
+                      "qualified_electronic_signature": true,
+                      "expires_in": 60
                     }
                   }
                 }
@@ -6290,7 +6295,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DocumentSettingsResponse"
+                  "$ref": "#/components/schemas/TemplateSettingsResponse"
                 },
                 "examples": {
                   "example-1": {
@@ -6329,7 +6334,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateDocumentSettingsRequest"
+                "$ref": "#/components/schemas/UpdateTemplateSettingsRequest"
               },
               "examples": {
                 "example-1": {
@@ -6348,7 +6353,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DocumentSettingsResponse"
+                  "$ref": "#/components/schemas/TemplateSettingsResponse"
                 },
                 "examples": {
                   "example-1": {
@@ -14700,11 +14705,17 @@
           "qualified_electronic_signature": {
             "type": "boolean",
             "description": "Indicates whether the document requires a Qualified Electronic Signature (QES)\nduring the signing process. If `true`, signers must complete the document using\na third-party qualified electronic signature provider according to supported verification rules.\n"
+          },
+          "expires_in": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Document expiration in days. If not explicitly set, defaults to the system default expiration.\n"
           }
         },
         "required": [
           "language",
-          "qualified_electronic_signature"
+          "qualified_electronic_signature",
+          "expires_in"
         ]
       },
       "UpdateDocumentSettingsRequest": {
@@ -14717,6 +14728,12 @@
           "qualified_electronic_signature": {
             "type": "boolean",
             "description": "Indicates whether the document requires a Qualified Electronic Signature (QES)\nduring the signing process. If `true`, signers must complete the document using\na third-party qualified electronic signature provider according to supported verification rules.\n"
+          },
+          "expires_in": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "description": "Document expiration in days. Minimum is 1 day.\n"
           }
         }
       },
@@ -16246,6 +16263,27 @@
         "properties": {
           "tokens": {
             "$ref": "#/components/schemas/Tokens"
+          }
+        }
+      },
+      "TemplateSettingsResponse": {
+        "type": "object",
+        "description": "Template settings response.",
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/DocumentLanguageEnum"
+          }
+        },
+        "required": [
+          "language"
+        ]
+      },
+      "UpdateTemplateSettingsRequest": {
+        "type": "object",
+        "description": "Template settings update request.",
+        "properties": {
+          "language": {
+            "$ref": "#/components/schemas/DocumentLanguageEnum"
           }
         }
       },
