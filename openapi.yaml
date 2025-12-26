@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.11.0
+  version: 7.12.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -2863,7 +2863,7 @@ paths:
         - Document Settings
       summary: Get document settings
       description: |
-        Retrieves the settings for a specified document. Only the language field is currently supported.
+        Retrieves the settings for a specified document. Only the language and qualified_electronic_signature fields are currently supported.
       operationId: documentSettingsGet
       parameters:
         - name: document_id
@@ -2885,12 +2885,13 @@ paths:
                   summary: Document settings
                   value:
                     language: en-US
+                    qualified_electronic_signature: true
     patch:
       tags:
         - Document Settings
       summary: Update document settings
       description: |
-        Updates the settings for a specified document. Only the language field is currently supported.
+        Updates the settings for a specified document. Only the language and qualified_electronic_signature fields are currently supported.
       operationId: documentSettingsUpdate
       parameters:
         - name: document_id
@@ -13085,8 +13086,15 @@ components:
       properties:
         language:
           $ref: '#/components/schemas/DocumentLanguageEnum'
+        qualified_electronic_signature:
+          type: boolean
+          description: |
+            Indicates whether the document requires a Qualified Electronic Signature (QES)
+            during the signing process. If `true`, signers must complete the document using
+            a third-party qualified electronic signature provider according to supported verification rules.
       required:
         - language
+        - qualified_electronic_signature
     DocxExportTaskResponse:
       allOf:
         - $ref: '#/components/schemas/DocumentDocxExport'
@@ -13115,6 +13123,12 @@ components:
       properties:
         language:
           $ref: '#/components/schemas/DocumentLanguageEnum'
+        qualified_electronic_signature:
+          type: boolean
+          description: |
+            Indicates whether the document requires a Qualified Electronic Signature (QES)
+            during the signing process. If `true`, signers must complete the document using
+            a third-party qualified electronic signature provider according to supported verification rules.
     RecipientVerificationPlaceEnum:
       description: |
         Specifies when a recipient must complete the verification process:

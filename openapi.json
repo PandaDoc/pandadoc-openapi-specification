@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.11.0"
+    "version": "7.12.0"
   },
   "servers": [
     {
@@ -3836,7 +3836,7 @@
           "Document Settings"
         ],
         "summary": "Get document settings",
-        "description": "Retrieves the settings for a specified document. Only the language field is currently supported.\n",
+        "description": "Retrieves the settings for a specified document. Only the language and qualified_electronic_signature fields are currently supported.\n",
         "operationId": "documentSettingsGet",
         "parameters": [
           {
@@ -3862,7 +3862,8 @@
                   "example-1": {
                     "summary": "Document settings",
                     "value": {
-                      "language": "en-US"
+                      "language": "en-US",
+                      "qualified_electronic_signature": true
                     }
                   }
                 }
@@ -3876,7 +3877,7 @@
           "Document Settings"
         ],
         "summary": "Update document settings",
-        "description": "Updates the settings for a specified document. Only the language field is currently supported.\n",
+        "description": "Updates the settings for a specified document. Only the language and qualified_electronic_signature fields are currently supported.\n",
         "operationId": "documentSettingsUpdate",
         "parameters": [
           {
@@ -17834,10 +17835,15 @@
         "properties": {
           "language": {
             "$ref": "#/components/schemas/DocumentLanguageEnum"
+          },
+          "qualified_electronic_signature": {
+            "type": "boolean",
+            "description": "Indicates whether the document requires a Qualified Electronic Signature (QES)\nduring the signing process. If `true`, signers must complete the document using\na third-party qualified electronic signature provider according to supported verification rules.\n"
           }
         },
         "required": [
-          "language"
+          "language",
+          "qualified_electronic_signature"
         ]
       },
       "DocxExportTaskResponse": {
@@ -17880,6 +17886,10 @@
         "properties": {
           "language": {
             "$ref": "#/components/schemas/DocumentLanguageEnum"
+          },
+          "qualified_electronic_signature": {
+            "type": "boolean",
+            "description": "Indicates whether the document requires a Qualified Electronic Signature (QES)\nduring the signing process. If `true`, signers must complete the document using\na third-party qualified electronic signature provider according to supported verification rules.\n"
           }
         }
       },
