@@ -39,6 +39,8 @@ security:
 tags:
   - name: OAuth 2.0 Authentication
     description: Operations for creating and refreshing access tokens for user authentication.
+  - name: Utility
+    description: Lightweight endpoints for verifying API and OpenAPI connectivity.
   - name: Documents
     description: Operations for managing documents, including appending content library items and creating document sessions for embedded signing.
   - name: Document Reminders
@@ -160,6 +162,41 @@ paths:
                   error:
                     type: string
                     example: unsupported_grant_type
+  /public/v1/ping:
+    get:
+      summary: Ping
+      description: |
+        Lightweight endpoint to verify API connectivity.
+
+        This endpoint is primarily intended for validating that the OpenAPI specification
+        can be updated and bundled successfully.
+      operationId: ping
+      tags:
+        - Utility
+      responses:
+        '200':
+          description: Pong
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required:
+                  - status
+                  - version
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  version:
+                    type: string
+                    description: API version from the OpenAPI document.
+                    example: 7.15.0
+              examples:
+                Pong:
+                  value:
+                    status: ok
+                    version: 7.15.0
   /public/v1/documents:
     get:
       tags:

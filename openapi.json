@@ -35,6 +35,10 @@
       "description": "Operations for creating and refreshing access tokens for user authentication."
     },
     {
+      "name": "Utility",
+      "description": "Lightweight endpoints for verifying API and OpenAPI connectivity."
+    },
+    {
       "name": "Documents",
       "description": "Operations for managing documents, including appending content library items and creating document sessions for embedded signing."
     },
@@ -202,6 +206,52 @@
                     "error": {
                       "type": "string",
                       "example": "unsupported_grant_type"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/v1/ping": {
+      "get": {
+        "summary": "Ping",
+        "description": "Lightweight endpoint to verify API connectivity.\n\nThis endpoint is primarily intended for validating that the OpenAPI specification\ncan be updated and bundled successfully.\n",
+        "operationId": "ping",
+        "tags": [
+          "Utility"
+        ],
+        "responses": {
+          "200": {
+            "description": "Pong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "status",
+                    "version"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "API version from the OpenAPI document.",
+                      "example": "7.15.0"
+                    }
+                  }
+                },
+                "examples": {
+                  "Pong": {
+                    "value": {
+                      "status": "ok",
+                      "version": "7.15.0"
                     }
                   }
                 }
