@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.15.0
+  version: 7.15.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -10362,6 +10362,11 @@ components:
         date_modified:
           type: string
           example: '2018-02-06T08:42:13.836022Z'
+        date_completed:
+          type: string
+          description: Document completion date.
+          example: '2021-10-23T21:07:04.147345Z'
+          nullable: true
         expiration_date:
           type: string
           example: '2018-02-06T08:42:13.836022Z'
@@ -10398,10 +10403,17 @@ components:
                 example: '+14842634627'
               delivery_methods:
                 $ref: '#/components/schemas/RecipientDeliveryMethods'
-              signing_order: {}
+              signing_order:
+                type: integer
+                example: 1
+                nullable: true
               shared_link:
                 type: string
                 example: https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364
+              type:
+                type: string
+                example: recipient
+                nullable: true
     EditingSessionRequest:
       type: object
       properties:
