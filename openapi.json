@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.15.1"
+    "version": "7.16.0"
   },
   "servers": [
     {
@@ -18609,6 +18609,11 @@
                   "nullable": true,
                   "description": "Name of the quotes section. If you create a section without providing a value, it will have the default value.",
                   "default": "Section name"
+                },
+                "currency": {
+                  "type": "string",
+                  "description": "Currency code (ISO 4217)",
+                  "example": "USD"
                 },
                 "items": {
                   "type": "array",
