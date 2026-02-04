@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.16.2
+  version: 7.17.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -5086,84 +5086,20 @@ paths:
           $ref: '#/components/responses/429'
   /public/v1/logs:
     get:
-      summary: List API Log
+      summary: '[Deprecated] List API Log'
       description: Get the list of all logs within the selected workspace.\ Optionally filter by date, page, and `#` of items per page.
       operationId: listLogs
       tags:
         - API Logs
       parameters:
-        - name: since
-          in: query
-          schema:
-            type: string
-            default: '-90d'
-          description: Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as "-90d" (for past 90 days).
-          example: '-7d'
-        - name: to
-          in: query
-          schema:
-            type: string
-          description: Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as "-10d" (for past 10 days) or a special "now" value.
-          example: now
-        - name: count
-          in: query
-          schema:
-            type: integer
-            format: int32
-            minimum: 1
-            default: 100
-          description: The amount of items on each page.
-          example: 10
-        - name: page
-          in: query
-          schema:
-            type: integer
-            format: int32
-            minimum: 1
-            default: 1
-          description: Returns page of the results by number.
-          example: 1
-        - name: statuses
-          in: query
-          style: form
-          explode: true
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiLogStatusEnum'
-          description: Returns only the predefined status codes.
-          examples:
-            Default:
-              value:
-                - 400
-                - 500
-            List API Logs 2XX:
-              value:
-                - 200
-        - name: methods
-          in: query
-          style: form
-          explode: true
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ApiLogMethodEnum'
-          description: Returns only the predefined HTTP methods. Allows GET, POST, PUT, PATCH, and DELETE.
-          example:
-            - GET
-            - POST
-        - name: search
-          in: query
-          schema:
-            type: string
-          description: Returns the results containing a string.
-          example: documents/hryJY9mqYZHjQCYQuSjRQg/send
-        - name: environment_type
-          in: query
-          schema:
-            $ref: '#/components/schemas/ApiLogEnvironmentTypeEnum'
-          description: Returns logs for production/sandbox.
-          example: PRODUCTION
+        - $ref: '#/components/parameters/SinceParam'
+        - $ref: '#/components/parameters/ToParam'
+        - $ref: '#/components/parameters/CountParam'
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/StatusesParam'
+        - $ref: '#/components/parameters/MethodsParam'
+        - $ref: '#/components/parameters/SearchParam'
+        - $ref: '#/components/parameters/EnvironmentTypeParam'
       responses:
         '200':
           description: OK
@@ -5173,47 +5109,9 @@ paths:
                 $ref: '#/components/schemas/APILogListResponse'
               examples:
                 List API Logs:
-                  value:
-                    results:
-                      - id: AZC86i5PYKMjoyFBAw9e
-                        url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/
-                        method: POST
-                        status: 200
-                        request_time: '2024-07-15T18:59:38.000'
-                        response_time: '2024-07-15T18:59:39.000'
-                      - id: AZC86ewVMUHWrVijestF
-                        url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/details
-                        method: GET
-                        status: 200
-                        request_time: '2024-07-15T18:59:22.000'
-                        response_time: '2024-07-15T18:59:22.000'
-                      - id: AZC86RrndoYcdqXPVw-l
-                        url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/wdNMxCRFqH2DaZDcRDXkGc/
-                        method: DELETE
-                        status: 204
-                        request_time: '2024-07-15T18:58:19.000'
-                        response_time: '2024-07-15T18:58:20.000'
+                  $ref: '#/components/examples/APILogListExample'
                 List API Logs 2XX:
-                  value:
-                    results:
-                      - id: AXp2jrHMK2MKv_lRqmQ
-                        url: /public/v1/logs
-                        method: GET
-                        status: 200
-                        request_time: '2021-07-05T12:05:00.389'
-                        response_time: '2021-07-05T12:05:00.827'
-                      - id: AXp2iQACarAbusgUW4jY
-                        url: /public/v1/logs
-                        method: GET
-                        status: 200
-                        request_time: '2021-07-05T11:58:47.070'
-                        response_time: '2021-07-05T11:58:47.588'
-                      - id: AXpip7PGK5MpUv_lQsuj
-                        url: /public/v1/documents
-                        method: POST
-                        status: 201
-                        request_time: '2021-07-01T15:19:54.607'
-                        response_time: '2021-07-01T15:19:55.404'
+                  $ref: '#/components/examples/APILogList2XXExample'
         '400':
           $ref: '#/components/responses/400RequestError'
         '401':
@@ -5222,21 +5120,13 @@ paths:
           $ref: '#/components/responses/429'
   /public/v1/logs/{id}:
     get:
-      summary: API Log Details
+      summary: '[Deprecated] API Log Details'
       description: Returns details of the specific API log event.
       operationId: detailsLog
       tags:
         - API Logs
       parameters:
-        - name: id
-          in: path
-          description: Log event id.
-          schema:
-            type: string
-          required: true
-          examples:
-            Log Event ID:
-              value: AZC86i5PYKMjQjMMMw9e
+        - $ref: '#/components/parameters/LogEventIdParam'
       responses:
         '200':
           description: OK
@@ -5246,32 +5136,74 @@ paths:
                 $ref: '#/components/schemas/APILogDetailsResponse'
               examples:
                 API Logs Details:
-                  value:
-                    id: AZC86i5PYKMjQjMMMw9e
-                    url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/
-                    method: POST
-                    status: 200
-                    request_time: '2024-07-15T18:59:38.000'
-                    response_time: '2024-07-15T18:59:39.000'
-                    request_body:
-                      id: xNVQVHShdgxHTTPVJ3CWCC
-                      kind: contact
-                    query_params_string: null
-                    query_params_object: null
-                    response_body:
-                      recipient_id: PsPqdRm4dt4thxnYMqttwY
-                    token_type: API_KEY
-                    application: null
-                    key: 9cf111111c3bd477ab9bb4123453b7f5d6502cd8
-                    request_id: 284b1456-1111-4ba9-1111-0d82418205f5
-                    user_email: siarhei@pandadoc.com
-                    user_id: Hzpt4yyQ3A5qHTTPdZQxpH
+                  $ref: '#/components/examples/APILogDetailsExample'
         '401':
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
+  /public/v2/logs:
+    get:
+      summary: List API Log
+      description: Get the list of all logs within the selected workspace.\ Optionally filter by date, page, and `#` of items per page.
+      operationId: listLogsV2
+      tags:
+        - API Logs
+      parameters:
+        - $ref: '#/components/parameters/SinceParam'
+        - $ref: '#/components/parameters/ToParam'
+        - $ref: '#/components/parameters/CountParam'
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/StatusesParam'
+        - $ref: '#/components/parameters/MethodsParam'
+        - $ref: '#/components/parameters/SearchParam'
+        - $ref: '#/components/parameters/EnvironmentTypeParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APILogListResponse'
+              examples:
+                List API Logs:
+                  $ref: '#/components/examples/APILogListExample'
+                List API Logs 2XX:
+                  $ref: '#/components/examples/APILogList2XXExample'
+        '400':
+          $ref: '#/components/responses/400BadRequestV2'
+        '401':
+          $ref: '#/components/responses/401AuthErrorV2'
+        '429':
+          $ref: '#/components/responses/429TooManyRequestsV2'
+  /public/v2/logs/{id}:
+    get:
+      summary: API Log Details
+      description: Returns details of the specific API log event.
+      operationId: detailsLogV2
+      tags:
+        - API Logs
+      parameters:
+        - $ref: '#/components/parameters/LogEventIdParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APILogDetailsResponse'
+              examples:
+                API Logs Details:
+                  $ref: '#/components/examples/APILogDetailsExample'
+        '400':
+          $ref: '#/components/responses/400BadRequestV2'
+        '401':
+          $ref: '#/components/responses/401AuthErrorV2'
+        '404':
+          $ref: '#/components/responses/404NotFoundV2'
+        '429':
+          $ref: '#/components/responses/429TooManyRequestsV2'
   /public/v1/contacts:
     get:
       tags:
@@ -14431,15 +14363,15 @@ components:
                   required:
                     - code
                 example: []
-    403PermissionDeniedV2:
-      description: Permission error
+    401AuthErrorV2:
+      description: Authentication error
       content:
         application/json:
           schema:
             properties:
               code:
                 type: string
-                example: forbidden
+                example: unauthorized
               details:
                 type: array
                 items:
@@ -14518,15 +14450,15 @@ components:
                   required:
                     - code
                 example: []
-    401AuthErrorV2:
-      description: Authentication error
+    403PermissionDeniedV2:
+      description: Permission error
       content:
         application/json:
           schema:
             properties:
               code:
                 type: string
-                example: unauthorized
+                example: forbidden
               details:
                 type: array
                 items:
@@ -14616,3 +14548,158 @@ components:
               detail:
                 type: string
                 example: This member or workspace does not exist.
+  parameters:
+    SinceParam:
+      name: since
+      in: query
+      schema:
+        type: string
+        default: '-90d'
+      description: Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as "-90d" (for past 90 days).
+      example: '-7d'
+    ToParam:
+      name: to
+      in: query
+      schema:
+        type: string
+      description: Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as "-10d" (for past 10 days) or a special "now" value.
+      example: now
+    CountParam:
+      name: count
+      in: query
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        default: 100
+      description: The amount of items on each page.
+      example: 10
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        default: 1
+      description: Returns page of the results by number.
+      example: 1
+    StatusesParam:
+      name: statuses
+      in: query
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ApiLogStatusEnum'
+      description: Returns only the predefined status codes.
+      examples:
+        Default:
+          value:
+            - 400
+            - 500
+        List API Logs 2XX:
+          value:
+            - 200
+    MethodsParam:
+      name: methods
+      in: query
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ApiLogMethodEnum'
+      description: Returns only the predefined HTTP methods. Allows GET, POST, PUT, PATCH, and DELETE.
+      example:
+        - GET
+        - POST
+    SearchParam:
+      name: search
+      in: query
+      schema:
+        type: string
+      description: Returns the results containing a string.
+      example: documents/hryJY9mqYZHjQCYQuSjRQg/send
+    EnvironmentTypeParam:
+      name: environment_type
+      in: query
+      schema:
+        $ref: '#/components/schemas/ApiLogEnvironmentTypeEnum'
+      description: Returns logs for production/sandbox.
+      example: PRODUCTION
+    LogEventIdParam:
+      name: id
+      in: path
+      description: Log event id.
+      schema:
+        type: string
+      required: true
+      examples:
+        Log Event ID:
+          value: AZC86i5PYKMjQjMMMw9e
+  examples:
+    APILogListExample:
+      value:
+        results:
+          - id: AZC86i5PYKMjoyFBAw9e
+            url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/
+            method: POST
+            status: 200
+            request_time: '2024-07-15T18:59:38.000'
+            response_time: '2024-07-15T18:59:39.000'
+          - id: AZC86ewVMUHWrVijestF
+            url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/details
+            method: GET
+            status: 200
+            request_time: '2024-07-15T18:59:22.000'
+            response_time: '2024-07-15T18:59:22.000'
+          - id: AZC86RrndoYcdqXPVw-l
+            url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/wdNMxCRFqH2DaZDcRDXkGc/
+            method: DELETE
+            status: 204
+            request_time: '2024-07-15T18:58:19.000'
+            response_time: '2024-07-15T18:58:20.000'
+    APILogList2XXExample:
+      value:
+        results:
+          - id: AXp2jrHMK2MKv_lRqmQ
+            url: /public/v1/logs
+            method: GET
+            status: 200
+            request_time: '2021-07-05T12:05:00.389'
+            response_time: '2021-07-05T12:05:00.827'
+          - id: AXp2iQACarAbusgUW4jY
+            url: /public/v1/logs
+            method: GET
+            status: 200
+            request_time: '2021-07-05T11:58:47.070'
+            response_time: '2021-07-05T11:58:47.588'
+          - id: AXpip7PGK5MpUv_lQsuj
+            url: /public/v1/documents
+            method: POST
+            status: 201
+            request_time: '2021-07-01T15:19:54.607'
+            response_time: '2021-07-01T15:19:55.404'
+    APILogDetailsExample:
+      value:
+        id: AZC86i5PYKMjQjMMMw9e
+        url: /public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/
+        method: POST
+        status: 200
+        request_time: '2024-07-15T18:59:38.000'
+        response_time: '2024-07-15T18:59:39.000'
+        request_body:
+          id: xNVQVHShdgxHTTPVJ3CWCC
+          kind: contact
+        query_params_string: null
+        query_params_object: null
+        response_body:
+          recipient_id: PsPqdRm4dt4thxnYMqttwY
+        token_type: API_KEY
+        application: null
+        key: 9cf111111c3bd477ab9bb4123453b7f5d6502cd8
+        request_id: 284b1456-1111-4ba9-1111-0d82418205f5
+        user_email: siarhei@pandadoc.com
+        user_id: Hzpt4yyQ3A5qHTTPdZQxpH
