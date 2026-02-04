@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.16.1"
+    "version": "7.16.2"
   },
   "servers": [
     {
@@ -12242,7 +12242,6 @@
               },
               "phone": {
                 "type": "string",
-                "pattern": "^\\+[1-9]\\d{0,4}\\d{2,14}$",
                 "example": "+1234567890"
               },
               "role": {
@@ -12632,7 +12631,8 @@
               },
               "merge_field": {
                 "type": "string",
-                "example": "MergeId"
+                "example": "MergeId",
+                "nullable": true
               },
               "type": {
                 "type": "string",
@@ -13590,6 +13590,12 @@
             "example": "API Sample Document from PandaDoc Template"
           },
           "autonumbering_sequence_name_prefix": {},
+          "folder_uuid": {
+            "type": "string",
+            "example": "QMDSzwabfFzTgjW4kUijqQ",
+            "description": "ID of the folder where the created document should be stored.",
+            "nullable": true
+          },
           "date_created": {
             "type": "string",
             "description": "Document creation date.",
@@ -13942,6 +13948,28 @@
             "type": "string",
             "description": "Document status.",
             "example": "document.draft"
+          },
+          "approval_execution": {
+            "type": "object",
+            "description": "Document approval execution.",
+            "nullable": true,
+            "properties": {
+              "document_uuid": {
+                "type": "string",
+                "description": "Decoded uuid of related RegularDocument instance.",
+                "example": "1234567890"
+              },
+              "revision_number": {
+                "type": "integer",
+                "description": "Consequent number of revision for related RegularDocument.",
+                "example": 1
+              }
+            }
+          },
+          "version": {
+            "type": "string",
+            "description": "Document version.",
+            "example": "1"
           }
         }
       },
@@ -15078,7 +15106,7 @@
                       "type": "string",
                       "description": "Subject line of the reminder email sent to the recipient.\n",
                       "example": "Reminder: Please sign the document \"Service Agreement\"",
-                      "maxLength": 78
+                      "maxLength": 300
                     },
                     "message": {
                       "type": "string",
@@ -15185,7 +15213,7 @@
                       "type": "string",
                       "description": "Subject line of the reminder email sent to the recipient.\n",
                       "example": "Reminder: Please sign the document \"Service Agreement\"",
-                      "maxLength": 78
+                      "maxLength": 300
                     },
                     "message": {
                       "type": "string",
