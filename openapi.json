@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.17.0"
+    "version": "7.17.1"
   },
   "servers": [
     {
@@ -6903,7 +6903,9 @@
     },
     "/public/v1/logs": {
       "get": {
-        "summary": "[Deprecated] List API Log",
+        "deprecated": true,
+        "x-sunset": "2027-02-04",
+        "summary": "List API Log",
         "description": "Get the list of all logs within the selected workspace.\\ Optionally filter by date, page, and `#` of items per page.",
         "operationId": "listLogs",
         "tags": [
@@ -6968,7 +6970,9 @@
     },
     "/public/v1/logs/{id}": {
       "get": {
-        "summary": "[Deprecated] API Log Details",
+        "deprecated": true,
+        "x-sunset": "2027-02-04",
+        "summary": "API Log Details",
         "description": "Returns details of the specific API log event.",
         "operationId": "detailsLog",
         "tags": [
