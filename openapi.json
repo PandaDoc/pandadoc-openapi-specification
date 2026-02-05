@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.17.1"
+    "version": "7.18.0"
   },
   "servers": [
     {
@@ -18536,6 +18536,77 @@
           }
         }
       },
+      "QuoteUpdateRequestDiscountTypeEnum": {
+        "type": "string",
+        "enum": [
+          "percent",
+          "flat"
+        ]
+      },
+      "QuoteUpdateRequestSummary": {
+        "type": "object",
+        "description": "Summary settings containing adjustments (discounts, fees, taxes) and custom columns that apply to the entire quote / section total.",
+        "properties": {
+          "custom_columns": {
+            "type": "object",
+            "nullable": false,
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "discounts": {
+            "type": "object",
+            "nullable": false,
+            "description": "Summary level discounts.",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "$ref": "#/components/schemas/QuoteUpdateRequestDiscountTypeEnum"
+                },
+                "value": {
+                  "type": "number",
+                  "nullable": false
+                }
+              }
+            }
+          },
+          "fees": {
+            "type": "object",
+            "nullable": false,
+            "description": "Summary level fees.",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "$ref": "#/components/schemas/QuoteUpdateRequestDiscountTypeEnum"
+                },
+                "value": {
+                  "type": "number",
+                  "nullable": false
+                }
+              }
+            }
+          },
+          "taxes": {
+            "type": "object",
+            "nullable": false,
+            "description": "Summary level taxes.",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "$ref": "#/components/schemas/QuoteUpdateRequestDiscountTypeEnum"
+                },
+                "value": {
+                  "type": "number",
+                  "nullable": false
+                }
+              }
+            }
+          }
+        }
+      },
       "QuoteUpdateRequestBillingFrequencyEnum": {
         "type": "string",
         "nullable": true,
@@ -18545,13 +18616,6 @@
           "annually",
           "quarterly",
           "semiannualy"
-        ]
-      },
-      "QuoteUpdateRequestDiscountTypeEnum": {
-        "type": "string",
-        "enum": [
-          "percent",
-          "flat"
         ]
       },
       "QuoteUpdateRequestSettingsSelectionTypeTypeEnum": {
@@ -18569,6 +18633,9 @@
             "type": "string",
             "description": "Currency code (ISO 4217)",
             "example": "USD"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/QuoteUpdateRequestSummary"
           },
           "sections": {
             "type": "array",
@@ -18588,6 +18655,9 @@
                   "nullable": true,
                   "description": "Name of the quotes section. If you create a section without providing a value, it will have the default value.",
                   "default": "Section name"
+                },
+                "summary": {
+                  "$ref": "#/components/schemas/QuoteUpdateRequestSummary"
                 },
                 "items": {
                   "type": "array",
