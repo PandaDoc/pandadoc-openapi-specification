@@ -1,0 +1,36 @@
+$kind: http-request
+description: |
+  Retrieve detailed information about a specific content library item using its ID. The details include:
+
+  - **Roles**
+  - **All fields with values**
+  - **All tokens with values**
+  - **Pricing information (pricing tables, products, etc)**
+  - **Metadata**
+  - **Tags**
+  - **Modification Timestamps**: note that `date_modified` means any changes associated with the CLI, while `content_date_modified` logs any changes in CLI content.
+url: "{{baseUrl}}/public/v1/content-library-items/:id/details"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: UXdP7Lnbvvr4WEb2wzM2hc
+    description: Content Library Item ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Content Library Item Details.resources/examples
+order: 5000

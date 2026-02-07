@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for managing and retrieving forms, including filtering and sorting options.
+order: 16000

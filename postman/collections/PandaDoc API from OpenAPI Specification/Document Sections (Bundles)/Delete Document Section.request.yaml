@@ -1,0 +1,42 @@
+$kind: http-request
+description: Removes selected section from the document.
+url: "{{baseUrl}}/public/v1/documents/:document_id/sections/:section_id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: ZPeAfcpzr9aiVs5vqUf6jg
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: section_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Specify section ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete Document Section.resources/examples
+order: 6000

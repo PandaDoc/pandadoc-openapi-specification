@@ -1,0 +1,76 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/content-library-items?q=Sample Pricing Table&id=UXdP7Lnbvvr4WEb2wzM2hc&deleted=false&folder_uuid=S6xX7saJfA44mtJxGWd95L&count=10&page=1&tag=pricing_tables"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: q
+      value: Sample Pricing Table
+      description: Search query. Filter by content library item name.
+    - key: id
+      value: UXdP7Lnbvvr4WEb2wzM2hc
+      description: Specify content library item ID.
+    - key: deleted
+      value: "false"
+      description: Returns only the deleted content library items.
+    - key: folder_uuid
+      value: S6xX7saJfA44mtJxGWd95L
+      description: The UUID of the folder where the content library items are stored.
+    - key: count
+      value: "10"
+      description: Specify how many content library items to return. Default is 50 content library items, maximum is 100 content library items.
+    - key: page
+      value: "1"
+      description: Specify which page of the dataset to return.
+    - key: tag
+      value: pricing_tables
+      description: Search tag. Filter by content library item tag.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "request_error",
+        "detail": {
+          "count": [
+            "A valid integer is required."
+          ],
+          "order_by": [
+            "value is not a valid choice."
+          ]
+        }
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "request_error"
+          },
+          "detail": {
+            "type": "object",
+            "example": {
+              "count": [
+                "A valid integer is required."
+              ],
+              "order_by": [
+                "value is not a valid choice."
+              ]
+            }
+          }
+        }
+      }
+order: 2000

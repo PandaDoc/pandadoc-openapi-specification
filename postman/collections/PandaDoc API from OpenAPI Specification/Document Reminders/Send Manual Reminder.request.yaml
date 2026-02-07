@@ -1,0 +1,100 @@
+$kind: http-request
+description: |
+  Sends manual reminders to one or more recipients of a specified document.
+url: "{{baseUrl}}/public/v1/documents/:document_id/send-reminder"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: The UUID of the document.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "reminders": [
+        {
+          "recipient_id": "2eWSKSvVqmuVCnuUK3iWwD",
+          "delivery_methods": {
+            "email": true,
+            "sms": false
+          }
+        },
+        {
+          "recipient_id": "7JhSDcvLQa9uR7kBX8mYeK",
+          "delivery_methods": {
+            "email": true,
+            "sms": true
+          }
+        }
+      ]
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "reminders": {
+          "type": "array",
+          "description": "A list of reminders to be sent to specified recipients.\nUse this field to specify which recipients should receive a reminder and through which delivery methods.\n\nEach email reminder contains document sender in the From field, \nensuring the recipient always sees consistent sender details and branding.\n",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recipient_id": {
+                "type": "string",
+                "example": "2eWSKSvVqmuVCnuUK3iWwD",
+                "description": "Unique identifier of the recipient to receive the reminder."
+              },
+              "delivery_methods": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "boolean"
+                  },
+                  "sms": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "email_customization": {
+                "type": "object",
+                "example": {
+                  "subject": "Reminder: Please sign the document \"Service Agreement\"",
+                  "message": "This is a friendly reminder to review and sign the document \"Service Agreement\".\nPlease click the link below to access the document.\nThank you,\nThe Tech Solutions Team\n"
+                },
+                "description": "Optional customization settings for the reminder email.\nDefines the subject and body text used when sending the reminder via email.\n**This object is processed only if** `delivery_methods.email` is set to `true`.\n",
+                "properties": {
+                  "subject": {
+                    "type": "string",
+                    "maxLength": 512,
+                    "example": "Reminder: Please sign the document \"Service Agreement\"",
+                    "description": "Subject line of the reminder email sent to the recipient.\n"
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 5000,
+                    "example": "**Reminder:** Please review and sign the document *\"Service Agreement\"*.\n\nThank you,  \n**The Tech Solutions Team**\n",
+                    "description": "Custom message body of the reminder email. Can include friendly or contextual\ntext encouraging the recipient to complete the signing process.\n\nSupports **Markdown** syntax for rich text formatting (e.g., bold, italics, links, and line breaks).\n"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+examples: ./.resources/Send Manual Reminder.resources/examples
+order: 4000

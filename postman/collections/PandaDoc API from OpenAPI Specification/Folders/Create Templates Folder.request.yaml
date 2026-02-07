@@ -1,0 +1,37 @@
+$kind: http-request
+description: |
+  Create a new folder to store your templates.
+
+  For the full list of folder operations and their limitations, see [Organize Templates and Folders](https://developers.pandadoc.com/docs/organize-folders).
+url: "{{baseUrl}}/public/v1/templates/folders"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "A new templates folder"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "A new template folder",
+          "description": "Name the folder for Templates you are creating."
+        },
+        "parent_uuid": {
+          "type": "string",
+          "example": "Nq8htXxFssmhRxAPSP4SBP",
+          "description": "ID of the parent folder. To create a new folder in the root folder, remove this parameter in the request."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+examples: ./.resources/Create Templates Folder.resources/examples
+order: 5000

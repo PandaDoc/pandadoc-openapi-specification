@@ -1,0 +1,54 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/templates?fields=content_date_modified"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: multipart/form-data
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: fields
+      value: content_date_modified
+      description: A comma-separated list of additional fields to include in the response.
+  body:
+    type: formdata
+    content:
+      - type: file
+        key: file
+        src: ""
+        description: Binary PDF/DocX/RTF File.
+      - type: text
+        key: data
+        value: "[object Object]"
+        description: JSON as a multipart/form-data string.
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "authentication_error",
+        "detail": "Authentication credentials were not provided."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "authentication_error"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Authentication credentials were not provided."
+          }
+        }
+      }
+order: 3000

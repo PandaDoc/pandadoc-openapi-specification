@@ -1,0 +1,101 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/sections/uploads?merge_field_scope=document"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: merge_field_scope
+      value: document
+      description: |
+        Determines how the fields are mapped when creating a section.
+          * document: Default value. The fields of the entire document are updated.
+          * upload: Only the fields from the created section are updated. The merge field is appended with the upload ID.
+  pathVariables:
+    - key: document_id
+      value: CFz2UnLXDck3UJkeGGEuB3
+      description: Document ID
+  body:
+    type: json
+    content: |-
+      {
+        "name": "New section from template",
+        "template_uuid": "hryJY9mqYZHjQCYQuSjRQg",
+        "recipients": [
+          {
+            "role": "Client",
+            "email": "client@pandadoc.com"
+          },
+          {
+            "role": "Sender",
+            "email": "sender@pandadoc.com"
+          }
+        ]
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "uuid": "LQ6cUT7xevPLUEgJeF8Zrm",
+        "document_uuid": "CFz2UnLXDck3UJkeGGEuB3",
+        "status": "document_sections_upload.UPLOADED",
+        "name": "null",
+        "date_created": "2023-08-28T15:48:09.379860Z",
+        "date_modified": "2023-08-28T15:48:09.379860Z",
+        "info_message": "You need to poll the Document Sections Upload Status method until the status will be changed to document_sections_upload.PROCESSED"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "example": "cKbJ7uay3cEGtsKuGPwYGX"
+          },
+          "name": {
+            "type": "string",
+            "example": "API Sample Upload Section from PandaDoc Template"
+          },
+          "document_uuid": {
+            "type": "string",
+            "example": "cKbJ7uay3cEGtsKuGPwYGX"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "document_sections_upload.UPLOADED",
+              "document_sections_upload.PROCESSED",
+              "document_sections_upload.ERROR"
+            ],
+            "example": "document_sections_upload.PROCESSED"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-10-08T11:06:32.337395Z"
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2021-10-08T11:06:32.337395Z"
+          },
+          "date_completed": {
+            "type": "string",
+            "example": "2021-10-08T11:06:32.337395Z"
+          },
+          "info_message": {
+            "type": "string",
+            "example": "You need to poll the Document Sections Upload Status method until the status will be changed to document_sections_upload.PROCESSED"
+          }
+        }
+      }
+order: 1000

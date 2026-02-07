@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/move-to-folder/:folder_id"
+  method: POST
+  headers:
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: ZPeAfcpzr9aiVs5vqUf6jg
+      description: Specify document ID.
+    - key: folder_id
+      value: ZPeAfcpzr9aiVs5vqUf6jg
+      description: Specify folder ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

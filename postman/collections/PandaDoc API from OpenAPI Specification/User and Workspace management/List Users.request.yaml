@@ -1,0 +1,59 @@
+$kind: http-request
+description: |
+  Get a list of all users with membership in your organization, with their contact information, license type, and workspace roles.
+
+  You must be an organization admin to list users.
+url: "{{baseUrl}}/public/v1/users?count=10&page=1&show_removed=false"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: count
+    value: "10"
+    description: Number of elements in page.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "default": 50,
+            "minimum": 0,
+            "maximum": 50
+          }
+        }
+      }
+  - key: page
+    value: "1"
+    description: Page number.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "minimum": 0
+          }
+        }
+      }
+  - key: show_removed
+    value: "false"
+    description: Filter option - show users with removed memberships.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Users.resources/examples
+order: 4000

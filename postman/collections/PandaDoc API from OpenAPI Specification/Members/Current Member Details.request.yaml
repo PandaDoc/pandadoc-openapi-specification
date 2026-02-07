@@ -1,0 +1,31 @@
+$kind: http-request
+description: |
+  Returns the member details of the current user (the owner of the API key).
+
+  **User** - is an account with a license in the Organization.  
+  **Member** - is a User with a predefined Role in the Workspace.
+
+  | Parameter | Description |
+  |---|---|
+  | `user_id` | A unique identifier of the `user` in the **organization** |
+  | `membership_id` | A unique identifier of the `user` in the **workspace** |
+  | `email` | A user email address |
+  | `first_name` | A user's first name |
+  | `last_name` | A user's last name |
+  | `is_active` | A boolean value that identifies if a member is active and not blocked |
+  | `workspace` | A unique identifier of the user's current active workspace |
+  | `workspace_name` | A name of the user's current active workspace |
+  | `email_verified` | A boolean value that identifies if the email is verified |
+  | `role` | A member's role in the workspace |
+  | `user_license` | A user license in the organization:  <br/>`Full (Standard)`;  <br/>`Read-only`;  <br/>`eSignature`;  <br/>`Guest`;  <br/>`Creator` |
+  | `date_created` | A date when a member was added to the workspace |
+  | `date_modified` | Last modified date of a member |
+url: "{{baseUrl}}/public/v1/members/current"
+method: GET
+headers:
+  Accept: application/json
+body:
+  type: text
+  content: ""
+examples: ./.resources/Current Member Details.resources/examples
+order: 2000

@@ -1,0 +1,42 @@
+$kind: http-request
+description: |
+  This API endpoint allows users to create an empty item in the content library.
+  No actual content or data is required to be provided in the initial creation.
+url: "{{baseUrl}}/public/v1/content-library-items"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "CLI name example"
+    }
+  $type: |-
+    {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "example": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+              "description": "Secure (HTTPS) and publicly accessible URL to the PDF document."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "CLI name example",
+              "description": "The name of the Content Library Item."
+            }
+          }
+        }
+      ]
+    }
+examples: ./.resources/Create Content Library Item.resources/examples
+order: 2000

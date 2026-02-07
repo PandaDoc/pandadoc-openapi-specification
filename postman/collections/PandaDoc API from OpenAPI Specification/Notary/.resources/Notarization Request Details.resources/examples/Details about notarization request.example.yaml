@@ -1,0 +1,247 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/notary/notarization-requests/:session_request_id"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: session_request_id
+      value: 0b2256a2-5803-4ae9-b1b8-595f48e37173
+      description: Notarization Request ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "string",
+        "status": "COMPLETED",
+        "document_id": "D3okRfgHRX7NEhavcACReB",
+        "date_created": "2024-01-25T15:07:10.845Z",
+        "date_started": "2024-01-25T15:07:10.845Z",
+        "date_completed": "2024-01-25T15:07:10.845Z",
+        "created_by": {
+          "user_id": "string",
+          "email": "string",
+          "first_name": "string",
+          "last_name": "string"
+        },
+        "invitees": [
+          {
+            "id": "string",
+            "email": "user@example.com",
+            "first_name": "string",
+            "last_name": "string"
+          }
+        ],
+        "signed_documents": [
+          {
+            "url": "string",
+            "document_name": "string",
+            "size": 200,
+            "document_type": "COMBINED"
+          },
+          {
+            "url": "string",
+            "document_name": "string",
+            "size": 100,
+            "document_type": "SINGLE"
+          },
+          {
+            "url": "string",
+            "document_name": "string",
+            "size": 100,
+            "document_type": "SINGLE"
+          }
+        ],
+        "recording": {
+          "url": "string",
+          "name": "string",
+          "size": 5242880
+        },
+        "termination_reason": null,
+        "termination_details": null
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "0b2256a2-5803-4ae9-b1b8-595f48e37173",
+            "description": "A unique identifier of the notarization request."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "SENT",
+              "WAITING_FOR_NOTARY",
+              "ACCEPTED",
+              "LIVE",
+              "COMPLETED",
+              "INCOMPLETE",
+              "CANCELLED"
+            ],
+            "example": "SENT",
+            "description": "Current status of the notarization request."
+          },
+          "document_id": {
+            "type": "string",
+            "example": "D3okRfgHRX7NEhavcACReB",
+            "description": "A unique identifier of the document for notarization."
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2025-01-13T10:25:53.800367Z",
+            "description": "A date when a notarization request was created.",
+            "format": "date-time"
+          },
+          "date_started": {
+            "type": "string",
+            "example": "2025-01-13T10:25:53.800367Z",
+            "description": "A date when a notarization session was started.",
+            "format": "date-time"
+          },
+          "date_completed": {
+            "type": "string",
+            "example": "2025-01-13T10:25:53.800367Z",
+            "description": "A date when a notarization session was completed.",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "object",
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "example": "nyAnVpY7pZ23FBve8s9xgk",
+                "description": "A unique identifier of the user who created a notarization request."
+              },
+              "email": {
+                "type": "string",
+                "example": "josh@example.com",
+                "description": "A user's email address."
+              },
+              "first_name": {
+                "type": "string",
+                "example": "Josh",
+                "description": "A user's first name."
+              },
+              "last_name": {
+                "type": "string",
+                "example": "Ron",
+                "description": "A user's last name."
+              }
+            }
+          },
+          "invitees": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "nyAnVpY7pZ23FBve8s9xgk",
+                  "description": "A unique identifier of the invitee."
+                },
+                "email": {
+                  "type": "string",
+                  "maxLength": 255,
+                  "example": "josh@example.com",
+                  "description": "A invitee's email address.",
+                  "format": "email"
+                },
+                "first_name": {
+                  "type": "string",
+                  "maxLength": 50,
+                  "example": "Josh",
+                  "description": "A invitee's first name."
+                },
+                "last_name": {
+                  "type": "string",
+                  "maxLength": 50,
+                  "example": "Ron",
+                  "description": "A invitee's last name."
+                }
+              }
+            }
+          },
+          "signed_documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "description": "Secure URL to download signed PDF document."
+                },
+                "document_name": {
+                  "type": "string",
+                  "example": "example.pdf",
+                  "description": "A signer document name."
+                },
+                "size": {
+                  "type": "number",
+                  "example": 523107,
+                  "description": "A signer document size in bytes."
+                },
+                "document_type": {
+                  "type": "string",
+                  "enum": [
+                    "COMBINED",
+                    "SINGLE"
+                  ],
+                  "example": "SINGLE",
+                  "description": "A type of the signed document."
+                }
+              }
+            }
+          },
+          "recording": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "Secure URL to download video recording of the notarization session."
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the video recording file."
+              },
+              "size": {
+                "type": "number",
+                "example": 5242880,
+                "description": "Size of the video recording file in bytes."
+              }
+            }
+          },
+          "termination_reason": {
+            "type": "string",
+            "enum": [
+              "SIGNER_NO_SHOW",
+              "AUDIO_VIDEO_ISSUE",
+              "FAILED_IDENTITY_VERIFICATION",
+              "TEST_SESSION",
+              "OTHER"
+            ],
+            "example": "FAILED_IDENTITY_VERIFICATION",
+            "description": "The reason why the notarization session was terminated. Only present when the request status is INCOMPLETE."
+          },
+          "termination_details": {
+            "type": "string",
+            "example": "The signer failed to verify their identity.",
+            "description": "Additional details about the termination reason provided by the notary. Only present when the request status is INCOMPLETE."
+          }
+        }
+      }
+order: 1000

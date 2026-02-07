@@ -1,0 +1,82 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/workspaces/:workspace_id/members?notify_user=true&notify_ws_admins=false"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: notify_user
+      value: "true"
+      description: Send a confirmation email to the user that was added to workspace(s).
+    - key: notify_ws_admins
+      value: "false"
+      description: Send a confirmation email to all workspace admins indicating that the user has been added to the workspace.
+  pathVariables:
+    workspace_id: BhVzRcxH9Z2LgfPPGXFUBa
+  body:
+    type: json
+    content: |-
+      {
+        "user_id": "2eWSKSvVqmuVCnuUK3iWwD",
+        "role": "Member"
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "member_id": "iMymdDd9XFD3HyxP5VD67Q",
+        "workspace_id": "2eWSKSvVqmuVCnuUK3iWwD",
+        "role": "Admin",
+        "email": "email@example.com",
+        "first_name": "John",
+        "last_name": "Doe"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "member_id": {
+            "type": "string",
+            "example": "iMymdDd9XFD3HyxP5VD67Q"
+          },
+          "workspace_id": {
+            "type": "string",
+            "example": "2eWSKSvVqmuVCnuUK3iWwD"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "Admin",
+              "Manager",
+              "Member",
+              "Collaborator"
+            ],
+            "example": "Member",
+            "description": "Role for a member."
+          },
+          "email": {
+            "type": "string",
+            "example": "email@example.com"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe"
+          }
+        }
+      }
+order: 1000

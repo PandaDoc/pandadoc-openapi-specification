@@ -1,0 +1,16 @@
+# Use this workspace to collaborate
+workspace:
+  id: 99762b76-c2b0-407a-b5bd-a4ac049c5c23
+
+localResources:
+  specs:
+    - ../openapi.json
+    - ../openapi.yaml
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  specs:
+    ../openapi.json: 59d00a41-167d-4672-b9c9-59c1c45028d1
+  collections:
+    ../postman/collections/PandaDoc API from OpenAPI Specification: 30119088-8a643317-31c2-4966-b9c1-748a6e6810c6

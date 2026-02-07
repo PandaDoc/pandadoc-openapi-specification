@@ -1,0 +1,38 @@
+$kind: http-request
+description: |
+  Requesting the CLI status helps verify that a CLI is in the expected state before invoking additional API methods.
+
+  ## Available CLI Statuses
+
+  The following is a complete list of all possible CLI statuses returned:
+
+  | CLI Status | Status Description |
+  |-----------------|--------------------|
+  | `cli.UPLOADED`  | The CLI upload process has been initiated and is currently in progress. It will soon transition to the `cli.PROCESSED` state. |
+  | `cli.PROCESSED` | The CLI has been successfully uploaded and created. At this stage, all aspects of the CLI are editable. |
+  | `cli.ERROR`     | The CLI upload process has failed. Please refer to the error details in the response for more information. |
+url: "{{baseUrl}}/public/v1/content-library-items/:id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: EE8yUNg5HztqVAuH85He8V
+    description: Content Library Item ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Content Library Item Status.resources/examples
+order: 4000

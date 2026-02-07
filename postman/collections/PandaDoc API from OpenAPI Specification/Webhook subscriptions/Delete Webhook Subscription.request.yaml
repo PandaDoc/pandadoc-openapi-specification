@@ -1,0 +1,28 @@
+$kind: http-request
+description: This operation deletes a specific webhook subscription identified by its UUID.
+url: "{{baseUrl}}/public/v1/webhook-subscriptions/:id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: d173751d-0057-4d5c-ab75-49a670a4ca68
+    description: Webhook subscription uuid.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete Webhook Subscription.resources/examples
+order: 5000

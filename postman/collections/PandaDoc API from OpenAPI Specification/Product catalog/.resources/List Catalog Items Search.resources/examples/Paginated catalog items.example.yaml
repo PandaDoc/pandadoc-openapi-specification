@@ -1,0 +1,392 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/product-catalog/items/search?page=1&per_page=10&query=coffee&order_by=-date_modified&types=regular&billing_types=one_time&exclude_uuids=06cb0ce9-094b-1f38-2fe6-0a9d226cd22c&category_id=06cb0ce9-094b-1f38-2fe6-0a9d226cd22c&no_category=true"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: page
+      value: "1"
+      description: Page number.
+    - key: per_page
+      value: "10"
+      description: Items per page.
+    - key: query
+      value: coffee
+      description: |
+        Search query. Searches the following fields: Title, SKU, description, category name, custom fields name and value.
+    - key: order_by
+      value: -date_modified
+      description: Ordering principle for displaying search results.
+    - key: types
+      value: regular
+      description: Filter by catalog item types.
+    - key: billing_types
+      value: one_time
+      description: Filter by billing types.
+    - key: exclude_uuids
+      value: 06cb0ce9-094b-1f38-2fe6-0a9d226cd22c
+      description: A list of item uuids to be excluded from search.
+    - key: category_id
+      value: 06cb0ce9-094b-1f38-2fe6-0a9d226cd22c
+      description: Category id.
+    - key: no_category
+      value: "true"
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "items": [
+          {
+            "billing_cycle": null,
+            "billing_type": "one_time",
+            "bundle_items_count": 0,
+            "workspace_id": "n7SK7prHeoWJsmb9VkrPve",
+            "category_id": "0ac5f88a-bdd6-4836-304d-28d042b8d3a2",
+            "category_name": "Sample product",
+            "created_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "currency": "USD",
+            "custom_fields": [],
+            "date_created": "2023-02-01T10:55:07+00:00",
+            "date_modified": "2023-02-01T10:55:07+00:00",
+            "description": "Its exceptionally effective vacuum brewing method extracts all precious oils of your favorite coffee. In addition, the brewing time and temperature are perfectly calibrated, ensuring a perfect cup of coffee with each brew.",
+            "image_src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/81361512-488e-42c8-8c13-5e61b8a27638/1.jpeg",
+            "images": [
+              {
+                "src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/81361512-488e-42c8-8c13-5e61b8a27638/1.jpeg",
+                "order": 0,
+                "is_main": true
+              },
+              {
+                "src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/a0aca18e-8074-4698-aadb-3f41c1bd6a88/2.jpeg",
+                "order": 1,
+                "is_main": false
+              }
+            ],
+            "max_tier_value": null,
+            "min_tier_value": null,
+            "modified_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "price": 250,
+            "pricing_method": 0,
+            "sku": "coffee_maker",
+            "title": "Siphon vacuum coffee maker",
+            "type": "regular",
+            "uuid": "1725f759-3a1c-64e3-2daa-f67eafa589d7",
+            "highlights": null,
+            "tiers": null,
+            "cost": 100
+          },
+          {
+            "billing_cycle": null,
+            "billing_type": "one_time",
+            "bundle_items_count": 0,
+            "workspace_id": "n7SK7prHeoWJsmb9VkrPve",
+            "category_id": "0ac5f88a-bdd6-4836-304d-28d042b8d3a2",
+            "category_name": "Sample product",
+            "created_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "currency": "USD",
+            "custom_fields": [],
+            "date_created": "2023-02-01T10:55:07+00:00",
+            "date_modified": "2023-02-01T10:55:07+00:00",
+            "description": "Double-layer Filter: Dual layers of 304 stainless steel allow fine oils from coffee powder to infuse themselves into your coffee, creating a richer, fuller flavor and no coffee ground deposits",
+            "image_src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/b593eb9a-74cd-40a0-8c38-6a9d39248d3d/3.jpeg",
+            "images": [
+              {
+                "src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/b593eb9a-74cd-40a0-8c38-6a9d39248d3d/3.jpeg",
+                "order": 0,
+                "is_main": true
+              },
+              {
+                "src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/ea09bd4a-c619-4b3e-8f99-f1a2180a97a8/4.jpeg",
+                "order": 1,
+                "is_main": false
+              },
+              {
+                "src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6e6312f8-787d-4453-8772-ac81f481be00/5.jpeg",
+                "order": 2,
+                "is_main": false
+              }
+            ],
+            "max_tier_value": null,
+            "min_tier_value": null,
+            "modified_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "price": 100,
+            "pricing_method": 0,
+            "sku": "coffee_brewer",
+            "title": "Jittermaster coffee brewer",
+            "type": "regular",
+            "uuid": "06cb0ce9-094b-1f38-2fe6-0a9d226cd22c",
+            "highlights": null,
+            "tiers": null,
+            "cost": 50
+          },
+          {
+            "billing_cycle": null,
+            "billing_type": "one_time",
+            "bundle_items_count": 0,
+            "workspace_id": "n7SK7prHeoWJsmb9VkrPve",
+            "category_id": "0ac5f88a-bdd6-4836-304d-28d042b8d3a2",
+            "category_name": "Sample product",
+            "created_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "currency": "USD",
+            "custom_fields": [],
+            "date_created": "2023-02-01T10:55:07+00:00",
+            "date_modified": "2023-03-17T14:19:12+00:00",
+            "description": "<p>Meticulously crafted in Italy these classic glass coffee mugs or tea cups will complete any barware collection. Contemporary sleek drinking glasses designed to enhance any décor.</p>",
+            "image_src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6267265d-2b29-4471-8181-c7544e35a69a/6.jpeg",
+            "images": [
+              {
+                "src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6267265d-2b29-4471-8181-c7544e35a69a/6.jpeg",
+                "order": 0,
+                "is_main": true
+              }
+            ],
+            "max_tier_value": 30,
+            "min_tier_value": 20,
+            "modified_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "price": null,
+            "pricing_method": 1,
+            "sku": "coffee_mug_v2",
+            "title": "Coffee Magic Mug",
+            "type": "regular",
+            "uuid": "ff137b79-e7f6-5710-17d3-c9ea81dac6b6",
+            "highlights": null,
+            "tiers": [
+              {
+                "value": 30,
+                "min_qty": 1
+              },
+              {
+                "value": 20,
+                "min_qty": 21
+              }
+            ],
+            "cost": 5
+          },
+          {
+            "billing_cycle": 1,
+            "billing_type": "recurring",
+            "bundle_items_count": 0,
+            "workspace_id": "n7SK7prHeoWJsmb9VkrPve",
+            "category_id": "0ac5f88a-bdd6-4836-304d-28d042b8d3a2",
+            "category_name": "Sample product",
+            "created_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "currency": "USD",
+            "custom_fields": [],
+            "date_created": "2023-02-01T10:55:07+00:00",
+            "date_modified": "2023-02-01T10:55:07+00:00",
+            "description": "Enjoy a new light roast coffee each month. Box of white chocolate. Up to 20% off retail prices. Pause or cancel anytime.",
+            "image_src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/e818970c-5aa8-4645-941f-04ab0ab5b9b0/7.png",
+            "images": [
+              {
+                "src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/e818970c-5aa8-4645-941f-04ab0ab5b9b0/7.png",
+                "order": 0,
+                "is_main": true
+              }
+            ],
+            "max_tier_value": null,
+            "min_tier_value": null,
+            "modified_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "price": 19,
+            "pricing_method": 0,
+            "sku": "light_coffee",
+            "title": "Light Roast Collection",
+            "type": "regular",
+            "uuid": "646ebcc2-58ba-8eb1-faaa-a93e4542b37b",
+            "highlights": null,
+            "tiers": null,
+            "cost": 5
+          },
+          {
+            "billing_cycle": 1,
+            "billing_type": "recurring",
+            "bundle_items_count": 0,
+            "workspace_id": "n7SK7prHeoWJsmb9VkrPve",
+            "category_id": "0ac5f88a-bdd6-4836-304d-28d042b8d3a2",
+            "category_name": "Sample product",
+            "created_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "currency": "USD",
+            "custom_fields": [],
+            "date_created": "2023-02-01T10:55:07+00:00",
+            "date_modified": "2023-02-01T10:55:07+00:00",
+            "description": "Enjoy a new dark roast coffee each month. Box of white chocolate. Up to 20% off retail prices. Pause or cancel anytime.",
+            "image_src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6cb41994-5a6e-4253-bc4c-f5e90bb9d7f8/8.png",
+            "images": [
+              {
+                "src": "https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6cb41994-5a6e-4253-bc4c-f5e90bb9d7f8/8.png",
+                "order": 0,
+                "is_main": true
+              }
+            ],
+            "max_tier_value": null,
+            "min_tier_value": null,
+            "modified_by": "FA5QAu8UGA3oVDQZuPL75B",
+            "price": 19,
+            "pricing_method": 0,
+            "sku": "dark_coffee",
+            "title": "Dark Roast Collection",
+            "type": "regular",
+            "uuid": "0d80ccaf-37e1-ce94-c339-d1f0405c3a62",
+            "highlights": null,
+            "tiers": null,
+            "cost": 5
+          }
+        ],
+        "has_more_items": false,
+        "total": 5
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "billing_cycle": {
+                  "type": "integer"
+                },
+                "billing_type": {
+                  "type": "string"
+                },
+                "bundle_items_count": {
+                  "type": "integer"
+                },
+                "workspace_id": {
+                  "type": "string"
+                },
+                "category_id": {
+                  "type": "string"
+                },
+                "category_name": {
+                  "type": "string"
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "cost": {
+                  "type": "number"
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "custom_fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "date_created": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "date_modified": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "image_src": {
+                  "type": "string"
+                },
+                "images": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "is_main": {
+                        "type": "boolean"
+                      },
+                      "order": {
+                        "type": "number"
+                      },
+                      "src": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "max_tier_value": {
+                  "type": "number"
+                },
+                "min_tier_value": {
+                  "type": "number"
+                },
+                "modified_by": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "pricing_method": {
+                  "type": "integer"
+                },
+                "sku": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "tiers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "min_qty": {
+                        "type": "number"
+                      },
+                      "value": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "regular",
+                    "bundle"
+                  ],
+                  "example": "regular"
+                },
+                "uuid": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "highlights": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "has_more_items": {
+            "type": "boolean"
+          },
+          "total": {
+            "type": "number"
+          }
+        }
+      }
+order: 1000

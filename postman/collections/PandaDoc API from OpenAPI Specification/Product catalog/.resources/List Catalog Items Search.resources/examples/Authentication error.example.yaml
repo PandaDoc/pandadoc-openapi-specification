@@ -1,0 +1,86 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/product-catalog/items/search?page=1&per_page=10&query=coffee&order_by=-date_modified&types=regular&billing_types=one_time&exclude_uuids=06cb0ce9-094b-1f38-2fe6-0a9d226cd22c&category_id=06cb0ce9-094b-1f38-2fe6-0a9d226cd22c&no_category=true"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: page
+      value: "1"
+      description: Page number.
+    - key: per_page
+      value: "10"
+      description: Items per page.
+    - key: query
+      value: coffee
+      description: |
+        Search query. Searches the following fields: Title, SKU, description, category name, custom fields name and value.
+    - key: order_by
+      value: -date_modified
+      description: Ordering principle for displaying search results.
+    - key: types
+      value: regular
+      description: Filter by catalog item types.
+    - key: billing_types
+      value: one_time
+      description: Filter by billing types.
+    - key: exclude_uuids
+      value: 06cb0ce9-094b-1f38-2fe6-0a9d226cd22c
+      description: A list of item uuids to be excluded from search.
+    - key: category_id
+      value: 06cb0ce9-094b-1f38-2fe6-0a9d226cd22c
+      description: Category id.
+    - key: no_category
+      value: "true"
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "code": "unauthorized"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "unauthorized"
+          },
+          "details": {
+            "type": "array",
+            "example": [],
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "pointer": {
+                  "type": "string",
+                  "description": "JSON Pointer."
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Details data."
+                }
+              },
+              "required": [
+                "code"
+              ]
+            }
+          }
+        }
+      }
+order: 3000

@@ -1,0 +1,79 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/notary/notarization-requests?status=SENT&created_by_user_id=nyAnVpY7pZ23FBve8s9xgk&document_id=D3okRfgHRX7NEhavcACReB&offset=0&limit=50&order_by=-date_created"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: status
+      value: SENT
+      description: Filter by status (comma-separated values supported).
+    - key: created_by_user_id
+      value: nyAnVpY7pZ23FBve8s9xgk
+      description: Filter by creator user ID (comma-separated values supported).
+    - key: document_id
+      value: D3okRfgHRX7NEhavcACReB
+      description: Filter by document ID (comma-separated values supported).
+    - key: offset
+      value: "0"
+      description: Number of results to skip.
+    - key: limit
+      value: "50"
+      description: Maximum number of results to return.
+    - key: order_by
+      value: -date_created
+      description: |
+        Sort field. Use a `-` prefix for descending order (e.g., `-date_created`).
+        When omitted, results are sorted by `date_created` ascending (oldest first).
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "code": "too_many_requests"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "too_many_requests"
+          },
+          "details": {
+            "type": "array",
+            "example": [],
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "pointer": {
+                  "type": "string",
+                  "description": "JSON Pointer."
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Details data."
+                }
+              },
+              "required": [
+                "code"
+              ]
+            }
+          }
+        }
+      }
+order: 5000

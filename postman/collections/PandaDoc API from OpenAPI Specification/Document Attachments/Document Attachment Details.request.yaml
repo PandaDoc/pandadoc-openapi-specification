@@ -1,0 +1,42 @@
+$kind: http-request
+description: Returns details of the specific document's attachment.
+url: "{{baseUrl}}/public/v1/documents/:id/attachments/:attachment_id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: attachment_id
+    value: 89ce2f49-10fb-4e9b-b5f3-e28be2a5c042
+    description: Attachment UUID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Document Attachment Details.resources/examples
+order: 4000

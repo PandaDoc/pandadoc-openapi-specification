@@ -1,0 +1,89 @@
+$kind: http-request
+description: Get a list of documents connected to a linked object - an entity from an integration.
+url: "{{baseUrl}}/public/v1/documents/linked-objects?entity_id=12345&entity_type=deal&provider=hubspot&order_by=-date_created&owner_ids=owner1&owner_ids=owner2"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: entity_id
+    value: "12345"
+    description: You can get entity id from your integration, for example, from a url of a HubSpot deal.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: entity_type
+    value: deal
+    description: |
+      See the available entity types:
+      https://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: provider
+    value: hubspot
+    description: |
+      See the available providers:
+      https://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: order_by
+    value: -date_created
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "default": "-date_created"
+          }
+        }
+      }
+  - key: owner_ids
+    value: owner1
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "array",
+            "default": [
+              "[]"
+            ]
+          }
+        }
+      }
+  - key: owner_ids
+    value: owner2
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Documents by Linked Object.resources/examples
+order: 1000

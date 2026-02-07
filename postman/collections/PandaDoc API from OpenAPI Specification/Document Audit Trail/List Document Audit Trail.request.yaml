@@ -1,0 +1,60 @@
+$kind: http-request
+description: |
+  Retrieves the full audit trail for a specified document. The audit trail includes detailed user actions
+  such as sending, viewing, signing, and editing, along with metadata like timestamps, IP addresses, and user identity.
+  This endpoint is accessible to authorized workspace administrators only.
+url: "{{baseUrl}}/public/v2/documents/:document_id/audit-trail?limit=20&offset=0"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: limit
+    value: "20"
+    description: Maximum number of items to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+  - key: offset
+    value: "0"
+    description: Number of items to skip before starting to collect the result set.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          }
+        }
+      }
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Unique identifier of the document to retrieve the audit trail for.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Document Audit Trail.resources/examples
+order: 1000

@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for retrieving the full audit trail of a document, including user actions and metadata.
+order: 8000

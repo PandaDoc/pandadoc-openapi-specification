@@ -1,0 +1,81 @@
+$kind: http-request
+description: |
+  Adds one or more named items to the specified document by ID. 
+  These items define the document's structure and hierarchy (e.g., sections or headings) 
+  for display or navigation purposes within the Document Structure View (DSV).
+url: "{{baseUrl}}/public/v2/dsv/:document_id/add-named-items"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Unique identifier of the document to which the DSV named items will be added.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "items": [
+        {
+          "name": "First Section",
+          "level": 0,
+          "page_name": "page_name_1"
+        },
+        {
+          "name": "Second Section",
+          "level": 0,
+          "page_name": "page_name_2"
+        }
+      ]
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "description": "List of named items representing structural elements of the document.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The display name of the item (e.g., \"Introduction\", \"Chapter 1\")."
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Hierarchical level of the item. \nLevel 0 is the highest (top-level), with increasing numbers for nested structures.\n"
+              },
+              "page_name": {
+                "type": "string",
+                "description": "Internal reference or identifier for the page this item is associated with."
+              }
+            },
+            "required": [
+              "name",
+              "level",
+              "page_name"
+            ]
+          }
+        }
+      },
+      "required": [
+        "items"
+      ]
+    }
+examples: ./.resources/Add DSV Named Items to a Document.resources/examples
+order: 1000

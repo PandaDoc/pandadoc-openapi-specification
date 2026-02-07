@@ -1,0 +1,31 @@
+$kind: http-example
+name: Workspace was deactivated successfully.
+request:
+  url: "{{baseUrl}}/public/v1/workspaces/:workspace_id/deactivate"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    workspace_id: BhVzRcxH9Z2LgfPPGXFUBa
+  body:
+    type: json
+    content: "{}"
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: "{}"
+    $type: |-
+      {
+        "type": "object"
+      }
+order: 1000

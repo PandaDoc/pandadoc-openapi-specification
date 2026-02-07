@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/contacts?value="
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: value
+      value: ""
+      description: Optional search parameter. Filter results by exact match.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "throttled",
+        "detail": "Request was throttled."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "throttled"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Request was throttled."
+          }
+        }
+      }
+order: 5000

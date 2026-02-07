@@ -1,0 +1,70 @@
+$kind: http-example
+name: Auto reminder status retrieved successfully.
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/auto-reminders/status"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: The UUID of the document.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "result": [
+          {
+            "recipient_id": "2eWSKSvVqmuVCnuUK3iWwD",
+            "status": "sent"
+          },
+          {
+            "recipient_id": "2ZjA3A3RvjgVadJ9DpNQwz",
+            "status": "error"
+          },
+          {
+            "recipient_id": "udDBKqHFhJt9PxzS5cv7to",
+            "status": "scheduled"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "recipient_id": {
+                  "type": "string",
+                  "description": "Unique identifier of the recipient."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "sent",
+                    "error",
+                    "scheduled"
+                  ],
+                  "description": "Status of the reminder attempt (sent, error, scheduled)."
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

@@ -1,0 +1,68 @@
+$kind: http-request
+description: |
+  Get details about a notarization request by its `id`.
+
+  Details include:
+
+  - Basic notarization request information (status, creator, invitees).
+  - Signed documents information with links for downloading.
+  - Notarization session recording information with link for downloading.
+  - Timestamps associated with a notarization request.
+  - Termination reason and details when the notarization session was not completed successfully.
+
+  ## Available Notarization Request Statuses
+
+  The following is a complete list of all possible notarization request statuses returned:
+
+  | Notarization Request Status | Status Description                                                                                                 |
+  | :-------------------------- | :----------------------------------------------------------------------------------------------------------------- |
+  | SENT                        | Notarization request has been created. Invitees are notified and can start the process of finding a notary.        |
+  | WAITING_FOR_NOTARY          | One of the invitees initialised the process of finding a notary.                                                   |
+  | ACCEPTED                    | Notarization request has been accepted by the notary. At this time nobody has joined the notarization session yet. |
+  | LIVE                        | Notarization session has started.                                                                                  |
+  | COMPLETED                   | Notarization session is finished. Documents have been successfully signed and ready for downloading.               |
+  | INCOMPLETE                  | Notarization session has started but was not completed successfully.                                               |
+
+  ## Signed documents
+
+  Signed documents are the documents that were successfully signed during the notarization session. The signed document's info is available only if the notarization request has `COMPLETED` status, otherwise the returned list will be empty.  
+
+  In case you uploaded several documents for notarization then the `signed_documents` list will contain links for downloading for each document separately (with `SINGLE` document type) and link for the combined document (with `COMBINED` document type accordingly).
+
+  ## Recording
+
+  Recording is the video of the notarization session. The recording info is available only if the notarization request has `COMPLETED` status and recording is available, otherwise the returned object will be empty.
+
+  > 📘 Links expire in 1 hour
+  > 
+  > **Note**: The signed document and recording links expire in 1 hour. After this time it will be not possible to download files using the returned urls. In this case you need to call endpoint again since each request generates a new link.
+
+  ## Limits
+
+  A maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.
+url: "{{baseUrl}}/public/v2/notary/notarization-requests/:session_request_id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: session_request_id
+    value: 0b2256a2-5803-4ae9-b1b8-595f48e37173
+    description: Notarization Request ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Notarization Request Details.resources/examples
+order: 4000

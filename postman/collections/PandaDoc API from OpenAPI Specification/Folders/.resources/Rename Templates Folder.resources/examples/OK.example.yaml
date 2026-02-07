@@ -1,0 +1,54 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/templates/folders/:id"
+  method: PUT
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: Nq8htXxFssmhRxAPSP4SBP
+      description: The UUID of the folder which you are renaming.
+  body:
+    type: json
+    content: |-
+      {
+        "name": "New Folder Name"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "uuid": "h3HyGDj6NuiDfKEiY4xSMD",
+        "name": "New Folder Name",
+        "date_created": "2024-07-15T17:35:52.981054Z"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "example": "Nq8htXxFssmhRxAPSP4SBP"
+          },
+          "name": {
+            "type": "string",
+            "example": "Another template folder"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-10-15T10:43:04.103331Z"
+          }
+        }
+      }
+order: 1000

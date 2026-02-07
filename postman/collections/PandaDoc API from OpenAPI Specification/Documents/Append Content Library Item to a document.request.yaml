@@ -1,0 +1,83 @@
+$kind: http-request
+description: Appends a Content Library Item (CLI) to a document and provides a name mapping for its content blocks.
+url: "{{baseUrl}}/public/v1/documents/:id/append-content-library-item"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Specify document id.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "cli": {
+        "id": "QYCPtavst3DqqBK72ZRtbF",
+        "pages": [
+          {
+            "index": 1,
+            "name": "Page 1"
+          },
+          {
+            "index": 1,
+            "name": "Page 1"
+          }
+        ]
+      }
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "cli": {
+          "type": "object",
+          "description": "Settings to append a CLI to a document, with ability to change some parameters",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "QYCPtavst3DqqBK72ZRtbF",
+              "description": "CLI ID to append to the first section."
+            },
+            "pages": {
+              "type": "array",
+              "description": "The list of the CLI's pages you want to change in a result document",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "index": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "example": 1,
+                    "description": "The index of the CLI's page you want to change in a result document during appending the CLI"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Page 1",
+                    "description": "The name you want to apply to the CLI's page in a result document during appending the CLI"
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "id"
+          ]
+        }
+      }
+    }
+examples: ./.resources/Append Content Library Item to a document.resources/examples
+order: 22000

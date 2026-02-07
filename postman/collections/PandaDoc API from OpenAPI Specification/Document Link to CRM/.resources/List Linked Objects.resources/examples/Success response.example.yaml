@@ -1,0 +1,94 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/linked-objects"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: ZPeAfcpzr9aiVs5vqUf6jg
+      description: Specify document ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "linked_objects": [
+          {
+            "id": "abb4d3fc-919b-491e-9e08-775036660c0b",
+            "provider": "pipedrive",
+            "entity_type": "deal",
+            "entity_id": "134"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "linked_objects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "abb4d3fc-919b-491e-9e08-775036660c0b",
+                  "description": "Linked object identifier (link_id)."
+                },
+                "provider": {
+                  "type": "string",
+                  "example": "pipedrive",
+                  "description": "CRM name (lowercase).\n\nSee the list of available providers:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n"
+                },
+                "entity_type": {
+                  "type": "string",
+                  "example": "deal",
+                  "description": "Entity type.\n\nSee the available entity types:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n"
+                },
+                "entity_id": {
+                  "type": "string",
+                  "example": "9372",
+                  "description": "Entity unique identifier. The system validates if the entity exists."
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "description": "Child entity reference in a hierarchical chain structure that provides essential metadata and direct access links for lazy-loading the complete object by ID.",
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "abb4d3fc-919b-491e-9e08-775036660c0b",
+                        "description": "Linked object identifier (link_id)."
+                      },
+                      "entity_type": {
+                        "type": "string",
+                        "example": "deal",
+                        "description": "Entity type.\n\nSee the available entity types:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n"
+                      },
+                      "entity_id": {
+                        "type": "string",
+                        "example": "9372",
+                        "description": "Entity unique identifier. The system validates if the entity exists."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

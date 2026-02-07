@@ -1,0 +1,226 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/append-content-library-item"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Specify document id.
+  body:
+    type: json
+    content: |-
+      {
+        "cli": {
+          "id": "QYCPtavst3DqqBK72ZRtbF",
+          "pages": [
+            {
+              "index": 1,
+              "name": "Page 1"
+            },
+            {
+              "index": 1,
+              "name": "Page 1"
+            }
+          ]
+        }
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "cli": {
+          "id": "QYCPtavst3DqqBK72ZRtbF",
+          "pages": [
+            {
+              "index": 0,
+              "name": "Introduction"
+            },
+            {
+              "index": 1,
+              "name": "Product Overview"
+            },
+            {
+              "index": 2,
+              "name": "Pricing"
+            }
+          ]
+        },
+        "block_mapping": {
+          "tables": [
+            {
+              "original_name": "Products_Table",
+              "new_name": "Products_Table_1"
+            },
+            {
+              "original_name": "Features_Comparison",
+              "new_name": "Features_Comparison"
+            }
+          ],
+          "pricing_tables": [
+            {
+              "original_name": "Services_Quote",
+              "new_name": "Services_Quote"
+            },
+            {
+              "original_name": "Monthly_Plans",
+              "new_name": "Monthly_Plans_2"
+            }
+          ],
+          "images": [
+            {
+              "original_name": "Hero_Image",
+              "new_name": "Hero_Image_2"
+            },
+            {
+              "original_name": "Product_Screenshot",
+              "new_name": "Product_Screenshot"
+            }
+          ],
+          "texts": [
+            {
+              "original_name": "Legal_Disclaimer",
+              "new_name": "Legal_Disclaimer"
+            },
+            {
+              "original_name": "Company_Description",
+              "new_name": "Company_Description_1"
+            }
+          ]
+        }
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "cli": {
+            "type": "object",
+            "description": "Settings of the appended to a document CLI. Name property can be different from what you passed if there were collisions",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "QYCPtavst3DqqBK72ZRtbF",
+                "description": "CLI ID appended to the first section."
+              },
+              "pages": {
+                "type": "array",
+                "description": "The list of the CLI's pages you have changed in a result document",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "example": 1,
+                      "description": "The index of the CLI's page you have changed in a result document during appending the CLI"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Page 1",
+                      "description": "The real name in the page. It can be different from the one you passed if there were collisions (e.g. you appended the same CLI twice with the same names)"
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          "block_mapping": {
+            "type": "object",
+            "description": "Maps the original names of content blocks from the CLI to their new names in the document. Use the 'new_name' to target blocks in subsequent API calls.",
+            "properties": {
+              "tables": {
+                "type": "array",
+                "description": "Mapping for Table blocks.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "original_name": {
+                      "type": "string",
+                      "example": "Products_Table",
+                      "description": "The name of the block in the source Content Library Item."
+                    },
+                    "new_name": {
+                      "type": "string",
+                      "example": "Products_Table_1",
+                      "description": "The new, unique name of the block in the document after appending."
+                    }
+                  }
+                }
+              },
+              "pricing_tables": {
+                "type": "array",
+                "description": "Mapping for Pricing Table blocks.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "original_name": {
+                      "type": "string",
+                      "example": "Services_Quote",
+                      "description": "The name of the block in the source Content Library Item."
+                    },
+                    "new_name": {
+                      "type": "string",
+                      "example": "Services_Quote",
+                      "description": "The new, unique name of the block in the document after appending."
+                    }
+                  }
+                }
+              },
+              "images": {
+                "type": "array",
+                "description": "Mapping for Image blocks.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "original_name": {
+                      "type": "string",
+                      "example": "Hero_Image",
+                      "description": "The name of the block in the source Content Library Item."
+                    },
+                    "new_name": {
+                      "type": "string",
+                      "example": "Hero_Image_2",
+                      "description": "The new, unique name of the block in the document after appending."
+                    }
+                  }
+                }
+              },
+              "texts": {
+                "type": "array",
+                "description": "Mapping for Text blocks.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "original_name": {
+                      "type": "string",
+                      "example": "Legal_Disclaimer",
+                      "description": "The name of the block in the source Content Library Item."
+                    },
+                    "new_name": {
+                      "type": "string",
+                      "example": "Legal_Disclaimer",
+                      "description": "The new, unique name of the block in the document after appending."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

@@ -1,0 +1,48 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/download-protected?separate_files=false"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: separate_files
+      value: "false"
+      description: Download document bundle as a zip-archive of separate PDFs (1 file per section).
+  pathVariables:
+    - key: id
+      value: Mebvyy3NGsGBnY2rPLkH84
+      description: Specify document ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "throttled",
+        "detail": "Request was throttled."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "throttled"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Request was throttled."
+          }
+        }
+      }
+order: 6000

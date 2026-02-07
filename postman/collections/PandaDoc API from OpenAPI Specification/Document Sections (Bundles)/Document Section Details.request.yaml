@@ -1,0 +1,42 @@
+$kind: http-request
+description: Receive information about each section.
+url: "{{baseUrl}}/public/v1/documents/:document_id/sections/:section_id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: section_id
+    value: LQ6cUT7xevPLUEgJeF8Zrm
+    description: Section ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Document Section Details.resources/examples
+order: 5000

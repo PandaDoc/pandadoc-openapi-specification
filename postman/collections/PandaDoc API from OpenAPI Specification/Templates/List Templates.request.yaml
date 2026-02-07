@@ -1,0 +1,70 @@
+$kind: http-request
+description: Retrieves a list of templates. You can filter results by a search query, tags, or fields.
+url: "{{baseUrl}}/public/v1/templates?q=Sample onboarding template&shared=false&deleted=false&count=10&page=1&id=e9LxBesSL73AeZMzeYdfvV&folder_uuid=xDKHoJ8DkwhiTQSUzNveCJ&tag=onboarding&fields=content_date_modified"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: q
+    value: Sample onboarding template
+    description: Search query. Filter by template name.
+    $type: string
+  - key: shared
+    value: "false"
+    description: Returns only the shared templates.
+    $type: boolean
+  - key: deleted
+    value: "false"
+    description: Returns only the deleted templates.
+    $type: boolean
+  - key: count
+    value: "10"
+    description: Specify how many templates to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+  - key: page
+    value: "1"
+    description: Specify which page of the dataset to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          }
+        }
+      }
+  - key: id
+    value: e9LxBesSL73AeZMzeYdfvV
+    description: Specify template ID.
+    $type: string
+  - key: folder_uuid
+    value: xDKHoJ8DkwhiTQSUzNveCJ
+    description: UUID of the folder where the templates are stored.
+    $type: string
+  - key: tag
+    value: onboarding
+    description: Search tag. Filter by template tag.
+    $type: array
+  - key: fields
+    value: content_date_modified
+    description: A comma-separated list of additional fields to include in the response.
+    $type: array
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Templates.resources/examples
+order: 1000

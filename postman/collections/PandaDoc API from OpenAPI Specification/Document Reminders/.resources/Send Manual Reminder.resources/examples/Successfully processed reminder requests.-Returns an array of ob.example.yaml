@@ -1,0 +1,194 @@
+$kind: http-example
+name: |-
+  Successfully processed reminder requests.
+  Returns an array of objects, where each object details the outcome of the reminder delivery attempt for a specific recipient.
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/send-reminder"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: The UUID of the document.
+  body:
+    type: json
+    content: |-
+      {
+        "reminders": [
+          {
+            "recipient_id": "2eWSKSvVqmuVCnuUK3iWwD",
+            "delivery_methods": {
+              "email": true,
+              "sms": false
+            }
+          },
+          {
+            "recipient_id": "7JhSDcvLQa9uR7kBX8mYeK",
+            "delivery_methods": {
+              "email": true,
+              "sms": true
+            }
+          }
+        ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "result": [
+          {
+            "recipient_id": "2eWSKSvVqmuVCnuUK3iWwD",
+            "email": {
+              "status": "sent",
+              "sent_at": "2025-04-14T10:15:30Z"
+            },
+            "sms": {
+              "status": "sent",
+              "sent_at": "2025-04-14T10:15:31Z"
+            }
+          },
+          {
+            "recipient_id": "2ZjA3A3RvjgVadJ9DpNQwz",
+            "email": {
+              "status": "error",
+              "detail": "Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet"
+            },
+            "sms": {
+              "status": "error",
+              "detail": "Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet"
+            }
+          },
+          {
+            "recipient_id": "udDBKqHFhJt9PxzS5cv7to",
+            "sms": {
+              "status": "error",
+              "detail": "Can't send SMS reminder to the Recipient with invalid phone number"
+            },
+            "email": {
+              "status": "sent",
+              "sent_at": "2025-04-14T10:15:35Z"
+            }
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "recipient_id": {
+                  "type": "string",
+                  "description": "Unique identifier of the recipient."
+                },
+                "sms": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "sent",
+                        "error"
+                      ],
+                      "description": "Status of the SMS reminder attempt (sent or error)."
+                    },
+                    "sent_at": {
+                      "type": "string",
+                      "description": "Timestamp of when the reminder was sent, in ISO 8601 format.",
+                      "format": "date-time"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "enum": [
+                        "Can't send reminder to CC recipient",
+                        "Can't send reminder to recipient group",
+                        "Can't send reminder to the Recipient who completed their part",
+                        "Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet",
+                        "Can't send reminder. SMS delivery method is not selected for recipient",
+                        "Can't send SMS reminder. Confirmation of recipient consent is required. Admin should access workspace settings to certify",
+                        "Can't send SMS reminder to the Recipient more than once every 24 hours",
+                        "Can't send SMS reminder to the Recipient with no phone number",
+                        "Can't send SMS reminder to the Recipient with invalid phone number",
+                        "Can't send reminder. The document does not contain a recipient with the specified recipient ID"
+                      ],
+                      "description": "Detailed explanation of why the reminder could not be sent, if applicable."
+                    }
+                  }
+                },
+                "email": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "sent",
+                        "error"
+                      ],
+                      "description": "Status of the email reminder attempt (sent or error)."
+                    },
+                    "sent_at": {
+                      "type": "string",
+                      "description": "Timestamp of when the reminder was sent, in ISO 8601 format.",
+                      "format": "date-time"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "enum": [
+                        "Can't send reminder to CC recipient",
+                        "Can't send reminder to recipient group",
+                        "Can't send reminder to the Recipient who completed their part",
+                        "Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet",
+                        "Can't send reminder. Email delivery method is not selected for recipient",
+                        "Can't send email reminder. Recipient's mailbox is unreachable",
+                        "Can't send email reminder to the Recipient with no email",
+                        "Can't send email reminder to the Recipient more than once every 24 hours",
+                        "Can't send reminder. The document does not contain a recipient with the specified recipient ID",
+                        "Can’t send reminder. Email message contains potentially malicious links and could not be processed"
+                      ],
+                      "description": "Detailed explanation of why the reminder could not be sent, if applicable."
+                    }
+                  }
+                },
+                "email_customization": {
+                  "type": "object",
+                  "example": {
+                    "subject": "Reminder: Please sign the document \"Service Agreement\"",
+                    "message": "This is a friendly reminder to review and sign the document \"Service Agreement\".\nPlease click the link below to access the document.\nThank you,\nThe Tech Solutions Team\n"
+                  },
+                  "description": "Optional customization settings for the reminder email.\nDefines the subject and body text used when sending the reminder via email.\n",
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "maxLength": 512,
+                      "example": "Reminder: Please sign the document \"Service Agreement\"",
+                      "description": "Subject line of the reminder email sent to the recipient.\n"
+                    },
+                    "message": {
+                      "type": "string",
+                      "maxLength": 5000,
+                      "example": "**Reminder:** Please review and sign the document *\"Service Agreement\"*.\n\nThank you,  \n**The Tech Solutions Team**\n",
+                      "description": "Custom message body of the reminder email. Can include friendly or contextual\ntext encouraging the recipient to complete the signing process.\n\nSupports **Markdown** syntax for rich text formatting (e.g., bold, italics, links, and line breaks).\n"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

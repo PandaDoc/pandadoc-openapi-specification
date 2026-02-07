@@ -1,0 +1,29 @@
+$kind: http-request
+description: |
+  Get webhook subscription by uuid
+url: "{{baseUrl}}/public/v1/webhook-subscriptions/:id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: 4fb6506c-02a0-427e-b445-b9e9ff0c822f
+    description: Webhook subscription uuid
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Webhook Subscription Details.resources/examples
+order: 3000

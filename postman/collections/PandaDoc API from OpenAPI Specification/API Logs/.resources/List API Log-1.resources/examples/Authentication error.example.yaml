@@ -1,0 +1,83 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/logs?since=-7d&to=now&count=10&page=1&statuses=500&methods=POST&search=documents/hryJY9mqYZHjQCYQuSjRQg/send&environment_type=PRODUCTION"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: since
+      value: -7d
+      description: Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as "-90d" (for past 90 days).
+    - key: to
+      value: now
+      description: Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as "-10d" (for past 10 days) or a special "now" value.
+    - key: count
+      value: "10"
+      description: The amount of items on each page. The total number of accessible items (`count × page`) must not exceed 10,000.
+    - key: page
+      value: "1"
+      description: Returns page of the results by number. The total number of accessible items (`count × page`) must not exceed 10,000.
+    - key: statuses
+      value: "500"
+      description: Returns only the predefined status codes.
+    - key: methods
+      value: POST
+      description: Returns only the predefined HTTP methods. Allows GET, POST, PUT, PATCH, and DELETE.
+    - key: search
+      value: documents/hryJY9mqYZHjQCYQuSjRQg/send
+      description: Returns the results containing a string.
+    - key: environment_type
+      value: PRODUCTION
+      description: Returns logs for production/sandbox.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "code": "unauthorized"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "unauthorized"
+          },
+          "details": {
+            "type": "array",
+            "example": [],
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "pointer": {
+                  "type": "string",
+                  "description": "JSON Pointer."
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Details data."
+                }
+              },
+              "required": [
+                "code"
+              ]
+            }
+          }
+        }
+      }
+order: 3000

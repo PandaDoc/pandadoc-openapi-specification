@@ -1,0 +1,27 @@
+$kind: http-request
+description: This method deletes a contact.
+url: "{{baseUrl}}/public/v1/contacts/:id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: SyoufNkJiHRn24LpuJ7RXb
+    description: Contact id.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete Contact.resources/examples
+order: 4000

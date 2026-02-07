@@ -1,0 +1,14 @@
+$kind: http-request
+description: |
+  Retrieve all members details of the workspace implied by the OAuth token or API key.\
+  For each member, the `workspace` parameter shows their active workspace, that is the workspace they are currently working in.\
+  This means the `workspace` value can differ from the workspace implied by your API key.
+url: "{{baseUrl}}/public/v1/members"
+method: GET
+headers:
+  Accept: application/json
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Members.resources/examples
+order: 1000

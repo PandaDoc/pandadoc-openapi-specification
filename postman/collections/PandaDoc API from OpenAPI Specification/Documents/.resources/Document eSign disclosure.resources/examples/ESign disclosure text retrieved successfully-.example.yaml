@@ -1,0 +1,59 @@
+$kind: http-example
+name: ESign disclosure text retrieved successfully.
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/esign-disclosure"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: The UUID of the document.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "result": {
+          "is_enabled": true,
+          "company_name": "Acme Corp",
+          "esign_disclosure_text": "<p>By signing this document electronically, you consent to use\nelectronic records and signatures. <strong>Your electronic signature</strong>\nis the legal equivalent of your\nhandwritten signature.</p>\n"
+        }
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object",
+            "properties": {
+              "is_enabled": {
+                "type": "boolean",
+                "example": true,
+                "description": "Indicates whether the ESign disclosure feature is enabled for the document."
+              },
+              "company_name": {
+                "type": "string",
+                "example": "Acme Corp"
+              },
+              "esign_disclosure_text": {
+                "type": "string",
+                "example": "<p>By signing this document electronically, you consent to use\nelectronic records and signatures. <strong>Your electronic signature</strong>\nis the legal equivalent of your\nhandwritten signature.</p>\n",
+                "description": "Rich text (HTML) of the pre-configured ESign disclosure."
+              }
+            }
+          }
+        }
+      }
+order: 1000

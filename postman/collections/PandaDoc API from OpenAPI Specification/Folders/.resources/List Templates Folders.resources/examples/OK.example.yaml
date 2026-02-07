@@ -1,0 +1,75 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/templates/folders?parent_uuid=Nq8htXxFssmhRxAPSP4SBP&count=50&page=1"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: parent_uuid
+      value: Nq8htXxFssmhRxAPSP4SBP
+      description: The UUID of the folder containing folders. To list the folders located in the root folder, remove this parameter in the request.
+    - key: count
+      value: "50"
+      description: Optionally, specify how many folders to return.
+    - key: page
+      value: "1"
+      description: Optionally, specify which page of the dataset to return.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "uuid": "h3HyGDj6NuiDfKEiY4xSMD",
+            "name": "A new templates folder",
+            "date_created": "2024-07-15T17:35:52.981054Z",
+            "has_folders": true,
+            "has_items": false
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "Nq8htXxFssmhRxAPSP4SBP"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "A new template folder"
+                },
+                "date_created": {
+                  "type": "string",
+                  "example": "2021-10-15T10:43:04.103331Z"
+                },
+                "has_folders": {
+                  "type": "boolean"
+                },
+                "has_items": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

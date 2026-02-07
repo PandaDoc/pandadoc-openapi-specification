@@ -1,0 +1,1839 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/content-library-items/:id/details"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: UXdP7Lnbvvr4WEb2wzM2hc
+      description: Content Library Item ID
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "9d9k7VtSQ5KCXfsUQv4GxE",
+        "name": "Sample Pricing Table",
+        "date_created": "2021-08-11T14:12:20.017074Z",
+        "date_modified": "2021-08-11T14:13:38.562290Z",
+        "content_date_modified": "2021-10-23T21:07:04.147345Z",
+        "created_by": {
+          "id": "b6RGTSGwJw838L2KZqckpD",
+          "email": "jane@example.com",
+          "first_name": "Jane",
+          "last_name": "Roe",
+          "avatar": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+        },
+        "metadata": {},
+        "pricing": {
+          "tables": [
+            {
+              "name": "Pricing Table",
+              "id": "065c5cbc-a065-4843-ba17-028e63779605",
+              "total": "11500",
+              "is_included_in_total": true,
+              "summary": {
+                "subtotal": "11500",
+                "total": "11500",
+                "discount": "0",
+                "tax": "0",
+                "fee": "0"
+              },
+              "items": [
+                {
+                  "id": "string",
+                  "sku": "string",
+                  "qty": "10",
+                  "name": "Annual license",
+                  "cost": "string",
+                  "price": "100",
+                  "description": "1 year subscription",
+                  "custom_fields": {},
+                  "custom_columns": {
+                    "Images": "",
+                    "Cost": "",
+                    "Subtotal": ""
+                  },
+                  "discount": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "tax_first": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "tax_second": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "subtotal": "10000",
+                  "options": {},
+                  "sale_price": "1000",
+                  "taxes": {},
+                  "discounts": {},
+                  "fees": {},
+                  "merged_data": {
+                    "custom_name": "SomeName",
+                    "custom_description": "SomeCustomDescription",
+                    "custom_price": "10.99",
+                    "custom_qty": "1.00",
+                    "custom_sku": "Test",
+                    "custom_tax": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_fee": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_discount": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_text": "Some other",
+                    "Cost": null,
+                    "Subtotal": "26.38",
+                    "fluffiness": "Fluffiness",
+                    "Other_field": "SomeText"
+                  }
+                },
+                {
+                  "id": "string",
+                  "sku": "string",
+                  "qty": "10",
+                  "name": "Annual license",
+                  "cost": "string",
+                  "price": "100",
+                  "description": "1 year subscription",
+                  "custom_fields": {},
+                  "custom_columns": {
+                    "Images": "",
+                    "Cost": "",
+                    "Subtotal": ""
+                  },
+                  "discount": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "tax_first": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "tax_second": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "subtotal": "10000",
+                  "options": {},
+                  "sale_price": "1000",
+                  "taxes": {},
+                  "discounts": {},
+                  "fees": {},
+                  "merged_data": {
+                    "custom_name": "SomeName",
+                    "custom_description": "SomeCustomDescription",
+                    "custom_price": "10.99",
+                    "custom_qty": "1.00",
+                    "custom_sku": "Test",
+                    "custom_tax": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_fee": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_discount": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_text": "Some other",
+                    "Cost": null,
+                    "Subtotal": "26.38",
+                    "fluffiness": "Fluffiness",
+                    "Other_field": "SomeText"
+                  }
+                }
+              ],
+              "currency": "USD"
+            },
+            {
+              "name": "Pricing Table",
+              "id": "065c5cbc-a065-4843-ba17-028e63779605",
+              "total": "11500",
+              "is_included_in_total": true,
+              "summary": {
+                "subtotal": "11500",
+                "total": "11500",
+                "discount": "0",
+                "tax": "0",
+                "fee": "0"
+              },
+              "items": [
+                {
+                  "id": "string",
+                  "sku": "string",
+                  "qty": "10",
+                  "name": "Annual license",
+                  "cost": "string",
+                  "price": "100",
+                  "description": "1 year subscription",
+                  "custom_fields": {},
+                  "custom_columns": {
+                    "Images": "",
+                    "Cost": "",
+                    "Subtotal": ""
+                  },
+                  "discount": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "tax_first": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "tax_second": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "subtotal": "10000",
+                  "options": {},
+                  "sale_price": "1000",
+                  "taxes": {},
+                  "discounts": {},
+                  "fees": {},
+                  "merged_data": {
+                    "custom_name": "SomeName",
+                    "custom_description": "SomeCustomDescription",
+                    "custom_price": "10.99",
+                    "custom_qty": "1.00",
+                    "custom_sku": "Test",
+                    "custom_tax": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_fee": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_discount": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_text": "Some other",
+                    "Cost": null,
+                    "Subtotal": "26.38",
+                    "fluffiness": "Fluffiness",
+                    "Other_field": "SomeText"
+                  }
+                },
+                {
+                  "id": "string",
+                  "sku": "string",
+                  "qty": "10",
+                  "name": "Annual license",
+                  "cost": "string",
+                  "price": "100",
+                  "description": "1 year subscription",
+                  "custom_fields": {},
+                  "custom_columns": {
+                    "Images": "",
+                    "Cost": "",
+                    "Subtotal": ""
+                  },
+                  "discount": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "tax_first": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "tax_second": {
+                    "value": "string",
+                    "type": "string"
+                  },
+                  "subtotal": "10000",
+                  "options": {},
+                  "sale_price": "1000",
+                  "taxes": {},
+                  "discounts": {},
+                  "fees": {},
+                  "merged_data": {
+                    "custom_name": "SomeName",
+                    "custom_description": "SomeCustomDescription",
+                    "custom_price": "10.99",
+                    "custom_qty": "1.00",
+                    "custom_sku": "Test",
+                    "custom_tax": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_fee": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_discount": {
+                      "value": "10",
+                      "type": "percent"
+                    },
+                    "custom_text": "Some other",
+                    "Cost": null,
+                    "Subtotal": "26.38",
+                    "fluffiness": "Fluffiness",
+                    "Other_field": "SomeText"
+                  }
+                }
+              ],
+              "currency": "USD"
+            }
+          ],
+          "quotes": [
+            {
+              "id": "4b011d86-286b-4f86-b697-90a6ad3f1489",
+              "currency": "USD",
+              "total": "900",
+              "summary": {
+                "total": "900",
+                "subtotal": "1000",
+                "one_time_subtotal": "500",
+                "recurring_subtotal": [
+                  {
+                    "billing_cycle": "monthly",
+                    "value": "500"
+                  },
+                  {
+                    "billing_cycle": "monthly",
+                    "value": "500"
+                  }
+                ],
+                "total_qty": "string",
+                "discounts": {
+                  "key_0": {
+                    "type": "string",
+                    "value": "string"
+                  }
+                },
+                "taxes": {},
+                "fees": {},
+                "custom_fields": {
+                  "key_0": "string",
+                  "key_1": "string",
+                  "key_2": "string",
+                  "key_3": "string",
+                  "key_4": "string"
+                },
+                "total_discount": "100",
+                "total_tax": "string",
+                "total_fee": "string",
+                "total_savings": "string",
+                "total_contract_value": "1900"
+              },
+              "sections": [
+                {
+                  "id": "string",
+                  "name": "string",
+                  "summary": {
+                    "total": "1000",
+                    "subtotal": "1000",
+                    "one_time_subtotal": "500",
+                    "recurring_subtotal": [
+                      {
+                        "billing_cycle": "monthly",
+                        "value": "500"
+                      },
+                      {
+                        "billing_cycle": "monthly",
+                        "value": "500"
+                      }
+                    ],
+                    "total_qty": "string",
+                    "discounts": {},
+                    "taxes": {},
+                    "fees": {},
+                    "custom_fields": {
+                      "key_0": "string",
+                      "key_1": "string"
+                    },
+                    "total_section_value": "1900"
+                  },
+                  "columns": [
+                    {
+                      "header": "string",
+                      "name": "string",
+                      "merge_name": "string",
+                      "hidden": "string"
+                    },
+                    {
+                      "header": "string",
+                      "name": "string",
+                      "merge_name": "string",
+                      "hidden": "string"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "id": "string",
+                      "sku": "string",
+                      "name": "string",
+                      "description": "string",
+                      "qty": "1",
+                      "price": "500",
+                      "cost": "string",
+                      "billing_frequency": "string",
+                      "contract_term": "string",
+                      "pricing_method": "string",
+                      "type": "string",
+                      "reference_type": "string",
+                      "options": {
+                        "selected": true,
+                        "qty_editable": false
+                      },
+                      "custom_columns": {
+                        "key_0": "string"
+                      },
+                      "external_columns": {
+                        "key_0": "string",
+                        "key_1": "string"
+                      },
+                      "discounts": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "taxes": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "fees": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "multipliers": {
+                        "key_0": "string"
+                      },
+                      "total": "string",
+                      "overall_total": "1000"
+                    },
+                    {
+                      "id": "string",
+                      "sku": "string",
+                      "name": "string",
+                      "description": "string",
+                      "qty": "1",
+                      "price": "500",
+                      "cost": "string",
+                      "billing_frequency": "string",
+                      "contract_term": "string",
+                      "pricing_method": "string",
+                      "type": "string",
+                      "reference_type": "string",
+                      "options": {
+                        "selected": false,
+                        "qty_editable": true
+                      },
+                      "custom_columns": {
+                        "key_0": "string",
+                        "key_1": "string",
+                        "key_2": "string"
+                      },
+                      "external_columns": {
+                        "key_0": "string"
+                      },
+                      "discounts": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_2": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_3": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "taxes": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "fees": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "multipliers": {
+                        "key_0": "string",
+                        "key_1": "string",
+                        "key_2": "string",
+                        "key_3": "string",
+                        "key_4": "string"
+                      },
+                      "total": "string",
+                      "overall_total": "1000"
+                    }
+                  ],
+                  "total": "1000",
+                  "settings": {
+                    "optional": true,
+                    "selected": true,
+                    "selection_type": "multiple"
+                  }
+                },
+                {
+                  "id": "string",
+                  "name": "string",
+                  "summary": {
+                    "total": "1000",
+                    "subtotal": "1000",
+                    "one_time_subtotal": "500",
+                    "recurring_subtotal": [
+                      {
+                        "billing_cycle": "monthly",
+                        "value": "500"
+                      },
+                      {
+                        "billing_cycle": "monthly",
+                        "value": "500"
+                      }
+                    ],
+                    "total_qty": "string",
+                    "discounts": {},
+                    "taxes": {},
+                    "fees": {},
+                    "custom_fields": {
+                      "key_0": "string",
+                      "key_1": "string",
+                      "key_2": "string"
+                    },
+                    "total_section_value": "1900"
+                  },
+                  "columns": [
+                    {
+                      "header": "string",
+                      "name": "string",
+                      "merge_name": "string",
+                      "hidden": "string"
+                    },
+                    {
+                      "header": "string",
+                      "name": "string",
+                      "merge_name": "string",
+                      "hidden": "string"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "id": "string",
+                      "sku": "string",
+                      "name": "string",
+                      "description": "string",
+                      "qty": "1",
+                      "price": "500",
+                      "cost": "string",
+                      "billing_frequency": "string",
+                      "contract_term": "string",
+                      "pricing_method": "string",
+                      "type": "string",
+                      "reference_type": "string",
+                      "options": {
+                        "selected": true,
+                        "qty_editable": false
+                      },
+                      "custom_columns": {
+                        "key_0": "string"
+                      },
+                      "external_columns": {
+                        "key_0": "string",
+                        "key_1": "string"
+                      },
+                      "discounts": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_2": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "taxes": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_2": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "fees": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "multipliers": {
+                        "key_0": "string"
+                      },
+                      "total": "string",
+                      "overall_total": "1000"
+                    },
+                    {
+                      "id": "string",
+                      "sku": "string",
+                      "name": "string",
+                      "description": "string",
+                      "qty": "1",
+                      "price": "500",
+                      "cost": "string",
+                      "billing_frequency": "string",
+                      "contract_term": "string",
+                      "pricing_method": "string",
+                      "type": "string",
+                      "reference_type": "string",
+                      "options": {
+                        "selected": false,
+                        "qty_editable": true
+                      },
+                      "custom_columns": {
+                        "key_0": "string"
+                      },
+                      "external_columns": {
+                        "key_0": "string"
+                      },
+                      "discounts": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "taxes": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "fees": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "multipliers": {
+                        "key_0": "string"
+                      },
+                      "total": "string",
+                      "overall_total": "1000"
+                    }
+                  ],
+                  "total": "1000",
+                  "settings": {
+                    "optional": false,
+                    "selected": true,
+                    "selection_type": "multiple"
+                  }
+                }
+              ],
+              "merge_rules": [
+                {
+                  "id": "string",
+                  "enabled": true,
+                  "action": {
+                    "type": "string",
+                    "section_id": "string"
+                  },
+                  "condition": {
+                    "field_name": "string",
+                    "type": "string",
+                    "comparison": [
+                      {
+                        "type": "string",
+                        "value": "string"
+                      },
+                      {
+                        "type": "string",
+                        "value": "string"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "string",
+                  "enabled": true,
+                  "action": {
+                    "type": "string",
+                    "section_id": "string"
+                  },
+                  "condition": {
+                    "field_name": "string",
+                    "type": "string",
+                    "comparison": [
+                      {
+                        "type": "string",
+                        "value": "string"
+                      },
+                      {
+                        "type": "string",
+                        "value": "string"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "settings": {
+                "selection_type": "single"
+              }
+            },
+            {
+              "id": "4b011d86-286b-4f86-b697-90a6ad3f1489",
+              "currency": "USD",
+              "total": "900",
+              "summary": {
+                "total": "900",
+                "subtotal": "1000",
+                "one_time_subtotal": "500",
+                "recurring_subtotal": [
+                  {
+                    "billing_cycle": "monthly",
+                    "value": "500"
+                  },
+                  {
+                    "billing_cycle": "monthly",
+                    "value": "500"
+                  }
+                ],
+                "total_qty": "string",
+                "discounts": {
+                  "key_0": {
+                    "type": "string",
+                    "value": "string"
+                  },
+                  "key_1": {
+                    "type": "string",
+                    "value": "string"
+                  }
+                },
+                "taxes": {},
+                "fees": {},
+                "custom_fields": {
+                  "key_0": "string",
+                  "key_1": "string",
+                  "key_2": "string"
+                },
+                "total_discount": "100",
+                "total_tax": "string",
+                "total_fee": "string",
+                "total_savings": "string",
+                "total_contract_value": "1900"
+              },
+              "sections": [
+                {
+                  "id": "string",
+                  "name": "string",
+                  "summary": {
+                    "total": "1000",
+                    "subtotal": "1000",
+                    "one_time_subtotal": "500",
+                    "recurring_subtotal": [
+                      {
+                        "billing_cycle": "monthly",
+                        "value": "500"
+                      },
+                      {
+                        "billing_cycle": "monthly",
+                        "value": "500"
+                      }
+                    ],
+                    "total_qty": "string",
+                    "discounts": {},
+                    "taxes": {},
+                    "fees": {},
+                    "custom_fields": {
+                      "key_0": "string",
+                      "key_1": "string",
+                      "key_2": "string"
+                    },
+                    "total_section_value": "1900"
+                  },
+                  "columns": [
+                    {
+                      "header": "string",
+                      "name": "string",
+                      "merge_name": "string",
+                      "hidden": "string"
+                    },
+                    {
+                      "header": "string",
+                      "name": "string",
+                      "merge_name": "string",
+                      "hidden": "string"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "id": "string",
+                      "sku": "string",
+                      "name": "string",
+                      "description": "string",
+                      "qty": "1",
+                      "price": "500",
+                      "cost": "string",
+                      "billing_frequency": "string",
+                      "contract_term": "string",
+                      "pricing_method": "string",
+                      "type": "string",
+                      "reference_type": "string",
+                      "options": {
+                        "selected": true,
+                        "qty_editable": true
+                      },
+                      "custom_columns": {
+                        "key_0": "string",
+                        "key_1": "string"
+                      },
+                      "external_columns": {
+                        "key_0": "string",
+                        "key_1": "string"
+                      },
+                      "discounts": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "taxes": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "fees": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_2": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "multipliers": {
+                        "key_0": "string",
+                        "key_1": "string"
+                      },
+                      "total": "string",
+                      "overall_total": "1000"
+                    },
+                    {
+                      "id": "string",
+                      "sku": "string",
+                      "name": "string",
+                      "description": "string",
+                      "qty": "1",
+                      "price": "500",
+                      "cost": "string",
+                      "billing_frequency": "string",
+                      "contract_term": "string",
+                      "pricing_method": "string",
+                      "type": "string",
+                      "reference_type": "string",
+                      "options": {
+                        "selected": true,
+                        "qty_editable": true
+                      },
+                      "custom_columns": {
+                        "key_0": "string",
+                        "key_1": "string",
+                        "key_2": "string"
+                      },
+                      "external_columns": {
+                        "key_0": "string"
+                      },
+                      "discounts": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_2": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "taxes": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "fees": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "multipliers": {
+                        "key_0": "string"
+                      },
+                      "total": "string",
+                      "overall_total": "1000"
+                    }
+                  ],
+                  "total": "1000",
+                  "settings": {
+                    "optional": true,
+                    "selected": true,
+                    "selection_type": "single"
+                  }
+                },
+                {
+                  "id": "string",
+                  "name": "string",
+                  "summary": {
+                    "total": "1000",
+                    "subtotal": "1000",
+                    "one_time_subtotal": "500",
+                    "recurring_subtotal": [
+                      {
+                        "billing_cycle": "monthly",
+                        "value": "500"
+                      },
+                      {
+                        "billing_cycle": "monthly",
+                        "value": "500"
+                      }
+                    ],
+                    "total_qty": "string",
+                    "discounts": {},
+                    "taxes": {},
+                    "fees": {},
+                    "custom_fields": {
+                      "key_0": "string"
+                    },
+                    "total_section_value": "1900"
+                  },
+                  "columns": [
+                    {
+                      "header": "string",
+                      "name": "string",
+                      "merge_name": "string",
+                      "hidden": "string"
+                    },
+                    {
+                      "header": "string",
+                      "name": "string",
+                      "merge_name": "string",
+                      "hidden": "string"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "id": "string",
+                      "sku": "string",
+                      "name": "string",
+                      "description": "string",
+                      "qty": "1",
+                      "price": "500",
+                      "cost": "string",
+                      "billing_frequency": "string",
+                      "contract_term": "string",
+                      "pricing_method": "string",
+                      "type": "string",
+                      "reference_type": "string",
+                      "options": {
+                        "selected": true,
+                        "qty_editable": true
+                      },
+                      "custom_columns": {
+                        "key_0": "string",
+                        "key_1": "string",
+                        "key_2": "string"
+                      },
+                      "external_columns": {
+                        "key_0": "string"
+                      },
+                      "discounts": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "taxes": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_2": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "fees": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "multipliers": {
+                        "key_0": "string",
+                        "key_1": "string",
+                        "key_2": "string"
+                      },
+                      "total": "string",
+                      "overall_total": "1000"
+                    },
+                    {
+                      "id": "string",
+                      "sku": "string",
+                      "name": "string",
+                      "description": "string",
+                      "qty": "1",
+                      "price": "500",
+                      "cost": "string",
+                      "billing_frequency": "string",
+                      "contract_term": "string",
+                      "pricing_method": "string",
+                      "type": "string",
+                      "reference_type": "string",
+                      "options": {
+                        "selected": false,
+                        "qty_editable": true
+                      },
+                      "custom_columns": {
+                        "key_0": "string",
+                        "key_1": "string"
+                      },
+                      "external_columns": {
+                        "key_0": "string",
+                        "key_1": "string",
+                        "key_2": "string"
+                      },
+                      "discounts": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "taxes": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "fees": {
+                        "key_0": {
+                          "type": "string",
+                          "value": "string"
+                        },
+                        "key_1": {
+                          "type": "string",
+                          "value": "string"
+                        }
+                      },
+                      "multipliers": {
+                        "key_0": "string"
+                      },
+                      "total": "string",
+                      "overall_total": "1000"
+                    }
+                  ],
+                  "total": "1000",
+                  "settings": {
+                    "optional": true,
+                    "selected": true,
+                    "selection_type": "multiple"
+                  }
+                }
+              ],
+              "merge_rules": [
+                {
+                  "id": "string",
+                  "enabled": false,
+                  "action": {
+                    "type": "string",
+                    "section_id": "string"
+                  },
+                  "condition": {
+                    "field_name": "string",
+                    "type": "string",
+                    "comparison": [
+                      {
+                        "type": "string",
+                        "value": "string"
+                      },
+                      {
+                        "type": "string",
+                        "value": "string"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "string",
+                  "enabled": true,
+                  "action": {
+                    "type": "string",
+                    "section_id": "string"
+                  },
+                  "condition": {
+                    "field_name": "string",
+                    "type": "string",
+                    "comparison": [
+                      {
+                        "type": "string",
+                        "value": "string"
+                      },
+                      {
+                        "type": "string",
+                        "value": "string"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "settings": {
+                "selection_type": "multiple"
+              }
+            }
+          ],
+          "total": "11500"
+        },
+        "tags": [
+          "string",
+          "string"
+        ],
+        "version": "2",
+        "tables": [
+          {
+            "name": "string"
+          },
+          {
+            "name": "string"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "9d9k7VtSQ5KCXfsUQv4GxE"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sample Pricing Table"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-08-11T14:12:20.017074Z"
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2021-08-11T14:13:38.562290Z"
+          },
+          "content_date_modified": {
+            "type": "string",
+            "example": "2021-10-23T21:07:04.147345Z"
+          },
+          "created_by": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "b6RGTSGwJw838L2KZqckpD"
+              },
+              "email": {
+                "type": "string",
+                "example": "jane@example.com"
+              },
+              "first_name": {
+                "type": "string",
+                "example": "Jane"
+              },
+              "last_name": {
+                "type": "string",
+                "example": "Roe"
+              },
+              "avatar": {
+                "type": "string",
+                "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "tokens": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "pricing": {
+            "type": "object",
+            "properties": {
+              "tables": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Pricing Table"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "065c5cbc-a065-4843-ba17-028e63779605"
+                    },
+                    "total": {
+                      "type": "string",
+                      "example": "11500"
+                    },
+                    "is_included_in_total": {
+                      "type": "boolean"
+                    },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "subtotal": {
+                          "type": "string",
+                          "example": "11500"
+                        },
+                        "total": {
+                          "type": "string",
+                          "example": "11500"
+                        },
+                        "discount": {
+                          "type": "string",
+                          "example": "0"
+                        },
+                        "tax": {
+                          "type": "string",
+                          "example": "0"
+                        },
+                        "fee": {
+                          "type": "string",
+                          "example": "0"
+                        }
+                      }
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "sku": {
+                            "type": "string"
+                          },
+                          "qty": {
+                            "type": "string",
+                            "example": "10"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Annual license"
+                          },
+                          "cost": {
+                            "type": "string"
+                          },
+                          "price": {
+                            "type": "string",
+                            "example": "100"
+                          },
+                          "description": {
+                            "type": "string",
+                            "example": "1 year subscription"
+                          },
+                          "custom_fields": {
+                            "type": "object",
+                            "example": {}
+                          },
+                          "custom_columns": {
+                            "type": "object",
+                            "example": {
+                              "Images": "",
+                              "Cost": "",
+                              "Subtotal": ""
+                            }
+                          },
+                          "discount": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "tax_first": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "tax_second": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "subtotal": {
+                            "type": "string",
+                            "example": "10000"
+                          },
+                          "options": {
+                            "type": "object",
+                            "example": {},
+                            "properties": {
+                              "optional": {
+                                "type": "boolean"
+                              },
+                              "optional_selected": {
+                                "type": "boolean"
+                              },
+                              "multichoice_enabled": {
+                                "type": "boolean"
+                              },
+                              "multichoice_selected": {
+                                "type": "boolean"
+                              }
+                            }
+                          },
+                          "sale_price": {
+                            "type": "string",
+                            "example": "1000"
+                          },
+                          "taxes": {
+                            "type": "object",
+                            "example": {}
+                          },
+                          "discounts": {
+                            "type": "object",
+                            "example": {}
+                          },
+                          "fees": {
+                            "type": "object",
+                            "example": {}
+                          },
+                          "merged_data": {
+                            "type": "object",
+                            "example": {
+                              "custom_name": "SomeName",
+                              "custom_description": "SomeCustomDescription",
+                              "custom_price": "10.99",
+                              "custom_qty": "1.00",
+                              "custom_sku": "Test",
+                              "custom_tax": {
+                                "value": "10",
+                                "type": "percent"
+                              },
+                              "custom_fee": {
+                                "value": "10",
+                                "type": "percent"
+                              },
+                              "custom_discount": {
+                                "value": "10",
+                                "type": "percent"
+                              },
+                              "custom_text": "Some other",
+                              "Cost": null,
+                              "Subtotal": "26.38",
+                              "fluffiness": "Fluffiness",
+                              "Other_field": "SomeText"
+                            },
+                            "description": "Contains all fields in a flat structure with external field names defined in the template."
+                          }
+                        }
+                      }
+                    },
+                    "currency": {
+                      "type": "string",
+                      "example": "USD"
+                    }
+                  }
+                }
+              },
+              "quotes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "4b011d86-286b-4f86-b697-90a6ad3f1489"
+                    },
+                    "currency": {
+                      "type": "string",
+                      "example": "USD"
+                    },
+                    "total": {
+                      "type": "string",
+                      "example": "900"
+                    },
+                    "summary": {
+                      "type": "object",
+                      "title": "QuoteResponseSummary",
+                      "properties": {
+                        "total": {
+                          "type": "string",
+                          "example": "900"
+                        },
+                        "subtotal": {
+                          "type": "string",
+                          "example": "1000"
+                        },
+                        "one_time_subtotal": {
+                          "type": "string",
+                          "example": "500"
+                        },
+                        "recurring_subtotal": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "billing_cycle": {
+                                "type": "string",
+                                "example": "monthly"
+                              },
+                              "value": {
+                                "type": "string",
+                                "example": "500"
+                              }
+                            }
+                          }
+                        },
+                        "total_qty": {
+                          "type": "string"
+                        },
+                        "discounts": {
+                          "type": "object"
+                        },
+                        "taxes": {
+                          "type": "object"
+                        },
+                        "fees": {
+                          "type": "object"
+                        },
+                        "custom_fields": {
+                          "type": "object"
+                        },
+                        "total_discount": {
+                          "type": "string",
+                          "example": "100"
+                        },
+                        "total_tax": {
+                          "type": "string"
+                        },
+                        "total_fee": {
+                          "type": "string"
+                        },
+                        "total_savings": {
+                          "type": "string"
+                        },
+                        "total_contract_value": {
+                          "type": "string",
+                          "example": "1900"
+                        }
+                      }
+                    },
+                    "sections": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "summary": {
+                            "type": "object",
+                            "title": "QuoteResponseSectionSummary",
+                            "properties": {
+                              "total": {
+                                "type": "string",
+                                "example": "1000"
+                              },
+                              "subtotal": {
+                                "type": "string",
+                                "example": "1000"
+                              },
+                              "one_time_subtotal": {
+                                "type": "string",
+                                "example": "500"
+                              },
+                              "recurring_subtotal": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "billing_cycle": {
+                                      "type": "string",
+                                      "example": "monthly"
+                                    },
+                                    "value": {
+                                      "type": "string",
+                                      "example": "500"
+                                    }
+                                  }
+                                }
+                              },
+                              "total_qty": {
+                                "type": "string"
+                              },
+                              "discounts": {
+                                "type": "object"
+                              },
+                              "taxes": {
+                                "type": "object"
+                              },
+                              "fees": {
+                                "type": "object"
+                              },
+                              "custom_fields": {
+                                "type": "object"
+                              },
+                              "total_section_value": {
+                                "type": "string",
+                                "example": "1900"
+                              }
+                            }
+                          },
+                          "columns": {
+                            "type": "array",
+                            "items": {
+                              "title": "QuoteResponseSectionColumn",
+                              "type": "object",
+                              "properties": {
+                                "header": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "merge_name": {
+                                  "type": "string"
+                                },
+                                "hidden": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "title": "QuoteResponseSectionItem",
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "sku": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "qty": {
+                                  "type": "string",
+                                  "example": "1"
+                                },
+                                "price": {
+                                  "type": "string",
+                                  "example": "500"
+                                },
+                                "cost": {
+                                  "type": "string"
+                                },
+                                "billing_frequency": {
+                                  "type": "string"
+                                },
+                                "contract_term": {
+                                  "type": "string"
+                                },
+                                "pricing_method": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                },
+                                "reference_type": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "selected": {
+                                      "type": "boolean"
+                                    },
+                                    "qty_editable": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "custom_columns": {
+                                  "type": "object"
+                                },
+                                "external_columns": {
+                                  "type": "object"
+                                },
+                                "discounts": {
+                                  "type": "object"
+                                },
+                                "taxes": {
+                                  "type": "object"
+                                },
+                                "fees": {
+                                  "type": "object"
+                                },
+                                "multipliers": {
+                                  "type": "object"
+                                },
+                                "total": {
+                                  "type": "string"
+                                },
+                                "overall_total": {
+                                  "type": "string",
+                                  "example": "1000"
+                                }
+                              }
+                            }
+                          },
+                          "total": {
+                            "type": "string",
+                            "example": "1000"
+                          },
+                          "settings": {
+                            "type": "object",
+                            "properties": {
+                              "optional": {
+                                "type": "boolean"
+                              },
+                              "selected": {
+                                "type": "boolean"
+                              },
+                              "selection_type": {
+                                "type": "string",
+                                "enum": [
+                                  "custom",
+                                  "single",
+                                  "multiple"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "merge_rules": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "action": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string"
+                              },
+                              "section_id": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "condition": {
+                            "type": "object",
+                            "properties": {
+                              "field_name": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "comparison": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string"
+                                    },
+                                    "value": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "settings": {
+                      "type": "object",
+                      "properties": {
+                        "selection_type": {
+                          "type": "string",
+                          "enum": [
+                            "custom",
+                            "single",
+                            "multiple"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "total": {
+                "type": "string",
+                "example": "11500"
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "version": {
+            "type": "string",
+            "example": "2"
+          },
+          "content_placeholders": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "tables": {
+            "type": "array",
+            "description": "Document tables.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Table name."
+                }
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      }
+order: 1000

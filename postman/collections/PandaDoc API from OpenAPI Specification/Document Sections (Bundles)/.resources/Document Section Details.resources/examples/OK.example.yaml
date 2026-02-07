@@ -1,0 +1,52 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/sections/:section_id"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document ID.
+    - key: section_id
+      value: LQ6cUT7xevPLUEgJeF8Zrm
+      description: Section ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "uuid": "mcqRJhoEjDOUyT5AePMa9Z",
+        "name": "New document",
+        "document_uuid": "Gpzd2nXgFjCS3zipucci2E"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "example": "7kqXgjFejB2toXxjcC5jfZ"
+          },
+          "name": {
+            "type": "string",
+            "example": "API Sample Section from PandaDoc Template"
+          },
+          "document_uuid": {
+            "type": "string",
+            "example": "cKbJ7uay3cEGtsKuGPwYGX"
+          }
+        }
+      }
+order: 1000

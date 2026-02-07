@@ -1,0 +1,73 @@
+$kind: http-request
+description: This operation creates a new webhook subscription by specifying its details.
+url: "{{baseUrl}}/public/v1/webhook-subscriptions"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "PandaDoc",
+      "url": "webhooks_subscription_url",
+      "active": true,
+      "payload": [
+        "fields",
+        "products",
+        "metadata",
+        "tokens",
+        "pricing"
+      ],
+      "triggers": [
+        "document_deleted",
+        "recipient_completed",
+        "document_updated",
+        "document_state_changed",
+        "document_creation_failed"
+      ]
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "My Subscription",
+          "description": "Set a name for the Webhooks subscription."
+        },
+        "url": {
+          "type": "string",
+          "example": "https://example.com",
+          "description": "Set the Webhooks subscription URL.",
+          "format": "url"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Set the status of the Webhooks subscription."
+        },
+        "payload": {
+          "type": "array",
+          "description": "Set a payload structure.",
+          "items": {
+            "type": "string",
+            "example": "pricing"
+          }
+        },
+        "triggers": {
+          "type": "array",
+          "description": "Set trigger events for the Webhooks subscription.",
+          "items": {
+            "type": "string",
+            "example": "document_state_changed"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "url",
+        "triggers"
+      ]
+    }
+examples: ./.resources/Create Webhook Subscription.resources/examples
+order: 2000

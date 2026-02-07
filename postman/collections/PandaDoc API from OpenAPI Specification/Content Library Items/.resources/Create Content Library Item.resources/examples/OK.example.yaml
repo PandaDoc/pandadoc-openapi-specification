@@ -1,0 +1,71 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/content-library-items"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: json
+    content: |-
+      {
+        "name": "CLI name example"
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "va9aNuj3uX2w9M7uytn967",
+        "name": "Sample CLI",
+        "date_created": "2024-07-08T14:41:42.625906Z",
+        "date_modified": "2024-07-08T14:41:42.700084Z",
+        "version": "2",
+        "status": "cli.PROCESSED"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "iMymdDd9XFD3HyxP5VD67Q"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sample CLI"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-06-17T15:51:13.226974Z",
+            "format": "date-time"
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2021-06-17T15:51:13.326974Z",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "string",
+            "example": "2"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "cli.UPLOADED",
+              "cli.PROCESSED",
+              "cli.ERROR"
+            ]
+          }
+        }
+      }
+order: 1000

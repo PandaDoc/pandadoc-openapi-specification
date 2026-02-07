@@ -1,0 +1,27 @@
+$kind: http-request
+description: Delete a template
+url: "{{baseUrl}}/public/v1/templates/:id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: EE8yUNg5HztqVAuH85He8V
+    description: Template ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete Template.resources/examples
+order: 5000

@@ -1,0 +1,42 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/oauth2/access_token"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/x-www-form-urlencoded
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: urlencoded
+    content:
+      grant_type: authorization_code
+      client_id: 479a3c7ba4a8d3cf28702
+      client_secret: a66515d3caf9183b8cad3eee546bcba892b45b01
+      code: a9a60d4dabb61ade665c712d2b41766e7bb9a2f9
+      scope: read+write
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "error": "unsupported_grant_type"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "unsupported_grant_type"
+          }
+        }
+      }
+order: 2000

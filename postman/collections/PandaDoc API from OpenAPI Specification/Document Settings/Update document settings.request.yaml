@@ -1,0 +1,74 @@
+$kind: http-request
+description: |
+  Updates the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).
+url: "{{baseUrl}}/public/v2/documents/:document_id/settings"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Unique identifier of the document to update settings for.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "language": "fr-FR",
+      "qualified_electronic_signature": true,
+      "expires_in": 60
+    }
+  $type: |-
+    {
+      "description": "Document settings update request.",
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": [
+            "en-US",
+            "fr-FR",
+            "it-IT",
+            "es-ES",
+            "nl-NL",
+            "de-DE",
+            "pt-BR",
+            "pt-PT",
+            "pl-PL",
+            "sv-SE",
+            "cs-CZ",
+            "da-DK",
+            "el-GR",
+            "hu-HU",
+            "nb-NO",
+            "ro-RO",
+            "bg-BG"
+          ],
+          "description": "Document language code (e.g., 'en-US', 'fr-FR')."
+        },
+        "qualified_electronic_signature": {
+          "type": "boolean",
+          "description": "Indicates whether the document requires a Qualified Electronic Signature (QES)\nduring the signing process. If `true`, signers must complete the document using\na third-party qualified electronic signature provider according to supported verification rules.\n"
+        },
+        "expires_in": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Document expiration in days. Minimum is 1 day.\n",
+          "format": "int32"
+        }
+      }
+    }
+examples: ./.resources/Update document settings.resources/examples
+order: 2000

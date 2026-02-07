@@ -1,0 +1,164 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/notary/notarization-requests"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: json
+    content: |-
+      {
+        "document_id": "D3okRfgHRX7NEhavcACReB",
+        "disable_invitees_notifications": true,
+        "invitation": {
+          "message": "Your session is ready",
+          "invitees": [
+            {
+              "email": "signer@example.com",
+              "first_name": "test",
+              "last_name": "test"
+            }
+          ]
+        }
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "f75e053a-25e8-40be-8681-fd755ade2a2b",
+        "name": "test",
+        "status": "SENT",
+        "date_created": "2023-04-14T16:33:06.938984Z",
+        "date_accepted": null,
+        "created_by": {
+          "first_name": "test",
+          "last_name": "test",
+          "email": "user@example.com",
+          "user_id": "nyAnVpY7pZ23FBve8s9xgk"
+        },
+        "invitees": [
+          {
+            "first_name": "test",
+            "last_name": "test",
+            "email": "signer@example.com",
+            "notarization_link": "https://notarize.pandadoc.com/session-request#/?requestId=f75e053a-25e8-40be-8681-fd755ade2a2b&inviteeId=2fbb4cbf-d461-4421-94cf-eaadcb9627e0"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "f75e053a-25e8-40be-8681-fd755ade2a2b",
+            "description": "A unique identifier of the notarization request."
+          },
+          "name": {
+            "type": "string",
+            "example": "test",
+            "description": "A name of the notarization request."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "SENT",
+              "WAITING_FOR_NOTARY",
+              "ACCEPTED",
+              "LIVE",
+              "COMPLETED",
+              "INCOMPLETE",
+              "CANCELLED"
+            ],
+            "example": "SENT",
+            "description": "Current status of the notarization request."
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2023-04-14T16:33:06.938984Z",
+            "description": "A date when a notarization request was created.",
+            "format": "date-time"
+          },
+          "date_accepted": {
+            "type": "string",
+            "example": "2023-04-14T16:33:06.938984Z",
+            "description": "A date when a notarization session was accepted by notary.",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "object",
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "example": "nyAnVpY7pZ23FBve8s9xgk",
+                "description": "A unique identifier of the user who created a notarization request."
+              },
+              "email": {
+                "type": "string",
+                "example": "email@gmail.com",
+                "description": "A user's email address."
+              },
+              "first_name": {
+                "type": "string",
+                "example": "John",
+                "description": "A user's first name."
+              },
+              "last_name": {
+                "type": "string",
+                "example": "Smith",
+                "description": "A user's last name."
+              }
+            }
+          },
+          "invitees": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "nyAnVpY7pZ23FBve8s9xgk",
+                  "description": "A unique identifier of the invitee."
+                },
+                "email": {
+                  "type": "string",
+                  "maxLength": 255,
+                  "example": "email@gmail.com",
+                  "description": "A invitee's email address.",
+                  "format": "email"
+                },
+                "first_name": {
+                  "type": "string",
+                  "maxLength": 50,
+                  "example": "John",
+                  "description": "A invitee's first name."
+                },
+                "last_name": {
+                  "type": "string",
+                  "maxLength": 50,
+                  "example": "Smith",
+                  "description": "A invitee's last name."
+                },
+                "notarization_link": {
+                  "type": "string",
+                  "example": "https://notarize.pandadoc.com/session-request#/?requestId=f75e053a-25e8-40be-8681-fd755ade2a2b&inviteeId=2fbb4cbf-d461-4421-94cf-eaadcb9627e0",
+                  "description": "A secure link to join a notarization request."
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

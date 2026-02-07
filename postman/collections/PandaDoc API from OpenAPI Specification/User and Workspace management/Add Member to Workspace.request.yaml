@@ -1,0 +1,68 @@
+$kind: http-request
+description: |
+  Add an existing user to a workspace.
+  - You must be an organization admin or a workspace admin to add members.
+url: "{{baseUrl}}/public/v1/workspaces/:workspace_id/members?notify_user=true&notify_ws_admins=false"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+queryParams:
+  - key: notify_user
+    value: "true"
+    description: Send a confirmation email to the user that was added to workspace(s).
+    $type: boolean
+  - key: notify_ws_admins
+    value: "false"
+    description: Send a confirmation email to all workspace admins indicating that the user has been added to the workspace.
+    $type: boolean
+pathVariables:
+  - key: workspace_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "user_id": "2eWSKSvVqmuVCnuUK3iWwD",
+      "role": "Member"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "example": "2eWSKSvVqmuVCnuUK3iWwD",
+          "description": "User id."
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "Admin",
+            "Manager",
+            "Member",
+            "Collaborator"
+          ],
+          "example": "Member",
+          "description": "Role for a member."
+        }
+      },
+      "required": [
+        "user_id",
+        "role"
+      ]
+    }
+examples: ./.resources/Add Member to Workspace.resources/examples
+order: 7000

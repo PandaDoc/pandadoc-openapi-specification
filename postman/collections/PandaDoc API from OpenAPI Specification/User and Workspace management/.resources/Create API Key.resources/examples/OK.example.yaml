@@ -1,0 +1,68 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/workspaces/:workspace_id/api-keys"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: workspace_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Workspace id.
+  body:
+    type: json
+    content: |-
+      {
+        "type": "production",
+        "user_id": "ajnN7eGutJZsRKjQrNuPkh"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "user_id": "ajnN7eGutJZsRKjQrNuPkh",
+        "type": "production",
+        "workspace_id": "BhVzRcxH9Z2LgfPPGXFUBa",
+        "key": "5606722917eaf631cce6256e64b4afbd30d0e5fa"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "example": "ajnN7eGutJZsRKjQrNuPkh",
+            "description": "A unique identifier of the user."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "production",
+              "sandbox"
+            ],
+            "example": "sandbox",
+            "description": "A type of API key."
+          },
+          "workspace_id": {
+            "type": "string",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa",
+            "description": "A unique identifier of the workspace."
+          },
+          "key": {
+            "type": "string",
+            "example": "5606722917eaf631cce6256e64b4afbd30d0e5fa",
+            "description": "A New Public API key."
+          }
+        }
+      }
+order: 1000

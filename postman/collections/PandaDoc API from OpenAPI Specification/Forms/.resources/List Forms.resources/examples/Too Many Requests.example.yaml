@@ -1,0 +1,59 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/forms?count=10&page=1&status=active&order_by=name&asc=true&name=New Form"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: count
+      value: "10"
+      description: Specify how many forms to return. Default is 50 forms, maximum is 100 forms.
+    - key: page
+      value: "1"
+      description: Specify which page of the dataset to return.
+    - key: status
+      value: active
+      description: Specify which status of the forms dataset to return.
+    - key: order_by
+      value: name
+      description: Specify the form dataset order to return.
+    - key: asc
+      value: "true"
+      description: Specify sorting the result-set in ascending or descending order.
+    - key: name
+      value: New Form
+      description: Specify the form name.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "throttled",
+        "detail": "Request was throttled."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "throttled"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Request was throttled."
+          }
+        }
+      }
+order: 5000

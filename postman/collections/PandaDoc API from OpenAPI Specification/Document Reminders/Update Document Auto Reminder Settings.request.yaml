@@ -1,0 +1,76 @@
+$kind: http-request
+description: |
+  Configures automatic reminders for document recipients. 
+  These reminders are sent after the document's initial dispatch. 
+  Settings include enabling reminders, delivery method (email/SMS), initial delay, 
+  and recurrence frequency.
+url: "{{baseUrl}}/public/v1/documents/:document_id/auto-reminders"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: The UUID of the document.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "enabled": true,
+      "delivery_method": "email",
+      "initial_delay_days": 3,
+      "is_recurring": true,
+      "recurrence_frequency_days": 5
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Toggles auto-reminders for the document. \nIf `true`, reminders are scheduled based on the configuration.\n"
+        },
+        "delivery_method": {
+          "type": "string",
+          "enum": [
+            "email",
+            "sms"
+          ],
+          "description": "The method used to deliver reminders (e.g., email, SMS).\n"
+        },
+        "initial_delay_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 180,
+          "description": "Number of days to wait after sending the document before the first reminder is sent.\n"
+        },
+        "is_recurring": {
+          "type": "boolean",
+          "description": "If `true`, reminders will be sent repeatedly at specified intervals after the initial reminder.\n"
+        },
+        "recurrence_frequency_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 180,
+          "description": "Number of days between recurring reminders, applicable if `is_recurring` is `true`.\n"
+        }
+      },
+      "required": [
+        "enabled"
+      ]
+    }
+examples: ./.resources/Update Document Auto Reminder Settings.resources/examples
+order: 1000

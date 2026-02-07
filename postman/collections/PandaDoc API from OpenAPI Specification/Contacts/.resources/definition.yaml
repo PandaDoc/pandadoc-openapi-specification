@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations related to managing and retrieving contact details.
+order: 19000

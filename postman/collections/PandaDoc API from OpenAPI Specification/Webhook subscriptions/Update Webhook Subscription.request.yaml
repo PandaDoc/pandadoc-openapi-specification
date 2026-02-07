@@ -1,0 +1,86 @@
+$kind: http-request
+description: This operation updates the details of a webhook subscription.
+url: "{{baseUrl}}/public/v1/webhook-subscriptions/:id"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: d173751d-0057-4d5c-ab75-49a670a4ca68
+    description: Webhook subscription uuid
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "name": "PandaDoc",
+      "url": "https://pandadoc.com/webhooks",
+      "active": true,
+      "payload": [
+        "fields",
+        "products",
+        "metadata",
+        "tokens",
+        "pricing"
+      ],
+      "triggers": [
+        "document_deleted",
+        "recipient_completed",
+        "document_updated",
+        "document_state_changed",
+        "document_creation_failed"
+      ]
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "My Subscription",
+          "description": "Set a new name for the Webhooks subscription."
+        },
+        "url": {
+          "type": "string",
+          "example": "https://example.com",
+          "description": "Set the new Webhooks subscription URL.",
+          "format": "url"
+        },
+        "active": {
+          "type": "boolean",
+          "example": true,
+          "description": "Set the status of the Webhooks subscription."
+        },
+        "payload": {
+          "type": "array",
+          "description": "Set a new payload structure.",
+          "items": {
+            "type": "string",
+            "example": "pricing"
+          }
+        },
+        "triggers": {
+          "type": "array",
+          "description": "Set trigger events for the Webhooks subscription.",
+          "items": {
+            "type": "string",
+            "example": "document_state_changed"
+          }
+        }
+      }
+    }
+examples: ./.resources/Update Webhook Subscription.resources/examples
+order: 4000

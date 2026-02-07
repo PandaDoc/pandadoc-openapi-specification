@@ -1,0 +1,28 @@
+$kind: http-request
+description: |
+  Retrieves the current version of eSign disclosure text for a specified document.
+url: "{{baseUrl}}/public/v1/documents/:document_id/esign-disclosure"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: The UUID of the document.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Document eSign disclosure.resources/examples
+order: 9000

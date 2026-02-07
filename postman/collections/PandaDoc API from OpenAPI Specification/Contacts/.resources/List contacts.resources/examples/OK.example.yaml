@@ -1,0 +1,132 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/contacts?value="
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: value
+      value: ""
+      description: Optional search parameter. Filter results by exact match.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "id": "kQDLgj54VGCocTSTzthywf",
+            "email": "john.doe@example.com",
+            "first_name": "John",
+            "last_name": "Doe",
+            "company": "ExampleCorp",
+            "job_title": "Software Engineer",
+            "phone": "+1-555-123-4567",
+            "country": "USA",
+            "state": "California",
+            "street_address": "1234 Elm Street",
+            "city": "San Francisco",
+            "postal_code": "94101"
+          },
+          {
+            "id": "kQDLgj54VGCocTSTzthywd",
+            "email": "jane.smith@example.com",
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "company": "ExampleCorp",
+            "job_title": "Product Manager",
+            "phone": "+1-555-987-6543",
+            "country": "USA",
+            "state": "California",
+            "street_address": "5678 Oak Street",
+            "city": "San Francisco",
+            "postal_code": "94102"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "BCUWJhZm3k7grUNFAz6cD2",
+                  "description": "A unique identifier of the contact"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "user01@pandadoc.com",
+                  "description": "An email address of the contact"
+                },
+                "first_name": {
+                  "type": "string",
+                  "example": "John",
+                  "description": "Contact's first name"
+                },
+                "last_name": {
+                  "type": "string",
+                  "example": "Doe",
+                  "description": "Contact's last name"
+                },
+                "company": {
+                  "type": "string",
+                  "example": "John Doe Inc.",
+                  "description": "Contact's company name"
+                },
+                "job_title": {
+                  "type": "string",
+                  "example": "CTO",
+                  "description": "Contact's job title"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "+14842634627",
+                  "description": "A phone number"
+                },
+                "country": {
+                  "type": "string",
+                  "example": "USA",
+                  "description": "A country name"
+                },
+                "state": {
+                  "type": "string",
+                  "example": "Texas",
+                  "description": "A state name"
+                },
+                "street_address": {
+                  "type": "string",
+                  "example": "1313 Mockingbird Lane",
+                  "description": "A street address"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "Austin",
+                  "description": "A city name"
+                },
+                "postal_code": {
+                  "type": "string",
+                  "example": "75001",
+                  "description": "A postal code"
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

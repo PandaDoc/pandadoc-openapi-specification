@@ -1,0 +1,64 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/sections"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document ID
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "uuid": "fGE5F6rAeBSPokHMBt8Pbm",
+            "name": "[DEV] Test Template with HTML Tags"
+          },
+          {
+            "uuid": "MBMsxWgditbvUAgSKXR8kA",
+            "name": "Sample Document from PDF with Field Tags"
+          },
+          {
+            "uuid": "JKmXhd9e4ZwNMyaEYFJEkK",
+            "name": "Sample Document from PDF with Form Fields"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "example": "ZsiBHUyksDoKActQNGz542"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Sample Section"
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

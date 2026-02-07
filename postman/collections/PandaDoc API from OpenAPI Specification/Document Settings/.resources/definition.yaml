@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for retrieving and managing document settings, such as language.
+order: 9000

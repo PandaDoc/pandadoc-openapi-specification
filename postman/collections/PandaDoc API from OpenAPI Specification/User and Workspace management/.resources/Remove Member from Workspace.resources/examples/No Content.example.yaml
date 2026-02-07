@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/workspaces/:workspace_id/members/:member_id"
+  method: DELETE
+  headers:
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: workspace_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Workspace id
+    - key: member_id
+      value: nPh2PDhFdDqAES9k64h9qX
+      description: Member id
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

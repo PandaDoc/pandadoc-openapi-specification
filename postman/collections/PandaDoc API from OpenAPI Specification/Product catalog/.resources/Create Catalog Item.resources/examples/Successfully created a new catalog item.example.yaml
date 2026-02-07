@@ -1,0 +1,438 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/product-catalog/items"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: json
+    content: |-
+      {
+        "type": "regular",
+        "title": "New Product",
+        "category_id": null,
+        "sku": "",
+        "description": null,
+        "price_configuration": {
+          "currency": "EUR",
+          "price": 1,
+          "cost": null,
+          "pricing_method": 0,
+          "tiers": null,
+          "billing_type": "one_time",
+          "billing_cycle": null
+        },
+        "custom_fields": [],
+        "images": [],
+        "bundle_items": []
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "uuid": "ea90c56c-1350-41e0-97d1-3b3be0764f9c",
+        "title": "New Product",
+        "date_created": "2024-07-18T13:11:42.326997",
+        "date_modified": "2024-07-18T13:11:42.326997",
+        "created_by": "FA5QAu8UGA3oVDQZuPL75B",
+        "modified_by": "FA5QAu8UGA3oVDQZuPL75B",
+        "default_price_configuration": {
+          "uuid": "71b0660f-f6a4-413a-a9cb-dd1f4d93754e",
+          "price": 1,
+          "cost": null,
+          "currency": "EUR",
+          "pricing_method": 0,
+          "tiers": null,
+          "billing_cycle": null,
+          "billing_type": "one_time"
+        },
+        "variants": [
+          {
+            "uuid": "ff6ae8fd-a31f-485b-8437-5ff72fe40d97",
+            "sku": "211813902327",
+            "description": null,
+            "custom_fields": [],
+            "images": [],
+            "date_created": "2024-07-18T13:11:42.326997",
+            "date_modified": "2024-07-18T13:11:42.326997",
+            "status": 0,
+            "price_configurations": [
+              {
+                "uuid": "71b0660f-f6a4-413a-a9cb-dd1f4d93754e",
+                "price": 1,
+                "cost": null,
+                "currency": "EUR",
+                "pricing_method": 0,
+                "tiers": null,
+                "billing_cycle": null,
+                "billing_type": "one_time"
+              }
+            ]
+          }
+        ],
+        "category_id": null,
+        "category_name": null,
+        "type": "regular",
+        "bundle_items": null
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "date_modified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "modified_by": {
+            "type": "string"
+          },
+          "category_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "category_name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "regular",
+              "bundle"
+            ],
+            "example": "regular"
+          },
+          "bundle_items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "integer"
+                },
+                "item": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "sku": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "image_url": {
+                          "type": "string"
+                        },
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "is_main": {
+                                "type": "boolean"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "src": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "price": {
+                          "type": "number"
+                        },
+                        "currency": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "image_url": {
+                          "type": "string"
+                        },
+                        "images": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "is_main": {
+                                "type": "boolean"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "src": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "price": {
+                          "type": "number"
+                        },
+                        "currency": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default_price_configuration": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "currency": {
+                    "type": "string",
+                    "example": "USD"
+                  },
+                  "price": {
+                    "type": "number",
+                    "example": 59.99
+                  },
+                  "cost": {
+                    "type": "number"
+                  },
+                  "billing_type": {
+                    "type": "string"
+                  },
+                  "billing_cycle": {
+                    "type": "string"
+                  },
+                  "tiers": {
+                    "type": "array",
+                    "description": "only for volume based pricing",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "minimum": 0,
+                          "example": 9.99,
+                          "format": "float"
+                        },
+                        "min_qty": {
+                          "type": "number",
+                          "minimum": 1
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "min_qty"
+                      ]
+                    }
+                  },
+                  "pricing_method": {
+                    "type": "integer",
+                    "enum": [
+                      0,
+                      1,
+                      2
+                    ]
+                  }
+                },
+                "required": [
+                  "currency",
+                  "pricing_method"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "uuid": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "pricing_method": {
+                    "type": "number"
+                  }
+                }
+              }
+            ]
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "sku": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "custom_fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "images": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "is_main": {
+                        "type": "boolean"
+                      },
+                      "order": {
+                        "type": "number"
+                      },
+                      "src": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "date_created": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "date_modified": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "status": {
+                  "type": "number"
+                },
+                "price_configurations": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "example": "USD"
+                          },
+                          "price": {
+                            "type": "number",
+                            "example": 59.99
+                          },
+                          "cost": {
+                            "type": "number"
+                          },
+                          "billing_type": {
+                            "type": "string"
+                          },
+                          "billing_cycle": {
+                            "type": "string"
+                          },
+                          "tiers": {
+                            "type": "array",
+                            "description": "only for volume based pricing",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "example": 9.99,
+                                  "format": "float"
+                                },
+                                "min_qty": {
+                                  "type": "number",
+                                  "minimum": 1
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "min_qty"
+                              ]
+                            }
+                          },
+                          "pricing_method": {
+                            "type": "integer",
+                            "enum": [
+                              0,
+                              1,
+                              2
+                            ]
+                          }
+                        },
+                        "required": [
+                          "currency",
+                          "pricing_method"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "uuid": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "pricing_method": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

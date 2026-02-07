@@ -1,0 +1,62 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/product-catalog/items/:item_uuid"
+  method: DELETE
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: item_uuid
+      value: 2e39c7e0-acb0-4ff2-b4cd-ea3141f95db8
+      description: Catalog item UUID
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 403
+  statusText: Forbidden
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "code": "forbidden"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "forbidden"
+          },
+          "details": {
+            "type": "array",
+            "example": [],
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "pointer": {
+                  "type": "string",
+                  "description": "JSON Pointer."
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Details data."
+                }
+              },
+              "required": [
+                "code"
+              ]
+            }
+          }
+        }
+      }
+order: 2000

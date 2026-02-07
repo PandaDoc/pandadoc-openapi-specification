@@ -1,0 +1,87 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/attachments"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document UUID
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      [
+        {
+          "uuid": "076797cd-dca6-4083-a3pi-6960714209d9",
+          "date_created": "2024-07-15T21:14:39.973077Z",
+          "created_by": {
+            "id": "bSfiuAJNokERwsBxynKjwA",
+            "email": "sergio@pandadoc.com",
+            "first_name": "Sergio",
+            "last_name": "",
+            "avatar": null
+          },
+          "name": "document.pdf",
+          "type": "general"
+        }
+      ]
+    $type: |-
+      {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "uuid": {
+              "type": "string",
+              "example": "5a2df796-6c65-492b-955c-5709229a89f7"
+            },
+            "date_created": {
+              "type": "string",
+              "example": "2021-10-27T20:54:18.757496Z"
+            },
+            "created_by": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "WbAzFZFMgXHnoQREADTdnE"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "test_user@mail.com"
+                },
+                "first_name": {
+                  "type": "string",
+                  "example": "John"
+                },
+                "last_name": {
+                  "type": "string",
+                  "example": "Smith"
+                },
+                "avatar": {
+                  "type": "string",
+                  "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+                }
+              }
+            },
+            "name": {
+              "type": "string",
+              "example": "AttachedPhoto.jpg"
+            }
+          }
+        }
+      }
+order: 1000

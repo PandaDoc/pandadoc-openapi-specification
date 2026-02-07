@@ -1,0 +1,63 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/folders/:id"
+  method: PUT
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: Nq8htXxFssmhRxAPSP4SBP
+      description: The UUID of the folder that you are renaming.
+  body:
+    type: json
+    content: |-
+      {
+        "name": "New folder name"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "validation_error",
+        "detail": {
+          "count": [
+            "A valid integer is required."
+          ],
+          "order_by": [
+            "value is not a valid choice."
+          ]
+        }
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "validation_error"
+          },
+          "detail": {
+            "type": "object",
+            "example": {
+              "count": [
+                "A valid integer is required."
+              ],
+              "order_by": [
+                "value is not a valid choice."
+              ]
+            }
+          }
+        }
+      }
+order: 2000

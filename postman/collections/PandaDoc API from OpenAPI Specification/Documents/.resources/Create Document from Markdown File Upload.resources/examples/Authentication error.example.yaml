@@ -1,0 +1,56 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: multipart/form-data
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: formdata
+    content:
+      - type: file
+        key: file
+        src: ""
+        description: |
+          The Markdown file to upload.
+
+          Accepted content types: `text/markdown`, `text/x-markdown`.
+      - type: text
+        key: data
+        value: "[object Object]"
+        description: |
+          Request body for creating a document from an uploaded Markdown file.
+
+          > **Alpha:** Markdown file upload is currently in alpha. This functionality may change or be removed without notice.
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "authentication_error",
+        "detail": "Authentication credentials were not provided."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "authentication_error"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Authentication credentials were not provided."
+          }
+        }
+      }
+order: 3000

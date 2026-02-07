@@ -1,0 +1,38 @@
+$kind: http-request
+description: |
+  Get details about a template by `id`. Details include:
+
+  - Basic template information (name, author, etc)
+  - Roles
+  - All fields with values
+  - All tokens with values
+  - Pricing information (pricing tables, products, quotes)
+  - Template metadata
+  - Template tags
+  - Content placeholders
+  - Modification timestamps. Note that `date_modified` means any changes associated with the template roles, while `content_date_modified` logs any changes in the template content.
+url: "{{baseUrl}}/public/v1/templates/:id/details"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: vibuun3DXG8QDDLfXm27Ne
+    description: Template ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Template Details.resources/examples
+order: 4000

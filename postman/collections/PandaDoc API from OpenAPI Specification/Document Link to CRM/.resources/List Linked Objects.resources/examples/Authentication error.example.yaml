@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/linked-objects"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: ZPeAfcpzr9aiVs5vqUf6jg
+      description: Specify document ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "authentication_error",
+        "detail": "Authentication credentials were not provided."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "authentication_error"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Authentication credentials were not provided."
+          }
+        }
+      }
+order: 2000

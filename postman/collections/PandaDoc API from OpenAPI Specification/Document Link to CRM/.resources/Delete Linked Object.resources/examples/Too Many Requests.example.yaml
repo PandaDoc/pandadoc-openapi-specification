@@ -1,0 +1,47 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/linked-objects/:linked_object_id"
+  method: DELETE
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: ZPeAfcpzr9aiVs5vqUf6jg
+      description: Specify document ID.
+    - key: linked_object_id
+      value: deb0d530-d759-4189-a422-8d2265e01b2e
+      description: Specify linked object ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "throttled",
+        "detail": "Request was throttled."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "throttled"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Request was throttled."
+          }
+        }
+      }
+order: 6000

@@ -1,0 +1,61 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/webhook-subscriptions"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: json
+    content: |-
+      {
+        "name": "PandaDoc",
+        "url": "webhooks_subscription_url",
+        "active": true,
+        "payload": [
+          "fields",
+          "products",
+          "metadata",
+          "tokens",
+          "pricing"
+        ],
+        "triggers": [
+          "document_deleted",
+          "recipient_completed",
+          "document_updated",
+          "document_state_changed",
+          "document_creation_failed"
+        ]
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "throttled",
+        "detail": "Request was throttled."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "throttled"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Request was throttled."
+          }
+        }
+      }
+order: 5000

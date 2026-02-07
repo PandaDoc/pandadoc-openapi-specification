@@ -1,0 +1,28 @@
+$kind: http-request
+description: Get catalog item.
+url: "{{baseUrl}}/public/v2/product-catalog/items/:item_uuid"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: item_uuid
+    value: 2e39c7e0-acb0-4ff2-b4cd-ea3141f95db8
+    description: Catalog item UUID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Catalog Item Details.resources/examples
+order: 3000

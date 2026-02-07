@@ -1,0 +1,52 @@
+$kind: http-request
+description: |
+  Returns a summary for the specified document. Use query parameter `type` to select summary granularity.
+url: "{{baseUrl}}/public/beta/documents/:document_id/summary?type=detailed"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: type
+    value: detailed
+    description: |
+      Document summary granularity to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "description": "Document summary granularity (query parameter `type`).\n",
+            "type": "string",
+            "enum": [
+              "detailed",
+              "short",
+              "headline"
+            ]
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+pathVariables:
+  - key: document_id
+    value: D3okRfgHRX7NEhavcACReB
+    description: |
+      The unique identifier of the document.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/[Beta] Document Summary.resources/examples
+order: 25000

@@ -1,0 +1,33 @@
+$kind: http-request
+description: |
+  This method transfers ownership of all documents from one member to another.
+url: "{{baseUrl}}/public/v1/documents/ownership"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "from_membership_id": "Dqsxp4jNnFcS63tJEgLJGN",
+      "to_membership_id": "radQBiBkU7MBk59NSgaGfd"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "from_membership_id": {
+          "type": "string",
+          "example": "Dqsxp4jNnFcS63tJEgLJGN",
+          "description": "A unique identifier of a workspace member from whom you want to transfer ownership."
+        },
+        "to_membership_id": {
+          "type": "string",
+          "example": "radQBiBkU7MBk59NSgaGfd",
+          "description": "A unique identifier of a workspace member to whom you want to transfer ownership."
+        }
+      }
+    }
+examples: ./.resources/Transfer all documents ownership.resources/examples
+order: 20000

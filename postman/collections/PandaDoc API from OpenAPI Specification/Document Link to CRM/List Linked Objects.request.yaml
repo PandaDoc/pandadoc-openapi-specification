@@ -1,0 +1,28 @@
+$kind: http-request
+description: |
+  Get a list of linked objects for the document.
+url: "{{baseUrl}}/public/v1/documents/:id/linked-objects"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: ZPeAfcpzr9aiVs5vqUf6jg
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Linked Objects.resources/examples
+order: 2000

@@ -1,0 +1,3768 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/details"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document ID
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "approval_execution": null,
+        "content_date_modified": "2024-07-08T15:43:54.194562Z",
+        "linked_objects": [],
+        "date_completed": "2024-07-08T15:43:53.877522Z",
+        "id": "f9CbJKS4ZAs6nU629cuowb",
+        "name": "Digital Marketing Proposal",
+        "autonumbering_sequence_name_prefix": null,
+        "date_created": "2024-07-08T15:36:09.600947Z",
+        "date_modified": "2024-07-08T15:43:53.918819Z",
+        "date_sent": "2024-07-08T15:41:23.351853Z",
+        "ref_number": "MTMJR-FEUQB-ECEWW-3WVZP",
+        "created_by": {
+          "id": "FA5QAu8UGA3oVDQZuPL75B",
+          "email": "pandaDoc@pandadoc.com",
+          "first_name": "Panda",
+          "last_name": "Doc",
+          "avatar": null,
+          "membership_id": "RyMNXBjBPRppw56TfYBrXi"
+        },
+        "template": {
+          "id": "gZRVmyHiQV5riXSCMKsku2",
+          "name": "Sample Template"
+        },
+        "expiration_date": "2024-09-06T15:43:36.297737Z",
+        "metadata": {
+          "document__created_via_public_api": "true",
+          "document__creation_source": "public api"
+        },
+        "tokens": [],
+        "fields": [
+          {
+            "uuid": "f03e22f3-b3a8-4783-8b26-e43880ef87bf",
+            "name": "Signature",
+            "title": "",
+            "value": {},
+            "placeholder": "Signature",
+            "assigned_to": {
+              "id": "8KAZvGRL3W4u44a4fyDoeH",
+              "first_name": "Recipient First Name",
+              "last_name": "Recipient Last Name",
+              "email": "test@pandadoc.com",
+              "phone": "",
+              "recipient_type": "signer",
+              "has_completed": true,
+              "role": "Client",
+              "roles": [
+                "Client"
+              ],
+              "signing_order": null,
+              "delivery_methods": {
+                "sms": false,
+                "email": true
+              },
+              "redirect": {
+                "is_enabled": false,
+                "url": null
+              },
+              "type": "recipient"
+            },
+            "field_id": "signature_f03e22f3-b3a8-4783-8b26-e43880ef87bf",
+            "type": "signature"
+          }
+        ],
+        "pricing": {},
+        "tables": [
+          {
+            "name": "Table_1"
+          }
+        ],
+        "images": [
+          {
+            "name": "Image_1"
+          }
+        ],
+        "texts": [
+          {
+            "name": "Legal Terms Section"
+          }
+        ],
+        "tags": [
+          "tag1"
+        ],
+        "status": "document.completed",
+        "recipients": [
+          {
+            "id": "8KAZvGRL3W4u44a4fyDoeH",
+            "first_name": "Recipient First Name",
+            "last_name": "Recipient Last Name",
+            "email": "test@pandadoc.com",
+            "phone": "",
+            "recipient_type": "signer",
+            "has_completed": true,
+            "role": "Client",
+            "roles": [
+              "Client"
+            ],
+            "signing_order": null,
+            "delivery_methods": {
+              "sms": false,
+              "email": true
+            },
+            "redirect": {
+              "is_enabled": false,
+              "url": null
+            },
+            "contact_id": "HzXnuyNraSXMhXchYjUmHJ",
+            "shared_link": "https://app.pandadoc.com/document/15d4b481384b652a298530ddc7023bfc07a67d59",
+            "signature_date": "2024-07-08T15:43:53.800135Z",
+            "verification_settings": {
+              "verification_place": "before_open",
+              "kba_verification": null,
+              "passcode_verification": null,
+              "phone_verification": null,
+              "id_verification": {
+                "enabled": true
+              }
+            },
+            "type": "recipient"
+          }
+        ],
+        "sent_by": {
+          "id": "FA5QAu8UGA3oVDQZuPL75B",
+          "email": "pandadoc@pandadoc.com",
+          "first_name": "Panda",
+          "last_name": "Doc",
+          "avatar": null
+        },
+        "grand_total": {
+          "amount": "0",
+          "currency": "EUR"
+        },
+        "version": "2"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "7kqXgjFejB2toXxjcC5jfZ",
+            "description": "Document ID."
+          },
+          "name": {
+            "type": "string",
+            "example": "API Sample Document from PandaDoc Template",
+            "description": "Document name."
+          },
+          "folder_uuid": {
+            "type": "string",
+            "example": "QMDSzwabfFzTgjW4kUijqQ",
+            "description": "ID of the folder where the created document should be stored."
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-10-23T21:07:04.147345Z",
+            "description": "Document creation date."
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2021-10-23T21:07:04.147345Z",
+            "description": "Document modification date."
+          },
+          "date_completed": {
+            "type": "string",
+            "example": "2021-10-23T21:07:04.147345Z",
+            "description": "Document completion date."
+          },
+          "content_date_modified": {
+            "type": "string",
+            "example": "2021-10-23T21:07:04.147345Z",
+            "description": "Document content modification date."
+          },
+          "date_sent": {
+            "type": "string",
+            "example": "2021-10-23T21:07:04.147345Z",
+            "description": "Document sent date."
+          },
+          "ref_number": {
+            "type": "string",
+            "example": "MTMJR-FEUQB-ECEWW-3WVZP",
+            "description": "Document reference number."
+          },
+          "created_by": {
+            "type": "object",
+            "description": "Document creator details.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "7kqXgjFejB2toXxjcC5jfZ",
+                "description": "Creator ID."
+              },
+              "membership_id": {
+                "type": "string",
+                "example": "7kqXgjFejB2toXxjcC5jfZ",
+                "description": "Creator membership ID."
+              },
+              "email": {
+                "type": "string",
+                "example": "teset@test.test",
+                "description": "Creator email."
+              },
+              "first_name": {
+                "type": "string",
+                "example": "Jhon",
+                "description": "Creator first name."
+              },
+              "last_name": {
+                "type": "string",
+                "example": "Dow",
+                "description": "Creator last name."
+              },
+              "avatar": {
+                "type": "string",
+                "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg",
+                "description": "Creator avatar URL."
+              }
+            }
+          },
+          "template": {
+            "type": "object",
+            "description": "Document template details.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "hryJY9mqYZHjQCYQuSjRQg",
+                "description": "Template ID."
+              },
+              "name": {
+                "type": "string",
+                "example": "Upload test",
+                "description": "Template name."
+              }
+            }
+          },
+          "expiration_date": {
+            "type": "string",
+            "example": "2021-10-23T21:07:04.147345Z",
+            "description": "Document expiration date."
+          },
+          "metadata": {
+            "type": "object",
+            "example": {
+              "document__created_via_public_api": "true",
+              "my_favorite_pet": "Panda",
+              "opp_id": "1234567"
+            },
+            "description": "Document metadata."
+          },
+          "tokens": {
+            "type": "array",
+            "example": [
+              {
+                "name": "Document.GrandTotal",
+                "value": "$29.99"
+              },
+              {
+                "name": "Favorite.Pet",
+                "value": "Panda"
+              }
+            ],
+            "description": "Document tokens.",
+            "items": {
+              "type": "object"
+            }
+          },
+          "fields": {
+            "type": "array",
+            "example": [
+              {
+                "uuid": "f9574c3b-5b1e-4479-b2c9-c3ccd92748f3",
+                "name": "Click to upload a file",
+                "title": "",
+                "placeholder": "Click to upload a file",
+                "value": {
+                  "name": "file_name.pdf",
+                  "url": "https://uploadfields.pandadoc-static.com/collect_files/e7b082c2-395b-43c7-a24c-66bd1bbb5d2f/65af1f23-9d26-4622-8ff0-f406b3be27b8-file_name.pdf"
+                },
+                "assigned_to": {
+                  "id": "Fx7CgaVgpGbJBgZ4i5oTx8",
+                  "first_name": "John",
+                  "last_name": "Roe",
+                  "email": "john@example.com",
+                  "recipient_type": "signer",
+                  "has_completed": false,
+                  "role": "",
+                  "roles": [
+                    "singer"
+                  ],
+                  "type": "recipient"
+                },
+                "field_id": "CollectFile1",
+                "type": "collect_file"
+              },
+              {
+                "uuid": "f9574c3b-5b1e-4479-b2c9-c3ccd92748f3",
+                "name": "Favorite.Color",
+                "merge_field": "Favorite.Color",
+                "title": "Textfield",
+                "value": "value",
+                "assigned_to": {
+                  "id": "Fx7CgaVgpGbJBgZ4i5oTx8",
+                  "name": "Group 2",
+                  "email": "group2@example.com",
+                  "recipient_type": "signer",
+                  "has_completed": false,
+                  "roles": [],
+                  "type": "recipient_group",
+                  "members": [
+                    {
+                      "id": "4b011d86-286b-4f86-b697-90a6ad3f1489",
+                      "email": "john@example.com",
+                      "first_name": "John",
+                      "last_name": "Doe"
+                    }
+                  ]
+                },
+                "field_id": "text1",
+                "type": "text"
+              },
+              {
+                "uuid": "M4755SJuoyz5Jzsw4WXTDb",
+                "name": "Like",
+                "merge_field": "Like",
+                "title": "Checkbox",
+                "value": true,
+                "assigned_to": {
+                  "id": "Fx7CgaVgpGbJBgZ4i5oTx8",
+                  "first_name": "John",
+                  "last_name": "Roe",
+                  "email": "john@example.com",
+                  "recipient_type": "signer",
+                  "has_completed": false,
+                  "role": "",
+                  "roles": [
+                    "signer"
+                  ],
+                  "type": "recipient"
+                },
+                "field_id": "checkbox1",
+                "type": "checkbox"
+              }
+            ],
+            "description": "Document fields.",
+            "items": {
+              "anyOf": [
+                {
+                  "title": "Checkbox",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "boolean",
+                          "example": true,
+                          "description": "Value of the Checkbox field."
+                        },
+                        "merge_field": {
+                          "type": "string",
+                          "example": "MergeId"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Collect File",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "object",
+                          "description": "Value of the Collect File field.",
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "example": "example.jpg"
+                            },
+                            "url": {
+                              "type": "string",
+                              "example": "https://some-url.com/collect_files"
+                            }
+                          }
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "collect_file"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Date",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "example": "2024-01-01T00:00:00",
+                          "description": "Value of the Date field.",
+                          "format": "date-time"
+                        },
+                        "merge_field": {
+                          "type": "string",
+                          "example": "MergeId"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "date"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Dropdown",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "example": "dropdown item 1",
+                          "description": "Value of the Dropdown field."
+                        },
+                        "merge_field": {
+                          "type": "string",
+                          "example": "MergeId"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "dropdown"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Initials",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "object",
+                          "example": {},
+                          "description": "Value of the Initials field. Always empty object."
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "initials"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Payment Details",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "example": "",
+                          "description": "Value of the Payment field. Always empty string."
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "payment_details"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Radio Buttons",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "example": "Option 1",
+                          "description": "Value of the Radio Buttons field."
+                        },
+                        "merge_field": {
+                          "type": "string",
+                          "example": "MergeId"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "radio_buttons"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Signature",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "object",
+                          "example": {},
+                          "description": "Value of the Signature field. Always empty object."
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "signature"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Stamp",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "object",
+                          "example": {},
+                          "description": "Value of the Stamp field. Always empty object."
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "stamp"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Text",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "example": "6ce1a193-04da-4023-98c3-51ef1b8747b9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of a field"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "placeholder": {
+                          "type": "string",
+                          "description": "Placeholder of a field"
+                        },
+                        "assigned_to": {
+                          "anyOf": [
+                            {
+                              "title": "Recipient",
+                              "description": "Recipient",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "John"
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Doe"
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+1234567890"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "example": "Role 1"
+                                    },
+                                    "delivery_methods": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sms": {
+                                          "type": "boolean"
+                                        },
+                                        "email": {
+                                          "type": "boolean"
+                                        }
+                                      }
+                                    },
+                                    "redirect": {
+                                      "type": "object",
+                                      "properties": {
+                                        "is_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "url": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "title": "Recipient Group",
+                              "description": "Collection of Recipients",
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "example": "DueKG6wZYwmqsvPrnk76ma"
+                                    },
+                                    "email": {
+                                      "type": "string",
+                                      "example": "email@example.com",
+                                      "format": "email"
+                                    },
+                                    "recipient_type": {
+                                      "type": "string",
+                                      "example": "signer"
+                                    },
+                                    "roles": {
+                                      "type": "array",
+                                      "example": [
+                                        "Role 1"
+                                      ],
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "signing_order": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "has_completed": {
+                                      "type": "boolean",
+                                      "example": false
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string",
+                                      "example": "Group name"
+                                    },
+                                    "members": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "id": {
+                                            "type": "string",
+                                            "example": "027d6a8e-bd05-45dc-a609-43840d523b7b",
+                                            "format": "uuid"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "example": "email@example.com",
+                                            "format": "email"
+                                          },
+                                          "first_name": {
+                                            "type": "string",
+                                            "example": "John"
+                                          },
+                                          "last_name": {
+                                            "type": "string",
+                                            "example": "Doe"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "recipient_group"
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "field_id": {
+                          "type": "string",
+                          "example": "FieldId1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "checkbox",
+                            "collect_file",
+                            "date",
+                            "dropdown",
+                            "initials",
+                            "payment_details",
+                            "radio_buttons",
+                            "signature",
+                            "stamp",
+                            "text"
+                          ],
+                          "example": "payment_details"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "example": "Some text",
+                          "description": "Value of the Text field."
+                        },
+                        "merge_field": {
+                          "type": "string",
+                          "example": "MergeId"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "text"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "pricing": {
+            "type": "object",
+            "properties": {
+              "tables": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Pricing Table"
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "065c5cbc-a065-4843-ba17-028e63779605"
+                    },
+                    "total": {
+                      "type": "string",
+                      "example": "11500"
+                    },
+                    "is_included_in_total": {
+                      "type": "boolean"
+                    },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "subtotal": {
+                          "type": "string",
+                          "example": "11500"
+                        },
+                        "total": {
+                          "type": "string",
+                          "example": "11500"
+                        },
+                        "discount": {
+                          "type": "string",
+                          "example": "0"
+                        },
+                        "tax": {
+                          "type": "string",
+                          "example": "0"
+                        },
+                        "fee": {
+                          "type": "string",
+                          "example": "0"
+                        }
+                      }
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "sku": {
+                            "type": "string"
+                          },
+                          "qty": {
+                            "type": "string",
+                            "example": "10"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Annual license"
+                          },
+                          "cost": {
+                            "type": "string"
+                          },
+                          "price": {
+                            "type": "string",
+                            "example": "100"
+                          },
+                          "description": {
+                            "type": "string",
+                            "example": "1 year subscription"
+                          },
+                          "custom_fields": {
+                            "type": "object",
+                            "example": {}
+                          },
+                          "custom_columns": {
+                            "type": "object",
+                            "example": {
+                              "Images": "",
+                              "Cost": "",
+                              "Subtotal": ""
+                            }
+                          },
+                          "discount": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "tax_first": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "tax_second": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "subtotal": {
+                            "type": "string",
+                            "example": "10000"
+                          },
+                          "options": {
+                            "type": "object",
+                            "example": {},
+                            "properties": {
+                              "optional": {
+                                "type": "boolean"
+                              },
+                              "optional_selected": {
+                                "type": "boolean"
+                              },
+                              "multichoice_enabled": {
+                                "type": "boolean"
+                              },
+                              "multichoice_selected": {
+                                "type": "boolean"
+                              }
+                            }
+                          },
+                          "sale_price": {
+                            "type": "string",
+                            "example": "1000"
+                          },
+                          "taxes": {
+                            "type": "object",
+                            "example": {}
+                          },
+                          "discounts": {
+                            "type": "object",
+                            "example": {}
+                          },
+                          "fees": {
+                            "type": "object",
+                            "example": {}
+                          },
+                          "merged_data": {
+                            "type": "object",
+                            "example": {
+                              "custom_name": "SomeName",
+                              "custom_description": "SomeCustomDescription",
+                              "custom_price": "10.99",
+                              "custom_qty": "1.00",
+                              "custom_sku": "Test",
+                              "custom_tax": {
+                                "value": "10",
+                                "type": "percent"
+                              },
+                              "custom_fee": {
+                                "value": "10",
+                                "type": "percent"
+                              },
+                              "custom_discount": {
+                                "value": "10",
+                                "type": "percent"
+                              },
+                              "custom_text": "Some other",
+                              "Cost": null,
+                              "Subtotal": "26.38",
+                              "fluffiness": "Fluffiness",
+                              "Other_field": "SomeText"
+                            },
+                            "description": "Contains all fields in a flat structure with external field names defined in the template."
+                          }
+                        }
+                      }
+                    },
+                    "currency": {
+                      "type": "string",
+                      "example": "USD"
+                    }
+                  }
+                }
+              },
+              "quotes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "4b011d86-286b-4f86-b697-90a6ad3f1489"
+                    },
+                    "currency": {
+                      "type": "string",
+                      "example": "USD"
+                    },
+                    "total": {
+                      "type": "string",
+                      "example": "900"
+                    },
+                    "summary": {
+                      "type": "object",
+                      "title": "QuoteResponseSummary",
+                      "properties": {
+                        "total": {
+                          "type": "string",
+                          "example": "900"
+                        },
+                        "subtotal": {
+                          "type": "string",
+                          "example": "1000"
+                        },
+                        "one_time_subtotal": {
+                          "type": "string",
+                          "example": "500"
+                        },
+                        "recurring_subtotal": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "billing_cycle": {
+                                "type": "string",
+                                "example": "monthly"
+                              },
+                              "value": {
+                                "type": "string",
+                                "example": "500"
+                              }
+                            }
+                          }
+                        },
+                        "total_qty": {
+                          "type": "string"
+                        },
+                        "discounts": {
+                          "type": "object"
+                        },
+                        "taxes": {
+                          "type": "object"
+                        },
+                        "fees": {
+                          "type": "object"
+                        },
+                        "custom_fields": {
+                          "type": "object"
+                        },
+                        "total_discount": {
+                          "type": "string",
+                          "example": "100"
+                        },
+                        "total_tax": {
+                          "type": "string"
+                        },
+                        "total_fee": {
+                          "type": "string"
+                        },
+                        "total_savings": {
+                          "type": "string"
+                        },
+                        "total_contract_value": {
+                          "type": "string",
+                          "example": "1900"
+                        }
+                      }
+                    },
+                    "sections": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "summary": {
+                            "type": "object",
+                            "title": "QuoteResponseSectionSummary",
+                            "properties": {
+                              "total": {
+                                "type": "string",
+                                "example": "1000"
+                              },
+                              "subtotal": {
+                                "type": "string",
+                                "example": "1000"
+                              },
+                              "one_time_subtotal": {
+                                "type": "string",
+                                "example": "500"
+                              },
+                              "recurring_subtotal": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "billing_cycle": {
+                                      "type": "string",
+                                      "example": "monthly"
+                                    },
+                                    "value": {
+                                      "type": "string",
+                                      "example": "500"
+                                    }
+                                  }
+                                }
+                              },
+                              "total_qty": {
+                                "type": "string"
+                              },
+                              "discounts": {
+                                "type": "object"
+                              },
+                              "taxes": {
+                                "type": "object"
+                              },
+                              "fees": {
+                                "type": "object"
+                              },
+                              "custom_fields": {
+                                "type": "object"
+                              },
+                              "total_section_value": {
+                                "type": "string",
+                                "example": "1900"
+                              }
+                            }
+                          },
+                          "columns": {
+                            "type": "array",
+                            "items": {
+                              "title": "QuoteResponseSectionColumn",
+                              "type": "object",
+                              "properties": {
+                                "header": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "merge_name": {
+                                  "type": "string"
+                                },
+                                "hidden": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "title": "QuoteResponseSectionItem",
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "sku": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "qty": {
+                                  "type": "string",
+                                  "example": "1"
+                                },
+                                "price": {
+                                  "type": "string",
+                                  "example": "500"
+                                },
+                                "cost": {
+                                  "type": "string"
+                                },
+                                "billing_frequency": {
+                                  "type": "string"
+                                },
+                                "contract_term": {
+                                  "type": "string"
+                                },
+                                "pricing_method": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                },
+                                "reference_type": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "selected": {
+                                      "type": "boolean"
+                                    },
+                                    "qty_editable": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "custom_columns": {
+                                  "type": "object"
+                                },
+                                "external_columns": {
+                                  "type": "object"
+                                },
+                                "discounts": {
+                                  "type": "object"
+                                },
+                                "taxes": {
+                                  "type": "object"
+                                },
+                                "fees": {
+                                  "type": "object"
+                                },
+                                "multipliers": {
+                                  "type": "object"
+                                },
+                                "total": {
+                                  "type": "string"
+                                },
+                                "overall_total": {
+                                  "type": "string",
+                                  "example": "1000"
+                                }
+                              }
+                            }
+                          },
+                          "total": {
+                            "type": "string",
+                            "example": "1000"
+                          },
+                          "settings": {
+                            "type": "object",
+                            "properties": {
+                              "optional": {
+                                "type": "boolean"
+                              },
+                              "selected": {
+                                "type": "boolean"
+                              },
+                              "selection_type": {
+                                "type": "string",
+                                "enum": [
+                                  "custom",
+                                  "single",
+                                  "multiple"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "merge_rules": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "action": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string"
+                              },
+                              "section_id": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "condition": {
+                            "type": "object",
+                            "properties": {
+                              "field_name": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "comparison": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "type": {
+                                      "type": "string"
+                                    },
+                                    "value": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "settings": {
+                      "type": "object",
+                      "properties": {
+                        "selection_type": {
+                          "type": "string",
+                          "enum": [
+                            "custom",
+                            "single",
+                            "multiple"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "total": {
+                "type": "string",
+                "example": "11500"
+              }
+            }
+          },
+          "tables": {
+            "type": "array",
+            "description": "Document tables.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Table name."
+                }
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "description": "Document images.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Image name."
+                }
+              }
+            }
+          },
+          "texts": {
+            "type": "array",
+            "description": "Document text blocks.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Legal Terms Section",
+                  "description": "Text name."
+                }
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "example": [
+              "tag1",
+              "tag2"
+            ],
+            "description": "Document tags.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recipients": {
+            "type": "array",
+            "description": "Document recipients.",
+            "items": {
+              "oneOf": [
+                {
+                  "title": "Recipient",
+                  "allOf": [
+                    {
+                      "description": "Actor",
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "7kqXgjFejB2toXxjcC5jfZ"
+                        },
+                        "recipient_type": {
+                          "type": "string",
+                          "example": "CC"
+                        },
+                        "role": {
+                          "type": "string",
+                          "deprecated": true,
+                          "example": ""
+                        },
+                        "roles": {
+                          "type": "array",
+                          "example": [
+                            "user"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "signing_order": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "test@test.com"
+                        },
+                        "has_completed": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    },
+                    {
+                      "description": "Recipient",
+                      "type": "object",
+                      "properties": {
+                        "last_name": {
+                          "type": "string",
+                          "example": "Dow"
+                        },
+                        "contact_id": {
+                          "type": "string",
+                          "example": "7kqXgjFejB2toXxjcC5jfZ"
+                        },
+                        "first_name": {
+                          "type": "string",
+                          "example": "Jhon"
+                        },
+                        "phone": {
+                          "type": "string",
+                          "example": "+14842634627"
+                        },
+                        "delivery_methods": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "boolean"
+                            },
+                            "sms": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "has_completed": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "shared_link": {
+                          "type": "string",
+                          "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
+                        },
+                        "signature_date": {
+                          "type": "string",
+                          "example": "2021-10-23T21:07:04.147345Z"
+                        },
+                        "verification_settings": {
+                          "type": "object",
+                          "description": "To set up recipient verification, fill in verification_place and specify the type: passcode_verification, phone_verification, kba_verification or id_verification.\n- For passcode_verification, provide the passcode.\n- For phone_verification, provide the phone_number.\n- For kba_verification and id_verification, set the enabled parameter to true.\n",
+                          "properties": {
+                            "verification_place": {
+                              "type": "string",
+                              "enum": [
+                                "before_open",
+                                "before_sign"
+                              ],
+                              "description": "Specifies when a recipient must complete the verification process:\n- `before_open` (before opening the document),\n- `before_sign` (before signing the document).\n"
+                            },
+                            "passcode_verification": {
+                              "type": "object",
+                              "description": "Sets the passcode.",
+                              "properties": {
+                                "passcode": {
+                                  "type": "string",
+                                  "pattern": "^(?=(?:.*[a-zA-Z]){1,})(?=(?:.*[0-9]){1,})^[\\S]{6,100}$",
+                                  "example": "SimpleCode1",
+                                  "description": "Document passcode."
+                                }
+                              },
+                              "required": [
+                                "passcode"
+                              ]
+                            },
+                            "phone_verification": {
+                              "type": "object",
+                              "description": "Sets the phone number to send a passcode to.",
+                              "properties": {
+                                "phone_number": {
+                                  "type": "string",
+                                  "pattern": "^\\+[1-9]\\d{0,4}\\d{2,14}$",
+                                  "example": "+1234567890",
+                                  "description": "A phone number to send a passcode to."
+                                }
+                              },
+                              "required": [
+                                "phone_number"
+                              ]
+                            },
+                            "kba_verification": {
+                              "type": "object",
+                              "description": "Sets the KBA verification.",
+                              "properties": {
+                                "time_limit_sec": {
+                                  "type": "integer",
+                                  "example": 120
+                                },
+                                "score_threshold": {
+                                  "type": "integer",
+                                  "example": 80
+                                },
+                                "max_attempts_count": {
+                                  "type": "integer",
+                                  "example": 2
+                                }
+                              }
+                            },
+                            "id_verification": {
+                              "type": "object",
+                              "description": "Sets the ID verification.",
+                              "properties": {
+                                "enabled": {
+                                  "type": "boolean",
+                                  "example": true
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "redirect": {
+                          "type": "object",
+                          "properties": {
+                            "is_enabled": {
+                              "type": "boolean"
+                            },
+                            "url": {
+                              "type": "string",
+                              "example": "https://example.com",
+                              "description": "A URL to redirect to after the document is signed."
+                            }
+                          },
+                          "required": [
+                            "is_enabled",
+                            "url"
+                          ]
+                        },
+                        "avatar": {
+                          "type": "string",
+                          "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "recipient"
+                          ],
+                          "example": "recipient"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "Recipient Group",
+                  "allOf": [
+                    {
+                      "description": "Actor",
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "7kqXgjFejB2toXxjcC5jfZ"
+                        },
+                        "recipient_type": {
+                          "type": "string",
+                          "example": "CC"
+                        },
+                        "role": {
+                          "type": "string",
+                          "deprecated": true,
+                          "example": ""
+                        },
+                        "roles": {
+                          "type": "array",
+                          "example": [
+                            "user"
+                          ],
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "signing_order": {
+                          "type": "integer",
+                          "minimum": 1
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "test@test.com"
+                        },
+                        "has_completed": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    },
+                    {
+                      "description": "Recipient Group",
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "Group 1"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "recipient_group"
+                          ],
+                          "example": "recipient_group"
+                        },
+                        "members": {
+                          "type": "array",
+                          "items": {
+                            "description": "Recipient Group Member",
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "4b011d86-286b-4f86-b697-90a6ad3f1489"
+                              },
+                              "first_name": {
+                                "type": "string",
+                                "example": "Jhon"
+                              },
+                              "last_name": {
+                                "type": "string",
+                                "example": "Dow"
+                              },
+                              "email": {
+                                "type": "string",
+                                "example": "test@test.com"
+                              },
+                              "shared_link": {
+                                "type": "string",
+                                "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
+                              },
+                              "avatar": {
+                                "type": "string",
+                                "example": "https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg"
+                              },
+                              "signature_date": {
+                                "type": "string",
+                                "example": "2021-10-23T21:07:04.147345Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "grand_total": {
+            "type": "object",
+            "description": "Document grand total.",
+            "properties": {
+              "amount": {
+                "type": "string",
+                "example": "29.99",
+                "description": "Total amount."
+              },
+              "currency": {
+                "type": "string",
+                "example": "USD",
+                "description": "Currency type."
+              }
+            }
+          },
+          "linked_objects": {
+            "type": "array",
+            "description": "Document linked objects.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "example": "hubspot",
+                  "description": "Linked object provider."
+                },
+                "entity_type": {
+                  "type": "string",
+                  "example": "deal",
+                  "description": "Linked object entity type."
+                },
+                "entity_id": {
+                  "type": "string",
+                  "example": "18640",
+                  "description": "Linked object entity ID."
+                },
+                "id": {
+                  "type": "string",
+                  "example": "ea88ed1dc8094dd3a57754aa643a1954",
+                  "description": "Linked object ID."
+                },
+                "children": {
+                  "type": "array",
+                  "description": "Linked object children array.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "entity_type": {
+                        "type": "string",
+                        "example": "child-deal",
+                        "description": "Linked object child entity type."
+                      },
+                      "entity_id": {
+                        "type": "string",
+                        "example": "19640",
+                        "description": "Linked object child entity ID."
+                      },
+                      "id": {
+                        "type": "string",
+                        "example": "ea88ed1dc8094dd3a57754aa643a1954",
+                        "description": "Linked object child ID."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "example": "document.draft",
+            "description": "Document status."
+          },
+          "approval_execution": {
+            "type": "object",
+            "description": "Document approval execution.",
+            "properties": {
+              "document_uuid": {
+                "type": "string",
+                "example": "1234567890",
+                "description": "Decoded uuid of related RegularDocument instance."
+              },
+              "revision_number": {
+                "type": "integer",
+                "example": 1,
+                "description": "Consequent number of revision for related RegularDocument."
+              }
+            }
+          },
+          "version": {
+            "type": "string",
+            "example": "1",
+            "description": "Document version."
+          }
+        }
+      }
+order: 1000

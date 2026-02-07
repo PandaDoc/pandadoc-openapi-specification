@@ -1,0 +1,78 @@
+$kind: http-request
+description: |
+  Add a CC recipient to a document.
+
+  > 🚧 Before you start
+  > 
+  > To add a CC recipient, please ensure that:
+  > 
+  > - You have the 'Can Manage Recipients' permission.
+  > - This recipient is already created in your contacts. If not, add them using the [Create Contact](https://developers.pandadoc.com/reference/create-contact) endpoint.
+
+  To add a new CC recipient to a document, two parameters must be included in the request body:
+
+  - `kind`: Set this parameter to `contact` to specify an individual contact.
+  - `id`:  Input the ID of the desired contact.
+
+  To retrieve the contact's ID, use the [List Contacts](https://developers.pandadoc.com/reference/list-contacts) endpoint to access a list of all contacts, and then locate the desired contact by searching using the name or email address within the returned list.
+
+  ### Document status
+
+  You can add CC recipients in any document status except for the 'Expired' (`document.voided`) and 'Declined' (`document.declined`).
+
+  > 📘 Email notification to access the document
+  > 
+  > **Note**: When a document is in one of the following statuses: 'Sent' (`document.sent`), 'Viewed' (`document.viewed`), 'Completed' (`document.completed`), 'Waiting for Payment' (`document.waiting_pay`), or 'Paid' (`document.paid`), any added CC recipient will receive an instant notification at their email address, allowing them access to the document.
+url: "{{baseUrl}}/public/v1/documents/:id/recipients"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "id": "pGkLnJUAx99JpXJy5DVD30",
+      "kind": "contact"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "2eWSKSvVqmuVCnuUK3iWwD",
+          "description": "Contact uuid."
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "contact",
+            "contact_group"
+          ],
+          "example": "contact"
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ]
+    }
+examples: ./.resources/Add Document Recipient.resources/examples
+order: 1000

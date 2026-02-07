@@ -1,0 +1,42 @@
+$kind: http-request
+description: This operation allows transferring the ownership of a document to another user by specifying the document ID and membership ID.
+url: "{{baseUrl}}/public/v1/documents/:id/ownership"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "membership_id": "radQBiBkU7MBk59NSgaGfd"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "membership_id": {
+          "type": "string",
+          "example": "radQBiBkU7MBk59NSgaGfd",
+          "description": "A unique identifier of a workspace member."
+        }
+      }
+    }
+examples: ./.resources/Update document ownership.resources/examples
+order: 19000

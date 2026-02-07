@@ -1,0 +1,108 @@
+$kind: http-request
+description: |
+  Create users, and assign them roles, licenses, and workspaces.
+
+  - You must be an organization admin to create users.
+  - We check that the user email domain matches your organization domain.
+  - We check that the user email and phone number have a valid format.
+url: "{{baseUrl}}/public/v1/users?notify_user=true&notify_ws_admins=false"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+queryParams:
+  - key: notify_user
+    value: "true"
+    description: Send a confirmation email to the user that was added to workspace(s).
+    $type: boolean
+  - key: notify_ws_admins
+    value: "false"
+    description: Send a confirmation email to all workspace admins indicating that the user has been added to the workspace.
+    $type: boolean
+body:
+  type: json
+  content: |-
+    {
+      "user": {
+        "email": "test@pandadoc.com",
+        "first_name": "New",
+        "last_name": "User",
+        "phone_number": ""
+      },
+      "workspaces": [
+        {
+          "workspace_id": "Ab123",
+          "role": "Collaborator"
+        }
+      ],
+      "license": "Guest"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "object",
+          "description": "User info",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "email@example.com"
+            },
+            "first_name": {
+              "type": "string",
+              "example": "John"
+            },
+            "last_name": {
+              "type": "string",
+              "example": "Doe"
+            },
+            "phone_number": {
+              "type": "string",
+              "example": "+14842634627"
+            }
+          }
+        },
+        "workspaces": {
+          "type": "array",
+          "description": "Info for adding a user to a workspace(s)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "workspace_id": {
+                "type": "string",
+                "example": "2eWSKSvVqmuVCnuUK3iWwD"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "Admin",
+                  "Manager",
+                  "Member",
+                  "Collaborator"
+                ],
+                "example": "Member",
+                "description": "Role for a member."
+              }
+            }
+          }
+        },
+        "license": {
+          "type": "string",
+          "enum": [
+            "Full",
+            "eSign",
+            "Read-only",
+            "Creator",
+            "Guest"
+          ]
+        }
+      },
+      "required": [
+        "user",
+        "license",
+        "workspaces"
+      ]
+    }
+examples: ./.resources/Create User.resources/examples
+order: 5000

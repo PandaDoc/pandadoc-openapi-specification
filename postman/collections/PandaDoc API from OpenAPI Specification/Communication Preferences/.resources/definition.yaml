@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for managing communication preferences, including SMS opt-out settings.
+order: 27000

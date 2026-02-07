@@ -1,0 +1,64 @@
+$kind: http-request
+description: |
+  It is useful to request document status to ensure a document is in the expected state before calling additional API methods. 
+
+  ### Required Document Statuses
+
+  Here are some common methods and the `document.status` required to proceed:
+
+  | API Method           | Required Document State |
+  | :------------------- | :---------------------- |
+  | Send A Document      | `document.draft`        |
+  | Get Document Details | `document.draft`        |
+  | Embed A Document     | `document.sent`         |
+  | Download A Document  | `document.completed`    |
+
+  > 📘 Polling vs Webhooks
+  > 
+  > If you are using the `GET` document status endpoint for [**polling**](https://en.wikipedia.org/wiki/Polling_(computer_science)), we also support and recommend using **webhooks** for event-driven needs: <https://developers.pandadoc.com/docs/listen-document-status-changes#/>
+
+  ### Available Document Statuses
+
+  The following is a complete list of all possible document statuses returned:
+
+  | Document Status             | Status Description                                                                                                                                                                                                               |
+  | :-------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `document.uploaded`         | The document has just been created or uploaded. It is in processing and will be in `document.draft` state soon.                                                                                                           |
+  | `document.error`            | The document creation has failed. This status is terminal, you should stop polling after getting it.
+  | `document.draft`            | The document is in a draft state. All aspects of the document can be edited in this state. Our API does not support edits after the document has been created, but it can still be edited manually on <https://app.pandadoc.com> |
+  | `document.sent`             | The document has been "sealed" and optionally sent. No further document edits can occur except for document recipient(s) filling out or signing the document.                                                                    |
+  | `document.viewed`           | Document recipient(s) have viewed the sent document.                                                                                                                                                                             |
+  | `document.waiting_approval` | The document has an [automatic approval workflow](https://support.pandadoc.com/en/articles/9714799-approval-workflow) and has not yet been approved.                                                      |
+  | `document.rejected`         | The document has an [automatic approval workflow](https://support.pandadoc.com/en/articles/9714799-approval-workflow) and was rejected.                                                                   |
+  | `document.approved`         | The document has an [automatic approval workflow](https://support.pandadoc.com/en/articles/9714799-approval-workflow) and was approved.                                                                   |
+  | `document.waiting_pay`      | The document has a [Stripe payment](https://support.pandadoc.com/en/articles/9714942-stripe-checkout-payments) option and is awaiting payment.                                                                              |
+  | `document.paid`             | The document has a [Stripe payment](https://support.pandadoc.com/en/articles/9714942-stripe-checkout-payments) option and was paid.                                                                                         |
+  | `document.completed`        | The document has been completed by all recipients.                                                                                                                                                                               |
+  | `document.voided`           | The document expired and is no longer available for completion or signature.                                                                                                                                                     |
+  | `document.declined`         | The document was [manually marked](https://support.pandadoc.com/en/articles/9714842-manually-change-document-status) as "Declined"                                                                                    |
+  | `document.external_review`  | The document is reviewed by it's recipient using Suggest Edit feature                                                                                                                                                            |
+url: "{{baseUrl}}/public/v1/documents/:id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: fANp5wW5EwY7AkiTkTGekZ
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Document Status.resources/examples
+order: 6000

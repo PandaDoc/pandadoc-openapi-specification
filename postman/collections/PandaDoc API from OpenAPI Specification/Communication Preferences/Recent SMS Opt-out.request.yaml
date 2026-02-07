@@ -1,0 +1,47 @@
+$kind: http-request
+description: |
+  Retrieves a list of the most recent SMS opt-out changes for each phone numbers used in your workspace.
+
+  > 📘 You can filter results by time range using `timestamp_from` and `timestamp_to`.
+url: "{{baseUrl}}/public/v1/sms-opt-outs?timestamp_from=2025-01-28T00:00:00Z&timestamp_to=2025-01-28T23:59:59Z"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: timestamp_from
+    value: 2025-01-28T00:00:00Z
+    description: |
+      The start of the timestamp. 
+
+      If no timestamp is provided, 1 hour before the current time will be used.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+  - key: timestamp_to
+    value: 2025-01-28T23:59:59Z
+    description: |
+      The end of the timestamp range. 
+
+      If no timestamp is provided the current time will be used.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Recent SMS Opt-out.resources/examples
+order: 1000

@@ -1,0 +1,112 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/members/:id"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: radQBiBkU7MBk59NSgaGf5
+      description: Membership id.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "user_id": "nXN9uokLULUw4L4HPsJGHQ",
+        "membership_id": "mz4Ys3cVUSAyBpQKbHphtE",
+        "email": "user.with.custom.role@pandadoc.com",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "workspace": "n7SK7prHeoWJSXb9VkrPve",
+        "workspace_name": "Workspace",
+        "email_verified": true,
+        "role": "Custom",
+        "user_license": "Full",
+        "date_created": "2024-02-16T12:40:55.547303Z",
+        "date_modified": "2024-03-21T15:55:33.783886Z"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "example": "ajnN7eGutJZsRKjQrNuPkh",
+            "description": "A unique identifier of the user in the organization."
+          },
+          "membership_id": {
+            "type": "string",
+            "example": "radQBiBkU7MBk59NSgaGf5",
+            "description": "A unique identifier of the user in the workspace."
+          },
+          "email": {
+            "type": "string",
+            "example": "josh@example.com",
+            "description": "A user's email address."
+          },
+          "first_name": {
+            "type": "string",
+            "example": "Josh",
+            "description": "A user's first name."
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Ron",
+            "description": "A user's last name."
+          },
+          "is_active": {
+            "type": "boolean",
+            "example": true,
+            "description": "A boolean value that identifies if a member is active in the workspace."
+          },
+          "workspace": {
+            "type": "string",
+            "example": "xc4mBZ7dKErXQtJwwD6Ghg",
+            "description": "A unique identifier of the user's current active workspace."
+          },
+          "workspace_name": {
+            "type": "string",
+            "example": "PandaDoc",
+            "description": "A name of the user's current active workspace."
+          },
+          "emails_verified": {
+            "type": "boolean",
+            "example": true,
+            "description": "A boolean value that identifies if the email is verified."
+          },
+          "role": {
+            "type": "string",
+            "example": "Admin",
+            "description": "A member's role in the workspace."
+          },
+          "user_license": {
+            "type": "string",
+            "example": "Full",
+            "description": "A user license in the organization."
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2020-11-17T08:42:34.237567Z",
+            "description": "A date when a member was added to the workspace."
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2021-11-30T10:30:35.071428Z",
+            "description": "Last modified date of a member."
+          }
+        }
+      }
+order: 1000

@@ -1,0 +1,38 @@
+$kind: http-request
+description: |
+  Use this method to delete a notarization request.
+  Once notarization request is deleted it cannot be restored.
+
+  > 🚧 Notarization Request status
+  > 
+  > You can only delete a notarization request in status 'SENT', 'WAITING_FOR_NOTARY' or 'INCOMPLETE'. 
+  > If the notarization request is in any other status, the request will return a 400 Bad Request error.
+
+  By default all invitees will receive email notification about deletion of the notarization request. 
+  If you want to disable this notification, you can use the `disable_invitees_notifications` parameter when creating request (see [Create Notarization Request](https://developers.pandadoc.com/reference/create-notarization-request)).
+url: "{{baseUrl}}/public/v2/notary/notarization-requests/:session_request_id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: session_request_id
+    value: 0b2256a2-5803-4ae9-b1b8-595f48e37173
+    description: Notarization Request ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete Notarization Request.resources/examples
+order: 5000

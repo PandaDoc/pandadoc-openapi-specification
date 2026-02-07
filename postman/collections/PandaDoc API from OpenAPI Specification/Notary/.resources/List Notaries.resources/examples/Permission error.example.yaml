@@ -1,0 +1,74 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/notary/notaries?status=UNDER_REVIEW&commission_state=Arizona&offset=0&limit=50&order_by=email"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: status
+      value: UNDER_REVIEW
+      description: Filter by status (comma-separated values supported). Valid values are INVITED, UNDER_REVIEW, ACTIVE, REJECTED, INACTIVE
+    - key: commission_state
+      value: Arizona
+      description: Filter by commission state (comma-separated values supported)
+    - key: offset
+      value: "0"
+      description: Number of results to skip
+    - key: limit
+      value: "50"
+      description: Maximum number of results to return
+    - key: order_by
+      value: email
+      description: Sort by name, email, or status (default is email). Use a - prefix for descending order (e.g., -email)
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 403
+  statusText: Forbidden
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "code": "forbidden"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "forbidden"
+          },
+          "details": {
+            "type": "array",
+            "example": [],
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "pointer": {
+                  "type": "string",
+                  "description": "JSON Pointer."
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Details data."
+                }
+              },
+              "required": [
+                "code"
+              ]
+            }
+          }
+        }
+      }
+order: 3000

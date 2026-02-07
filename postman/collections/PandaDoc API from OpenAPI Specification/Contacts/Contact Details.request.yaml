@@ -1,0 +1,27 @@
+$kind: http-request
+description: Returns contact details by its ID.
+url: "{{baseUrl}}/public/v1/contacts/:id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: SyoufNkJiHRn24LpuJ7RXb
+    description: Contact id.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Contact Details.resources/examples
+order: 3000

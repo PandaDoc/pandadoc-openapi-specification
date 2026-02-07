@@ -1,0 +1,33 @@
+$kind: http-request
+description: |
+  Deactivate the workspace, remove all the members from it and make it 
+  unavailable.
+url: "{{baseUrl}}/public/v1/workspaces/:workspace_id/deactivate"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: workspace_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: "{}"
+  $type: |-
+    {
+      "type": "object"
+    }
+examples: ./.resources/Deactivate Workspace.resources/examples
+order: 3000

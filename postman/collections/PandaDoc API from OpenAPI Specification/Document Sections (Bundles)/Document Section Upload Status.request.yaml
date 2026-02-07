@@ -1,0 +1,64 @@
+$kind: http-request
+description: |
+  Receive the upload status of the document and sections by their `upload_id`.
+
+  Requesting document section upload status is useful to ensure a document section upload is in the expected state before calling additional API methods.
+
+  In response, you receive an array with `sections_uuid`. You can receive information about each section using the [Document Section Info](https://developers.pandadoc.com/reference/document-section-info) endpoint.
+
+  ```json
+      "section_uuids": [
+          "H8T8CJofGY6JwTsWsPuDEF",
+          "8MwLaU4SaZywqLiDk26mDF"
+      ]
+  ```
+
+  ## Available Document Section Upload Statuses
+
+  The following is a complete list of all possible document statuses returned:
+
+  | Document Status                      | Status Description                                                                                                                                                |
+  | :----------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `document_sections_upload.UPLOADED`  | The document section upload process has just been created. It is in processing and will be in `document_sections_upload.PROCESSED` state momentarily.             |
+  | `document_sections_upload.PROCESSED` | The document sections upload is processed and the sections are already created in the document. All aspects of the document sections can be edited in this state. |
+  | `document_sections_upload.ERROR`     | Document section upload procces has been failed. For more information check error details in the response.                                                        |
+url: "{{baseUrl}}/public/v1/documents/:document_id/sections/uploads/:upload_id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: upload_id
+    value: LQ6cUT7xevPLUEgJeF8Zrm
+    description: Upload ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Document Section Upload Status.resources/examples
+order: 4000

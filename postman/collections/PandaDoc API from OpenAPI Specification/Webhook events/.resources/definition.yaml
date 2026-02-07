@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations related to webhook events.
+order: 22000

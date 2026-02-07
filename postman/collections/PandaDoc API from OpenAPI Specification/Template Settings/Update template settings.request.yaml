@@ -1,0 +1,62 @@
+$kind: http-request
+description: |
+  Updates the settings for a specified template. Only the language field is currently supported.
+url: "{{baseUrl}}/public/v2/templates/:template_id/settings"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: template_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Unique identifier of the template to update settings for.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "language": "fr-FR"
+    }
+  $type: |-
+    {
+      "description": "Template settings update request.",
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": [
+            "en-US",
+            "fr-FR",
+            "it-IT",
+            "es-ES",
+            "nl-NL",
+            "de-DE",
+            "pt-BR",
+            "pt-PT",
+            "pl-PL",
+            "sv-SE",
+            "cs-CZ",
+            "da-DK",
+            "el-GR",
+            "hu-HU",
+            "nb-NO",
+            "ro-RO",
+            "bg-BG"
+          ],
+          "description": "Document language code (e.g., 'en-US', 'fr-FR')."
+        }
+      }
+    }
+examples: ./.resources/Update template settings.resources/examples
+order: 2000

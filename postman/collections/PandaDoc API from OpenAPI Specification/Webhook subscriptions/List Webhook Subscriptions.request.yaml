@@ -1,0 +1,11 @@
+$kind: http-request
+description: This operation fetches a paginated list of webhook subscriptions.
+url: "{{baseUrl}}/public/v1/webhook-subscriptions"
+method: GET
+headers:
+  Accept: application/json
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Webhook Subscriptions.resources/examples
+order: 1000

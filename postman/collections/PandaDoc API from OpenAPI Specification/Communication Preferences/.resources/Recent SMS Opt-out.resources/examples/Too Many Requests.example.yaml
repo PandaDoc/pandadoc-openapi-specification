@@ -1,0 +1,53 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/sms-opt-outs?timestamp_from=2025-01-28T00:00:00Z&timestamp_to=2025-01-28T23:59:59Z"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: timestamp_from
+      value: 2025-01-28T00:00:00Z
+      description: |
+        The start of the timestamp. 
+
+        If no timestamp is provided, 1 hour before the current time will be used.
+    - key: timestamp_to
+      value: 2025-01-28T23:59:59Z
+      description: |
+        The end of the timestamp range. 
+
+        If no timestamp is provided the current time will be used.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "throttled",
+        "detail": "Request was throttled."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "throttled"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Request was throttled."
+          }
+        }
+      }
+order: 5000

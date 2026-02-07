@@ -1,0 +1,86 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/sections/uploads/:upload_id"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document ID.
+    - key: upload_id
+      value: LQ6cUT7xevPLUEgJeF8Zrm
+      description: Upload ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "uuid": "zVbriqiPaulqj4ThcLeKQG",
+        "name": "Sample Section",
+        "document_uuid": "Gpzd2nXgFjCSS3hTucci2E",
+        "status": "document_sections_upload.PROCESSED",
+        "section_uuids": [
+          "xn5gLB9ox1fbpZ9XDbAQsi"
+        ],
+        "date_created": "2024-07-15T08:20:28.187477Z",
+        "date_modified": "2024-07-15T08:20:31.839240Z",
+        "info_message": null
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "example": "7kqXgjFejB2toXxjcC5jfZ"
+          },
+          "document_uuid": {
+            "type": "string",
+            "example": "cKbJ7uay3cEGtsKuGPwYGX"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "document_sections_upload.UPLOADED",
+              "document_sections_upload.PROCESSED",
+              "document_sections_upload.ERROR"
+            ],
+            "example": "document_sections_upload.PROCESSED"
+          },
+          "name": {
+            "type": "string",
+            "example": "API Sample Section from PandaDoc Template"
+          },
+          "sections_uuids": {
+            "type": "array",
+            "example": [
+              "cKbJ7uay3cEGtsKuGPwYGX",
+              "jzjCfYgKQYm2u9ctwN6io4"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-10-08T11:06:32.337395Z"
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2021-10-08T11:06:32.337395Z"
+          }
+        }
+      }
+order: 1000

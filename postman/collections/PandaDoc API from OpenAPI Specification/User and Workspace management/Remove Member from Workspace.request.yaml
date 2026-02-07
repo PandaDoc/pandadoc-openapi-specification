@@ -1,0 +1,42 @@
+$kind: http-request
+description: This operation removes a specified member from a workspace by providing the workspace ID and member ID.
+url: "{{baseUrl}}/public/v1/workspaces/:workspace_id/members/:member_id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: workspace_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Workspace id
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: member_id
+    value: nPh2PDhFdDqAES9k64h9qX
+    description: Member id
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Remove Member from Workspace.resources/examples
+order: 8000

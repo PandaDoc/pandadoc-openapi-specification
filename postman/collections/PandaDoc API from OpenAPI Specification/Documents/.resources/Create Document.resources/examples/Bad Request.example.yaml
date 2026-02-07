@@ -1,0 +1,181 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents?editor_ver=ev2&use_form_field_properties=true"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: editor_ver
+      value: ev2
+      description: Set this parameter as `ev1` if you want to create a document from PDF with Classic Editor when both editors are enabled for the workspace.
+    - key: use_form_field_properties
+      value: "true"
+      description: Set this parameter as `yes` or `1` or `true` (only when upload pdf with form fields) if you want to  respect form fields properties, like `required`.
+  body:
+    type: json
+    content: |-
+      {
+        "name": "Simple API Sample Document from PandaDoc Template",
+        "template_uuid": "onoznwTq4Y3EELMPyvucnc",
+        "recipients": [
+          {
+            "email": "josh@example.com",
+            "first_name": "Josh",
+            "last_name": "Ron",
+            "role": "user",
+            "phone": "555-5555-5555",
+            "signing_order": 1,
+            "company": "PandaDoc",
+            "default": false,
+            "delivery_methods": {
+              "sms": true,
+              "email": false
+            },
+            "redirect": {
+              "is_enabled": true,
+              "url": "https://super.redirect.url/1"
+            },
+            "verification_settings": {
+              "verification_place": "before_open",
+              "passcode_verification": null,
+              "phone_verification": null,
+              "kba_verification": null,
+              "id_verification": {
+                "enabled": true
+              }
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "Favorite.Pet",
+            "value": "Panda"
+          }
+        ],
+        "fields": {
+          "Favorite.Color": {
+            "value": "PandaDoc green"
+          },
+          "Delivery": {
+            "value": "Same Day Delivery"
+          },
+          "Like": {
+            "value": true
+          },
+          "Date": {
+            "value": "2019-12-31T00:00:00.000Z"
+          }
+        },
+        "metadata": {
+          "my_favorite_pet": "Panda"
+        },
+        "tags": [
+          "created_via_api",
+          "test_document"
+        ],
+        "images": [
+          {
+            "name": "Image 1",
+            "urls": [
+              "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
+            ]
+          }
+        ],
+        "pricing_tables": [
+          {
+            "name": "Pricing Table 1",
+            "data_merge": true,
+            "options": {
+              "Tax": {
+                "type": "percent",
+                "name": "Tax",
+                "value": 10
+              },
+              "Fee": {
+                "type": "percent",
+                "name": "Fee",
+                "value": 5
+              }
+            },
+            "sections": [
+              {
+                "title": "Sample Section",
+                "default": true,
+                "rows": [
+                  {
+                    "options": {
+                      "optional": true,
+                      "optional_selected": true,
+                      "qty_editable": true
+                    },
+                    "data": {
+                      "Name": "Toy Panda",
+                      "Description": "Fluffy!",
+                      "Price": 10,
+                      "QTY": 3,
+                      "Tax": {
+                        "value": 20,
+                        "type": "percent"
+                      },
+                      "Fee": {
+                        "value": 5,
+                        "type": "percent"
+                      }
+                    },
+                    "custom_fields": {
+                      "Fluffiness": "5 / 5"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "validation_error",
+        "detail": {
+          "count": [
+            "A valid integer is required."
+          ],
+          "order_by": [
+            "value is not a valid choice."
+          ]
+        }
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "validation_error"
+          },
+          "detail": {
+            "type": "object",
+            "example": {
+              "count": [
+                "A valid integer is required."
+              ],
+              "order_by": [
+                "value is not a valid choice."
+              ]
+            }
+          }
+        }
+      }
+order: 2000

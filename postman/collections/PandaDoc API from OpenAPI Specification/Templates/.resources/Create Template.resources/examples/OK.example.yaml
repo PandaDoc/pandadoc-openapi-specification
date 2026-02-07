@@ -1,0 +1,78 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/templates?fields=content_date_modified"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: fields
+      value: content_date_modified
+      description: A comma-separated list of additional fields to include in the response.
+  body:
+    type: json
+    content: |-
+      {
+        "name": "Sample Template",
+        "folder_uuid": "EE8yUNg5HztqVAuH85He8V",
+        "owner": {
+          "email": "john.doe@example.com"
+        },
+        "metadata": {
+          "my_favorite_pet": "Panda"
+        }
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "va9aNuj3uX2w9M7uytn967",
+        "name": "Sample Template",
+        "date_created": "2024-07-08T14:41:42.625906Z",
+        "date_modified": "2024-07-08T14:41:42.700084Z",
+        "version": "2"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "iMymdDd9XFD3HyxP5VD67Q"
+          },
+          "name": {
+            "type": "string",
+            "example": "Blank"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-06-17T15:51:13.226974Z",
+            "format": "date-time"
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2021-06-17T15:51:13.326974Z",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "string",
+            "example": "2"
+          },
+          "content_date_modified": {
+            "type": "string",
+            "example": "2021-06-17T15:51:13.426974Z",
+            "format": "date-time"
+          }
+        }
+      }
+order: 1000

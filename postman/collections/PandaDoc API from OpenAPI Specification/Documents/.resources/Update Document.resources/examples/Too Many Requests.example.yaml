@@ -1,0 +1,58 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id"
+  method: PATCH
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document ID
+  body:
+    type: json
+    content: |-
+      {
+        "texts": [
+          {
+            "name": "Legal Terms Section",
+            "data": "## Terms of Service\nThis document outlines the terms and conditions. \n- **Acceptance:** By using our service, you agree to these terms.\n"
+          },
+          {
+            "name": "Product Description",
+            "data": "## Product Description\nGeneral description of the product.\n"
+          }
+        ]
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "throttled",
+        "detail": "Request was throttled."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "throttled"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Request was throttled."
+          }
+        }
+      }
+order: 6000

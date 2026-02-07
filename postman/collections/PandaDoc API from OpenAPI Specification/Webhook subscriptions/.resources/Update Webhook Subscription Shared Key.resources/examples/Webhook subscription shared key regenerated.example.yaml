@@ -1,0 +1,39 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/webhook-subscriptions/:id/shared-key"
+  method: PATCH
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: d173751d-0057-4d5c-ab75-49a670a4ca68
+      description: Webhook subscription uuid
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "shared_key": "DgwSJeYa2h5SCmzVZws2UM"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "shared_key": {
+            "type": "string",
+            "example": "587c22285F57883db3ee"
+          }
+        }
+      }
+order: 1000

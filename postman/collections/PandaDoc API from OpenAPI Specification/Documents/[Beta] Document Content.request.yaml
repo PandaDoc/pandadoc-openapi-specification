@@ -1,0 +1,51 @@
+$kind: http-request
+description: |
+  Returns the document content for the specified document. Use query parameter `format` to select the content format.
+url: "{{baseUrl}}/public/beta/documents/:document_id/content?format=plaintext"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: format
+    value: plaintext
+    description: |
+      Document content representation to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "description": "Format selector for document content (query `format` and JSON `format` on 200).\n",
+            "type": "string",
+            "enum": [
+              "plaintext",
+              "markdown"
+            ]
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+pathVariables:
+  - key: document_id
+    value: D3okRfgHRX7NEhavcACReB
+    description: |
+      The unique identifier of the document.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/[Beta] Document Content.resources/examples
+order: 26000

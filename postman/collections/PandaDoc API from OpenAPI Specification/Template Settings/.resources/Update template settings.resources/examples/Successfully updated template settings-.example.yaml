@@ -1,0 +1,68 @@
+$kind: http-example
+name: Successfully updated template settings.
+request:
+  url: "{{baseUrl}}/public/v2/templates/:template_id/settings"
+  method: PATCH
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: template_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Unique identifier of the template to update settings for.
+  body:
+    type: json
+    content: |-
+      {
+        "language": "fr-FR"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "language": "fr-FR"
+      }
+    $type: |-
+      {
+        "description": "Template settings response.",
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string",
+            "enum": [
+              "en-US",
+              "fr-FR",
+              "it-IT",
+              "es-ES",
+              "nl-NL",
+              "de-DE",
+              "pt-BR",
+              "pt-PT",
+              "pl-PL",
+              "sv-SE",
+              "cs-CZ",
+              "da-DK",
+              "el-GR",
+              "hu-HU",
+              "nb-NO",
+              "ro-RO",
+              "bg-BG"
+            ],
+            "description": "Document language code (e.g., 'en-US', 'fr-FR')."
+          }
+        },
+        "required": [
+          "language"
+        ]
+      }
+order: 1000

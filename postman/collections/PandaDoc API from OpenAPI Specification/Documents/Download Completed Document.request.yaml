@@ -1,0 +1,47 @@
+$kind: http-request
+description: |
+  Download a completed document as a verifiable PDF (Download Protected Document)
+  > 🚧 Production key only
+  > 
+  > This endpoint only works with a Production key. You'll get a 401 Unauthorized error when trying to use a Sandbox key.
+
+  Download a signed PDF of a completed document
+url: "{{baseUrl}}/public/v1/documents/:id/download-protected?separate_files=false"
+method: GET
+headers:
+  Accept: application/pdf
+queryParams:
+  - key: separate_files
+    value: "false"
+    description: Download document bundle as a zip-archive of separate PDFs (1 file per section).
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+pathVariables:
+  - key: id
+    value: Mebvyy3NGsGBnY2rPLkH84
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Download Completed Document.resources/examples
+order: 18000

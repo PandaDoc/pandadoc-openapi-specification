@@ -1,0 +1,172 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents?template_id=BhVzRcxH9Z2LgfPPGXFUBa&form_id=BhVzRcxH9Z2LgfPPGXFUBa&folder_uuid=BhVzRcxH9Z2LgfPPGXFUBa&contact_id=9FeAY2NB3C9qDdtQRb4tTL&count=50&page=1&order_by=date_status_changed&created_from=2024-10-27T15:22:23.132757Z&created_to=2024-10-27T15:22:23.132757Z&deleted=false&id=BhVzRcxH9Z2LgfPPGXFUBa&completed_from=2024-10-27T15:22:23.132757Z&completed_to=2024-10-27T15:22:23.132757Z&membership_id=BhVzRcxH9Z2LgfPPGXFUBa&metadata=metadata_custom_key=custom_value&modified_from=2024-10-27T15:22:23.132757Z&modified_to=2024-10-27T15:22:23.132757Z&q=Sample Document&status=5&status__ne=5&tag=tag_1"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: template_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Filters by parent template. This Parameter can't be used with form_id.
+    - key: form_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Filters by parent form. This parameter can't be used with template_id.
+    - key: folder_uuid
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Filters by the folder where the documents are stored.
+    - key: contact_id
+      value: 9FeAY2NB3C9qDdtQRb4tTL
+      description: Filters by recipient or approver with this 'contact_id'.
+    - key: count
+      value: "50"
+      description: Limits the size of the response. Default is 50 documents, maximum is 100 documents.
+    - key: page
+      value: "1"
+      description: Paginates the search result. Increase value to get the next page of results.
+    - key: order_by
+      value: date_status_changed
+      description: Defines the sorting of the result. Use `date_created` for ASC and `-date_created` for DESC sorting.
+    - key: created_from
+      value: 2024-10-27T15:22:23.132757Z
+      description: Limits results to the documents with the `date_created` greater than or equal to this value.
+    - key: created_to
+      value: 2024-10-27T15:22:23.132757Z
+      description: Limits results to the documents with the `date_created` less than this value.
+    - key: deleted
+      value: "false"
+      description: Returns only the deleted documents.
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+    - key: completed_from
+      value: 2024-10-27T15:22:23.132757Z
+      description: Limits results to the documents with the `date_completed` greater than or equal to this value.
+    - key: completed_to
+      value: 2024-10-27T15:22:23.132757Z
+      description: Limits results to the documents with the `date_completed` less than this value.
+    - key: membership_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Filter documents by the owner's 'membership_id'.
+    - key: metadata
+      value: metadata_custom_key=custom_value
+      description: Filters documents by metadata. Pass metadata in the format of `metadata_{metadata-key}={metadata-value}` such as `metadata_opportunity_id=2181432`. The `metadata_` prefix is always required.
+    - key: modified_from
+      value: 2024-10-27T15:22:23.132757Z
+      description: Limits results to the documents with the `date_modified` greater than or equal to this value.
+    - key: modified_to
+      value: 2024-10-27T15:22:23.132757Z
+      description: Limits results to the documents with the `date_modified` less than this value.
+    - key: q
+      value: Sample Document
+      description: Filters documents by name or reference number (stored on the template level).
+    - key: status
+      value: "5"
+      description: |
+        Filters documents by the status.
+          * 0: document.draft
+          * 1: document.sent
+          * 2: document.completed
+          * 3: document.uploaded
+          * 4: document.error
+          * 5: document.viewed
+          * 6: document.waiting_approval
+          * 7: document.approved
+          * 8: document.rejected
+          * 9: document.waiting_pay
+          * 10: document.paid
+          * 11: document.voided
+          * 12: document.declined
+          * 13: document.external_review
+    - key: status__ne
+      value: "5"
+      description: |
+        Exludes documents with this status.
+          * 0: document.draft
+          * 1: document.sent
+          * 2: document.completed
+          * 3: document.uploaded
+          * 4: document.error
+          * 5: document.viewed
+          * 6: document.waiting_approval
+          * 7: document.approved
+          * 8: document.rejected
+          * 9: document.waiting_pay
+          * 10: document.paid
+          * 11: document.voided
+          * 12: document.declined
+          * 13: document.external_review
+    - key: tag
+      value: tag_1
+      description: Filters documents by tag.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 403
+  statusText: Forbidden
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "permission_error",
+        "detail": "You do not have permission to perform this action.",
+        "info_message": "You are not allowed to send documents outside of your organization",
+        "links": [
+          {
+            "rel": "status",
+            "href": "https://api.pandadoc.com/public/v1/documents/RsXrKarV524iCpjci9CMGa",
+            "type": "POST"
+          },
+          {
+            "rel": "status",
+            "href": "https://api.pandadoc.com/public/v1/documents/RsXrKarV524iCpjci9CMGa",
+            "type": "POST"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "permission_error"
+          },
+          "detail": {
+            "type": "string",
+            "example": "You do not have permission to perform this action."
+          },
+          "info_message": {
+            "type": "string",
+            "example": "You are not allowed to send documents outside of your organization",
+            "description": "Human-readable explanation of the permission error."
+          },
+          "links": {
+            "type": "array",
+            "description": "Optional links related to the error (e.g. a status endpoint).",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rel": {
+                  "type": "string",
+                  "example": "status"
+                },
+                "href": {
+                  "type": "string",
+                  "example": "https://api.pandadoc.com/public/v1/documents/RsXrKarV524iCpjci9CMGa"
+                },
+                "type": {
+                  "type": "string",
+                  "example": "POST"
+                }
+              }
+            }
+          }
+        }
+      }
+order: 4000

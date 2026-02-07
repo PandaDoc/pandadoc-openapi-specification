@@ -1,0 +1,42 @@
+$kind: http-request
+description: This operation allows you to move a document to a folder by specifying the document ID and folder ID.
+url: "{{baseUrl}}/public/v1/documents/:id/move-to-folder/:folder_id"
+method: POST
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: ZPeAfcpzr9aiVs5vqUf6jg
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: folder_id
+    value: ZPeAfcpzr9aiVs5vqUf6jg
+    description: Specify folder ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Document move to folder.resources/examples
+order: 21000
