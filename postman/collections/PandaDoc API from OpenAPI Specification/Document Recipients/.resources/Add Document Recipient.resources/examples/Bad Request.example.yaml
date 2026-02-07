@@ -1,0 +1,64 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/recipients"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document UUID
+  body:
+    type: json
+    content: |-
+      {
+        "id": "pGkLnJUAx99JpXJy5DVD30",
+        "kind": "contact"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "request_error",
+        "detail": {
+          "count": [
+            "A valid integer is required."
+          ],
+          "order_by": [
+            "value is not a valid choice."
+          ]
+        }
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "request_error"
+          },
+          "detail": {
+            "type": "object",
+            "example": {
+              "count": [
+                "A valid integer is required."
+              ],
+              "order_by": [
+                "value is not a valid choice."
+              ]
+            }
+          }
+        }
+      }
+order: 2000

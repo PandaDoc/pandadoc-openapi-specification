@@ -1,0 +1,62 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/oauth2/access_token"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/x-www-form-urlencoded
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: urlencoded
+    content:
+      grant_type: authorization_code
+      client_id: 479a3c7ba4a8d3cf28702
+      client_secret: a66515d3caf9183b8cad3eee546bcba892b45b01
+      code: a9a60d4dabb61ade665c712d2b41766e7bb9a2f9
+      scope: read+write
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "access_token": "2ff2dfe36322448c6953616740a910be57bbd4ca",
+        "token_type": "Bearer",
+        "expires_in": 31535999,
+        "scope": "read+write",
+        "refresh_token": "4c82f23d91a75961f4d08134fc5ad0dfe6a4c36a"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "example": "2ff2dfe36322448c6953616740a910be57bbd4ca"
+          },
+          "token_type": {
+            "type": "string",
+            "example": "Bearer"
+          },
+          "expires_in": {
+            "type": "number",
+            "example": 31535999
+          },
+          "scope": {
+            "type": "string",
+            "example": "read+write"
+          },
+          "refresh_token": {
+            "type": "string",
+            "example": "4c82f23d91a75961f4d08134fc5ad0dfe6a4c36a"
+          }
+        }
+      }
+order: 1000

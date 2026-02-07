@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations related to API logs.
+order: 18000

@@ -1,0 +1,36 @@
+$kind: collection
+description: |-
+  PandaDoc API spans a broad range of functionality to help you build incredible documents automation experiences inside your product.
+
+  PandaDoc API is organized around REST. Our API has predictable resource-oriented URLs and uses standard HTTP response codes, authentication, and verbs.
+
+  ## Getting started
+
+  You can start testing PandaDoc API with a sandbox key on our [Enterprise](https://www.pandadoc.com/pricing/) plan, either active or in trial.
+
+  Generate your [sandbox key](https://developers.pandadoc.com/reference/sandbox-key) on the Developer Dashboard with predefined [rate limits](https://developers.pandadoc.com/reference/limits). Or contact our solutions expert if you work with high-transaction volumes.
+
+  ## Guides
+
+  If you’re just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you’re most interested in, whether that’s:
+
+  - [Create from template](https://developers.pandadoc.com/docs/create-send-document),
+  - [Upload and send a local PDF](https://developers.pandadoc.com/docs/upload-and-send-a-local-pdf),
+  - or [Listening for changes in document status](https://developers.pandadoc.com/docs/listen-document-status-changes).
+
+  We also recommend you to discover our dynamic content generation on a fly: [Create from a template with content placeholder](https://developers.pandadoc.com/docs/create-with-content-placeholders-from-template).
+
+
+  Contact Support:
+   Name: PandaDoc API Support
+   Email: api-track@pandadoc.com
+variables:
+  baseUrl: https://api.pandadoc.com
+auth:
+  - id: 98470659-1c9a-436d-81aa-fe66f4d80d76
+    type: apikey
+    name: apikey auth
+    credentials:
+      key: Authorization
+      value: "{{apiKey}}"
+      in: header

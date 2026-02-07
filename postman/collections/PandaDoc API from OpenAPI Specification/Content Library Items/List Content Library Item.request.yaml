@@ -1,0 +1,64 @@
+$kind: http-request
+description: |
+  The endpoint retrieves items from the content library in PandaDoc. This endpoint supports filtering options to narrow down the results, allowing users to search by query, tags, folder, and more.
+
+  > ### ⚠️ Please avoid empty values for the parameters
+  > API returns "400" error when any of the parameters has an empty value. Please remove such a parameter from the request or add a value.
+url: "{{baseUrl}}/public/v1/content-library-items?q=Sample Pricing Table&id=UXdP7Lnbvvr4WEb2wzM2hc&deleted=false&folder_uuid=S6xX7saJfA44mtJxGWd95L&count=10&page=1&tag=pricing_tables"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: q
+    value: Sample Pricing Table
+    description: Search query. Filter by content library item name.
+    $type: string
+  - key: id
+    value: UXdP7Lnbvvr4WEb2wzM2hc
+    description: Specify content library item ID.
+    $type: string
+  - key: deleted
+    value: "false"
+    description: Returns only the deleted content library items.
+    $type: boolean
+  - key: folder_uuid
+    value: S6xX7saJfA44mtJxGWd95L
+    description: The UUID of the folder where the content library items are stored.
+    $type: string
+  - key: count
+    value: "10"
+    description: Specify how many content library items to return. Default is 50 content library items, maximum is 100 content library items.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          }
+        }
+      }
+  - key: page
+    value: "1"
+    description: Specify which page of the dataset to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          }
+        }
+      }
+  - key: tag
+    value: pricing_tables
+    description: Search tag. Filter by content library item tag.
+    $type: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Content Library Item.resources/examples
+order: 1000

@@ -1,0 +1,47 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/attachments/:attachment_id/download"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document UUID.
+    - key: attachment_id
+      value: 89ce2f49-10fb-4e9b-b5f3-e28be2a5c042
+      description: Attachment UUID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "request_error",
+        "detail": "Not found"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "request_error"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Not found"
+          }
+        }
+      }
+order: 3000

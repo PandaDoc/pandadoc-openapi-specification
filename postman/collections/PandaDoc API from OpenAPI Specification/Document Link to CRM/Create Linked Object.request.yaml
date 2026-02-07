@@ -1,0 +1,66 @@
+$kind: http-request
+description: |
+  Create a linked object in the document.
+
+  > 🚧 
+  > 
+  > You can only link each document to each CRM once. This ensures the consistent functionality of the [two-way CRM sync](https://support.pandadoc.com/en/articles/9714877-hubspot-crm#h_3a3344e8-2a6e-4fd8-86be-0da8c121e4ac).
+  > 
+  > You can, however, link one document to several external systems.
+url: "{{baseUrl}}/public/v1/documents/:id/linked-objects"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: ZPeAfcpzr9aiVs5vqUf6jg
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "provider": "pipedrive",
+      "entity_type": "deal",
+      "entity_id": "134"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "example": "pipedrive",
+          "description": "CRM name (lowercase).\n\nSee the list of available providers:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n"
+        },
+        "entity_type": {
+          "type": "string",
+          "example": "deal",
+          "description": "Entity type.\n\nSee the available entity types:\nhttps://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms\n"
+        },
+        "entity_id": {
+          "type": "string",
+          "example": "9372",
+          "description": "Entity unique identifier. The system validates if the entity exists."
+        }
+      },
+      "required": [
+        "provider",
+        "entity_type",
+        "entity_id"
+      ]
+    }
+examples: ./.resources/Create Linked Object.resources/examples
+order: 3000

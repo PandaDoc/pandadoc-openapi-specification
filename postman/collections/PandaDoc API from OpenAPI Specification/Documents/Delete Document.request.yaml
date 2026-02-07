@@ -1,0 +1,28 @@
+$kind: http-request
+description: |
+  Delete a document by ID.
+url: "{{baseUrl}}/public/v1/documents/:id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete Document.resources/examples
+order: 7000

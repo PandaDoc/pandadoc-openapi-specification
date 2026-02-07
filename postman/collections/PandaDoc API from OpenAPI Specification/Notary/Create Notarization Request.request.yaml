@@ -1,0 +1,159 @@
+$kind: http-request
+description: |
+  Create a notarization request to connect with a notary and complete online notarizations for your signers within minutes.
+
+  > 🚧 **Important:** This endpoint supports only documents in draft status.
+
+  ## Prerequisites
+
+  > 🚧 Before you start
+  > 
+  > Ensure the following before creating a notarization request:
+  > 
+  > - Install the Notary On-Demand or Notary add-on
+  > - Create a document for notarization and get its `document_id`. To create a document, use the [Create Document from Template](https://developers.pandadoc.com/reference/create-document-from-pandadoc-template) or [Create Document from File Upload](https://developers.pandadoc.com/reference/create-document-from-pdf) endpoint.
+
+  ## Request Details
+
+  For the notarization request, include in the request body:
+
+  - `document_id`
+  - At least one `invitees`, specifying their `email`, `first_name`, and `last_name`
+  - Optionally, include a `message` for your signers
+  - Optionally, using `disable_invitees_notifications` you can disable all notifications for invitees including email with invitation for notarization. This is useful when you are using alternative delivery methods.
+  - If in-house notary must be assigned to this request, include the `notary` object with the notary's `id`, `scheduled_at` timestamp, and an optional `message` for the notary
+
+  After the API call is executed, your signers will receive an email invitation for notarization. Alternatively, you can directly share the `notarization_link` with your signers, which is available in the 201 response body.
+
+  Upon successful notarization, you will receive an email with a link to the notarized document.
+
+  ## Usage Tips
+
+  > 📘 Best Practices
+  > 
+  > - Ensure that signers are added as both invitees in the request body and recipients in the document to avoid inconveniences during notary sessions
+  > - Signers will receive an email with a notary link upon a successful API call; this link is also in the 201 response
+  > - In case if notary is not specified in the request, signers will use the link to connect with commissioned online notaries, available Mon-Fri, 9 AM - 9 PM Central Time, typically responding within 2 minutes
+  > - If notary is specified, signers will use the link to connect with your in-house notary at the scheduled time
+
+  ## Limits
+
+  A maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.
+
+  ## Troubleshooting
+
+  **Solutions for 4xx Response Codes:**
+
+  - **403 Forbidden (Inactive Add-on)**: Ensure the Notary On-Demand or Notary add-on is installed
+  - **403 Forbidden (Transactions Limit)**: Purchase additional transactions either through the Notary UI or by contacting the Sales team
+  - **429 Too Many Requests**: If you hit the limit, hold your API calls, then send them after waiting for the retry time
+
+  > 📘 To learn more about PandaDoc Notary On-Demand, visit our [website](https://notary.pandadoc.com/notary-on-demand/).
+url: "{{baseUrl}}/public/v2/notary/notarization-requests"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "document_id": "D3okRfgHRX7NEhavcACReB",
+      "disable_invitees_notifications": true,
+      "invitation": {
+        "message": "Your session is ready",
+        "invitees": [
+          {
+            "email": "signer@example.com",
+            "first_name": "test",
+            "last_name": "test"
+          }
+        ]
+      }
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "document_id": {
+          "type": "string",
+          "maxLength": 50,
+          "example": "8DstGmLJDBXBKrh3wnqzpe",
+          "description": "ID of the Document for notarization."
+        },
+        "disable_invitees_notifications": {
+          "type": "boolean",
+          "example": true,
+          "description": "Disable all notifications for invitees including email with invitation for notarization. This is useful when you are using alternative delivery methods."
+        },
+        "invitation": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "example": "Some message",
+              "description": "Optional message for invitation email."
+            },
+            "invitees": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "email@gmail.com",
+                    "format": "email"
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "John"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "Smith"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "notary": {
+          "type": "object",
+          "description": "Optional notary assignment for in-house notary requests. Used for Bring you own notary use case. Only ACTIVE notaries can be used",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "nyAnVpY7pZ23FBve8s9xgk",
+              "description": "ID of an ACTIVE notary"
+            },
+            "scheduled_at": {
+              "type": "string",
+              "example": "2025-09-01T11:00:00Z",
+              "description": "ISO 8601 timestamp for scheduled notarization",
+              "format": "date-time"
+            },
+            "message": {
+              "type": "string",
+              "example": "Please review the document before the scheduled session",
+              "description": "Optional custom message for the notary in the invitation email"
+            }
+          },
+          "required": [
+            "id",
+            "scheduled_at"
+          ]
+        }
+      },
+      "required": [
+        "document_id",
+        "invitation"
+      ]
+    }
+examples: ./.resources/Create Notarization Request.resources/examples
+order: 3000

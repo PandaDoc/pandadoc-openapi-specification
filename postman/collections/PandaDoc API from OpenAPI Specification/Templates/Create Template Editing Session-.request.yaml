@@ -1,0 +1,66 @@
+$kind: http-request
+name: |
+  Create Template Editing Session
+description: |
+  Creates a new editing session for the Embedded Editor. The response includes an E-Token, which is required to open the template.
+
+  #### Limitations
+
+  - **Single Active Session per User-Template Pair** 
+    Only one editing session can be active at a time for a specific user and template. Creating a new session for the same user-template pair will automatically invalidate the previous one.
+
+  - **Weekly Session Cap** 
+    A maximum of **250** editing sessions can be created for a single template per week. Any attempt to exceed this limit will result in a `403 Forbidden` error.
+url: "{{baseUrl}}/public/v1/templates/:id/editing-sessions"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: a53a2f96b91d47f99ee33f
+    description: Template ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "email": "john.doe@pandadoc.com",
+      "lifetime": 100
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "john.doe@pandadoc.com",
+          "description": "Email of the user to create the editing session for",
+          "format": "email"
+        },
+        "lifetime": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 86400,
+          "example": 3600,
+          "description": "Lifetime of the E-Token in seconds.",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    }
+examples: ./.resources/Create Template Editing Session-.resources/examples
+order: 8000

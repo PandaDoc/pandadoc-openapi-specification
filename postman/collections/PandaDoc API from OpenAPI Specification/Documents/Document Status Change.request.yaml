@@ -1,0 +1,90 @@
+$kind: http-request
+description: |
+  PandaDoc has eight document statuses, but you can manually set your document status to only four:
+
+  ### Document statuses
+
+  - Completed - `document.completed` - API code `2`
+  - Expired - `document.voided` - code `11`
+  - Paid - `document.paid` - code `10`. **Important**: You can only set it if you have a payment app connected.
+  - Declined - `document.declined` - code `12`
+
+  > 🚧 Pass a numeric code for the corresponding document status, for example, `2` for `document.completed`.
+
+  Find more details in [\[Editor 2.0\] Manually change document status](https://support.pandadoc.com/en/articles/9714842-manually-change-document-status) topic.
+
+  | Current Status | To Completed: | To Expired: | To Paid: | To Declined: |
+  |----------------|---------------|-------------|----------|--------------|
+  | Draft          | YES           | NO          | YES      | YES          |
+  | Approved       | NO            | NO          | NO       | NO           |
+  | Sent           | YES           | YES         | NO       | YES          |
+  | Viewed         | YES           | YES         | NO       | YES          |
+  | Completed (Auto) | NO          | NO          | NO       | YES          |
+  | Waithing for payment | NO      | NO          | YES      | YES          |
+  | Paid           | NO            | NO          | NO       | NO           |
+  | Expired        | YES           | NO          | YES      | YES          |
+  | Declined       | YES           | NO          | YES      | NO           |
+
+  > ✅ - from `document.voided` to `document.paid`
+  >
+  > ❌ - from `document.paid` to `document.voided`
+url: "{{baseUrl}}/public/v1/documents/:id/status"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: iGsFiaV2hEEvQdhr2WAkMk
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "status": 12,
+      "note": "Change status to Decline",
+      "notify_recipients": false
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "integer",
+          "enum": [
+            2,
+            10,
+            11,
+            12
+          ],
+          "example": 12,
+          "description": "Number code for the target document status. See notes for the codes corresponding to each status."
+        },
+        "note": {
+          "type": "string",
+          "example": "A private note",
+          "description": "Provide “private notes” regarding the manual status change."
+        },
+        "notify_recipients": {
+          "type": "boolean",
+          "description": "Send a notification email about the status change to all recipients."
+        }
+      },
+      "required": [
+        "status"
+      ]
+    }
+examples: ./.resources/Document Status Change.resources/examples
+order: 10000

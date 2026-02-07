@@ -1,0 +1,62 @@
+$kind: http-example
+name: "Document content is available. JSON object with `format` and `content` (see schema). Includes `ETag` and `Vary: format`."
+request:
+  url: "{{baseUrl}}/public/beta/documents/:document_id/content?format=plaintext"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: format
+      value: plaintext
+      description: |
+        Document content representation to return.
+  pathVariables:
+    - key: document_id
+      value: D3okRfgHRX7NEhavcACReB
+      description: |
+        The unique identifier of the document.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+    ETag: ""
+    Vary: ""
+  body:
+    type: json
+    content: |-
+      {
+        "format": "plaintext",
+        "content": "Agreement between Party A and Party B..."
+      }
+    $type: |-
+      {
+        "description": "Content response envelope. The `format` field echoes the `format` query parameter.\n",
+        "type": "object",
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "plaintext",
+              "markdown"
+            ],
+            "description": "Format selector for document content (query `format` and JSON `format` on 200).\n"
+          },
+          "content": {
+            "type": "string",
+            "description": "Document body as plain text (`format=plaintext`) or markdown (`format=markdown`).\n"
+          }
+        },
+        "required": [
+          "format",
+          "content"
+        ]
+      }
+order: 1000

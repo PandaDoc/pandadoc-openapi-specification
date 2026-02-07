@@ -1,0 +1,64 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/send-reminder"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: The UUID of the document.
+  body:
+    type: json
+    content: |-
+      {
+        "reminders": [
+          {
+            "recipient_id": "2eWSKSvVqmuVCnuUK3iWwD",
+            "delivery_methods": {
+              "email": true,
+              "sms": false
+            }
+          },
+          {
+            "recipient_id": "7JhSDcvLQa9uR7kBX8mYeK",
+            "delivery_methods": {
+              "email": true,
+              "sms": true
+            }
+          }
+        ]
+      }
+response:
+  statusCode: 429
+  statusText: Too Many Requests
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "throttled",
+        "detail": "Request was throttled."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "throttled"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Request was throttled."
+          }
+        }
+      }
+order: 6000

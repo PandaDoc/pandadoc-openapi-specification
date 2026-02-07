@@ -1,0 +1,80 @@
+$kind: http-request
+description: |
+  Assign, reassign, or unassign document fields to recipients.
+  Supports bulk operations by accepting multiple field assignment items in a single request.
+
+  > 🚧 Before you start
+  >
+  > - The document must be in the 'Draft' (`document.draft`) status.
+  > - You must have the 'Can Edit Document' permission.
+url: "{{baseUrl}}/public/v1/documents/:id/fields"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "fields": [
+        {
+          "field_id": "d6948f39-612a-4626-a439-ca9e0cbbda7c",
+          "assigned_to": "tf5dGS3Tmu3cj228ao6fnc"
+        }
+      ]
+    }
+  $type: |-
+    {
+      "description": "Request body for updating field assignments on a document.",
+      "title": "UpdateDocumentFieldsAssignmentRequest",
+      "type": "object",
+      "properties": {
+        "fields": {
+          "type": "array",
+          "description": "An array of field assignment operations. Each item specifies a field and the recipient it should be assigned to.",
+          "items": {
+            "description": "Specifies a field and the recipient it should be assigned or unassigned to.",
+            "title": "DocumentFieldAssignmentItem",
+            "type": "object",
+            "properties": {
+              "field_id": {
+                "type": "string",
+                "example": "d6948f39-612a-4626-a439-ca9e0cbbda7c",
+                "description": "UUID of the field to assign or unassign.",
+                "format": "uuid"
+              },
+              "assigned_to": {
+                "type": "string",
+                "example": "tf5dGS3Tmu3cj228ao6fnc",
+                "description": "UUID of the recipient to assign the field to. Set to `null` to unassign the field from its current recipient.\n"
+              }
+            },
+            "required": [
+              "field_id",
+              "assigned_to"
+            ]
+          }
+        }
+      },
+      "required": [
+        "fields"
+      ]
+    }
+examples: ./.resources/Update Document Fields Assignment.resources/examples
+order: 2000

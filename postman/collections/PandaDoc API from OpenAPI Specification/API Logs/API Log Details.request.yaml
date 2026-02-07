@@ -1,0 +1,27 @@
+$kind: http-request
+description: Returns details of the specific API log event.
+url: "{{baseUrl}}/public/v1/logs/:id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: AZC86i5PYKMjQjMMMw9e
+    description: Log event id.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/API Log Details.resources/examples
+order: 2000

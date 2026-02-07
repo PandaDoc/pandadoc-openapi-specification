@@ -1,0 +1,50 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/templates/folders"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: json
+    content: |-
+      {
+        "name": "A new templates folder"
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "uuid": "h3HyGDj6NuiDfKEiY4xSMD",
+        "name": "A new templates folder",
+        "date_created": "2024-07-15T17:35:52.981054Z"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "example": "Nq8htXxFssmhRxAPSP4SBP"
+          },
+          "name": {
+            "type": "string",
+            "example": "A new template folder"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-10-15T10:43:04.103331Z"
+          }
+        }
+      }
+order: 1000

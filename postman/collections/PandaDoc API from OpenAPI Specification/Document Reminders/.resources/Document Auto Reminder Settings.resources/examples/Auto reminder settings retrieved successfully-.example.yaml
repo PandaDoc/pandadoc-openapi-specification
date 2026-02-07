@@ -1,0 +1,71 @@
+$kind: http-example
+name: Auto reminder settings retrieved successfully.
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/auto-reminders"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: The UUID of the document.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "enabled": true,
+        "delivery_method": "email",
+        "initial_delay_days": 3,
+        "is_recurring": true,
+        "recurrence_frequency_days": 5
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Toggles auto-reminders for the document. \nIf `true`, reminders are scheduled based on the configuration.\n"
+          },
+          "delivery_method": {
+            "type": "string",
+            "enum": [
+              "email",
+              "sms"
+            ],
+            "description": "The method used to deliver reminders (e.g., email, SMS).\n"
+          },
+          "initial_delay_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 180,
+            "description": "Number of days to wait after sending the document before the first reminder is sent.\n"
+          },
+          "is_recurring": {
+            "type": "boolean",
+            "description": "If `true`, reminders will be sent repeatedly at specified intervals after the initial reminder.\n"
+          },
+          "recurrence_frequency_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 180,
+            "description": "Number of days between recurring reminders, applicable if `is_recurring` is `true`.\n"
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      }
+order: 1000

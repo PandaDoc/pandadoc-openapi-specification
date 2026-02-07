@@ -1,0 +1,81 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/sections/uploads?merge_field_scope=document"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: merge_field_scope
+      value: document
+      description: |
+        Determines how the fields are mapped when creating a section.
+          * document: Default value. The fields of the entire document are updated.
+          * upload: Only the fields from the created section are updated. The merge field is appended with the upload ID.
+  pathVariables:
+    - key: document_id
+      value: CFz2UnLXDck3UJkeGGEuB3
+      description: Document ID
+  body:
+    type: json
+    content: |-
+      {
+        "name": "New section from template",
+        "template_uuid": "hryJY9mqYZHjQCYQuSjRQg",
+        "recipients": [
+          {
+            "role": "Client",
+            "email": "client@pandadoc.com"
+          },
+          {
+            "role": "Sender",
+            "email": "sender@pandadoc.com"
+          }
+        ]
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "validation_error",
+        "detail": {
+          "count": [
+            "A valid integer is required."
+          ],
+          "order_by": [
+            "value is not a valid choice."
+          ]
+        }
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "validation_error"
+          },
+          "detail": {
+            "type": "object",
+            "example": {
+              "count": [
+                "A valid integer is required."
+              ],
+              "order_by": [
+                "value is not a valid choice."
+              ]
+            }
+          }
+        }
+      }
+order: 2000

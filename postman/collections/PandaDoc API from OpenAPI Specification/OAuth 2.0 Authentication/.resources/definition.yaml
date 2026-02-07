@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for creating and refreshing access tokens for user authentication.
+order: 2000

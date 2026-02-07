@@ -1,0 +1,120 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/contacts/:id"
+  method: PATCH
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: SyoufNkJiHRn24LpuJ7RXb
+      description: Contact id.
+  body:
+    type: json
+    content: |-
+      {
+        "first_name": "new first_name",
+        "last_name": "new last_name",
+        "company": "new company",
+        "job_title": "new job_title",
+        "phone": "new phone",
+        "country": "new country",
+        "state": "new state",
+        "street_address": "new street_address",
+        "city": "new city",
+        "postal_code": "new postal_code"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "SyoufNkJiHRn24LpuJ7RXb",
+        "email": "test@pandadoc.com",
+        "first_name": "new first_name",
+        "last_name": "new last_name",
+        "company": "new company",
+        "job_title": "new job_title",
+        "phone": "new phone",
+        "country": "new country",
+        "state": "new state",
+        "street_address": "new street_address",
+        "city": "new city",
+        "postal_code": "new postal_code"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "BCUWJhZm3k7grUNFAz6cD2",
+            "description": "A unique identifier of the contact"
+          },
+          "email": {
+            "type": "string",
+            "example": "user01@pandadoc.com",
+            "description": "An email address of the contact"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "John",
+            "description": "Contact's first name"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe",
+            "description": "Contact's last name"
+          },
+          "company": {
+            "type": "string",
+            "example": "John Doe Inc.",
+            "description": "Contact's company name"
+          },
+          "job_title": {
+            "type": "string",
+            "example": "CTO",
+            "description": "Contact's job title"
+          },
+          "phone": {
+            "type": "string",
+            "example": "+14842634627",
+            "description": "A phone number"
+          },
+          "country": {
+            "type": "string",
+            "example": "USA",
+            "description": "A country name"
+          },
+          "state": {
+            "type": "string",
+            "example": "Texas",
+            "description": "A state name"
+          },
+          "street_address": {
+            "type": "string",
+            "example": "1313 Mockingbird Lane",
+            "description": "A street address"
+          },
+          "city": {
+            "type": "string",
+            "example": "Austin",
+            "description": "A city name"
+          },
+          "postal_code": {
+            "type": "string",
+            "example": "75001",
+            "description": "A postal code"
+          }
+        }
+      }
+order: 1000

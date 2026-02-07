@@ -1,0 +1,87 @@
+$kind: http-request
+description: This operation retrieves a paginated list of all webhook events.
+url: "{{baseUrl}}/public/v1/webhook-events?count=10&page=1&since=2022-06-01T00:00:00Z&to=2022-06-30T23:59:59Z&type=recipient_completed&http_status_code=400&error=INTERNAL_ERROR&error=NOT_VALID_URL"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: count
+    value: "10"
+    description: Specify how many event results to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: page
+    value: "1"
+    description: Specify which page of the dataset to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: since
+    value: 2022-06-01T00:00:00Z
+    description: Return results where the event creation time is greater than or equal to this value.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+  - key: to
+    value: 2022-06-30T23:59:59Z
+    description: Return results where the event creation time is less than this value.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+  - key: type
+    value: recipient_completed
+    description: Returns results by the specified event types.
+    $type: array
+  - key: http_status_code
+    value: "400"
+    description: Returns results with the specified HTTP status codes.
+    $type: array
+  - key: error
+    value: INTERNAL_ERROR
+    description: Returns results with the following errors.
+    $type: array
+  - key: error
+    value: NOT_VALID_URL
+    description: Returns results with the following errors.
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Webhook Events.resources/examples
+order: 1000

@@ -1,0 +1,139 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/logs/:id"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: AZC86i5PYKMjQjMMMw9e
+      description: Log event id.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "AZC86i5PYKMjQjMMMw9e",
+        "url": "/public/v1/documents/iZy3j9GmryVUSAbwL9tGWP/recipients/",
+        "method": "POST",
+        "status": 200,
+        "request_time": "2024-07-15T18:59:38.000",
+        "response_time": "2024-07-15T18:59:39.000",
+        "request_body": {
+          "id": "xNVQVHShdgxHTTPVJ3CWCC",
+          "kind": "contact"
+        },
+        "query_params_string": null,
+        "query_params_object": null,
+        "response_body": {
+          "recipient_id": "PsPqdRm4dt4thxnYMqttwY"
+        },
+        "token_type": "API_KEY",
+        "application": null,
+        "key": "9cf111111c3bd477ab9bb4123453b7f5d6502cd8",
+        "request_id": "284b1456-1111-4ba9-1111-0d82418205f5",
+        "user_email": "siarhei@pandadoc.com",
+        "user_id": "Hzpt4yyQ3A5qHTTPdZQxpH"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "AXyDkCYFy9B65Q_E9BY3"
+          },
+          "url": {
+            "type": "string",
+            "example": "/public/v1/templates/folders/LKoqFUZZGowLAVo6ECFRyB"
+          },
+          "method": {
+            "type": "string",
+            "example": "PUT"
+          },
+          "status": {
+            "type": "integer",
+            "example": 201
+          },
+          "request_time": {
+            "type": "string",
+            "example": "2021-10-15T10:46:57.867"
+          },
+          "response_time": {
+            "type": "string",
+            "example": "2021-10-15T10:46:57.969"
+          },
+          "response_body": {
+            "type": "object",
+            "example": {
+              "name": "Another templates folder"
+            }
+          },
+          "query_params_string": {
+            "type": "string",
+            "example": "since=-1d&to=now"
+          },
+          "query_params_object": {
+            "type": "object",
+            "example": {
+              "moesif_meta": {
+                "root": {
+                  "count": 2
+                },
+                "since": {
+                  "count": 1
+                },
+                "to": {
+                  "count": 1
+                }
+              },
+              "since": "-1d",
+              "to": "now"
+            }
+          },
+          "request_body": {
+            "type": "object",
+            "example": {
+              "date_created": "2021-10-15T10:45:41.138489Z",
+              "name": "Another templates folder",
+              "uuid": "LKoqFUZZGowLAVo6ECFRyB"
+            }
+          },
+          "token_type": {
+            "type": "string",
+            "example": "OAUTH2_TOKEN"
+          },
+          "application": {
+            "type": "string",
+            "example": "Application One"
+          },
+          "key": {
+            "type": "string",
+            "example": "0a5eb48cf42fa507f3dfdd5bdbab7c5bfc20a1b9"
+          },
+          "request_id": {
+            "type": "string",
+            "example": "94d232f6-fadd-4e2d-a330-702b0b172588"
+          },
+          "user_email": {
+            "type": "string",
+            "example": "support@pandadoc.com"
+          },
+          "user_id": {
+            "type": "string",
+            "example": "KKj4kdqfrMeE6bni7pK5gK"
+          }
+        }
+      }
+order: 1000

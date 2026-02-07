@@ -1,0 +1,57 @@
+$kind: http-request
+description: Creates an attachment for a particular document
+url: "{{baseUrl}}/public/v1/documents/:id/attachments"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "source": "https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/1920px-Wikipedia-logo-v2.svg.png",
+      "name": "Wikipedia logo"
+    }
+  $type: |-
+    {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "source": {
+              "type": "string",
+              "example": "https://is3-ssl.mzstatic.com/1e7fbd74-d10c-8e3a-63c3-0beb3ea231a5/512x512bb.jpg",
+              "description": "URL link to the file to be attached to a document"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Additional agreement",
+              "description": "Optional name to set for uploaded file"
+            }
+          }
+        }
+      ]
+    }
+examples: ./.resources/Create Document Attachment.resources/examples
+order: 2000

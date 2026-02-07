@@ -1,0 +1,158 @@
+$kind: http-request
+description: |
+  Creates fields for a particular document.
+  For CFR11-compliant workspaces (21 CFR Part 11), 
+  signature fields must have a minimum size of 108×33.
+url: "{{baseUrl}}/public/v1/documents/:id/fields"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "fields": [
+        {
+          "type": "text",
+          "layout": {
+            "page": 1,
+            "position": {
+              "offset_x": 1,
+              "offset_y": 1,
+              "anchor_point": "topleft"
+            },
+            "style": {
+              "width": 1,
+              "height": 1
+            }
+          }
+        }
+      ]
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "type": "array",
+          "description": "An array of fields to place on a document.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field_id": {
+                "type": "string",
+                "description": "Optional unique identifier."
+              },
+              "merge_field": {
+                "type": "string",
+                "description": "Use this to dynamically populate this field with data from your CRM or API. Supported field types:\n  * text\n  * checkbox\n  * date\n  * dropdown\n  * radio_buttons\n"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "checkbox",
+                  "collect_file",
+                  "date",
+                  "dropdown",
+                  "initials",
+                  "payment_details",
+                  "radio_buttons",
+                  "signature",
+                  "stamp",
+                  "text"
+                ],
+                "example": "payment_details"
+              },
+              "placeholder": {
+                "type": "string"
+              },
+              "assigned_to": {
+                "type": "string",
+                "description": "Optional uuid of a recipient."
+              },
+              "layout": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer"
+                  },
+                  "position": {
+                    "type": "object",
+                    "properties": {
+                      "offset_x": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "offset_y": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "anchor_point": {
+                        "type": "string",
+                        "enum": [
+                          "topleft",
+                          "topright",
+                          "bottomleft",
+                          "bottomright"
+                        ],
+                        "example": "topleft"
+                      }
+                    },
+                    "required": [
+                      "offset_x",
+                      "offset_y",
+                      "anchor_point"
+                    ]
+                  },
+                  "style": {
+                    "type": "object",
+                    "properties": {
+                      "width": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "height": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "width",
+                      "height"
+                    ]
+                  }
+                },
+                "required": [
+                  "page",
+                  "position",
+                  "style"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "layout"
+            ]
+          }
+        }
+      }
+    }
+examples: ./.resources/Create Document Fields.resources/examples
+order: 3000

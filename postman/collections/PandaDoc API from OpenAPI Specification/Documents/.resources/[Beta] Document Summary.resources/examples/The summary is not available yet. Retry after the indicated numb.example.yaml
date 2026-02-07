@@ -1,0 +1,31 @@
+$kind: http-example
+name: The summary is not available yet. Retry after the indicated number of seconds. No response body is returned.
+request:
+  url: "{{baseUrl}}/public/beta/documents/:document_id/summary?type=detailed"
+  method: GET
+  headers:
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: type
+      value: detailed
+      description: |
+        Document summary granularity to return.
+  pathVariables:
+    - key: document_id
+      value: D3okRfgHRX7NEhavcACReB
+      description: |
+        The unique identifier of the document.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 202
+  statusText: Accepted
+  headers:
+    Retry-After: ""
+  body:
+    type: text
+    content: ""
+order: 2000

@@ -1,0 +1,48 @@
+$kind: http-example
+name: Bad Request
+request:
+  url: "{{baseUrl}}/public/v1/workspaces/:workspace_id/members/:member_id"
+  method: DELETE
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: workspace_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Workspace id
+    - key: member_id
+      value: nPh2PDhFdDqAES9k64h9qX
+      description: Member id
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "request_error",
+        "detail": "This member or workspace does not exist."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "request_error"
+          },
+          "detail": {
+            "type": "string",
+            "example": "This member or workspace does not exist."
+          }
+        }
+      }
+order: 5000

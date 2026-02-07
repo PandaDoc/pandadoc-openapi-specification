@@ -1,0 +1,29 @@
+$kind: http-request
+description: |
+  Retrieves the current auto reminder status per recipient for a specified document. Recipients who could not receive
+  reminders due to validations (recipient groups, non-signers, etc.) will be skipped and not included in the response.
+url: "{{baseUrl}}/public/v1/documents/:document_id/auto-reminders/status"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: The UUID of the document.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Document Auto Reminder Status.resources/examples
+order: 3000

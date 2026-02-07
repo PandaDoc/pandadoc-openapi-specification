@@ -1,0 +1,93 @@
+$kind: http-request
+description: |
+  Reassign fields to another signer.
+
+  > 🚧 Before you start
+  > 
+  > To change a signer in a document, please ensure that:
+  > 
+  > - You have the 'Can Manage Recipients' permission.
+  > - New signer is already created in your contacts. If not, add them using the [Create Contact](https://developers.pandadoc.com/reference/create-contact) endpoint.
+
+  You can reassign fields to another signer before the original signer has signed the document. You can choose any person except those recipients who have already signed the document.
+
+  The endpoint path includes the `recipient_id` of the original signer and the request body must include the following two parameters:
+
+  - `kind`: Set this parameter to `contact` to specify an individual contact.
+  - `id`: Input the ID of the contact you want to use as a replacement for the original signer.
+
+  To retrieve the contact's ID, use the [List Contacts](https://developers.pandadoc.com/reference/list-contacts) endpoint to access a list of all contacts, and then locate the desired contact by searching using the name or email address within the returned list.
+
+  Once you execute the call to change the signer, the original signer will be entirely removed from the document. If you wish to retain the original signer as a CC recipient, you can re-add them using the [Add CC Recipient](https://developers.pandadoc.com/reference/add-new-recipient-cc) endpoint.
+
+  > 🚧 Pre-filled fields
+  > 
+  > If you change the signer in a document that has already been sent, the signer's pre-filled fields will be completely reset. In the 'Draft' (`document.draft`) status, pre-filled fields will remain.
+url: "{{baseUrl}}/public/v1/documents/:id/recipients/:recipient_id/reassign"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: recipient_id
+    value: tf5dGS3Tmu3cj228ao6fnc
+    description: Recipient UUID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "kind": "contact",
+      "id": "pGkLnJUAx99JpXJy5DVD30"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "2eWSKSvVqmuVCnuUK3iWwD",
+          "description": "Contact uuid."
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "contact",
+            "contact_group"
+          ],
+          "example": "contact"
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ]
+    }
+examples: ./.resources/Change Signer (Reassign Document Recipient).resources/examples
+order: 4000

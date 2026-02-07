@@ -1,0 +1,52 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/session"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: ZPeAfcpzr9aiVs5vqUf6jg
+      description: Document ID
+  body:
+    type: json
+    content: |-
+      {
+        "recipient": "test@mail.com",
+        "lifetime": 900
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "nPh2PDhFdDqAES9k64h9qX",
+        "expires_at": "2024-07-01T08:03:57.536427Z"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "QYCPtavst3DqqBK72ZRtbF",
+            "description": "The session ID."
+          },
+          "expires_at": {
+            "type": "string",
+            "example": "2017-08-29T22:18:44.315Z",
+            "description": "The date and time when the session will expire."
+          }
+        }
+      }
+order: 1000

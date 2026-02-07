@@ -1,0 +1,74 @@
+$kind: http-request
+description: |
+  > 🚧 Template status
+  > 
+  > You can only update a template in the PROCESSED status (`template.PROCESSED`). 
+  > 
+  > After creating a new template, it usually retains a `template.uploaded` status for 3-5 seconds while the template syncs across PandaDoc servers. When the template is available for further API calls, the template moves to the `template.PROCESSED` state. Use [Template Status](https://developers.pandadoc.com/reference/template-status) or Webhooks to check template status.
+url: "{{baseUrl}}/public/v1/templates/:id"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Template ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "tokens": [
+        {
+          "name": "Favorite.Pet",
+          "value": "Panda"
+        }
+      ]
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "tokens": {
+          "type": "array",
+          "example": [
+            {
+              "name": "Favorite.Pet",
+              "value": "Panda"
+            }
+          ],
+          "description": "Create or initialize multiple CUSTOM variables with their values using tokens/values list. Template's predefined variables are read-only. Any attempts to do so will be ignored.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Favorite.Pet"
+              },
+              "value": {
+                "type": "string",
+                "example": "Panda"
+              }
+            },
+            "required": [
+              "name",
+              "value"
+            ]
+          }
+        }
+      }
+    }
+examples: ./.resources/Template Update.resources/examples
+order: 7000

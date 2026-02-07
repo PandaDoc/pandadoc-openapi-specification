@@ -1,0 +1,231 @@
+$kind: http-request
+description: |
+  > 🚧 Using the Sandbox Key
+  > 
+  > When you use a [sandbox API key](https://developers.pandadoc.com/reference/sandbox-key) during the free trial period, the sender and recipient email addresses must be from the same organisation (email domain).
+
+  ## Document State
+
+  - You can only send a document in the `document.draft` status.
+  - After creating a new document, it usually retains a `document.uploaded` status for 3-5 seconds while the document syncs across PandaDoc servers. When the document is available for further API calls, it moves to the `document.draft` state. Use [Document Status](/reference/document-status) or [Webhooks](/reference/on-document-status-change) to check document status.
+  - Moving a document to the `document.sent` status finalizes the document structure, before recipients can complete it.
+  - If a template used for the document creation has an approval workflow turned on, the sent document moves to the `document.waiting_approval` status. Once the document is approved, you need to make the call again to move the document to `document.sent` status.
+
+  ## Send and Silence Notifications
+
+  - By default, PandaDoc sends a notification email to the recipient, as well as notifications the sender has configured. You may disable all notifications for recipients by passing `silent: true`. This is useful when you are using alternative delivery methods such as linking to the document or embedding the document.
+  - The `silent: true` parameter disables sent, viewed, comment and completed document email notifications. "Document Approval" notification won't be affected by this parameter.
+  - If you pass `silent: false`, the document is going to be delivered by email and/or SMS. 
+
+  ![Example email. Branding can be changed in workspace settings](https://files.readme.io/cc5a03e-email2.png)
+
+  ## Select Approver from Group
+
+  If you have previously set up an approval workflow with selectable groups on the UI, you can select a particular approver from this group. Learn more about [selectable groups](https://support.pandadoc.com/en/articles/9714799-approval-workflow#h_01H4GNY5GSGG38BPYY46XV7GB4).  
+  To set an approver, we recommend to follow these steps:
+
+  1. Run the [Document Details](https://developers.pandadoc.com/reference/document-details) request.
+  2. Copy the `steps` part from the `approval_execution` section of the response into the `selected_approvers` field of the Send Document payload.
+  3. Modify your payload according to business needs: set `is_selected` to true for one approver.
+
+  > 📘 **Note**: You can change the selected approver only if you revert your document back to the `document.draft` status.
+url: "{{baseUrl}}/public/v1/documents/:id/send"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: ZPeAfcpzr9aiVs5vqUf6jg
+    description: Document ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "message": "Hello! This document was sent from the PandaDoc API",
+      "subject": "Please check this test API document from PandaDoc",
+      "silent": true,
+      "sender": {
+        "membership_id": "QMDSzwabfFzTgjW6KijHyu",
+        "email": "john.doe@example.com"
+      },
+      "forwarding_settings": {
+        "forwarding_allowed": true,
+        "forwarding_with_reassigning_allowed": true
+      },
+      "reply_to": "john.doe@example.com",
+      "selected_approvers": {
+        "steps": [
+          {
+            "id": "LzWmancTxrgfTMpsJP9Eqd",
+            "group": {
+              "id": "op9MA75HygJHiV4aeVHXCH",
+              "type": "selectable",
+              "assignees": [
+                {
+                  "user": "tpBLrk3vJoLggypMSRt92i",
+                  "is_selected": true
+                },
+                {
+                  "user": "tpBLrk3vJoLggypMSRt92i",
+                  "is_selected": true
+                }
+              ]
+            }
+          },
+          {
+            "id": "LzWmancTxrgfTMpsJP9Eqd",
+            "group": {
+              "id": "op9MA75HygJHiV4aeVHXCH",
+              "type": "selectable",
+              "assignees": [
+                {
+                  "user": "tpBLrk3vJoLggypMSRt92i",
+                  "is_selected": true
+                },
+                {
+                  "user": "tpBLrk3vJoLggypMSRt92i",
+                  "is_selected": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Hello! This document was sent from the PandaDoc API",
+          "description": "A message that will be sent by email with a link to a document to sign."
+        },
+        "subject": {
+          "type": "string",
+          "example": "Please check this test API document from PandaDoc",
+          "description": "Value that will be used as the email subject."
+        },
+        "silent": {
+          "type": "boolean",
+          "description": "If set to `true`, disables email notifications for document recipients and the document sender. Also disables scheduled reminders (manual reminders still possible). Doesn't affect \"Approve document\" email notification sent to the Approver."
+        },
+        "sender": {
+          "type": "object",
+          "description": "You can set a sender of a document as an `email` or `membership_id`",
+          "properties": {
+            "membership_id": {
+              "type": "string",
+              "example": "QMDSzwabfFzTgjW6KijHyu",
+              "description": "Membership ID."
+            },
+            "email": {
+              "type": "string",
+              "example": "john.doe@example.com",
+              "description": "Email."
+            }
+          }
+        },
+        "forwarding_settings": {
+          "type": "object",
+          "description": "Set settings for Document and Signature forwarding.",
+          "properties": {
+            "forwarding_allowed": {
+              "type": "boolean",
+              "example": true,
+              "description": "Your recipient will be able/not able to forward the document to another email address."
+            },
+            "forwarding_with_reassigning_allowed": {
+              "type": "boolean",
+              "example": true,
+              "description": "Your recipient will be able/not able to forward the right to fill out all fields (including signature) assigned to them to another email address."
+            }
+          }
+        },
+        "reply_to": {
+          "type": "string",
+          "example": "john.doe@example.com",
+          "description": "Email address that will be used as a reply-to address for the document. To use this parameter, please contact the support team to have it enabled for your account.\n",
+          "format": "email"
+        },
+        "selected_approvers": {
+          "type": "object",
+          "description": "Configuration for selected approvers.",
+          "properties": {
+            "steps": {
+              "type": "array",
+              "description": "Approval steps.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "example": "LzWmancTxrgfTMpsJP9Eqd",
+                    "description": "Step ID."
+                  },
+                  "group": {
+                    "type": "object",
+                    "description": "Group information.",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "op9MA75HygJHiV4aeVHXCH",
+                        "description": "Group ID."
+                      },
+                      "type": {
+                        "type": "string",
+                        "example": "selectable",
+                        "description": "Group type."
+                      },
+                      "assignees": {
+                        "type": "array",
+                        "description": "Assignees for the group.",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "user": {
+                              "type": "string",
+                              "example": "tpBLrk3vJoLggypMSRt92i",
+                              "description": "User ID."
+                            },
+                            "is_selected": {
+                              "type": "boolean",
+                              "example": true,
+                              "description": "Whether the user is selected."
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "assignees"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "group"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+examples: ./.resources/Send Document.resources/examples
+order: 14000

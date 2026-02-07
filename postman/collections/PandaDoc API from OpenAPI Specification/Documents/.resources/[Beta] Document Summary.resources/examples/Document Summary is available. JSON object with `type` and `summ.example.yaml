@@ -1,0 +1,63 @@
+$kind: http-example
+name: "Document Summary is available. JSON object with `type` and `summary` (see schema). Includes `ETag` and `Vary: type` headers."
+request:
+  url: "{{baseUrl}}/public/beta/documents/:document_id/summary?type=detailed"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: type
+      value: detailed
+      description: |
+        Document summary granularity to return.
+  pathVariables:
+    - key: document_id
+      value: D3okRfgHRX7NEhavcACReB
+      description: |
+        The unique identifier of the document.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+    ETag: ""
+    Vary: ""
+  body:
+    type: json
+    content: |-
+      {
+        "type": "detailed",
+        "summary": "This agreement establishes a partnership between Party A and Party B, covering terms of service, payment schedules, intellectual property rights, and termination clauses. The contract is effective from March 2026 and runs for 12 months with automatic renewal."
+      }
+    $type: |-
+      {
+        "description": "Summary response envelope. The `type` field echoes the `type` query parameter.\n",
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "detailed",
+              "short",
+              "headline"
+            ],
+            "description": "Document summary granularity (query parameter `type`).\n"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Summary text for the requested summary type.\n"
+          }
+        },
+        "required": [
+          "type",
+          "summary"
+        ]
+      }
+order: 1000

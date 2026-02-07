@@ -1,0 +1,42 @@
+$kind: http-request
+description: Delete a linked object associated with a document.
+url: "{{baseUrl}}/public/v1/documents/:id/linked-objects/:linked_object_id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: ZPeAfcpzr9aiVs5vqUf6jg
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: linked_object_id
+    value: deb0d530-d759-4189-a422-8d2265e01b2e
+    description: Specify linked object ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete Linked Object.resources/examples
+order: 4000

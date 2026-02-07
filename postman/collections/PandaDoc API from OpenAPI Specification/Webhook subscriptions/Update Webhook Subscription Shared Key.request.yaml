@@ -1,0 +1,28 @@
+$kind: http-request
+description: This operation regenerates the shared key for a specific webhook subscription identified by its UUID.
+url: "{{baseUrl}}/public/v1/webhook-subscriptions/:id/shared-key"
+method: PATCH
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: d173751d-0057-4d5c-ab75-49a670a4ca68
+    description: Webhook subscription uuid
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Update Webhook Subscription Shared Key.resources/examples
+order: 6000

@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/product-catalog/items/:item_uuid"
+  method: DELETE
+  headers:
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: item_uuid
+      value: 2e39c7e0-acb0-4ff2-b4cd-ea3141f95db8
+      description: Catalog item UUID
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  body:
+    type: text
+    content: ""
+order: 1000

@@ -1,0 +1,48 @@
+$kind: http-request
+description: |
+  Rename Documents Folder.
+
+  For the full list of folder operations and their limitations, see [Organize Documents and Folders](https://developers.pandadoc.com/docs/organize-folders).
+url: "{{baseUrl}}/public/v1/documents/folders/:id"
+method: PUT
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: Nq8htXxFssmhRxAPSP4SBP
+    description: The UUID of the folder that you are renaming.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "name": "New folder name"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Another document folder'",
+          "description": "Provide a new name for the folder."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+examples: ./.resources/Rename Documents Folder.resources/examples
+order: 3000

@@ -1,0 +1,106 @@
+$kind: http-example
+name: Got state of export DOCX task.
+request:
+  url: "{{baseUrl}}/public/beta/documents/:document_id/docx-export-tasks/:task_id"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Specify document id.
+    - key: task_id
+      value: nPh2PDhFdDqAES9k64h9qX
+      description: Specify Task id.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "nPh2PDhFdDqAES9k64h9qX",
+        "document_id": "BhVzRcxH9Z2LgfPPGXFUBa",
+        "status": "done",
+        "docx_items": [
+          {
+            "section_title": "Section 1",
+            "url": "https://example.com/downloads/section1.docx"
+          },
+          {
+            "section_title": "Section 2",
+            "url": "https://example.com/downloads/section2.docx"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "nPh2PDhFdDqAES9k64h9qX",
+                "description": "Export task id."
+              },
+              "document_id": {
+                "type": "string",
+                "example": "BhVzRcxH9Z2LgfPPGXFUBa",
+                "description": "Document id."
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "created",
+                  "processing",
+                  "done",
+                  "error"
+                ],
+                "example": "created",
+                "description": "| **Status**    | **Description**                                                                             |\n|---------------|---------------------------------------------------------------------------------------------|\n| **created**   | The export task has been created, but the process has not started.                          |\n| **processing**| The export task is in progress.                                                             |\n| **done**      | The export task is completed, and the response contains URLs for downloading the documents. |\n| **error**     | An error occurred during the execution of the export task.                                  |\n"
+              }
+            },
+            "required": [
+              "id",
+              "document_id",
+              "status"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "docx_items": {
+                "type": "array",
+                "description": "DOCX files result URLs with their names.",
+                "items": {
+                  "description": "List of download links and section item titles of the document.",
+                  "type": "object",
+                  "properties": {
+                    "section_title": {
+                      "type": "string",
+                      "example": "Section 1",
+                      "description": "Document Section Item title."
+                    },
+                    "url": {
+                      "type": "string",
+                      "description": "The url for downloading the DOCX file.",
+                      "format": "uri"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+order: 1000

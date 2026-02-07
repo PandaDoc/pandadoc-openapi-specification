@@ -1,0 +1,79 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/workspaces?count=10&page=1"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: count
+      value: "10"
+      description: Number of elements in page.
+    - key: page
+      value: "1"
+      description: Page number.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "id": "QCTETChxCDRWfM2FW4g9fX",
+            "name": "Workspace",
+            "owner": "siarhei@pandadoc.com",
+            "date_created": "2022-05-14T22:22:41.255046Z"
+          }
+        ],
+        "total": 1
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "A number of workspaces"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "ajnN7eGutJZsRKjQrNuPkh",
+                  "description": "A unique identifier of a workspace in a organization"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Test workspace",
+                  "description": "A workspace's name"
+                },
+                "date_created": {
+                  "type": "string",
+                  "example": "2021-06-17T15:51:13.226974Z",
+                  "description": "A workspace's date creation"
+                },
+                "owner": {
+                  "type": "string",
+                  "example": "josh@example.com",
+                  "description": "A owner's email address",
+                  "format": "email"
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

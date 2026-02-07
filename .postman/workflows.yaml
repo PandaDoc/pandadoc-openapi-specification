@@ -1,0 +1,12 @@
+# This is a Workflow metadata file for defining entity relationships in this workspace.
+# Each workflow defines relations between entities and may include optional behavior/settings.
+# The Paths are relative to the .postman directory (avoid absolute paths).
+# Keep relation entries explicit and avoid duplicate pairs within the same workflow.
+# This file is declarative metadata and does not execute workflows by itself.
+workflows:
+  syncSpecToCollection:
+    - spec: ../openapi.json
+      collection: ../postman/collections/PandaDoc API from OpenAPI Specification
+      options:
+        folderStrategy: Tags
+        syncExamples: false

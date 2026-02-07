@@ -1,0 +1,106 @@
+$kind: http-request
+description: This operation allows you to create a new template by providing the necessary template details.
+url: "{{baseUrl}}/public/v1/templates?fields=content_date_modified"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+queryParams:
+  - key: fields
+    value: content_date_modified
+    description: A comma-separated list of additional fields to include in the response.
+    $type: array
+body:
+  type: json
+  content: |-
+    {
+      "name": "Sample Template",
+      "folder_uuid": "EE8yUNg5HztqVAuH85He8V",
+      "owner": {
+        "email": "john.doe@example.com"
+      },
+      "metadata": {
+        "my_favorite_pet": "Panda"
+      }
+    }
+  $type: |-
+    {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "example": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+              "description": "Secure (HTTPS) and publicly accessible URL to the PDF document."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Template name example",
+              "description": "The name of the template."
+            },
+            "folder_uuid": {
+              "type": "string",
+              "example": "EE8yUNg5HztqVAuH85He8V",
+              "description": "The ID of the folder where the created template should be stored."
+            },
+            "owner": {
+              "type": "object",
+              "description": "You can set an owner of a template as an `email` or `membership_id`.",
+              "properties": {
+                "membership_id": {
+                  "type": "string",
+                  "example": "QMDSzwabfFzTgjW6KijHyu"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "john.doe@example.com",
+                  "format": "email"
+                }
+              }
+            },
+            "metadata": {
+              "type": "object",
+              "example": {
+                "my_favorite_pet": "Panda"
+              },
+              "description": "You can pass arbitrary data in the key-value format to associate custom information with a template. This information is returned in any API requests for the template details by id."
+            },
+            "tokens": {
+              "type": "array",
+              "example": [
+                {
+                  "name": "Favorite.Pet",
+                  "value": "Panda"
+                }
+              ],
+              "description": "Create or initialize multiple CUSTOM variables with their values using tokens/values list. Template's predefined variables are read-only. Any attempts to do so will be ignored.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Favorite.Pet"
+                  },
+                  "value": {
+                    "type": "string",
+                    "example": "Panda"
+                  }
+                },
+                "required": [
+                  "name",
+                  "value"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+examples: ./.resources/Create Template.resources/examples
+order: 2000

@@ -1,0 +1,78 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: fANp5wW5EwY7AkiTkTGekZ
+      description: Specify document ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "fANp5wW5EwY7AkiTkTGekZ",
+        "name": "Document from file",
+        "status": "document.uploaded",
+        "date_created": "2024-07-02T16:21:57.510203Z",
+        "date_modified": "2024-07-02T16:21:57.708251Z",
+        "expiration_date": null,
+        "version": null,
+        "uuid": "fANp5wW5EwY7AkiTkTGekZ"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "msFYActMfJHqNTKH8YSvF1"
+          },
+          "name": {
+            "type": "string",
+            "example": "API Sample Document from PandaDoc Template"
+          },
+          "status": {
+            "type": "string",
+            "example": "document.viewed"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2017-07-06T08:42:13.836022Z"
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2017-08-04T02:21:13.963750Z"
+          },
+          "date_completed": {
+            "type": "string",
+            "example": "2018-08-03T08:21:38.809868Z"
+          },
+          "expiration_date": {
+            "type": "string",
+            "example": "2018-08-05T08:21:38.809868Z"
+          },
+          "version": {
+            "type": "string",
+            "example": "2"
+          },
+          "uuid": {
+            "type": "string",
+            "example": "msFYActMfJHqNTKH8YSvF1"
+          }
+        }
+      }
+order: 1000

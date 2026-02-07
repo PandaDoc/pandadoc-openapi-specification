@@ -1,0 +1,258 @@
+$kind: http-request
+description: Create a new catalog item.
+url: "{{baseUrl}}/public/v2/product-catalog/items"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "type": "regular",
+      "title": "New Product",
+      "category_id": null,
+      "sku": "",
+      "description": null,
+      "price_configuration": {
+        "currency": "EUR",
+        "price": 1,
+        "cost": null,
+        "pricing_method": 0,
+        "tiers": null,
+        "billing_type": "one_time",
+        "billing_cycle": null
+      },
+      "custom_fields": [],
+      "images": [],
+      "bundle_items": []
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "category_id": {
+          "type": "string"
+        },
+        "sku": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "regular",
+            "bundle"
+          ],
+          "example": "regular"
+        },
+        "bundle_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "quantity": {
+                "type": "integer"
+              },
+              "item_or_uuid": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "uuid": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "image_url": {
+                        "type": "string"
+                      },
+                      "images": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "is_main": {
+                              "type": "boolean"
+                            },
+                            "order": {
+                              "type": "number"
+                            },
+                            "src": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "price_configuration": {
+                        "type": "object",
+                        "properties": {
+                          "currency": {
+                            "type": "string",
+                            "example": "USD"
+                          },
+                          "price": {
+                            "type": "number",
+                            "example": 59.99
+                          },
+                          "cost": {
+                            "type": "number"
+                          },
+                          "billing_type": {
+                            "type": "string"
+                          },
+                          "billing_cycle": {
+                            "type": "string"
+                          },
+                          "tiers": {
+                            "type": "array",
+                            "description": "only for volume based pricing",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "example": 9.99,
+                                  "format": "float"
+                                },
+                                "min_qty": {
+                                  "type": "number",
+                                  "minimum": 1
+                                }
+                              },
+                              "required": [
+                                "value",
+                                "min_qty"
+                              ]
+                            }
+                          },
+                          "pricing_method": {
+                            "type": "integer",
+                            "enum": [
+                              0,
+                              1,
+                              2
+                            ]
+                          }
+                        },
+                        "required": [
+                          "currency",
+                          "pricing_method"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "is_main": {
+                "type": "boolean"
+              },
+              "order": {
+                "type": "number"
+              },
+              "src": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "custom_fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "price_configuration": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "example": "USD"
+            },
+            "price": {
+              "type": "number",
+              "example": 59.99
+            },
+            "cost": {
+              "type": "number"
+            },
+            "billing_type": {
+              "type": "string"
+            },
+            "billing_cycle": {
+              "type": "string"
+            },
+            "tiers": {
+              "type": "array",
+              "description": "only for volume based pricing",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "number",
+                    "minimum": 0,
+                    "example": 9.99,
+                    "format": "float"
+                  },
+                  "min_qty": {
+                    "type": "number",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "value",
+                  "min_qty"
+                ]
+              }
+            },
+            "pricing_method": {
+              "type": "integer",
+              "enum": [
+                0,
+                1,
+                2
+              ]
+            }
+          },
+          "required": [
+            "currency",
+            "pricing_method"
+          ]
+        }
+      },
+      "required": [
+        "title",
+        "price_configuration"
+      ]
+    }
+examples: ./.resources/Create Catalog Item.resources/examples
+order: 2000

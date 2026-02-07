@@ -1,0 +1,87 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/editing-sessions"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: pSgK5XYZjyg3zXYZxsoUWg
+      description: Document ID
+  body:
+    type: json
+    content: |-
+      {
+        "email": "john.doe@pandadoc.com",
+        "lifetime": 100
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "ce9825e5-3210-4a8f-1230-f32b643295d2",
+        "email": "john.doe@pandadoc.com",
+        "expires_at": "2025-01-10T00:09:09.612651Z",
+        "token": "985b695b56eaaa571e9bb8e522afd5bd335c32d7",
+        "document_id": "pSgK5XYZjyg3zXYZxsoUWg"
+      }
+    $type: |-
+      {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "ce9825e5-3210-4a8f-1230-f32b643295d2",
+                "description": "Internal id of the editing session. Don't use it, it's not a token."
+              },
+              "email": {
+                "type": "string",
+                "example": "eric@pandadoc.com",
+                "description": "Email associated with the editing session.",
+                "format": "email"
+              },
+              "expires_at": {
+                "type": "string",
+                "example": "2025-01-10T00:09:09.612651Z",
+                "description": "Date and time when the editing session expires.",
+                "format": "date-time"
+              },
+              "key": {
+                "type": "string",
+                "deprecated": true,
+                "example": "985b695b56eaaa571e9bb8e522afd5bd335c32d7",
+                "description": "Same value as `token`, token for the embedded editor, aka E-Token. Deprecated — use `token` instead."
+              },
+              "token": {
+                "type": "string",
+                "example": "985b695b56eaaa571e9bb8e522afd5bd335c32d7",
+                "description": "Token for the embedded editor, aka E-Token. Use it for your Embedding."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "document_id": {
+                "type": "string",
+                "example": "pSgK5XYZjyg3zXYZxsoUWg",
+                "description": "ID of the document"
+              }
+            }
+          }
+        ]
+      }
+order: 1000

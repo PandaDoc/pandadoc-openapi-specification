@@ -1,0 +1,61 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/recipients/recipient/:recipient_id"
+  method: PATCH
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document UUID.
+    - key: recipient_id
+      value: tf5dGS3Tmu3cj228ao6fnc
+      description: Recipient UUID.
+  body:
+    type: json
+    content: |-
+      {
+        "first_name": "New First Name",
+        "last_name": "New Last Name",
+        "phone": "+3511111111111",
+        "company": "PandaDoc",
+        "title": "",
+        "street_address": "",
+        "city": "",
+        "state": "",
+        "postal_code": "",
+        "country": ""
+      }
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "authentication_error",
+        "detail": "Authentication credentials were not provided."
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "authentication_error"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Authentication credentials were not provided."
+          }
+        }
+      }
+order: 3000

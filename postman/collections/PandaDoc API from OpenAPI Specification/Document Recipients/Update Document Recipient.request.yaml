@@ -1,0 +1,233 @@
+$kind: http-request
+description: |
+  Modify recipient's personal details.
+
+  > 🚧 Before you start
+  > 
+  > To edit a recipient, please ensure that you have the 'Can Edit Document' permission.
+
+  Use this endpoint to easily fix typos in a recipient's name or email, or to change any other recipient information in a sent document. 
+
+  > 📘 Please note that changes made to a recipient within a document will also update their `Contact` information. However, these changes will not update information about this recipient in other documents where they have already been added.
+
+  ### Document status
+
+  - You can edit a signer in the following document statuses:
+    - 'Draft' (`document.draft`),
+    - 'Waiting Approval' (`document.waiting_approval`),
+    - 'Approved' (`document.approved`),
+    - 'Rejected' (`document.rejected`),
+    - 'Sent' (`document.sent`),
+    - 'Viewed' (`document.viewed`), but only until they have signed the document.
+  - You can edit a CC recipient in any document status **except**:
+    - 'Expired' (`document.voided`),
+    - 'Declined' (`document.declined`).
+
+  > 📘 Updating a recipient's email after sending a document
+  > 
+  > **Note**: If you update a recipient's email address after sending a document, they will receive an instant notification at the new email address, allowing them access to the document. Access via the previous email will be revoked.
+
+  ### Restrictions for updating a recipient's email
+
+  - You cannot change emails of PandaDoc users.
+  - You cannot use the email addresses of existing contacts. If you need to use an email from an existing contact, use the [Change Signer](https://developers.pandadoc.com/reference/change-signer) endpoint to replace a signer with this contact.
+url: "{{baseUrl}}/public/v1/documents/:id/recipients/recipient/:recipient_id"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: recipient_id
+    value: tf5dGS3Tmu3cj228ao6fnc
+    description: Recipient UUID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "first_name": "New First Name",
+      "last_name": "New Last Name",
+      "phone": "+3511111111111",
+      "company": "PandaDoc",
+      "title": "",
+      "street_address": "",
+      "city": "",
+      "state": "",
+      "postal_code": "",
+      "country": ""
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "user01@pandadoc.com",
+          "description": "You cannot use the email of another contact when updating a recipient contact."
+        },
+        "phone": {
+          "type": "string",
+          "example": "+14842634627"
+        },
+        "delivery_methods": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "boolean"
+            },
+            "sms": {
+              "type": "boolean"
+            }
+          }
+        },
+        "first_name": {
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "company": {
+          "type": "string",
+          "example": "John Doe Inc."
+        },
+        "job_title": {
+          "type": "string",
+          "example": "CTO"
+        },
+        "state": {
+          "type": "string",
+          "example": "Texas"
+        },
+        "street_address": {
+          "type": "string",
+          "example": "1313 Mockingbird Lane"
+        },
+        "city": {
+          "type": "string",
+          "example": "Austin"
+        },
+        "postal_code": {
+          "type": "string",
+          "example": "75001"
+        },
+        "verification_settings": {
+          "type": "object",
+          "description": "To set up recipient verification, fill in verification_place and specify the type: passcode_verification, phone_verification, kba_verification or id_verification.\n- For passcode_verification, provide the passcode.\n- For phone_verification, provide the phone_number.\n- For kba_verification and id_verification, set the enabled parameter to true.\n",
+          "properties": {
+            "verification_place": {
+              "type": "string",
+              "enum": [
+                "before_open",
+                "before_sign"
+              ],
+              "description": "Specifies when a recipient must complete the verification process:\n- `before_open` (before opening the document),\n- `before_sign` (before signing the document).\n"
+            },
+            "passcode_verification": {
+              "type": "object",
+              "description": "Sets the passcode.",
+              "properties": {
+                "passcode": {
+                  "type": "string",
+                  "pattern": "^(?=(?:.*[a-zA-Z]){1,})(?=(?:.*[0-9]){1,})^[\\S]{6,100}$",
+                  "example": "SimpleCode1",
+                  "description": "Document passcode."
+                }
+              },
+              "required": [
+                "passcode"
+              ]
+            },
+            "phone_verification": {
+              "type": "object",
+              "description": "Sets the phone number to send a passcode to.",
+              "properties": {
+                "phone_number": {
+                  "type": "string",
+                  "pattern": "^\\+[1-9]\\d{0,4}\\d{2,14}$",
+                  "example": "+1234567890",
+                  "description": "A phone number to send a passcode to."
+                }
+              },
+              "required": [
+                "phone_number"
+              ]
+            },
+            "kba_verification": {
+              "type": "object",
+              "description": "Sets the KBA verification.",
+              "properties": {
+                "time_limit_sec": {
+                  "type": "integer",
+                  "example": 120
+                },
+                "score_threshold": {
+                  "type": "integer",
+                  "example": 80
+                },
+                "max_attempts_count": {
+                  "type": "integer",
+                  "example": 2
+                }
+              }
+            },
+            "id_verification": {
+              "type": "object",
+              "description": "Sets the ID verification.",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        },
+        "redirect": {
+          "type": "object",
+          "properties": {
+            "is_enabled": {
+              "type": "boolean"
+            },
+            "url": {
+              "type": "string",
+              "example": "https://example.com",
+              "description": "A URL to redirect to after the document is signed."
+            }
+          },
+          "required": [
+            "is_enabled",
+            "url"
+          ]
+        }
+      }
+    }
+examples: ./.resources/Update Document Recipient.resources/examples
+order: 3000

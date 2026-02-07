@@ -1,0 +1,54 @@
+$kind: http-request
+description: |
+  Remove a recipient from a document.
+
+  > 🚧 Before you start
+  > 
+  > Please ensure that you have the 'Can Manage Recipients' permission.
+
+  To remove a recipient from a document, you must specify their ID in the path parameter (note that this is different from their contact's ID). The recipient's ID can be retrieved via the [Document Details](https://developers.pandadoc.com/reference/document-details) endpoint.
+
+  ### Document status
+
+  - Removing a signer is only possible when the document is in the 'Draft' (`document.draft`) status and this action will unassign all fields associated with that signer.
+  - Removing a CC recipient is allowed in any document status except for the 'Expired' (`document.voided`) and 'Declined' (`document.declined`). If a CC recipient is removed, their access will be revoked.
+url: "{{baseUrl}}/public/v1/documents/:id/recipients/:recipient_id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: recipient_id
+    value: tf5dGS3Tmu3cj228ao6fnc
+    description: Recipient UUID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete Document Recipient.resources/examples
+order: 2000

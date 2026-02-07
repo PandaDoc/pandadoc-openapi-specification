@@ -1,0 +1,28 @@
+$kind: http-request
+description: This operation fetches detailed information about a specific webhook event using its unique identifier.
+url: "{{baseUrl}}/public/v1/webhook-events/:id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: 8b61d111-5e0b-406d-a150-e8305fc7e97a
+    description: Webhook event uuid.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Webhook Event Details.resources/examples
+order: 2000

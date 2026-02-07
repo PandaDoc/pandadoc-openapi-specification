@@ -1,0 +1,96 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/content-library-items?q=Sample Pricing Table&id=UXdP7Lnbvvr4WEb2wzM2hc&deleted=false&folder_uuid=S6xX7saJfA44mtJxGWd95L&count=10&page=1&tag=pricing_tables"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: q
+      value: Sample Pricing Table
+      description: Search query. Filter by content library item name.
+    - key: id
+      value: UXdP7Lnbvvr4WEb2wzM2hc
+      description: Specify content library item ID.
+    - key: deleted
+      value: "false"
+      description: Returns only the deleted content library items.
+    - key: folder_uuid
+      value: S6xX7saJfA44mtJxGWd95L
+      description: The UUID of the folder where the content library items are stored.
+    - key: count
+      value: "10"
+      description: Specify how many content library items to return. Default is 50 content library items, maximum is 100 content library items.
+    - key: page
+      value: "1"
+      description: Specify which page of the dataset to return.
+    - key: tag
+      value: pricing_tables
+      description: Search tag. Filter by content library item tag.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "id": "a5UgY5J3rGqU7MtW5xwEGk",
+            "name": "Painting Blog Banner",
+            "date_created": "2021-04-12T08:43:51.090022Z",
+            "date_modified": "2021-04-12T08:43:51.190022Z",
+            "version": "2"
+          },
+          {
+            "id": "a5UgY5J3rGqU7MtW5xwEGk",
+            "name": "Painting Blog Banner",
+            "date_created": "2021-04-12T08:43:51.090022Z",
+            "date_modified": "2021-04-12T08:43:51.190022Z",
+            "version": "2"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "a5UgY5J3rGqU7MtW5xwEGk"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Painting Blog Banner"
+                },
+                "date_created": {
+                  "type": "string",
+                  "example": "2021-04-12T08:43:51.090022Z"
+                },
+                "date_modified": {
+                  "type": "string",
+                  "example": "2021-04-12T08:43:51.190022Z"
+                },
+                "version": {
+                  "type": "string",
+                  "example": "2"
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

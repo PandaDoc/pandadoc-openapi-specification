@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for managing document sections, including retrieving details and upload statuses.
+order: 11000

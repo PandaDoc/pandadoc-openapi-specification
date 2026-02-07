@@ -1,0 +1,74 @@
+$kind: http-request
+description: Retrieve a paginated list of forms with optional filtering and sorting options.
+url: "{{baseUrl}}/public/v1/forms?count=10&page=1&status=draft&status=active&order_by=name&asc=true&name=New Form"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: count
+    value: "10"
+    description: Specify how many forms to return. Default is 50 forms, maximum is 100 forms.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          }
+        }
+      }
+  - key: page
+    value: "1"
+    description: Specify which page of the dataset to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          }
+        }
+      }
+  - key: status
+    value: draft
+    description: Specify which status of the forms dataset to return.
+    $type: array
+  - key: status
+    value: active
+    description: Specify which status of the forms dataset to return.
+  - key: order_by
+    value: name
+    description: Specify the form dataset order to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "enum": [
+              "name",
+              "responses",
+              "status",
+              "created_date",
+              "modified_date"
+            ]
+          }
+        }
+      }
+  - key: asc
+    value: "true"
+    description: Specify sorting the result-set in ascending or descending order.
+    $type: boolean
+  - key: name
+    value: New Form
+    description: Specify the form name.
+    $type: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Forms.resources/examples
+order: 1000

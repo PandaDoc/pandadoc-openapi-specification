@@ -1,0 +1,31 @@
+$kind: http-request
+description: |
+  > ⏱️ Export as DOCX is a non-blocking (asynchronous) operation
+  > The document generation process may take some time.
+  > With a successful request, you receive a response with task ID, status **created** and document id. After process completes, usually in a few minutes, the task status moves to the **done** state.
+  > You can download documents up to 300 pages. For documents of 301+ pages, you will receive an error “400: The number of pages more then limit 300”
+url: "{{baseUrl}}/public/beta/documents/:document_id/docx-export-tasks"
+method: POST
+headers:
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Specify document id.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/[Beta] Create DOCX Export Task.resources/examples
+order: 23000

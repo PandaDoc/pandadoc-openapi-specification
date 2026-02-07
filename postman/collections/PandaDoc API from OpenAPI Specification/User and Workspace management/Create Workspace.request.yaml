@@ -1,0 +1,33 @@
+$kind: http-request
+description: |
+  Create a workspace in your organization.
+
+  - You need to be an Org Admin to create a workspace.
+  - You will be added to the new workspace with an Admin role.
+url: "{{baseUrl}}/public/v1/workspaces"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "A new workspace"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "A new workspace",
+          "description": "A name for the new workspace."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+examples: ./.resources/Create Workspace.resources/examples
+order: 2000

@@ -1,0 +1,522 @@
+$kind: http-request
+description: |
+  Use the PATCH method to update a PandaDoc document.
+
+  > 🚧 Document status
+  > 
+  > You can only update a document in the Draft status (`document.draft`). 
+  > 
+  > After creating a new document, it usually retains a `document.uploaded` status for 3-5 seconds while the document syncs across PandaDoc servers. When the document is available for further API calls, the document moves to the `document.draft` state. Use [Document Status](https://developers.pandadoc.com/reference/document-status) or Webhooks to check document status.
+url: "{{baseUrl}}/public/v1/documents/:id"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "texts": [
+        {
+          "name": "Legal Terms Section",
+          "data": "## Terms of Service\nThis document outlines the terms and conditions. \n- **Acceptance:** By using our service, you agree to these terms.\n"
+        },
+        {
+          "name": "Product Description",
+          "data": "## Product Description\nGeneral description of the product.\n"
+        }
+      ]
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Contract",
+          "description": "The name of the document."
+        },
+        "recipients": {
+          "type": "array",
+          "description": "The list of recipients you're sending the document to. The ID or email are required. If the ID is passed, an existing recipient will be updated. If the email is passed, a new recipient will be added to CC.",
+          "items": {
+            "anyOf": [
+              {
+                "title": "Recipient",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "role": {
+                        "type": "string",
+                        "example": "user",
+                        "description": "A recipient's role in the document from the template. A recipient will be added in CC if a role parameter is not provided."
+                      },
+                      "signing_order": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Set a signing order for a recipient. Learn more: https://developers.pandadoc.com/docs/set-signing-order\n"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "example": "josh@example.com",
+                        "description": "A recipient's email address."
+                      },
+                      "phone": {
+                        "type": "string",
+                        "example": "+14842634627",
+                        "description": "A recipient's phone number."
+                      },
+                      "first_name": {
+                        "type": "string",
+                        "example": "Josh",
+                        "description": "A recipient's first name. We automatically take the first name from contact data if this field is missed."
+                      },
+                      "last_name": {
+                        "type": "string",
+                        "example": "Ron",
+                        "description": "A recipient's last name. We automatically take the last name from contact data if this field is missed."
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "ZPeAfcpzr9aiVs5vqUf6jg"
+                      },
+                      "delivery_methods": {
+                        "type": "object",
+                        "properties": {
+                          "email": {
+                            "type": "boolean"
+                          },
+                          "sms": {
+                            "type": "boolean"
+                          }
+                        }
+                      },
+                      "redirect": {
+                        "type": "object",
+                        "properties": {
+                          "is_enabled": {
+                            "type": "boolean"
+                          },
+                          "url": {
+                            "type": "string",
+                            "example": "https://example.com",
+                            "description": "A URL to redirect to after the document is signed."
+                          }
+                        },
+                        "required": [
+                          "is_enabled",
+                          "url"
+                        ]
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "recipient"
+                        ],
+                        "example": "recipient"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "title": "RecipientGroup",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "role": {
+                        "type": "string",
+                        "example": "user",
+                        "description": "A recipient's role in the document from the template. A recipient will be added in CC if a role parameter is not provided."
+                      },
+                      "signing_order": {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Set a signing order for a recipient. Learn more: https://developers.pandadoc.com/docs/set-signing-order\n"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "ZPeAfcpzr9aiVs5vqUf6jg"
+                      },
+                      "name": {
+                        "type": "string",
+                        "maxLength": 120
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "recipient_group"
+                        ],
+                        "example": "recipient_group"
+                      },
+                      "members": {
+                        "type": "array",
+                        "minLength": 1,
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "string",
+                              "example": "josh@example.com",
+                              "description": "A recipient's email address."
+                            },
+                            "phone": {
+                              "type": "string",
+                              "example": "+14842634627",
+                              "description": "A recipient's phone number."
+                            },
+                            "first_name": {
+                              "type": "string",
+                              "example": "Josh",
+                              "description": "A recipient's first name. We automatically take the first name from contact data if this field is missed."
+                            },
+                            "last_name": {
+                              "type": "string",
+                              "example": "Ron",
+                              "description": "A recipient's last name. We automatically take the last name from contact data if this field is missed."
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "fields": {
+          "type": "object",
+          "example": {
+            "Like": {
+              "value": true
+            },
+            "Delivery": {
+              "value": "Same Day Delivery"
+            },
+            "Date": {
+              "value": "2019-12-31T00:00:00.000Z"
+            }
+          },
+          "description": "Set specific values to the fields. This object maps merge field names to their corresponding values.\n\nEach key represents a merge field name, and each value is an object containing the data to populate that field with. The structure allows you to pre-populate various field types including text inputs, checkboxes, dropdowns, and date fields.\n\n**Key Points:**\n- Keys must match the exact merge field names from your template or file.\n- Values must be wrapped in an object with a `value` property.\n- Supported value types: string, number, boolean.\n- Date fields should use RFC 3339 format (e.g., '2019-12-31T00:00:00.000Z').\n- Signature fields cannot be pre-filled.\n\n**Example Usage:**\n- Text field: `\"CustomerName\": {\"value\": \"John Doe\"}`\n- Checkbox: `\"AgreeToTerms\": {\"value\": true}`\n- Date field: `\"DeliveryDate\": {\"value\": \"2019-12-31T00:00:00.000Z\"}`\n"
+        },
+        "tokens": {
+          "type": "array",
+          "description": "Create or initialize multiple variables with their values using tokens/values list.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Favorite.Pet"
+              },
+              "value": {
+                "type": "string",
+                "example": "Panda"
+              }
+            },
+            "required": [
+              "name",
+              "value"
+            ]
+          }
+        },
+        "tags": {
+          "type": "array",
+          "example": [
+            "updated_via_api",
+            "test_document"
+          ],
+          "description": "Mark your document with one or several tags.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "example": {
+            "my_favorite_pet": "Cat"
+          },
+          "description": "You can pass arbitrary data in the key-value format to associate custom information with a document. This information is returned in any API requests for the document details by id. If metadata exists in a document then the value will be updated. Otherwise, metadata will be added to the document."
+        },
+        "pricing_tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Pricing Table 1"
+              },
+              "data_merge": {
+                "type": "boolean",
+                "description": "When set to true all field names in data rows must be passed as external names defined in the template."
+              },
+              "options": {
+                "type": "object",
+                "example": {
+                  "currency": "USD",
+                  "Discount": {
+                    "type": "absolute",
+                    "name": "Global Discount",
+                    "value": 10
+                  },
+                  "Tax": {
+                    "type": "percent",
+                    "name": "Tax First",
+                    "value": 15
+                  }
+                }
+              },
+              "sections": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "example": "Sample Section"
+                    },
+                    "default": {
+                      "type": "boolean"
+                    },
+                    "multichoice_enabled": {
+                      "type": "boolean"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "options": {
+                            "type": "object",
+                            "title": "Pricing Table Request Row Options",
+                            "properties": {
+                              "qty_editable": {
+                                "type": "boolean"
+                              },
+                              "optional_selected": {
+                                "type": "boolean"
+                              },
+                              "optional": {
+                                "type": "boolean"
+                              }
+                            }
+                          },
+                          "data": {
+                            "type": "object",
+                            "example": {
+                              "Name": "Toy Panda",
+                              "Description": "Fluffy",
+                              "Price": 10,
+                              "Cost": 8.5,
+                              "QTY": 3,
+                              "SKU": "toy_panda",
+                              "Discount": {
+                                "value": 10,
+                                "type": "percent"
+                              },
+                              "Tax": {
+                                "value": 10,
+                                "type": "percent"
+                              }
+                            },
+                            "title": "Pricing Table Request Row Data"
+                          },
+                          "custom_fields": {
+                            "type": "object",
+                            "example": {
+                              "Fluffiness": "5/5"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "title"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        },
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the table."
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "header": {
+                          "type": "array",
+                          "items": {
+                            "description": "Defines a single cell in the table, which can appear in either the header or the rows.",
+                            "type": "object",
+                            "properties": {
+                              "text": {
+                                "type": "string",
+                                "description": "Cell text."
+                              },
+                              "col_span": {
+                                "type": "integer",
+                                "description": "Represents how many columns the cell occupies."
+                              },
+                              "row_span": {
+                                "type": "integer",
+                                "description": "Represents the number of rows the cell occupies."
+                              }
+                            },
+                            "required": [
+                              "text"
+                            ]
+                          }
+                        },
+                        "rows": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "description": "Defines a single cell in the table, which can appear in either the header or the rows.",
+                              "type": "object",
+                              "properties": {
+                                "text": {
+                                  "type": "string",
+                                  "description": "Cell text."
+                                },
+                                "col_span": {
+                                  "type": "integer",
+                                  "description": "Represents how many columns the cell occupies."
+                                },
+                                "row_span": {
+                                  "type": "integer",
+                                  "description": "Represents the number of rows the cell occupies."
+                                }
+                              },
+                              "required": [
+                                "text"
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "header",
+                        "rows"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "sections"
+                ]
+              }
+            },
+            "required": [
+              "name",
+              "data"
+            ]
+          }
+        },
+        "images": {
+          "type": "array",
+          "description": "You can pass a list of images to image blocks (one image in one block) for replacement.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "urls": {
+                "type": "array",
+                "example": [
+                  "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              },
+              "name": {
+                "type": "string",
+                "example": "Image 1"
+              }
+            },
+            "required": [
+              "urls",
+              "name"
+            ]
+          }
+        },
+        "texts": {
+          "type": "array",
+          "description": "You can pass a list of texts to text blocks for replacement.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Legal Terms Section",
+                "description": "The name of the text block to update."
+              },
+              "data": {
+                "type": "string",
+                "example": "## Terms of Service\nThis document outlines the terms and conditions. \n- **Acceptance:** By using our service, you agree to these terms.\n- **Changes:** We may update these terms at any time.\n",
+                "description": "The rich text content to be inserted into the block. Supports markdown."
+              }
+            },
+            "required": [
+              "name",
+              "data"
+            ]
+          }
+        }
+      }
+    }
+examples: ./.resources/Update Document.resources/examples
+order: 8000

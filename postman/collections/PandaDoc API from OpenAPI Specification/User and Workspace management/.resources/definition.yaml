@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for managing users and workspaces.
+order: 26000

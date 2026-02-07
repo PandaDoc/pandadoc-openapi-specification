@@ -1,0 +1,228 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/fields"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document UUID.
+  body:
+    type: json
+    content: |-
+      {
+        "fields": [
+          {
+            "type": "text",
+            "layout": {
+              "page": 1,
+              "position": {
+                "offset_x": 1,
+                "offset_y": 1,
+                "anchor_point": "topleft"
+              },
+              "style": {
+                "width": 1,
+                "height": 1
+              }
+            }
+          }
+        ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "fields": [
+          {
+            "uuid": "d6948f39-612a-4626-a439-ca9e0cbbda7c",
+            "name": "Text",
+            "title": "",
+            "value": "",
+            "assigned_to": {
+              "id": "",
+              "first_name": "",
+              "last_name": "",
+              "email": "",
+              "phone": "",
+              "recipient_type": "",
+              "has_completed": false,
+              "signing_order": null,
+              "delivery_methods": {},
+              "redirect": {},
+              "type": "recipient"
+            },
+            "field_id": "text_d6948f39-612a-4626-a439-ca9e0cbbda7c",
+            "type": "text",
+            "settings": {
+              "required": true,
+              "placeholder": "Enter value",
+              "masked": false,
+              "multiline": true
+            },
+            "layout": {
+              "page": 1,
+              "position": {
+                "offset_x": 1,
+                "offset_y": 1,
+                "anchor_point": "topleft"
+              },
+              "style": {
+                "width": 1,
+                "height": 1
+              }
+            },
+            "merge_field": null
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uuid": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "field_id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "checkbox",
+                    "collect_file",
+                    "date",
+                    "dropdown",
+                    "initials",
+                    "payment_details",
+                    "radio_buttons",
+                    "signature",
+                    "stamp",
+                    "text"
+                  ],
+                  "example": "payment_details"
+                },
+                "placeholder": {
+                  "type": "string"
+                },
+                "assigned_to": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "first_name": {
+                      "type": "string"
+                    },
+                    "last_name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "string"
+                    },
+                    "recipient_type": {
+                      "type": "string"
+                    },
+                    "has_completed": {
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "layout": {
+                  "type": "object",
+                  "properties": {
+                    "page": {
+                      "type": "integer"
+                    },
+                    "position": {
+                      "type": "object",
+                      "properties": {
+                        "offset_x": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "offset_y": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "anchor_point": {
+                          "type": "string",
+                          "enum": [
+                            "topleft",
+                            "topright",
+                            "bottomleft",
+                            "bottomright"
+                          ],
+                          "example": "topleft"
+                        }
+                      },
+                      "required": [
+                        "offset_x",
+                        "offset_y",
+                        "anchor_point"
+                      ]
+                    },
+                    "style": {
+                      "type": "object",
+                      "properties": {
+                        "width": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "height": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "width",
+                        "height"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "page",
+                    "position",
+                    "style"
+                  ]
+                },
+                "section_uuid": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

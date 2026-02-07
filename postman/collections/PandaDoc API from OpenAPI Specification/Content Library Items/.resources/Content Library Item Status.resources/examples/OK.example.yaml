@@ -1,0 +1,70 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/content-library-items/:id"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: EE8yUNg5HztqVAuH85He8V
+      description: Content Library Item ID
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "vibuun3DXG8QDDLfXm27Ne",
+        "name": "API Sample PandaDoc CLI",
+        "date_created": "2024-07-15T17:44:07.524617Z",
+        "date_modified": "2024-07-15T17:44:07.613821Z",
+        "version": "2",
+        "status": "cli.PROCESSED"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "iMymdDd9XFD3HyxP5VD67Q"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sample CLI"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2021-06-17T15:51:13.226974Z",
+            "format": "date-time"
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2021-06-17T15:51:13.326974Z",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "string",
+            "example": "2"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "cli.UPLOADED",
+              "cli.PROCESSED",
+              "cli.ERROR"
+            ]
+          }
+        }
+      }
+order: 1000

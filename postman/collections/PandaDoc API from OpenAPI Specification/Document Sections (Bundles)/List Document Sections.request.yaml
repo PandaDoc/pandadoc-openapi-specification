@@ -1,0 +1,28 @@
+$kind: http-request
+description: |
+  Retrieve information about the sections within a document.
+url: "{{baseUrl}}/public/v1/documents/:document_id/sections"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Document Sections.resources/examples
+order: 1000

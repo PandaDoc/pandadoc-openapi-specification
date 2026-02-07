@@ -1,0 +1,44 @@
+$kind: http-request
+description: |
+  > 📘 This endpoint returns the current state of a DOCX export task for a document.
+  > The endpoint supports downloading only multiple files if the document contains several sections. Downloading as a single file in this case is not possible.
+url: "{{baseUrl}}/public/beta/documents/:document_id/docx-export-tasks/:task_id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Specify document id.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+  - key: task_id
+    value: nPh2PDhFdDqAES9k64h9qX
+    description: Specify Task id.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/[Beta] DOCX Export Task.resources/examples
+order: 24000

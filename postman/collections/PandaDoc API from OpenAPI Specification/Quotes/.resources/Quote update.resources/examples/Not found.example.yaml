@@ -1,0 +1,486 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:document_id/quotes/:quote_id"
+  method: PUT
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document ID
+    - key: quote_id
+      value: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
+      description: Quote ID
+  body:
+    type: json
+    content: |-
+      {
+        "currency": "USD",
+        "summary": {
+          "custom_columns": {
+            "key_0": "string",
+            "key_1": "string"
+          },
+          "discounts": {
+            "key_0": {
+              "type": "percent",
+              "value": 4199.732505007283
+            },
+            "key_1": {
+              "type": "flat",
+              "value": 1424.1403145276565
+            },
+            "key_2": {
+              "type": "flat",
+              "value": 8805.558722250198
+            }
+          },
+          "fees": {
+            "key_0": {
+              "type": "flat",
+              "value": 884.3603951464906
+            },
+            "key_1": {
+              "type": "percent",
+              "value": 4139.419420564676
+            },
+            "key_2": {
+              "type": "percent",
+              "value": 9356.382518840117
+            }
+          },
+          "taxes": {
+            "key_0": {
+              "type": "percent",
+              "value": 7781.600743827414
+            },
+            "key_1": {
+              "type": "flat",
+              "value": 6258.748295193017
+            }
+          }
+        },
+        "sections": [
+          {
+            "id": "325b63ba-4def-20d8-8dbd-558624ca1067",
+            "name": "Section name",
+            "summary": {
+              "custom_columns": {
+                "key_0": "string",
+                "key_1": "string"
+              },
+              "discounts": {
+                "key_0": {
+                  "type": "percent",
+                  "value": 5660.879980354384
+                }
+              },
+              "fees": {
+                "key_0": {
+                  "type": "flat",
+                  "value": 3900.942269107369
+                }
+              },
+              "taxes": {
+                "key_0": {
+                  "type": "flat",
+                  "value": 9542.824677795652
+                },
+                "key_1": {
+                  "type": "percent",
+                  "value": 5089.076084226957
+                },
+                "key_2": {
+                  "type": "flat",
+                  "value": 9428.710709874873
+                }
+              }
+            },
+            "items": [
+              {
+                "id": "d63816ee-7829-2a48-dca0-d1715af487d9",
+                "sku": "#",
+                "name": "",
+                "description": "",
+                "qty": 10,
+                "price": 42.42,
+                "price_settings": {
+                  "base_value": 489.33778417535655,
+                  "tiers": [
+                    {
+                      "value": 4410.597982735317,
+                      "min_qty": 515
+                    },
+                    {
+                      "value": 1227.350937619137,
+                      "min_qty": 3009
+                    }
+                  ]
+                },
+                "cost": 42.42,
+                "billing_frequency": "annually",
+                "contract_term": 9532,
+                "reference_id": "string",
+                "options": {
+                  "qty_editable": true,
+                  "selected": true,
+                  "optional": false
+                },
+                "custom_columns": {
+                  "key_0": "string",
+                  "key_1": "string"
+                },
+                "external_columns": {
+                  "key_0": "string",
+                  "key_1": "string",
+                  "key_2": "string",
+                  "key_3": "string"
+                },
+                "text_columns": {
+                  "key_0": "string",
+                  "key_1": "string"
+                },
+                "discounts": {
+                  "key_0": {
+                    "type": "flat",
+                    "value": 383.34695052752
+                  },
+                  "key_1": {
+                    "type": "flat",
+                    "value": 4520.340206490866
+                  },
+                  "key_2": {
+                    "type": "percent",
+                    "value": 1016.9017280607239
+                  }
+                },
+                "taxes": {
+                  "key_0": {
+                    "type": "flat",
+                    "value": 2876.4445752330203
+                  }
+                },
+                "fees": {
+                  "key_0": {
+                    "type": "percent",
+                    "value": 4905.9715308406985
+                  },
+                  "key_1": {
+                    "type": "percent",
+                    "value": 2495.1365949921924
+                  },
+                  "key_2": {
+                    "type": "flat",
+                    "value": 3650.3075506222704
+                  }
+                },
+                "multipliers": {
+                  "key_0": 1586.3525083753927,
+                  "key_1": 799.8362961384164,
+                  "key_2": 2143.2682928613544
+                }
+              },
+              {
+                "id": "c961563c-77e8-8ebf-1ddf-55f80860dfb6",
+                "sku": "#",
+                "name": "",
+                "description": "",
+                "qty": 10,
+                "price": 42.42,
+                "price_settings": {
+                  "base_value": 9492.672833834647,
+                  "tiers": [
+                    {
+                      "value": 6939.279482859944,
+                      "min_qty": 6289
+                    },
+                    {
+                      "value": 8825.98787684695,
+                      "min_qty": 8105
+                    }
+                  ]
+                },
+                "cost": 42.42,
+                "billing_frequency": "annually",
+                "contract_term": 2726,
+                "reference_id": "string",
+                "options": {
+                  "qty_editable": true,
+                  "selected": true,
+                  "optional": false
+                },
+                "custom_columns": {
+                  "key_0": "string",
+                  "key_1": "string",
+                  "key_2": "string"
+                },
+                "external_columns": {
+                  "key_0": "string",
+                  "key_1": "string",
+                  "key_2": "string"
+                },
+                "text_columns": {
+                  "key_0": "string"
+                },
+                "discounts": {
+                  "key_0": {
+                    "type": "percent",
+                    "value": 2830.140774162152
+                  }
+                },
+                "taxes": {
+                  "key_0": {
+                    "type": "percent",
+                    "value": 3517.1525191501196
+                  }
+                },
+                "fees": {
+                  "key_0": {
+                    "type": "flat",
+                    "value": 6324.738729404903
+                  },
+                  "key_1": {
+                    "type": "percent",
+                    "value": 9995.783231783109
+                  },
+                  "key_2": {
+                    "type": "flat",
+                    "value": 9348.82385720875
+                  },
+                  "key_3": {
+                    "type": "percent",
+                    "value": 9396.755714723113
+                  }
+                },
+                "multipliers": {
+                  "key_0": 1437.7067160726708,
+                  "key_1": 6865.071604317163,
+                  "key_2": 454.94572753530525
+                }
+              }
+            ],
+            "settings": {
+              "optional": true,
+              "selected": true,
+              "selection_type": "single"
+            }
+          },
+          {
+            "id": "25c3faf1-cc8b-7022-1062-f8fe24df1f5c",
+            "name": "Section name",
+            "summary": {
+              "custom_columns": {
+                "key_0": "string",
+                "key_1": "string"
+              },
+              "discounts": {
+                "key_0": {
+                  "type": "percent",
+                  "value": 7677.310882641352
+                }
+              },
+              "fees": {
+                "key_0": {
+                  "type": "flat",
+                  "value": 6360.928119783625
+                }
+              },
+              "taxes": {
+                "key_0": {
+                  "type": "percent",
+                  "value": 4463.241206937843
+                }
+              }
+            },
+            "items": [
+              {
+                "id": "2e123c83-a0dd-bcf0-61e0-ed0a1e75c844",
+                "sku": "#",
+                "name": "",
+                "description": "",
+                "qty": 10,
+                "price": 42.42,
+                "price_settings": {
+                  "base_value": 9446.48479957038,
+                  "tiers": [
+                    {
+                      "value": 8104.254946119247,
+                      "min_qty": 6525
+                    },
+                    {
+                      "value": 820.521556097088,
+                      "min_qty": 220
+                    }
+                  ]
+                },
+                "cost": 42.42,
+                "billing_frequency": "quarterly",
+                "contract_term": 3950,
+                "reference_id": "string",
+                "options": {
+                  "qty_editable": true,
+                  "selected": true,
+                  "optional": false
+                },
+                "custom_columns": {
+                  "key_0": "string",
+                  "key_1": "string"
+                },
+                "external_columns": {
+                  "key_0": "string"
+                },
+                "text_columns": {
+                  "key_0": "string",
+                  "key_1": "string",
+                  "key_2": "string",
+                  "key_3": "string"
+                },
+                "discounts": {
+                  "key_0": {
+                    "type": "flat",
+                    "value": 919.0537743727723
+                  },
+                  "key_1": {
+                    "type": "percent",
+                    "value": 3740.9162006180186
+                  },
+                  "key_2": {
+                    "type": "flat",
+                    "value": 7610.6372607042285
+                  }
+                },
+                "taxes": {
+                  "key_0": {
+                    "type": "flat",
+                    "value": 4505.292369320909
+                  }
+                },
+                "fees": {
+                  "key_0": {
+                    "type": "percent",
+                    "value": 9476.964922333134
+                  }
+                },
+                "multipliers": {
+                  "key_0": 6400.884864900844,
+                  "key_1": 9355.485266416666
+                }
+              },
+              {
+                "id": "a5378d23-5779-8d6a-932e-f10f4625ee31",
+                "sku": "#",
+                "name": "",
+                "description": "",
+                "qty": 10,
+                "price": 42.42,
+                "price_settings": {
+                  "base_value": 8186.676021273937,
+                  "tiers": [
+                    {
+                      "value": 3348.6919341284583,
+                      "min_qty": 4453
+                    },
+                    {
+                      "value": 4402.802540545074,
+                      "min_qty": 2480
+                    }
+                  ]
+                },
+                "cost": 42.42,
+                "billing_frequency": "annually",
+                "contract_term": 2949,
+                "reference_id": "string",
+                "options": {
+                  "qty_editable": true,
+                  "selected": true,
+                  "optional": false
+                },
+                "custom_columns": {
+                  "key_0": "string",
+                  "key_1": "string",
+                  "key_2": "string"
+                },
+                "external_columns": {
+                  "key_0": "string",
+                  "key_1": "string",
+                  "key_2": "string"
+                },
+                "text_columns": {
+                  "key_0": "string"
+                },
+                "discounts": {
+                  "key_0": {
+                    "type": "flat",
+                    "value": 412.39063225638307
+                  },
+                  "key_1": {
+                    "type": "flat",
+                    "value": 1031.3434404847121
+                  }
+                },
+                "taxes": {
+                  "key_0": {
+                    "type": "flat",
+                    "value": 701.7730089963803
+                  },
+                  "key_1": {
+                    "type": "flat",
+                    "value": 8274.933326364986
+                  }
+                },
+                "fees": {
+                  "key_0": {
+                    "type": "flat",
+                    "value": 7092.875890948053
+                  }
+                },
+                "multipliers": {
+                  "key_0": 6988.091642050352,
+                  "key_1": 6959.427953860596
+                }
+              }
+            ],
+            "settings": {
+              "optional": false,
+              "selected": true,
+              "selection_type": "custom"
+            }
+          }
+        ],
+        "settings": {
+          "selection_type": "multiple"
+        }
+      }
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "request_error",
+        "detail": "Not found"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "request_error"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Not found"
+          }
+        }
+      }
+order: 4000

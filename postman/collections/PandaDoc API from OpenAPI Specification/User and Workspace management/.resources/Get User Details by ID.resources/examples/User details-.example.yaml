@@ -1,0 +1,112 @@
+$kind: http-example
+name: User details.
+request:
+  url: "{{baseUrl}}/public/v1/users/:user_id"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: user_id
+      value: ajnN7eGutJZsRKjQrNuPkh
+      description: A unique identifier of the user.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "user_id": "ajnN7eGutJZsRKjQrNuPkh",
+        "email": "josh@example.com",
+        "first_name": "Josh",
+        "last_name": "Doe",
+        "phone_number": "+14842634627",
+        "license": "Full",
+        "is_organization_owner": true,
+        "workspaces": [
+          {
+            "role": "Admin",
+            "workspace_id": "fERpqZdFaF9dHVAeVxPFaV",
+            "membership_id": "nPh2PDhFdDqAES9k64h9qX"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "example": "ajnN7eGutJZsRKjQrNuPkh",
+            "description": "A unique identifier of the user in the organization."
+          },
+          "email": {
+            "type": "string",
+            "example": "josh@example.com",
+            "description": "A user's email address."
+          },
+          "first_name": {
+            "type": "string",
+            "example": "Josh",
+            "description": "A user's first name."
+          },
+          "last_name": {
+            "type": "string",
+            "example": "Doe",
+            "description": "A user's last name."
+          },
+          "phone_number": {
+            "type": "string",
+            "example": "+14842634627",
+            "description": "A user's phone number."
+          },
+          "license": {
+            "type": "string",
+            "example": "Full",
+            "description": "A user's license in the organization."
+          },
+          "is_organization_owner": {
+            "type": "boolean",
+            "description": "Whether the user is the owner of the organization."
+          },
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "Admin",
+                    "Manager",
+                    "Member",
+                    "Collaborator"
+                  ],
+                  "example": "Member",
+                  "description": "Role for a member."
+                },
+                "workspace_id": {
+                  "type": "string",
+                  "example": "fERpqZdFaF9dHVAeVxPFaV",
+                  "description": "A user's workspace."
+                },
+                "membership_id": {
+                  "type": "string",
+                  "example": "vibuun3DXG8QDDLfXm27Ne",
+                  "description": "A user's membership id in workspace."
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

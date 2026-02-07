@@ -1,0 +1,86 @@
+$kind: http-request
+description: This method adds a contact into a contacts list.
+url: "{{baseUrl}}/public/v1/contacts"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "user01@pandadoc.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "company": "John Doe Inc.",
+      "job_title": "CTO",
+      "phone": "+14842634627",
+      "country": "USA",
+      "state": "Texas",
+      "street_address": "1313 Mockingbird Lane",
+      "city": "Austin",
+      "postal_code": "75001"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "user01@pandadoc.com",
+          "description": "An email address of the contact"
+        },
+        "first_name": {
+          "type": "string",
+          "example": "John",
+          "description": "Contact's first name"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe",
+          "description": "Contact's last name"
+        },
+        "company": {
+          "type": "string",
+          "example": "John Doe Inc.",
+          "description": "Contact's company name"
+        },
+        "job_title": {
+          "type": "string",
+          "example": "CTO",
+          "description": "Contact's job title"
+        },
+        "phone": {
+          "type": "string",
+          "example": "+14842634627",
+          "description": "A phone number"
+        },
+        "country": {
+          "type": "string",
+          "example": "USA",
+          "description": "A country name"
+        },
+        "state": {
+          "type": "string",
+          "example": "Texas",
+          "description": "A state name"
+        },
+        "street_address": {
+          "type": "string",
+          "example": "1313 Mockingbird Lane",
+          "description": "A street address"
+        },
+        "city": {
+          "type": "string",
+          "example": "Austin",
+          "description": "A city name"
+        },
+        "postal_code": {
+          "type": "string",
+          "example": "75001",
+          "description": "A postal code"
+        }
+      }
+    }
+examples: ./.resources/Create contact.resources/examples
+order: 2000

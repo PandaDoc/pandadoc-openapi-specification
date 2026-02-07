@@ -1,0 +1,44 @@
+$kind: http-request
+description: |
+  ## Create from an upload
+  > See the [Create from PDF](https://developers.pandadoc.com/docs/create-document-from-file) tutorial for the usage specifics and sample PDF files.
+
+  **Note**: A file you upload is not stored in your PandaDoc account, so you have to upload it with every request.
+url: "{{baseUrl}}/public/v1/documents?upload&editor_ver=ev2&use_form_field_properties=true"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+queryParams:
+  - key: upload
+    value: null
+  - key: editor_ver
+    value: ev2
+    description: Set this parameter as `ev1` if you want to create a document from PDF with Classic Editor when both editors are enabled for the workspace.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "deprecated": true
+          }
+        }
+      }
+  - key: use_form_field_properties
+    value: "true"
+    description: Set this parameter as `yes` or `1` or `true` (only when upload pdf with form fields) if you want to  respect form fields properties, like `required`.
+    $type: string
+body:
+  type: formdata
+  content:
+    - type: file
+      key: file
+      src: ""
+      description: Binary PDF File
+    - type: text
+      key: data
+      value: "[object Object]"
+      description: ""
+examples: ./.resources/Create Document from File Upload.resources/examples
+order: 4000

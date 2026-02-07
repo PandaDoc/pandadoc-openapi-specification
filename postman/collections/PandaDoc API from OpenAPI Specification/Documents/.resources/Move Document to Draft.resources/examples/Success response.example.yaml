@@ -1,0 +1,62 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/draft"
+  method: POST
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: iGsFiaV2hEEvQdhr2WAkMk
+      description: Specify document ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "msFYActMfJHqNTKH8YSvF1",
+        "name": "Document",
+        "status": "document.draft",
+        "date_created": "2017-08-06T08:42:13.836022Z",
+        "date_modified": "2017-09-04T02:21:13.963750Z",
+        "expiration_date": null,
+        "version": "2"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "date_created": {
+            "type": "string"
+          },
+          "date_modified": {
+            "type": "string"
+          },
+          "expiration_date": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      }
+order: 1000

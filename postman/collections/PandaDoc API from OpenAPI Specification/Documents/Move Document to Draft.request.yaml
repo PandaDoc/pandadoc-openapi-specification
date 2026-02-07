@@ -1,0 +1,36 @@
+$kind: http-request
+description: |
+  Revert your document back to draft to continue editing it.
+
+  > 📘 Returning to Draft works for any document status except Removed.
+
+  ## After you move your document to the Draft status
+
+  - `Signature` and `Initials` fields are cleared. All other fields stay filled in.
+  - Recipients are **not** notified that the document is back in Draft.
+  - You'll need to resend the document so that recipients can sign the updated version.
+url: "{{baseUrl}}/public/v1/documents/:id/draft"
+method: POST
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: iGsFiaV2hEEvQdhr2WAkMk
+    description: Specify document ID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Move Document to Draft.resources/examples
+order: 12000

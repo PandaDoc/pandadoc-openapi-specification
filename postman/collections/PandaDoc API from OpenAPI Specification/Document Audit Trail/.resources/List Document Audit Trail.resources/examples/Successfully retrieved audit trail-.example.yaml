@@ -1,0 +1,128 @@
+$kind: http-example
+name: Successfully retrieved audit trail.
+request:
+  url: "{{baseUrl}}/public/v2/documents/:document_id/audit-trail?limit=20&offset=0"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: limit
+      value: "20"
+      description: Maximum number of items to return.
+    - key: offset
+      value: "0"
+      description: Number of items to skip before starting to collect the result set.
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Unique identifier of the document to retrieve the audit trail for.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "count": 3,
+        "results": [
+          {
+            "id": "V9aG9KSREgTE8GnMqxWyzf",
+            "user": {
+              "id": "FA5QAu8UGA3oVDQZuPL75B",
+              "email": "pandadoc@pandadoc.com"
+            },
+            "action": 1,
+            "reason": null,
+            "date_created": "2025-05-22T09:03:19Z",
+            "ip_address": "8.8.8.8"
+          },
+          {
+            "id": "bWuXeU2bsToNyheeXfENAQ",
+            "user": {
+              "id": "FA5QAu8UGA3oVDQZuPL75B",
+              "email": "pandadoc@pandadoc.com"
+            },
+            "action": 6,
+            "reason": "",
+            "date_created": "2025-05-22T09:03:49Z",
+            "ip_address": "8.8.8.8"
+          },
+          {
+            "id": "TkgpWurccyfAZv9kazRs3D",
+            "user": {
+              "id": "6A3gGiRY7TQp4PHBqCpEjG",
+              "email": "astronaut@nasa.com"
+            },
+            "action": 8,
+            "reason": null,
+            "date_created": "2025-05-22T09:06:42Z",
+            "ip_address": "128.156.0.0"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Total number of audit trail entries available."
+          },
+          "results": {
+            "type": "array",
+            "description": "List of audit trail entries returned for the current page.",
+            "items": {
+              "description": "Represents a single audit trail event for a document.",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier of the audit trail entry."
+                },
+                "user": {
+                  "type": "object",
+                  "description": "The user who triggered the action.",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique identifier of the user."
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "User's email address.",
+                      "format": "email"
+                    }
+                  }
+                },
+                "action": {
+                  "type": "integer",
+                  "description": "Numeric code representing the type of action performed.\nPossible values:\n\n| Integer Value | String Representation |\n|---------------|---------------------------------------------|\n| 1 | new document |\n| 2 | new revision |\n| 3 | approval request |\n| 4 | approved |\n| 5 | rejected |\n| 6 | sent |\n| 7 | completed by all |\n| 8 | viewed |\n| 9 | completed |\n| 10 | waiting pay |\n| 11 | paid |\n| 12 | forwarded |\n| 13 | expired |\n| 14 | bank account submitted |\n| 15 | bank account verified |\n| 16 | payment submitted |\n| 17 | payment failed |\n| 18 | completed manually |\n| 19 | expired manually |\n| 20 | paid manually |\n| 21 | approval deleted |\n| 22 | approval forced |\n| 23 | reassigned |\n| 24 | recipient edited |\n| 25 | recipient added |\n| 26 | recipient deleted |\n| 27 | declined manually |\n| 28 | approval step skipped |\n| 29 | suggest edits |\n| 43 | declined |\n| 44 | partly paid |\n| 45 | partly paid manually |\n| 47 | recipient verification with kba passed |\n| 48 | recipient verification with id passed |\n| 49 | recipient verification with text sms passed |\n| 50 | recipient verification with passcode passed |\n| 51 | recipient verification with kba failed |\n| 52 | recipient verification with id failed |\n| 53 | recipient verification with text sms failed |\n| 54 | recipient verification with passcode failed |\n| 55 | recipient signed with QES |\n| 56 | QES completed |\n| 57 | recipient QES attempt started |\n| 58 | recipient QES attempt expired |\n| 59 | Optional item in quote selected |\n| 60 | Optional item in quote deselected |\n| 61 | Item quantity in quote changed |\n| 62 | Item quantity in pricing table changed |\n| 63 | Optional item in pricing table selected |\n| 64 | Optional item in pricing table deselected |\n| 65 | Section item in pricing table selected (one of) |\n| 66 | Optional section in quote selected |\n| 67 | Optional section in quote deselected |\n| 68 | Section quantity in quote changed |\n"
+                },
+                "reason": {
+                  "type": "string",
+                  "description": "Optional reason or explanation for the action."
+                },
+                "date_created": {
+                  "type": "string",
+                  "description": "Timestamp when the action was performed (in ISO 8601 format).",
+                  "format": "date-time"
+                },
+                "ip_address": {
+                  "type": "string",
+                  "description": "The IP address from which the action was performed. If a sandbox API key is used, this will be \"hidden\"."
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

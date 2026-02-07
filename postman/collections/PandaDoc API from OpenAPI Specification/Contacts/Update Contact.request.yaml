@@ -1,0 +1,82 @@
+$kind: http-request
+description: This method updates a contact details.
+url: "{{baseUrl}}/public/v1/contacts/:id"
+method: PATCH
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: SyoufNkJiHRn24LpuJ7RXb
+    description: Contact id.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "first_name": "new first_name",
+      "last_name": "new last_name",
+      "company": "new company",
+      "job_title": "new job_title",
+      "phone": "new phone",
+      "country": "new country",
+      "state": "new state",
+      "street_address": "new street_address",
+      "city": "new city",
+      "postal_code": "new postal_code"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "example": "John"
+        },
+        "last_name": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "company": {
+          "type": "string",
+          "example": "John Doe Inc."
+        },
+        "job_title": {
+          "type": "string",
+          "example": "CTO"
+        },
+        "phone": {
+          "type": "string",
+          "example": "+14842634627"
+        },
+        "state": {
+          "type": "string",
+          "example": "Texas"
+        },
+        "street_address": {
+          "type": "string",
+          "example": "1313 Mockingbird Lane"
+        },
+        "city": {
+          "type": "string",
+          "example": "Austin"
+        },
+        "postal_code": {
+          "type": "string",
+          "example": "75001"
+        }
+      }
+    }
+examples: ./.resources/Update Contact.resources/examples
+order: 5000

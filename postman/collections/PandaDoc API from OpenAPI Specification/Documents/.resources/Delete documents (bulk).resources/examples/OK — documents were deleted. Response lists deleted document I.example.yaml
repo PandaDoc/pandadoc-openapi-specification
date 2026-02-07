@@ -1,0 +1,55 @@
+$kind: http-example
+name: OK — documents were deleted. Response lists deleted document IDs.
+request:
+  url: "{{baseUrl}}/public/v1/documents"
+  method: DELETE
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  body:
+    type: json
+    content: |-
+      [
+        {
+          "id": "XjV64iXRJMerjSpk428QSF"
+        },
+        {
+          "id": "6NbHUUu6uuYN2tqJvgtf9h"
+        }
+      ]
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": [
+          "XjV64iXRJMerjSpk428QSF",
+          "6NbHUUu6uuYN2tqJvgtf9h"
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "array",
+            "description": "Document IDs that were deleted, in the same order as processed by the API.",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+order: 1000

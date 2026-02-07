@@ -1,0 +1,37 @@
+$kind: http-request
+description: |
+  Create a new folder to store your documents.
+
+  For the full list of folder operations and their limitations, see [Organize Documents and Folders](https://developers.pandadoc.com/docs/organize-folders).
+url: "{{baseUrl}}/public/v1/documents/folders"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "A top level folder"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "A new document folder",
+          "description": "Name the folder for the Documents you are creating."
+        },
+        "parent_uuid": {
+          "type": "string",
+          "example": "Nq8htXxFssmhRxAPSP4SBP",
+          "description": "ID of the parent folder. To create a new folder in the root folder, remove this parameter in the request."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+examples: ./.resources/Create Documents Folder.resources/examples
+order: 2000

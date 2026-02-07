@@ -1,0 +1,28 @@
+$kind: http-request
+description: |
+  Retrieves the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).
+url: "{{baseUrl}}/public/v2/documents/:document_id/settings"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: document_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Unique identifier of the document to retrieve settings for.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Get document settings.resources/examples
+order: 1000

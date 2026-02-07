@@ -1,0 +1,47 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/download?watermark_color=%23FF5733&watermark_font_size=12&watermark_opacity=0.5&watermark_text=John Doe inc.&separate_files=false"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/pdf
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: watermark_color
+      value: "#FF5733"
+      description: HEX code (for example `#FF5733`).
+    - key: watermark_font_size
+      value: "12"
+      description: Font size of the watermark.
+    - key: watermark_opacity
+      value: "0.5"
+      description: In range 0.0-1.0
+    - key: watermark_text
+      value: John Doe inc.
+      description: Specify watermark text.
+    - key: separate_files
+      value: "false"
+      description: Download document bundle as a zip-archive of separate PDFs (1 file per section).
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Specify document ID.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/pdf
+  body:
+    type: text
+    content: string
+    $type: |-
+      {
+        "type": "string",
+        "format": "binary"
+      }
+order: 1000

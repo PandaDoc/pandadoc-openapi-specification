@@ -1,0 +1,90 @@
+$kind: http-request
+description: |
+  Retrieve a paginated list of notarization requests for your organization.
+
+  Results can be filtered by status, creator, or document, and sorted by status or by the request's creation or completion dates.
+
+  ## Permissions
+
+  > 🔒 **Requirements**
+  >
+  > - The **Notary On-Demand** or **Notary** add-on must be enabled for your organization. Without an active add-on, the endpoint returns `403 Forbidden`.
+  > - The request is executed with the permissions of the API key owner. By default, the response only includes notarization requests created by the API key owner. To list notarization requests created by any user in the organization, the API key owner must have the **Can view any notarization request** permission.
+
+  ## Limits
+
+  A maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.
+url: "{{baseUrl}}/public/v2/notary/notarization-requests?status=SENT&created_by_user_id=nyAnVpY7pZ23FBve8s9xgk&document_id=D3okRfgHRX7NEhavcACReB&offset=0&limit=50&order_by=-date_created"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: status
+    value: SENT
+    description: Filter by status (comma-separated values supported).
+    $type: array
+  - key: created_by_user_id
+    value: nyAnVpY7pZ23FBve8s9xgk
+    description: Filter by creator user ID (comma-separated values supported).
+    $type: array
+  - key: document_id
+    value: D3okRfgHRX7NEhavcACReB
+    description: Filter by document ID (comma-separated values supported).
+    $type: array
+  - key: offset
+    value: "0"
+    description: Number of results to skip.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "default": 0,
+            "minimum": 0
+          }
+        }
+      }
+  - key: limit
+    value: "50"
+    description: Maximum number of results to return.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      }
+  - key: order_by
+    value: -date_created
+    description: |
+      Sort field. Use a `-` prefix for descending order (e.g., `-date_created`).
+      When omitted, results are sorted by `date_created` ascending (oldest first).
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "default": "date_created",
+            "enum": [
+              "status",
+              "-status",
+              "date_created",
+              "-date_created",
+              "date_completed",
+              "-date_completed"
+            ]
+          }
+        }
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Notarization Requests.resources/examples
+order: 2000

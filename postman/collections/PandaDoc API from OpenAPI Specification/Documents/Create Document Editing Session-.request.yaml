@@ -1,0 +1,68 @@
+$kind: http-request
+name: |
+  Create Document Editing Session
+description: |
+  Creates a new editing session for the Embedded Editor. The response includes an E-Token, which is required to open the document.
+
+  > 🚧 **Important:** The Embedded Editor can only open documents that have a `draft` status.
+
+  #### Limitations
+
+  - **Single Active Session per User-Document Pair** 
+    Only one editing session can be active at a time for a specific user and document. Creating a new session for the same user-document pair will automatically invalidate the previous one.
+
+  - **Weekly Session Cap** 
+    A maximum of **250** editing sessions can be created for a single document per week. Any attempt to exceed this limit will result in a `403 Forbidden` error.
+url: "{{baseUrl}}/public/v1/documents/:id/editing-sessions"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: pSgK5XYZjyg3zXYZxsoUWg
+    description: Document ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "email": "john.doe@pandadoc.com",
+      "lifetime": 100
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "john.doe@pandadoc.com",
+          "description": "Email of the user to create the editing session for",
+          "format": "email"
+        },
+        "lifetime": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 86400,
+          "example": 3600,
+          "description": "Lifetime of the E-Token in seconds.",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    }
+examples: ./.resources/Create Document Editing Session-.resources/examples
+order: 15000

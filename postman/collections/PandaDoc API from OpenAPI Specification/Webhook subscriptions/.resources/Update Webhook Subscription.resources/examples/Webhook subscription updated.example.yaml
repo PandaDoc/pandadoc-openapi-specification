@@ -1,0 +1,125 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/webhook-subscriptions/:id"
+  method: PATCH
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: d173751d-0057-4d5c-ab75-49a670a4ca68
+      description: Webhook subscription uuid
+  body:
+    type: json
+    content: |-
+      {
+        "name": "PandaDoc",
+        "url": "https://pandadoc.com/webhooks",
+        "active": true,
+        "payload": [
+          "fields",
+          "products",
+          "metadata",
+          "tokens",
+          "pricing"
+        ],
+        "triggers": [
+          "document_deleted",
+          "recipient_completed",
+          "document_updated",
+          "document_state_changed",
+          "document_creation_failed"
+        ]
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "uuid": "d173751d-0057-4d5c-ab75-49a670a4ca68",
+        "name": "PandaDoc",
+        "url": "https://pandadoc.com/webhooks",
+        "status": "ACTIVE",
+        "active": true,
+        "payload": [
+          "products",
+          "metadata",
+          "fields",
+          "pricing",
+          "tokens"
+        ],
+        "triggers": [
+          "document_creation_failed",
+          "document_deleted",
+          "document_state_changed",
+          "document_updated",
+          "recipient_completed"
+        ],
+        "shared_key": "GCQsdCMoVCcmXZo8yHiNGI",
+        "workspace_id": "fQ2pg3hcWgiPpa3JvfBPn2"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "My Subscription"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://example.com",
+            "format": "url"
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "payload": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "pricing"
+            }
+          },
+          "triggers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "document_state_changed"
+            }
+          },
+          "workspace_id": {
+            "type": "string",
+            "example": "Nq8htXxFssmhRxAPSP4SBP"
+          },
+          "shared_key": {
+            "type": "string",
+            "example": "587c22285F57883db3ee"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE",
+              "DEACTIVATED"
+            ],
+            "example": "ACTIVE"
+          }
+        }
+      }
+order: 1000

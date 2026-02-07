@@ -1,0 +1,103 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/templates?q=Sample onboarding template&shared=false&deleted=false&count=10&page=1&id=e9LxBesSL73AeZMzeYdfvV&folder_uuid=xDKHoJ8DkwhiTQSUzNveCJ&tag=onboarding&fields=content_date_modified"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: q
+      value: Sample onboarding template
+      description: Search query. Filter by template name.
+    - key: shared
+      value: "false"
+      description: Returns only the shared templates.
+    - key: deleted
+      value: "false"
+      description: Returns only the deleted templates.
+    - key: count
+      value: "10"
+      description: Specify how many templates to return.
+    - key: page
+      value: "1"
+      description: Specify which page of the dataset to return.
+    - key: id
+      value: e9LxBesSL73AeZMzeYdfvV
+      description: Specify template ID.
+    - key: folder_uuid
+      value: xDKHoJ8DkwhiTQSUzNveCJ
+      description: UUID of the folder where the templates are stored.
+    - key: tag
+      value: onboarding
+      description: Search tag. Filter by template tag.
+    - key: fields
+      value: content_date_modified
+      description: A comma-separated list of additional fields to include in the response.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "id": "iMymdDd9XFD3HyxP5VD67Q",
+            "name": "Blank",
+            "date_created": "2021-06-17T15:51:13.226974Z",
+            "date_modified": "2021-06-17T15:51:13.326974Z",
+            "version": "2",
+            "content_date_modified": "2021-06-17T15:51:13.426974Z"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "iMymdDd9XFD3HyxP5VD67Q"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Blank"
+                },
+                "date_created": {
+                  "type": "string",
+                  "example": "2021-06-17T15:51:13.226974Z",
+                  "format": "date-time"
+                },
+                "date_modified": {
+                  "type": "string",
+                  "example": "2021-06-17T15:51:13.326974Z",
+                  "format": "date-time"
+                },
+                "version": {
+                  "type": "string",
+                  "example": "2"
+                },
+                "content_date_modified": {
+                  "type": "string",
+                  "example": "2021-06-17T15:51:13.426974Z",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

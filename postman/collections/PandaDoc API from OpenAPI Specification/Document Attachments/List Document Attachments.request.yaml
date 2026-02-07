@@ -1,0 +1,27 @@
+$kind: http-request
+description: Returns a list of attachments associated with a specified document.
+url: "{{baseUrl}}/public/v1/documents/:id/attachments"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Document Attachments.resources/examples
+order: 1000

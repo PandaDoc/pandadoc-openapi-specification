@@ -1,0 +1,44 @@
+$kind: http-request
+description: |
+  Delete multiple documents in one request by sending a JSON array. Each element must be an object with an `id` field (the document ID, same value as elsewhere in the Documents API).
+
+  The caller must have permission to delete each document. Documents must belong to the authenticated workspace.
+
+  This batch operation returns **200 OK** with a JSON body containing an `id` array of deleted document IDs. That differs from [Delete Document](#operation/deleteDocument) (`DELETE /public/v1/documents/{id}`), which returns **204 No Content** for a single document.
+url: "{{baseUrl}}/public/v1/documents"
+method: DELETE
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    [
+      {
+        "id": "XjV64iXRJMerjSpk428QSF"
+      },
+      {
+        "id": "6NbHUUu6uuYN2tqJvgtf9h"
+      }
+    ]
+  $type: |-
+    {
+      "type": "array",
+      "description": "List of documents to delete. Each object must contain a document `id`.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa",
+            "description": "Document ID to delete."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "minItems": 1
+    }
+examples: ./.resources/Delete documents (bulk).resources/examples
+order: 3000

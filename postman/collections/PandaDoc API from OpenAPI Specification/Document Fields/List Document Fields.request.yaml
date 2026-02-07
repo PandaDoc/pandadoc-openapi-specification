@@ -1,0 +1,27 @@
+$kind: http-request
+description: Return the list of fields for a particular document.
+url: "{{baseUrl}}/public/v1/documents/:id/fields"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/List Document Fields.resources/examples
+order: 1000

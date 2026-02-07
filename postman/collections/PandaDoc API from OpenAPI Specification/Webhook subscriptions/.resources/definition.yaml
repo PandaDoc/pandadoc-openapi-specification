@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for managing webhook subscriptions, including listing, retrieving details, and updating shared keys.
+order: 21000

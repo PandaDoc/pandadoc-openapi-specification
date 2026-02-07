@@ -1,0 +1,108 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v2/notary/notaries?status=UNDER_REVIEW&commission_state=Arizona&offset=0&limit=50&order_by=email"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: status
+      value: UNDER_REVIEW
+      description: Filter by status (comma-separated values supported). Valid values are INVITED, UNDER_REVIEW, ACTIVE, REJECTED, INACTIVE
+    - key: commission_state
+      value: Arizona
+      description: Filter by commission state (comma-separated values supported)
+    - key: offset
+      value: "0"
+      description: Number of results to skip
+    - key: limit
+      value: "50"
+      description: Maximum number of results to return
+    - key: order_by
+      value: email
+      description: Sort by name, email, or status (default is email). Use a - prefix for descending order (e.g., -email)
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "results": [
+          {
+            "id": "nyAnVpY7pZ23FBve8s9xgk",
+            "email": "notary1@example.com",
+            "name": "John Doe",
+            "status": "ACTIVE",
+            "commission_state": "California"
+          },
+          {
+            "id": "def456ghi789",
+            "email": "notary2@example.com",
+            "name": "Jane Smith",
+            "status": "UNDER_REVIEW",
+            "commission_state": "Arizona"
+          }
+        ],
+        "count": 2
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "description": "Array of notary objects",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "nyAnVpY7pZ23FBve8s9xgk",
+                  "description": "Unique identifier for the notary"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Email address of the notary",
+                  "format": "email"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "John Doe",
+                  "description": "Full name of the notary"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "INVITED",
+                    "UNDER_REVIEW",
+                    "ACTIVE",
+                    "REJECTED",
+                    "INACTIVE"
+                  ],
+                  "example": "ACTIVE",
+                  "description": "Current status of the notary"
+                },
+                "commission_state": {
+                  "type": "string",
+                  "example": "California"
+                }
+              }
+            }
+          },
+          "count": {
+            "type": "integer",
+            "example": 5,
+            "description": "Total number of notaries matching the criteria"
+          }
+        }
+      }
+order: 1000

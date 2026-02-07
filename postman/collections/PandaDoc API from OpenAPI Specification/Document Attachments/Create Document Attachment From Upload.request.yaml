@@ -1,0 +1,38 @@
+$kind: http-request
+description: Creates an attachment for a particular document
+url: "{{baseUrl}}/public/v1/documents/:id/attachments?upload"
+method: POST
+headers:
+  Content-Type: multipart/form-data
+  Accept: application/json
+queryParams:
+  upload: null
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document UUID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: formdata
+  content:
+    - type: text
+      key: file
+      value: string
+      description: ""
+    - type: text
+      key: name
+      value: Additional agreement
+      description: ""
+examples: ./.resources/Create Document Attachment From Upload.resources/examples
+order: 3000

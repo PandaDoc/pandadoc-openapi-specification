@@ -1,0 +1,4 @@
+$kind: collection
+description: |
+  New or proposed operations captured as a design artefact. Use this tag to review and iterate before promoting endpoints into stable public documentation.
+order: 1000

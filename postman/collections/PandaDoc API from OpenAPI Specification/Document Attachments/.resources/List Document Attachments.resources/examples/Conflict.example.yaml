@@ -1,0 +1,49 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/attachments"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Document UUID
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 409
+  statusText: Conflict
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "mXpGsEBHdSFW97zKXq75hm",
+        "status": "document.uploaded",
+        "info_message": "Warning - Document status document.uploaded doesn’t mean that the document already exists - processing happens asynchronously. Please follow the documentation section https://developers.pandadoc.com/reference/new-document"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "mXpGsEBHdSFW97zKXq75hm"
+          },
+          "status": {
+            "type": "string",
+            "example": "document.uploaded"
+          },
+          "info_message": {
+            "type": "string",
+            "example": "Warning - Document status document.uploaded doesn’t mean that the document already exists - processing happens asynchronously. Please follow the documentation section https://developers.pandadoc.com/reference/new-document"
+          }
+        }
+      }
+order: 4000

@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for managing recipients in documents, including adding, editing, reassigning, and deleting recipients.
+order: 10000

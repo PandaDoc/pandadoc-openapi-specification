@@ -1,0 +1,55 @@
+$kind: http-request
+description: |
+  Creates a document session for a recipient to view and sign a document.
+
+  > 📘 How to create an Embedded Sign session
+  > For more information on how to create an Embedded Sign session, see the [Embedded Signing](https://developers.pandadoc.com/docs/embedded-signing) documentation.
+url: "{{baseUrl}}/public/v1/documents/:id/session"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: ZPeAfcpzr9aiVs5vqUf6jg
+    description: Document ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "recipient": "test@mail.com",
+      "lifetime": 900
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "recipient": {
+          "type": "string",
+          "example": "josh@example.com",
+          "description": "Email address of the person who will receive access to the document."
+        },
+        "lifetime": {
+          "type": "number",
+          "example": 900,
+          "description": "The duration in seconds for which the document link will remain valid. The link will expire and become inaccessible after this time period.\nFor security, we recommend setting the lifetime to less than one year (e.g., `\"lifetime\": 31535999`).\nIf not specified, the default value is 1 hour (3600 seconds).\n"
+        }
+      },
+      "required": [
+        "recipient"
+      ]
+    }
+examples: ./.resources/Create Document Session for Embedded Sign.resources/examples
+order: 16000

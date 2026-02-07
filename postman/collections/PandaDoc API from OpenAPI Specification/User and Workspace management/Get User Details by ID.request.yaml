@@ -1,0 +1,30 @@
+$kind: http-request
+description: |
+  Get detailed information about a specific user by their ID, including contact information, license type, and workspace roles.
+
+  You must be an organization admin to get user details.
+url: "{{baseUrl}}/public/v1/users/:user_id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: user_id
+    value: ajnN7eGutJZsRKjQrNuPkh
+    description: A unique identifier of the user.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Get User Details by ID.resources/examples
+order: 6000

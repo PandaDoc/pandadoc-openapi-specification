@@ -1,0 +1,58 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/linked-objects?entity_id=12345&entity_type=deal&provider=hubspot&order_by=-date_created&owner_ids=owner2"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  queryParams:
+    - key: entity_id
+      value: "12345"
+      description: You can get entity id from your integration, for example, from a url of a HubSpot deal.
+    - key: entity_type
+      value: deal
+      description: |
+        See the available entity types:
+        https://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms
+    - key: provider
+      value: hubspot
+      description: |
+        See the available providers:
+        https://developers.pandadoc.com/reference/link-service#examples-of-the-most-popular-crms
+    - key: order_by
+      value: -date_created
+    - key: owner_ids
+      value: owner2
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "type": "request_error",
+        "detail": "Not found"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "request_error"
+          },
+          "detail": {
+            "type": "string",
+            "example": "Not found"
+          }
+        }
+      }
+order: 4000

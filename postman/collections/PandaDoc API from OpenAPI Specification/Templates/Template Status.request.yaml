@@ -1,0 +1,36 @@
+$kind: http-request
+description: |
+  ## Available Template Statuses
+
+  The following is a complete list of all possible template statuses returned:
+
+  | Template Status      | Status Description                                                                                                                      |
+  | :------------------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
+  | `template.UPLOADED`  | The template upload process has been initiated and is currently in progress. It will soon transition to the `template.PROCESSED` state. |
+  | `template.PROCESSED` | The template has been successfully uploaded and created. At this stage, all aspects of the template are editable.                       |
+  | `template.ERROR`     | The template upload process has failed. Please refer to the error details in the response for more information.                         |
+url: "{{baseUrl}}/public/v1/templates/:id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: vibuun3DXG8QDDLfXm27Ne
+    description: Template ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Template Status.resources/examples
+order: 6000

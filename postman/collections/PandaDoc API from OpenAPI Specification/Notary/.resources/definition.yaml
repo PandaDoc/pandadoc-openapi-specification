@@ -1,0 +1,3 @@
+$kind: collection
+description: Operations for creating and managing notarization requests.
+order: 23000

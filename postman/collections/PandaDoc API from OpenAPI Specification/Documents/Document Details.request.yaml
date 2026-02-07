@@ -1,0 +1,42 @@
+$kind: http-request
+description: |
+  Return detailed data about a document. Use Document Status for getting just a basic info and status.
+
+  Get details about a document by its `id`. Details include:
+
+  - Basic document information (name, document state, owner, sender, grand total, etc.)
+  - Recipients (completion status, signing order, etc.)
+  - Fields with values (incl. Collect Files field)
+  - Tokens (variables) with values
+  - Pricing information (pricing tables, products, quotes, etc.)
+  - Content block names for table, image, and text blocks (tables, images, texts)
+  - Metadata
+  - Tags
+  - Linked objects
+  - [Approval flow](https://support.pandadoc.com/en/articles/9714799-approval-workflow) (if present)
+  - Timestamps associated with a document. Note that `date_modified` means any changes associated with the recipients and document status, while `content_date_modified` reflects any changes in the document content.
+url: "{{baseUrl}}/public/v1/documents/:id/details"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Document ID
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Document Details.resources/examples
+order: 13000

@@ -1,0 +1,28 @@
+$kind: http-request
+description: |
+  Retrieves the settings for a specified template. Only the language field is currently supported.
+url: "{{baseUrl}}/public/v2/templates/:template_id/settings"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: template_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Unique identifier of the template to retrieve settings for.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/Get template settings.resources/examples
+order: 1000

@@ -1,0 +1,64 @@
+$kind: http-example
+name: Export DOCX task was created.
+request:
+  url: "{{baseUrl}}/public/beta/documents/:document_id/docx-export-tasks"
+  method: POST
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: document_id
+      value: BhVzRcxH9Z2LgfPPGXFUBa
+      description: Specify document id.
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "nPh2PDhFdDqAES9k64h9qX",
+        "document_id": "BhVzRcxH9Z2LgfPPGXFUBa",
+        "status": "done"
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "nPh2PDhFdDqAES9k64h9qX",
+            "description": "Export task id."
+          },
+          "document_id": {
+            "type": "string",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa",
+            "description": "Document id."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "created",
+              "processing",
+              "done",
+              "error"
+            ],
+            "example": "created",
+            "description": "| **Status**    | **Description**                                                                             |\n|---------------|---------------------------------------------------------------------------------------------|\n| **created**   | The export task has been created, but the process has not started.                          |\n| **processing**| The export task is in progress.                                                             |\n| **done**      | The export task is completed, and the response contains URLs for downloading the documents. |\n| **error**     | An error occurred during the execution of the export task.                                  |\n"
+          }
+        },
+        "required": [
+          "id",
+          "document_id",
+          "status"
+        ]
+      }
+order: 1000

@@ -1,0 +1,15 @@
+$kind: http-request
+description: This method returns a list of contacts associated with a workspace.
+url: "{{baseUrl}}/public/v1/contacts?value="
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: value
+    value: ""
+    description: Optional search parameter. Filter results by exact match.
+body:
+  type: text
+  content: ""
+examples: ./.resources/List contacts.resources/examples
+order: 1000

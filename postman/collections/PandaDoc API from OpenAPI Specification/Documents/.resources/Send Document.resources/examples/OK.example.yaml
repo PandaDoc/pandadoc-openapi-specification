@@ -1,0 +1,221 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/public/v1/documents/:id/send"
+  method: POST
+  headers:
+    - key: Content-Type
+      value: application/json
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: <API Key>
+      description: "Added as a part of security scheme: apikey"
+  pathVariables:
+    - key: id
+      value: ZPeAfcpzr9aiVs5vqUf6jg
+      description: Document ID
+  body:
+    type: json
+    content: |-
+      {
+        "message": "Hello! This document was sent from the PandaDoc API",
+        "subject": "Please check this test API document from PandaDoc",
+        "silent": true,
+        "sender": {
+          "membership_id": "QMDSzwabfFzTgjW6KijHyu",
+          "email": "john.doe@example.com"
+        },
+        "forwarding_settings": {
+          "forwarding_allowed": true,
+          "forwarding_with_reassigning_allowed": true
+        },
+        "reply_to": "john.doe@example.com",
+        "selected_approvers": {
+          "steps": [
+            {
+              "id": "LzWmancTxrgfTMpsJP9Eqd",
+              "group": {
+                "id": "op9MA75HygJHiV4aeVHXCH",
+                "type": "selectable",
+                "assignees": [
+                  {
+                    "user": "tpBLrk3vJoLggypMSRt92i",
+                    "is_selected": true
+                  },
+                  {
+                    "user": "tpBLrk3vJoLggypMSRt92i",
+                    "is_selected": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "LzWmancTxrgfTMpsJP9Eqd",
+              "group": {
+                "id": "op9MA75HygJHiV4aeVHXCH",
+                "type": "selectable",
+                "assignees": [
+                  {
+                    "user": "tpBLrk3vJoLggypMSRt92i",
+                    "is_selected": true
+                  },
+                  {
+                    "user": "tpBLrk3vJoLggypMSRt92i",
+                    "is_selected": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "msFYActMfJHqNTKH8YSvF1",
+        "name": "API Sample Document from PandaDoc Template",
+        "status": "document.sent",
+        "date_created": "2018-02-06T08:42:13.836022Z",
+        "date_modified": "2018-02-06T08:42:13.836022Z",
+        "date_completed": "2021-10-23T21:07:04.147345Z",
+        "expiration_date": "2018-02-06T08:42:13.836022Z",
+        "version": "2",
+        "uuid": "msFYActMfJHqNTKH8YSvF1",
+        "recipients": [
+          {
+            "id": "7kqXgjFejB2toXxjcC5jfZ",
+            "first_name": "Jhon",
+            "last_name": "Dow",
+            "recipient_type": "CC",
+            "email": "test@test.com",
+            "phone": "+14842634627",
+            "delivery_methods": {
+              "email": true,
+              "sms": true
+            },
+            "signing_order": 1,
+            "shared_link": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364",
+            "type": "recipient"
+          },
+          {
+            "id": "7kqXgjFejB2toXxjcC5jfZ",
+            "first_name": "Jhon",
+            "last_name": "Dow",
+            "recipient_type": "CC",
+            "email": "test@test.com",
+            "phone": "+14842634627",
+            "delivery_methods": {
+              "email": false,
+              "sms": false
+            },
+            "signing_order": 1,
+            "shared_link": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364",
+            "type": "recipient"
+          }
+        ]
+      }
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "msFYActMfJHqNTKH8YSvF1"
+          },
+          "name": {
+            "type": "string",
+            "example": "API Sample Document from PandaDoc Template"
+          },
+          "status": {
+            "type": "string",
+            "example": "document.sent"
+          },
+          "date_created": {
+            "type": "string",
+            "example": "2018-02-06T08:42:13.836022Z"
+          },
+          "date_modified": {
+            "type": "string",
+            "example": "2018-02-06T08:42:13.836022Z"
+          },
+          "date_completed": {
+            "type": "string",
+            "example": "2021-10-23T21:07:04.147345Z",
+            "description": "Document completion date."
+          },
+          "expiration_date": {
+            "type": "string",
+            "example": "2018-02-06T08:42:13.836022Z"
+          },
+          "version": {
+            "type": "string",
+            "example": "2"
+          },
+          "uuid": {
+            "type": "string",
+            "example": "msFYActMfJHqNTKH8YSvF1"
+          },
+          "recipients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "7kqXgjFejB2toXxjcC5jfZ"
+                },
+                "first_name": {
+                  "type": "string",
+                  "example": "Jhon"
+                },
+                "last_name": {
+                  "type": "string",
+                  "example": "Dow"
+                },
+                "recipient_type": {
+                  "type": "string",
+                  "example": "CC"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "test@test.com"
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "+14842634627"
+                },
+                "delivery_methods": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "boolean"
+                    },
+                    "sms": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "signing_order": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "shared_link": {
+                  "type": "string",
+                  "example": "https://app.pandadoc.com/document/b7f11ea3c09d1c11208cc122457d4f3a2829d364"
+                },
+                "type": {
+                  "type": "string",
+                  "example": "recipient"
+                }
+              }
+            }
+          }
+        }
+      }
+order: 1000

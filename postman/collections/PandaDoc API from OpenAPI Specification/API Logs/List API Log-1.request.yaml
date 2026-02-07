@@ -1,0 +1,95 @@
+$kind: http-request
+name: List API Log
+description: Get the list of all logs within the selected workspace.\ Optionally filter by date, page, and `#` of items per page.
+url: "{{baseUrl}}/public/v2/logs?since=-7d&to=now&count=10&page=1&statuses=400&statuses=500&methods=GET&methods=POST&search=documents/hryJY9mqYZHjQCYQuSjRQg/send&environment_type=PRODUCTION"
+method: GET
+headers:
+  Accept: application/json
+queryParams:
+  - key: since
+    value: -7d
+    description: Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as "-90d" (for past 90 days).
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "default": "-90d"
+          }
+        }
+      }
+  - key: to
+    value: now
+    description: Determines a point in time from which logs should be fetched. Either a specific ISO 8601 datetime or a relative identifier such as "-10d" (for past 10 days) or a special "now" value.
+    $type: string
+  - key: count
+    value: "10"
+    description: The amount of items on each page. The total number of accessible items (`count × page`) must not exceed 10,000.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 1000
+          }
+        }
+      }
+  - key: page
+    value: "1"
+    description: Returns page of the results by number. The total number of accessible items (`count × page`) must not exceed 10,000.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "minimum": 1
+          }
+        }
+      }
+  - key: statuses
+    value: "400"
+    description: Returns only the predefined status codes.
+    $type: array
+  - key: statuses
+    value: "500"
+    description: Returns only the predefined status codes.
+  - key: methods
+    value: GET
+    description: Returns only the predefined HTTP methods. Allows GET, POST, PUT, PATCH, and DELETE.
+    $type: array
+  - key: methods
+    value: POST
+    description: Returns only the predefined HTTP methods. Allows GET, POST, PUT, PATCH, and DELETE.
+  - key: search
+    value: documents/hryJY9mqYZHjQCYQuSjRQg/send
+    description: Returns the results containing a string.
+    $type: string
+  - key: environment_type
+    value: PRODUCTION
+    description: Returns logs for production/sandbox.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "enum": [
+              "PRODUCTION",
+              "SANDBOX"
+            ]
+          }
+        }
+      }
+body:
+  type: text
+  content: ""
+examples: ./.resources/List API Log-1.resources/examples
+order: 3000

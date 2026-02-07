@@ -1,0 +1,1305 @@
+$kind: http-request
+description: |
+  ## Create from a template
+  > See the [Create document from template](https://developers.pandadoc.com/docs/create-document-from-template) tutorial for details on how to use this endpoint, as well as a sample template.
+
+  ## Create from a URL
+  > See the [Create from public PDF](https://developers.pandadoc.com/docs/create-and-send-a-document-from-a-publicly-available-pdf) guide for info about roles and fields, as well as PDF examples.
+url: "{{baseUrl}}/public/v1/documents?editor_ver=ev2&use_form_field_properties=true"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+queryParams:
+  - key: editor_ver
+    value: ev2
+    description: Set this parameter as `ev1` if you want to create a document from PDF with Classic Editor when both editors are enabled for the workspace.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "deprecated": true
+          }
+        }
+      }
+  - key: use_form_field_properties
+    value: "true"
+    description: Set this parameter as `yes` or `1` or `true` (only when upload pdf with form fields) if you want to  respect form fields properties, like `required`.
+    $type: string
+body:
+  type: json
+  content: |-
+    {
+      "name": "Simple API Sample Document from PandaDoc Template",
+      "template_uuid": "onoznwTq4Y3EELMPyvucnc",
+      "recipients": [
+        {
+          "email": "josh@example.com",
+          "first_name": "Josh",
+          "last_name": "Ron",
+          "role": "user",
+          "phone": "555-5555-5555",
+          "signing_order": 1,
+          "company": "PandaDoc",
+          "default": false,
+          "delivery_methods": {
+            "sms": true,
+            "email": false
+          },
+          "redirect": {
+            "is_enabled": true,
+            "url": "https://super.redirect.url/1"
+          },
+          "verification_settings": {
+            "verification_place": "before_open",
+            "passcode_verification": null,
+            "phone_verification": null,
+            "kba_verification": null,
+            "id_verification": {
+              "enabled": true
+            }
+          }
+        }
+      ],
+      "tokens": [
+        {
+          "name": "Favorite.Pet",
+          "value": "Panda"
+        }
+      ],
+      "fields": {
+        "Favorite.Color": {
+          "value": "PandaDoc green"
+        },
+        "Delivery": {
+          "value": "Same Day Delivery"
+        },
+        "Like": {
+          "value": true
+        },
+        "Date": {
+          "value": "2019-12-31T00:00:00.000Z"
+        }
+      },
+      "metadata": {
+        "my_favorite_pet": "Panda"
+      },
+      "tags": [
+        "created_via_api",
+        "test_document"
+      ],
+      "images": [
+        {
+          "name": "Image 1",
+          "urls": [
+            "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
+          ]
+        }
+      ],
+      "pricing_tables": [
+        {
+          "name": "Pricing Table 1",
+          "data_merge": true,
+          "options": {
+            "Tax": {
+              "type": "percent",
+              "name": "Tax",
+              "value": 10
+            },
+            "Fee": {
+              "type": "percent",
+              "name": "Fee",
+              "value": 5
+            }
+          },
+          "sections": [
+            {
+              "title": "Sample Section",
+              "default": true,
+              "rows": [
+                {
+                  "options": {
+                    "optional": true,
+                    "optional_selected": true,
+                    "qty_editable": true
+                  },
+                  "data": {
+                    "Name": "Toy Panda",
+                    "Description": "Fluffy!",
+                    "Price": 10,
+                    "QTY": 3,
+                    "Tax": {
+                      "value": 20,
+                      "type": "percent"
+                    },
+                    "Fee": {
+                      "value": 5,
+                      "type": "percent"
+                    }
+                  },
+                  "custom_fields": {
+                    "Fluffiness": "5 / 5"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  $type: |-
+    {
+      "oneOf": [
+        {
+          "allOf": [
+            {
+              "description": "Use a PandaDoc template to create a document.",
+              "title": "From PandaDoc Template",
+              "type": "object",
+              "properties": {
+                "template_uuid": {
+                  "type": "string",
+                  "example": "hryJY9mqYZHjQCYQuSjRQg",
+                  "description": "ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates."
+                }
+              },
+              "required": [
+                "template_uuid"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "template_uuid": {
+                  "type": "string",
+                  "example": "hryJY9mqYZHjQCYQuSjRQg",
+                  "description": "The ID of a template you want to use. You can copy it from an in app template url such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates."
+                },
+                "fields": {
+                  "type": "object",
+                  "example": {
+                    "Like": {
+                      "value": true
+                    },
+                    "Delivery": {
+                      "value": "Same Day Delivery"
+                    },
+                    "Date": {
+                      "value": "2019-12-31T00:00:00.000Z"
+                    }
+                  },
+                  "description": "Set specific values to the fields. This object maps merge field names to their corresponding values.\n\nEach key represents a merge field name, and each value is an object containing the data to populate that field with. The structure allows you to pre-populate various field types including text inputs, checkboxes, dropdowns, and date fields.\n\n**Key Points:**\n- Keys must match the exact merge field names from your template or file.\n- Values must be wrapped in an object with a `value` property.\n- Supported value types: string, number, boolean.\n- Date fields should use RFC 3339 format (e.g., '2019-12-31T00:00:00.000Z').\n- Signature fields cannot be pre-filled.\n\n**Example Usage:**\n- Text field: `\"CustomerName\": {\"value\": \"John Doe\"}`\n- Checkbox: `\"AgreeToTerms\": {\"value\": true}`\n- Date field: `\"DeliveryDate\": {\"value\": \"2019-12-31T00:00:00.000Z\"}`\n"
+                },
+                "images": {
+                  "type": "array",
+                  "description": "You can pass a list of images to image blocks (one image in one block) for replacement.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "urls": {
+                        "type": "array",
+                        "example": [
+                          "https://s3.amazonaws.com/pd-static-content/public-docs/pandadoc-panda-bear.png"
+                        ],
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Image 1"
+                      }
+                    },
+                    "required": [
+                      "urls",
+                      "name"
+                    ]
+                  }
+                },
+                "pricing_tables": {
+                  "type": "array",
+                  "description": "Information to construct or populate a pricing table can be passed when creating a document. All product information must be passed when creating a new document. Products stored in PandaDoc cannot be used to populate table rows at this time. Keep in mind that this is an array, so multiple table objects can be passed to a document. Make sure that \"Automatically add products to this table\" is enabled in the PandaDoc template pricing tables you wish to populate via API.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "Pricing Table 1"
+                      },
+                      "data_merge": {
+                        "type": "boolean",
+                        "description": "When set to true all field names in data rows must be passed as external names defined in the template."
+                      },
+                      "options": {
+                        "type": "object",
+                        "example": {
+                          "currency": "USD",
+                          "Discount": {
+                            "type": "absolute",
+                            "name": "Global Discount",
+                            "value": 10
+                          },
+                          "Tax": {
+                            "type": "percent",
+                            "name": "Tax First",
+                            "value": 15
+                          }
+                        }
+                      },
+                      "sections": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "title": {
+                              "type": "string",
+                              "example": "Sample Section"
+                            },
+                            "default": {
+                              "type": "boolean"
+                            },
+                            "multichoice_enabled": {
+                              "type": "boolean"
+                            },
+                            "rows": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "options": {
+                                    "type": "object",
+                                    "title": "Pricing Table Request Row Options",
+                                    "properties": {
+                                      "qty_editable": {
+                                        "type": "boolean"
+                                      },
+                                      "optional_selected": {
+                                        "type": "boolean"
+                                      },
+                                      "optional": {
+                                        "type": "boolean"
+                                      }
+                                    }
+                                  },
+                                  "data": {
+                                    "type": "object",
+                                    "example": {
+                                      "Name": "Toy Panda",
+                                      "Description": "Fluffy",
+                                      "Price": 10,
+                                      "Cost": 8.5,
+                                      "QTY": 3,
+                                      "SKU": "toy_panda",
+                                      "Discount": {
+                                        "value": 10,
+                                        "type": "percent"
+                                      },
+                                      "Tax": {
+                                        "value": 10,
+                                        "type": "percent"
+                                      }
+                                    },
+                                    "title": "Pricing Table Request Row Data"
+                                  },
+                                  "custom_fields": {
+                                    "type": "object",
+                                    "example": {
+                                      "Fluffiness": "5/5"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "required": [
+                            "title"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  }
+                },
+                "tables": {
+                  "type": "array",
+                  "description": "Information to construct or populate a table can be passed when creating a document. Keep in mind that this is an array, so multiple table objects can be passed to a document.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Name of the table."
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "sections": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "header": {
+                                  "type": "array",
+                                  "items": {
+                                    "description": "Defines a single cell in the table, which can appear in either the header or the rows.",
+                                    "type": "object",
+                                    "properties": {
+                                      "text": {
+                                        "type": "string",
+                                        "description": "Cell text."
+                                      },
+                                      "col_span": {
+                                        "type": "integer",
+                                        "description": "Represents how many columns the cell occupies."
+                                      },
+                                      "row_span": {
+                                        "type": "integer",
+                                        "description": "Represents the number of rows the cell occupies."
+                                      }
+                                    },
+                                    "required": [
+                                      "text"
+                                    ]
+                                  }
+                                },
+                                "rows": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "array",
+                                    "items": {
+                                      "description": "Defines a single cell in the table, which can appear in either the header or the rows.",
+                                      "type": "object",
+                                      "properties": {
+                                        "text": {
+                                          "type": "string",
+                                          "description": "Cell text."
+                                        },
+                                        "col_span": {
+                                          "type": "integer",
+                                          "description": "Represents how many columns the cell occupies."
+                                        },
+                                        "row_span": {
+                                          "type": "integer",
+                                          "description": "Represents the number of rows the cell occupies."
+                                        }
+                                      },
+                                      "required": [
+                                        "text"
+                                      ]
+                                    }
+                                  }
+                                }
+                              },
+                              "required": [
+                                "header",
+                                "rows"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "sections"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "data"
+                    ]
+                  }
+                },
+                "texts": {
+                  "type": "array",
+                  "description": "You can pass a list of rich text values to pre-fill text blocks in a template. This is useful for inserting dynamic content like introductions or terms and conditions. Markdown is supported.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "Legal Terms Section",
+                        "description": "The name of the Text Block to update. This name is defined in the template."
+                      },
+                      "data": {
+                        "type": "string",
+                        "example": "## Terms of Service\nThis document outlines the terms and conditions.\n- **Acceptance:** By using our service, you agree to these terms.\n- **Changes:** We may update these terms at any time.\n",
+                        "description": "The text content to be inserted into the block. Supports markdown."
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "data"
+                    ]
+                  }
+                },
+                "detect_title_variables": {
+                  "type": "boolean",
+                  "example": true,
+                  "description": "Set this parameter as true if you want to detect title variables in the document."
+                },
+                "content_placeholders": {
+                  "type": "array",
+                  "description": "You may replace Content Library Item Placeholders with a few content library items each and pre-fill fields/variables values, pricing table items, and assign recipients to roles from there.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "content_library_items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "example": "hryJY9mqYZHjQCYQuSjRQg",
+                              "description": "Content library item id"
+                            },
+                            "fields": {
+                              "type": "object"
+                            },
+                            "pricing_tables": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "example": "Pricing Table 1"
+                                  },
+                                  "data_merge": {
+                                    "type": "boolean",
+                                    "description": "When set to true all field names in data rows must be passed as external names defined in the template."
+                                  },
+                                  "options": {
+                                    "type": "object",
+                                    "example": {
+                                      "currency": "USD",
+                                      "Discount": {
+                                        "type": "absolute",
+                                        "name": "Global Discount",
+                                        "value": 10
+                                      },
+                                      "Tax": {
+                                        "type": "percent",
+                                        "name": "Tax First",
+                                        "value": 15
+                                      }
+                                    }
+                                  },
+                                  "sections": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "title": {
+                                          "type": "string",
+                                          "example": "Sample Section"
+                                        },
+                                        "default": {
+                                          "type": "boolean"
+                                        },
+                                        "multichoice_enabled": {
+                                          "type": "boolean"
+                                        },
+                                        "rows": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "options": {
+                                                "type": "object",
+                                                "title": "Pricing Table Request Row Options",
+                                                "properties": {
+                                                  "qty_editable": {
+                                                    "type": "boolean"
+                                                  },
+                                                  "optional_selected": {
+                                                    "type": "boolean"
+                                                  },
+                                                  "optional": {
+                                                    "type": "boolean"
+                                                  }
+                                                }
+                                              },
+                                              "data": {
+                                                "type": "object",
+                                                "example": {
+                                                  "Name": "Toy Panda",
+                                                  "Description": "Fluffy",
+                                                  "Price": 10,
+                                                  "Cost": 8.5,
+                                                  "QTY": 3,
+                                                  "SKU": "toy_panda",
+                                                  "Discount": {
+                                                    "value": 10,
+                                                    "type": "percent"
+                                                  },
+                                                  "Tax": {
+                                                    "value": 10,
+                                                    "type": "percent"
+                                                  }
+                                                },
+                                                "title": "Pricing Table Request Row Data"
+                                              },
+                                              "custom_fields": {
+                                                "type": "object",
+                                                "example": {
+                                                  "Fluffiness": "5/5"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "title"
+                                      ]
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "name"
+                                ]
+                              }
+                            },
+                            "recipients": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "email": {
+                                    "type": "string",
+                                    "example": "josh@example.com"
+                                  },
+                                  "phone": {
+                                    "type": "string",
+                                    "example": "+14842634627"
+                                  },
+                                  "delivery_methods": {
+                                    "type": "object",
+                                    "properties": {
+                                      "email": {
+                                        "type": "boolean"
+                                      },
+                                      "sms": {
+                                        "type": "boolean"
+                                      }
+                                    }
+                                  },
+                                  "first_name": {
+                                    "type": "string",
+                                    "example": "Josh"
+                                  },
+                                  "last_name": {
+                                    "type": "string",
+                                    "example": "Ron"
+                                  },
+                                  "role": {
+                                    "type": "string",
+                                    "example": "user"
+                                  },
+                                  "signing_order": {
+                                    "type": "integer",
+                                    "example": 1
+                                  },
+                                  "redirect": {
+                                    "type": "object",
+                                    "properties": {
+                                      "is_enabled": {
+                                        "type": "boolean"
+                                      },
+                                      "url": {
+                                        "type": "string",
+                                        "example": "https://example.com",
+                                        "description": "A URL to redirect to after the document is signed."
+                                      }
+                                    },
+                                    "required": [
+                                      "is_enabled",
+                                      "url"
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "required": [
+                            "id"
+                          ]
+                        }
+                      },
+                      "block_id": {
+                        "type": "string",
+                        "example": "Content Placeholder 1",
+                        "description": "Content placeholder block id"
+                      }
+                    },
+                    "required": [
+                      "block_id"
+                    ]
+                  }
+                },
+                "name": {
+                  "type": "string",
+                  "example": "API Sample Document from PandaDoc Template",
+                  "description": "Name the document you are creating."
+                },
+                "folder_uuid": {
+                  "type": "string",
+                  "example": "QMDSzwabfFzTgjW4kUijqQ",
+                  "description": "ID of the folder where the created document should be stored."
+                },
+                "owner": {
+                  "type": "object",
+                  "example": {
+                    "membership_id": "QMDSzwabfFzTgjW6KijHyu"
+                  },
+                  "description": "The owner of the document. Pass either `email` or `membership_id` of the user in the workspace.",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "john.doe@example.com"
+                    },
+                    "membership_id": {
+                      "type": "string",
+                      "example": "QMDSzwabfFzTgjW6KijHyu"
+                    }
+                  }
+                },
+                "recipients": {
+                  "type": "array",
+                  "description": "The list of recipients to whom the document will be sent. Either `email` or `phone` is required. Specifying the `role` assigns all matching fields to the recipient or group. If `first_name` and `last_name` are not specified, the system looks them up in the workspace contacts list using the `email` or `phone number`. If `first_name` and `last_name` are provided, they override the existing contact's data.",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "Recipient",
+                        "allOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "role": {
+                                "type": "string",
+                                "example": "user",
+                                "description": "A recipient's role in the document from the template. A recipient will be added in CC if a role parameter is not provided."
+                              },
+                              "signing_order": {
+                                "type": "integer",
+                                "example": 1,
+                                "description": "Set a signing order for a recipient. Learn more: https://developers.pandadoc.com/docs/set-signing-order\n"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "email": {
+                                "type": "string",
+                                "example": "josh@example.com",
+                                "description": "A recipient's email address."
+                              },
+                              "phone": {
+                                "type": "string",
+                                "example": "+14842634627",
+                                "description": "A recipient's phone number."
+                              },
+                              "first_name": {
+                                "type": "string",
+                                "example": "Josh",
+                                "description": "A recipient's first name. We automatically take the first name from contact data if this field is missed."
+                              },
+                              "last_name": {
+                                "type": "string",
+                                "example": "Ron",
+                                "description": "A recipient's last name. We automatically take the last name from contact data if this field is missed."
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "delivery_methods": {
+                                "type": "object",
+                                "properties": {
+                                  "email": {
+                                    "type": "boolean"
+                                  },
+                                  "sms": {
+                                    "type": "boolean"
+                                  }
+                                }
+                              },
+                              "redirect": {
+                                "type": "object",
+                                "properties": {
+                                  "is_enabled": {
+                                    "type": "boolean"
+                                  },
+                                  "url": {
+                                    "type": "string",
+                                    "example": "https://example.com",
+                                    "description": "A URL to redirect to after the document is signed."
+                                  }
+                                },
+                                "required": [
+                                  "is_enabled",
+                                  "url"
+                                ]
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "recipient"
+                                ],
+                                "example": "recipient"
+                              },
+                              "verification_settings": {
+                                "type": "object",
+                                "description": "To set up recipient verification, fill in verification_place and specify the type: passcode_verification, phone_verification, kba_verification or id_verification.\n- For passcode_verification, provide the passcode.\n- For phone_verification, provide the phone_number.\n- For kba_verification and id_verification, set the enabled parameter to true.\n",
+                                "properties": {
+                                  "verification_place": {
+                                    "type": "string",
+                                    "enum": [
+                                      "before_open",
+                                      "before_sign"
+                                    ],
+                                    "description": "Specifies when a recipient must complete the verification process:\n- `before_open` (before opening the document),\n- `before_sign` (before signing the document).\n"
+                                  },
+                                  "passcode_verification": {
+                                    "type": "object",
+                                    "description": "Sets the passcode.",
+                                    "properties": {
+                                      "passcode": {
+                                        "type": "string",
+                                        "pattern": "^(?=(?:.*[a-zA-Z]){1,})(?=(?:.*[0-9]){1,})^[\\S]{6,100}$",
+                                        "example": "SimpleCode1",
+                                        "description": "Document passcode."
+                                      }
+                                    },
+                                    "required": [
+                                      "passcode"
+                                    ]
+                                  },
+                                  "phone_verification": {
+                                    "type": "object",
+                                    "description": "Sets the phone number to send a passcode to.",
+                                    "properties": {
+                                      "phone_number": {
+                                        "type": "string",
+                                        "pattern": "^\\+[1-9]\\d{0,4}\\d{2,14}$",
+                                        "example": "+1234567890",
+                                        "description": "A phone number to send a passcode to."
+                                      }
+                                    },
+                                    "required": [
+                                      "phone_number"
+                                    ]
+                                  },
+                                  "kba_verification": {
+                                    "type": "object",
+                                    "description": "Sets the KBA verification.",
+                                    "properties": {
+                                      "time_limit_sec": {
+                                        "type": "integer",
+                                        "example": 120
+                                      },
+                                      "score_threshold": {
+                                        "type": "integer",
+                                        "example": 80
+                                      },
+                                      "max_attempts_count": {
+                                        "type": "integer",
+                                        "example": 2
+                                      }
+                                    }
+                                  },
+                                  "id_verification": {
+                                    "type": "object",
+                                    "description": "Sets the ID verification.",
+                                    "properties": {
+                                      "enabled": {
+                                        "type": "boolean",
+                                        "example": true
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "title": "RecipientGroup",
+                        "allOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "role": {
+                                "type": "string",
+                                "example": "user",
+                                "description": "A recipient's role in the document from the template. A recipient will be added in CC if a role parameter is not provided."
+                              },
+                              "signing_order": {
+                                "type": "integer",
+                                "example": 1,
+                                "description": "Set a signing order for a recipient. Learn more: https://developers.pandadoc.com/docs/set-signing-order\n"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "maxLength": 120
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "recipient_group"
+                                ],
+                                "example": "recipient_group"
+                              },
+                              "members": {
+                                "type": "array",
+                                "minLength": 1,
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "email": {
+                                      "type": "string",
+                                      "example": "josh@example.com",
+                                      "description": "A recipient's email address."
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+14842634627",
+                                      "description": "A recipient's phone number."
+                                    },
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "Josh",
+                                      "description": "A recipient's first name. We automatically take the first name from contact data if this field is missed."
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Ron",
+                                      "description": "A recipient's last name. We automatically take the last name from contact data if this field is missed."
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "type"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "tokens": {
+                  "type": "array",
+                  "description": "Also known as variables. Pass values for the variables in the template to render them into the created document or make them available for insertion later.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "Client.CompanyName"
+                      },
+                      "value": {
+                        "type": "string",
+                        "example": "PandaDoc"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "value"
+                    ]
+                  }
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "lead_id": "1234567",
+                    "lead_source": "PandaDoc"
+                  },
+                  "description": "You can pass any data in a key-value format to associate it with a document. Searching by metadata is available in the List Documents endpoint and is also included in the Document Details response."
+                },
+                "tags": {
+                  "type": "array",
+                  "example": [
+                    "created_via_api",
+                    "test_document",
+                    "created_from_source"
+                  ],
+                  "description": "Mark your document with one or more tags. Tags are displayed in the UI, and you can filter by tags in the List Documents endpoint.",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "template_uuid",
+                "recipients"
+              ]
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "description": "Use a URL to create a document.",
+              "title": "From File By Url",
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "example": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                  "description": "Secure (HTTPS) and publicly accessible URL to the PDF document."
+                }
+              },
+              "required": [
+                "url"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "parse_form_fields": {
+                  "type": "boolean",
+                  "description": "Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags."
+                },
+                "fields": {
+                  "type": "object",
+                  "example": {
+                    "Like": {
+                      "value": true
+                    },
+                    "Delivery": {
+                      "value": "Same Day Delivery"
+                    },
+                    "Date": {
+                      "value": "2019-12-31T00:00:00.000Z"
+                    }
+                  },
+                  "description": "Set specific values to the fields. This object maps merge field names to their corresponding values.\n\nEach key represents a merge field name, and each value is an object containing the data to populate that field with. The structure allows you to pre-populate various field types including text inputs, checkboxes, dropdowns, and date fields.\n\n**Key Points:**\n- Keys must match the exact merge field names from your template or file.\n- Values must be wrapped in an object with a `value` property.\n- Supported value types: string, number, boolean.\n- Date fields should use RFC 3339 format (e.g., '2019-12-31T00:00:00.000Z').\n- Signature fields cannot be pre-filled.\n\n**Example Usage:**\n- Text field: `\"CustomerName\": {\"value\": \"John Doe\"}`\n- Checkbox: `\"AgreeToTerms\": {\"value\": true}`\n- Date field: `\"DeliveryDate\": {\"value\": \"2019-12-31T00:00:00.000Z\"}`\n"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "API Sample Document from PandaDoc Template",
+                  "description": "Name the document you are creating."
+                },
+                "folder_uuid": {
+                  "type": "string",
+                  "example": "QMDSzwabfFzTgjW4kUijqQ",
+                  "description": "ID of the folder where the created document should be stored."
+                },
+                "owner": {
+                  "type": "object",
+                  "example": {
+                    "membership_id": "QMDSzwabfFzTgjW6KijHyu"
+                  },
+                  "description": "The owner of the document. Pass either `email` or `membership_id` of the user in the workspace.",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "example": "john.doe@example.com"
+                    },
+                    "membership_id": {
+                      "type": "string",
+                      "example": "QMDSzwabfFzTgjW6KijHyu"
+                    }
+                  }
+                },
+                "recipients": {
+                  "type": "array",
+                  "description": "The list of recipients to whom the document will be sent. Either `email` or `phone` is required. Specifying the `role` assigns all matching fields to the recipient or group. If `first_name` and `last_name` are not specified, the system looks them up in the workspace contacts list using the `email` or `phone number`. If `first_name` and `last_name` are provided, they override the existing contact's data.",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "Recipient",
+                        "allOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "role": {
+                                "type": "string",
+                                "example": "user",
+                                "description": "A recipient's role in the document from the template. A recipient will be added in CC if a role parameter is not provided."
+                              },
+                              "signing_order": {
+                                "type": "integer",
+                                "example": 1,
+                                "description": "Set a signing order for a recipient. Learn more: https://developers.pandadoc.com/docs/set-signing-order\n"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "email": {
+                                "type": "string",
+                                "example": "josh@example.com",
+                                "description": "A recipient's email address."
+                              },
+                              "phone": {
+                                "type": "string",
+                                "example": "+14842634627",
+                                "description": "A recipient's phone number."
+                              },
+                              "first_name": {
+                                "type": "string",
+                                "example": "Josh",
+                                "description": "A recipient's first name. We automatically take the first name from contact data if this field is missed."
+                              },
+                              "last_name": {
+                                "type": "string",
+                                "example": "Ron",
+                                "description": "A recipient's last name. We automatically take the last name from contact data if this field is missed."
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "delivery_methods": {
+                                "type": "object",
+                                "properties": {
+                                  "email": {
+                                    "type": "boolean"
+                                  },
+                                  "sms": {
+                                    "type": "boolean"
+                                  }
+                                }
+                              },
+                              "redirect": {
+                                "type": "object",
+                                "properties": {
+                                  "is_enabled": {
+                                    "type": "boolean"
+                                  },
+                                  "url": {
+                                    "type": "string",
+                                    "example": "https://example.com",
+                                    "description": "A URL to redirect to after the document is signed."
+                                  }
+                                },
+                                "required": [
+                                  "is_enabled",
+                                  "url"
+                                ]
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "recipient"
+                                ],
+                                "example": "recipient"
+                              },
+                              "verification_settings": {
+                                "type": "object",
+                                "description": "To set up recipient verification, fill in verification_place and specify the type: passcode_verification, phone_verification, kba_verification or id_verification.\n- For passcode_verification, provide the passcode.\n- For phone_verification, provide the phone_number.\n- For kba_verification and id_verification, set the enabled parameter to true.\n",
+                                "properties": {
+                                  "verification_place": {
+                                    "type": "string",
+                                    "enum": [
+                                      "before_open",
+                                      "before_sign"
+                                    ],
+                                    "description": "Specifies when a recipient must complete the verification process:\n- `before_open` (before opening the document),\n- `before_sign` (before signing the document).\n"
+                                  },
+                                  "passcode_verification": {
+                                    "type": "object",
+                                    "description": "Sets the passcode.",
+                                    "properties": {
+                                      "passcode": {
+                                        "type": "string",
+                                        "pattern": "^(?=(?:.*[a-zA-Z]){1,})(?=(?:.*[0-9]){1,})^[\\S]{6,100}$",
+                                        "example": "SimpleCode1",
+                                        "description": "Document passcode."
+                                      }
+                                    },
+                                    "required": [
+                                      "passcode"
+                                    ]
+                                  },
+                                  "phone_verification": {
+                                    "type": "object",
+                                    "description": "Sets the phone number to send a passcode to.",
+                                    "properties": {
+                                      "phone_number": {
+                                        "type": "string",
+                                        "pattern": "^\\+[1-9]\\d{0,4}\\d{2,14}$",
+                                        "example": "+1234567890",
+                                        "description": "A phone number to send a passcode to."
+                                      }
+                                    },
+                                    "required": [
+                                      "phone_number"
+                                    ]
+                                  },
+                                  "kba_verification": {
+                                    "type": "object",
+                                    "description": "Sets the KBA verification.",
+                                    "properties": {
+                                      "time_limit_sec": {
+                                        "type": "integer",
+                                        "example": 120
+                                      },
+                                      "score_threshold": {
+                                        "type": "integer",
+                                        "example": 80
+                                      },
+                                      "max_attempts_count": {
+                                        "type": "integer",
+                                        "example": 2
+                                      }
+                                    }
+                                  },
+                                  "id_verification": {
+                                    "type": "object",
+                                    "description": "Sets the ID verification.",
+                                    "properties": {
+                                      "enabled": {
+                                        "type": "boolean",
+                                        "example": true
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "title": "RecipientGroup",
+                        "allOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "role": {
+                                "type": "string",
+                                "example": "user",
+                                "description": "A recipient's role in the document from the template. A recipient will be added in CC if a role parameter is not provided."
+                              },
+                              "signing_order": {
+                                "type": "integer",
+                                "example": 1,
+                                "description": "Set a signing order for a recipient. Learn more: https://developers.pandadoc.com/docs/set-signing-order\n"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "maxLength": 120
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "recipient_group"
+                                ],
+                                "example": "recipient_group"
+                              },
+                              "members": {
+                                "type": "array",
+                                "minLength": 1,
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "email": {
+                                      "type": "string",
+                                      "example": "josh@example.com",
+                                      "description": "A recipient's email address."
+                                    },
+                                    "phone": {
+                                      "type": "string",
+                                      "example": "+14842634627",
+                                      "description": "A recipient's phone number."
+                                    },
+                                    "first_name": {
+                                      "type": "string",
+                                      "example": "Josh",
+                                      "description": "A recipient's first name. We automatically take the first name from contact data if this field is missed."
+                                    },
+                                    "last_name": {
+                                      "type": "string",
+                                      "example": "Ron",
+                                      "description": "A recipient's last name. We automatically take the last name from contact data if this field is missed."
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "type"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "tokens": {
+                  "type": "array",
+                  "description": "Also known as variables. Pass values for the variables in the template to render them into the created document or make them available for insertion later.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "Client.CompanyName"
+                      },
+                      "value": {
+                        "type": "string",
+                        "example": "PandaDoc"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "value"
+                    ]
+                  }
+                },
+                "metadata": {
+                  "type": "object",
+                  "example": {
+                    "lead_id": "1234567",
+                    "lead_source": "PandaDoc"
+                  },
+                  "description": "You can pass any data in a key-value format to associate it with a document. Searching by metadata is available in the List Documents endpoint and is also included in the Document Details response."
+                },
+                "tags": {
+                  "type": "array",
+                  "example": [
+                    "created_via_api",
+                    "test_document",
+                    "created_from_source"
+                  ],
+                  "description": "Mark your document with one or more tags. Tags are displayed in the UI, and you can filter by tags in the List Documents endpoint.",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+examples: ./.resources/Create Document.resources/examples
+order: 2000

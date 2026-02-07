@@ -1,0 +1,61 @@
+$kind: http-request
+description: |
+  Generate a new API key for the workspace.
+  Check out [API Key Authentication article](https://developers.pandadoc.com/reference/api-key-authentication-process) for detailed API Keys description.
+
+  > 📘 
+  > - Only an **Org Admin** can generate an API keys.
+  > - To make another user a key's owner, pass `user_id` of this user. The user should has an **Admin** role in the workspace.
+  > - Generating a new key invalidates existing key with the same type. Using this request, you can deactivate the key you're using for the request.
+url: "{{baseUrl}}/public/v1/workspaces/:workspace_id/api-keys"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+pathVariables:
+  - key: workspace_id
+    value: BhVzRcxH9Z2LgfPPGXFUBa
+    description: Workspace id.
+    $type: |-
+      {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+body:
+  type: json
+  content: |-
+    {
+      "type": "production",
+      "user_id": "ajnN7eGutJZsRKjQrNuPkh"
+    }
+  $type: |-
+    {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "example": "2eWSKSvVqmuVCnuUK3iWwD"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "production",
+            "sandbox"
+          ],
+          "example": "sandbox",
+          "description": "A type of API key."
+        }
+      },
+      "required": [
+        "type"
+      ]
+    }
+examples: ./.resources/Create API Key.resources/examples
+order: 9000
