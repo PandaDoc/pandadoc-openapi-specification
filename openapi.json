@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.18.0"
+    "version": "7.18.1"
   },
   "servers": [
     {
@@ -15052,7 +15052,7 @@
                       "type": "string",
                       "description": "Subject line of the reminder email sent to the recipient.\n",
                       "example": "Reminder: Please sign the document \"Service Agreement\"",
-                      "maxLength": 300
+                      "maxLength": 512
                     },
                     "message": {
                       "type": "string",
@@ -15159,7 +15159,7 @@
                       "type": "string",
                       "description": "Subject line of the reminder email sent to the recipient.\n",
                       "example": "Reminder: Please sign the document \"Service Agreement\"",
-                      "maxLength": 300
+                      "maxLength": 512
                     },
                     "message": {
                       "type": "string",
