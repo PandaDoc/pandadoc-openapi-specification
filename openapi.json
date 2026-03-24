@@ -1019,6 +1019,80 @@
         }
       }
     },
+    "/public/v1/documents?upload-markdown": {
+      "post": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Create Document from Markdown File Upload",
+        "x-internal": true,
+        "description": "## Create from a Markdown upload\n\nUpload a Markdown (`.md`) file to create a new document. The file content will be converted into a PandaDoc document.\n\n**Note**: A file you upload is not stored in your PandaDoc account, so you have to upload it with every request.\n\n> **Alpha:** Markdown file upload is currently in alpha.\n> This functionality may change or be removed without notice.\n",
+        "operationId": "createDocumentFromMarkdownUpload",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The Markdown file to upload.\n\nAccepted content types: `text/markdown`, `text/x-markdown`.\n"
+                  },
+                  "data": {
+                    "$ref": "#/components/schemas/DocumentCreateByMarkdownRequest"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentCreateResponse"
+                },
+                "examples": {
+                  "Document from Markdown Upload": {
+                    "value": {
+                      "id": "D3okRfgHRX7NEhavcACReB",
+                      "name": "Document from Markdown",
+                      "status": "document.uploaded",
+                      "date_created": "2024-07-04T19:27:14.927317Z",
+                      "date_modified": "2024-07-04T19:27:14.927317Z",
+                      "expiration_date": null,
+                      "version": null,
+                      "uuid": "D3okRfgHRX7NEhavcACReB",
+                      "links": [
+                        {
+                          "rel": "status",
+                          "href": "https://api.pandadoc.com/public/v1/documents/D3okRfgHRX7NEhavcACReB",
+                          "type": "GET"
+                        }
+                      ],
+                      "info_message": "Wait until the status is changed to document.draft. You may use webhooks or poll the Document Status method."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
     "/public/v1/documents/{id}": {
       "get": {
         "tags": [
@@ -11593,6 +11667,91 @@
           }
         }
       },
+      "DocumentCreateByMarkdownRequest": {
+        "type": "object",
+        "description": "Request body for creating a document from an uploaded Markdown file.\n\n> **Alpha:** Markdown file upload is currently in alpha. This functionality may change or be removed without notice.\n",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name the document you are creating.",
+            "example": "API Sample Document from Markdown"
+          },
+          "folder_uuid": {
+            "type": "string",
+            "example": "QMDSzwabfFzTgjW4kUijqQ",
+            "description": "ID of the folder where the created document should be stored."
+          },
+          "owner": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "example": "john.doe@example.com"
+              },
+              "membership_id": {
+                "type": "string",
+                "example": "QMDSzwabfFzTgjW6KijHyu"
+              }
+            },
+            "description": "The owner of the document. Pass either `email` or `membership_id` of the user in the workspace.",
+            "example": {
+              "membership_id": "QMDSzwabfFzTgjW6KijHyu"
+            }
+          },
+          "recipients": {
+            "type": "array",
+            "description": "The list of recipients to whom the document will be sent. Either `email` or `phone` is required. Specifying the `role` assigns all matching fields to the recipient or group. If `first_name` and `last_name` are not specified, the system looks them up in the workspace contacts list using the `email` or `phone number`. If `first_name` and `last_name` are provided, they override the existing contact's data.",
+            "items": {
+              "$ref": "#/components/schemas/CreateDocumentActor"
+            }
+          },
+          "tokens": {
+            "type": "array",
+            "description": "Also known as variables. Pass values for the variables in the template to render them into the created document or make them available for insertion later.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Client.CompanyName"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "PandaDoc"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ]
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "description": "You can pass any data in a key-value format to associate it with a document. Searching by metadata is available in the List Documents endpoint and is also included in the Document Details response.",
+            "example": {
+              "lead_id": "1234567",
+              "lead_source": "PandaDoc"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "description": "Mark your document with one or more tags. Tags are displayed in the UI, and you can filter by tags in the List Documents endpoint.",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "created_via_api",
+              "test_document",
+              "created_from_source"
+            ]
+          }
+        }
+      },
       "DocumentStatusResponse": {
         "type": "object",
         "properties": {
@@ -14448,10 +14607,12 @@
             "type": "object",
             "properties": {
               "offset_x": {
-                "type": "number"
+                "type": "number",
+                "minimum": 0
               },
               "offset_y": {
-                "type": "number"
+                "type": "number",
+                "minimum": 0
               },
               "anchor_point": {
                 "$ref": "#/components/schemas/DocumentFieldAnchorPointEnum"
@@ -14467,10 +14628,12 @@
             "type": "object",
             "properties": {
               "width": {
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0
               },
               "height": {
-                "type": "integer"
+                "type": "integer",
+                "minimum": 0
               }
             },
             "required": [
