@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.18.1"
+    "version": "7.18.3"
   },
   "servers": [
     {
@@ -918,6 +918,73 @@
           },
           "403": {
             "$ref": "#/components/responses/403"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Documents"
+        ],
+        "summary": "Delete documents (bulk)",
+        "operationId": "bulkDeleteDocuments",
+        "description": "Delete multiple documents in one request by sending a JSON array. Each element must be an object with an `id` field (the document ID, same value as elsewhere in the Documents API).\n\nThe caller must have permission to delete each document. Documents must belong to the authenticated workspace.\n\nThis batch operation returns **200 OK** with a JSON body containing an `id` array of deleted document IDs. That differs from [Delete Document](#operation/deleteDocument) (`DELETE /public/v1/documents/{id}`), which returns **204 No Content** for a single document.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkDeleteDocumentsRequest"
+              },
+              "examples": {
+                "Two documents": {
+                  "value": [
+                    {
+                      "id": "XjV64iXRJMerjSpk428QSF"
+                    },
+                    {
+                      "id": "6NbHUUu6uuYN2tqJvgtf9h"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK — documents were deleted. Response lists deleted document IDs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkDeleteDocumentsResponse"
+                },
+                "examples": {
+                  "Deleted IDs": {
+                    "value": {
+                      "id": [
+                        "XjV64iXRJMerjSpk428QSF",
+                        "6NbHUUu6uuYN2tqJvgtf9h"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -11667,6 +11734,42 @@
           }
         }
       },
+      "BulkDeleteDocumentsRequestItem": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Document ID to delete.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        }
+      },
+      "BulkDeleteDocumentsRequest": {
+        "type": "array",
+        "description": "List of documents to delete. Each object must contain a document `id`.",
+        "minItems": 1,
+        "items": {
+          "$ref": "#/components/schemas/BulkDeleteDocumentsRequestItem"
+        }
+      },
+      "BulkDeleteDocumentsResponse": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "array",
+            "description": "Document IDs that were deleted, in the same order as processed by the API.",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "DocumentCreateByMarkdownRequest": {
         "type": "object",
         "description": "Request body for creating a document from an uploaded Markdown file.\n\n> **Alpha:** Markdown file upload is currently in alpha. This functionality may change or be removed without notice.\n",
@@ -11749,6 +11852,25 @@
               "test_document",
               "created_from_source"
             ]
+          },
+          "fields_mapping": {
+            "type": "object",
+            "description": "Map recipient roles to document field identifiers. Each key is a recipient role name (must match a `role` defined in `recipients`), and the value is a list of field identifiers to assign to that recipient.\n\nField identifiers reference fields created from the Markdown content. The system validates that all specified field identifiers exist in the document and that all referenced roles are present in the `recipients` list.\n",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "signer": [
+                "signer_name",
+                "signer_date"
+              ],
+              "reviewer": [
+                "reviewer_comment"
+              ]
+            }
           }
         }
       },
