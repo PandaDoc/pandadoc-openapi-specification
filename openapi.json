@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.18.3"
+    "version": "7.19.0"
   },
   "servers": [
     {
@@ -8781,7 +8781,7 @@
         ],
         "summary": "Notarization Request Details",
         "operationId": "notarizationRequestDetails",
-        "description": "Get details about a notarization request by its `id`.\n\nDetails include:\n\n- Basic notarization request information (status, creator, invitees).\n- Signed documents information with links for downloading.\n- Notarization session recording information with link for downloading.\n- Timestamps associated with a notarization request.\n\n## Available Notarization Request Statuses\n\nThe following is a complete list of all possible notarization request statuses returned:\n\n| Notarization Request Status | Status Description                                                                                                 |\n| :-------------------------- | :----------------------------------------------------------------------------------------------------------------- |\n| SENT                        | Notarization request has been created. Invitees are notified and can start the process of finding a notary.        |\n| WAITING_FOR_NOTARY          | One of the invitees initialised the process of finding a notary.                                                   |\n| ACCEPTED                    | Notarization request has been accepted by the notary. At this time nobody has joined the notarization session yet. |\n| LIVE                        | Notarization session has started.                                                                                  |\n| COMPLETED                   | Notarization session is finished. Documents have been successfully signed and ready for downloading.               |\n| INCOMPLETE                  | Notarization session has started but was not completed successfully.                                               |\n\n## Signed documents\n\nSigned documents are the documents that were successfully signed during the notarization session. The signed document's info is available only if the notarization request has `COMPLETED` status, otherwise the returned list will be empty.  \n\nIn case you uploaded several documents for notarization then the `signed_documents` list will contain links for downloading for each document separately (with `SINGLE` document type) and link for the combined document (with `COMBINED` document type accordingly).\n\n## Recording\n\nRecording is the video of the notarization session. The recording info is available only if the notarization request has `COMPLETED` status and recording is available, otherwise the returned object will be empty.\n\n> 📘 Links expire in 1 hour\n> \n> **Note**: The signed document and recording links expire in 1 hour. After this time it will be not possible to download files using the returned urls. In this case you need to call endpoint again since each request generates a new link.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n",
+        "description": "Get details about a notarization request by its `id`.\n\nDetails include:\n\n- Basic notarization request information (status, creator, invitees).\n- Signed documents information with links for downloading.\n- Notarization session recording information with link for downloading.\n- Timestamps associated with a notarization request.\n- Termination reason and details when the notarization session was not completed successfully.\n\n## Available Notarization Request Statuses\n\nThe following is a complete list of all possible notarization request statuses returned:\n\n| Notarization Request Status | Status Description                                                                                                 |\n| :-------------------------- | :----------------------------------------------------------------------------------------------------------------- |\n| SENT                        | Notarization request has been created. Invitees are notified and can start the process of finding a notary.        |\n| WAITING_FOR_NOTARY          | One of the invitees initialised the process of finding a notary.                                                   |\n| ACCEPTED                    | Notarization request has been accepted by the notary. At this time nobody has joined the notarization session yet. |\n| LIVE                        | Notarization session has started.                                                                                  |\n| COMPLETED                   | Notarization session is finished. Documents have been successfully signed and ready for downloading.               |\n| INCOMPLETE                  | Notarization session has started but was not completed successfully.                                               |\n\n## Signed documents\n\nSigned documents are the documents that were successfully signed during the notarization session. The signed document's info is available only if the notarization request has `COMPLETED` status, otherwise the returned list will be empty.  \n\nIn case you uploaded several documents for notarization then the `signed_documents` list will contain links for downloading for each document separately (with `SINGLE` document type) and link for the combined document (with `COMBINED` document type accordingly).\n\n## Recording\n\nRecording is the video of the notarization session. The recording info is available only if the notarization request has `COMPLETED` status and recording is available, otherwise the returned object will be empty.\n\n> 📘 Links expire in 1 hour\n> \n> **Note**: The signed document and recording links expire in 1 hour. After this time it will be not possible to download files using the returned urls. In this case you need to call endpoint again since each request generates a new link.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n",
         "parameters": [
           {
             "name": "session_request_id",
@@ -8850,7 +8850,37 @@
                         "url": "string",
                         "name": "string",
                         "size": 5242880
-                      }
+                      },
+                      "termination_reason": null,
+                      "termination_details": null
+                    }
+                  },
+                  "Incomplete Notarization Request Details": {
+                    "value": {
+                      "id": "string",
+                      "status": "INCOMPLETE",
+                      "document_id": "D3okRfgHRX7NEhavcACReB",
+                      "date_created": "2024-01-25T15:07:10.845Z",
+                      "date_started": "2024-01-25T15:07:10.845Z",
+                      "date_completed": null,
+                      "created_by": {
+                        "user_id": "string",
+                        "email": "string",
+                        "first_name": "string",
+                        "last_name": "string"
+                      },
+                      "invitees": [
+                        {
+                          "id": "string",
+                          "email": "user@example.com",
+                          "first_name": "string",
+                          "last_name": "string"
+                        }
+                      ],
+                      "signed_documents": [],
+                      "recording": null,
+                      "termination_reason": "FAILED_IDENTITY_VERIFICATION",
+                      "termination_details": "The signer failed to verify their identity"
                     }
                   }
                 }
@@ -18026,6 +18056,25 @@
                 "example": 5242880
               }
             }
+          },
+          "termination_reason": {
+            "type": "string",
+            "nullable": true,
+            "description": "The reason why the notarization session was terminated. Only present when the request status is INCOMPLETE.",
+            "example": "FAILED_IDENTITY_VERIFICATION",
+            "enum": [
+              "SIGNER_NO_SHOW",
+              "AUDIO_VIDEO_ISSUE",
+              "FAILED_IDENTITY_VERIFICATION",
+              "TEST_SESSION",
+              "OTHER"
+            ]
+          },
+          "termination_details": {
+            "type": "string",
+            "nullable": true,
+            "description": "Additional details about the termination reason provided by the notary. Only present when the request status is INCOMPLETE.",
+            "example": "The signer failed to verify their identity."
           }
         }
       },
