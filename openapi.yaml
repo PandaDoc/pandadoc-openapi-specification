@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.18.3
+  version: 7.19.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -6453,6 +6453,7 @@ paths:
         - Signed documents information with links for downloading.
         - Notarization session recording information with link for downloading.
         - Timestamps associated with a notarization request.
+        - Termination reason and details when the notarization session was not completed successfully.
 
         ## Available Notarization Request Statuses
 
@@ -6536,6 +6537,30 @@ paths:
                       url: string
                       name: string
                       size: 5242880
+                    termination_reason: null
+                    termination_details: null
+                Incomplete Notarization Request Details:
+                  value:
+                    id: string
+                    status: INCOMPLETE
+                    document_id: D3okRfgHRX7NEhavcACReB
+                    date_created: '2024-01-25T15:07:10.845Z'
+                    date_started: '2024-01-25T15:07:10.845Z'
+                    date_completed: null
+                    created_by:
+                      user_id: string
+                      email: string
+                      first_name: string
+                      last_name: string
+                    invitees:
+                      - id: string
+                        email: user@example.com
+                        first_name: string
+                        last_name: string
+                    signed_documents: []
+                    recording: null
+                    termination_reason: FAILED_IDENTITY_VERIFICATION
+                    termination_details: The signer failed to verify their identity
     delete:
       tags:
         - Notary
@@ -13370,6 +13395,22 @@ components:
               type: number
               description: Size of the video recording file in bytes.
               example: 5242880
+        termination_reason:
+          type: string
+          nullable: true
+          description: The reason why the notarization session was terminated. Only present when the request status is INCOMPLETE.
+          example: FAILED_IDENTITY_VERIFICATION
+          enum:
+            - SIGNER_NO_SHOW
+            - AUDIO_VIDEO_ISSUE
+            - FAILED_IDENTITY_VERIFICATION
+            - TEST_SESSION
+            - OTHER
+        termination_details:
+          type: string
+          nullable: true
+          description: Additional details about the termination reason provided by the notary. Only present when the request status is INCOMPLETE.
+          example: The signer failed to verify their identity.
     ProductCatalogTypeEnum:
       type: string
       default: regular
