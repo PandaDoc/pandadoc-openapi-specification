@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.19.1
+  version: 7.20.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -37,6 +37,9 @@ security:
   - apiKey: []
   - oauth2: []
 tags:
+  - name: new
+    description: |
+      New or proposed operations captured as a design artefact. Use this tag to review and iterate before promoting endpoints into stable public documentation.
   - name: OAuth 2.0 Authentication
     description: Operations for creating and refreshing access tokens for user authentication.
   - name: Documents
@@ -7789,6 +7792,159 @@ paths:
           $ref: '#/components/responses/404NotFoundV2'
         '429':
           $ref: '#/components/responses/429TooManyRequestsV2'
+  /public/beta/documents/{document_id}/summary:
+    get:
+      tags:
+        - Documents
+      x-internal: true
+      operationId: getDocumentSummary
+      summary: '[Beta] Document Summary'
+      description: |
+        Returns a summary for the specified document. Use query parameter `type` to select summary granularity.
+      parameters:
+        - $ref: '#/components/parameters/DocumentPathId'
+        - $ref: '#/components/parameters/DocumentSummaryTypeQuery'
+      responses:
+        '200':
+          description: |
+            Document Summary is available. JSON object with `type` and `summary` (see schema). Includes `ETag` and `Vary: type` headers.
+          headers:
+            ETag:
+              $ref: '#/components/headers/SummaryETag'
+            Vary:
+              $ref: '#/components/headers/VaryType'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentSummaryResponse'
+              example:
+                type: detailed
+                summary: This agreement establishes a partnership between Party A and Party B, covering terms of service, payment schedules, intellectual property rights, and termination clauses. The contract is effective from March 2026 and runs for 12 months with automatic renewal.
+        '202':
+          description: |
+            The summary is not available yet. Retry after the indicated number of seconds. No response body is returned.
+          headers:
+            Retry-After:
+              $ref: '#/components/headers/RetryAfter'
+        '400':
+          description: |
+            The request is invalid. Either the `type` query parameter is missing, or its value is not one of the allowed values (detailed, short, headline).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missing_type:
+                  summary: The type query parameter was not provided.
+                  value:
+                    error:
+                      code: missing_type
+                      message: The type query parameter is required.
+                invalid_type:
+                  summary: The type value is not valid.
+                  value:
+                    error:
+                      code: invalid_type
+                      message: 'The type must be one of: detailed, short, headline.'
+        '401':
+          $ref: '#/components/responses/401AuthErrorV2'
+        '403':
+          $ref: '#/components/responses/403PermissionDeniedV2'
+        '404':
+          description: |
+            The document was not found. The document_id does not correspond to any document in the system.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: document_not_found
+                  message: The document was not found.
+        '429':
+          $ref: '#/components/responses/429TooManyRequestsV2'
+  /public/beta/documents/{document_id}/content:
+    get:
+      tags:
+        - Documents
+      x-internal: true
+      operationId: getDocumentContent
+      summary: '[Beta] Document Content'
+      description: |
+        Returns the document content for the specified document. Use query parameter `format` to select the content format.
+      parameters:
+        - $ref: '#/components/parameters/DocumentPathId'
+        - $ref: '#/components/parameters/DocumentContentFormatQuery'
+      responses:
+        '200':
+          description: |
+            Document content is available. JSON object with `format` and `content` (see schema). Includes `ETag` and `Vary: format`.
+          headers:
+            ETag:
+              $ref: '#/components/headers/ContentETag'
+            Vary:
+              $ref: '#/components/headers/VaryFormat'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentContentResponse'
+              examples:
+                plaintext:
+                  summary: When format=plaintext
+                  value:
+                    format: plaintext
+                    content: Agreement between Party A and Party B...
+                markdown:
+                  summary: When format=markdown
+                  value:
+                    format: markdown
+                    content: |-
+                      # Agreement
+
+                      Between **Party A** and **Party B**...
+        '202':
+          description: |
+            The requested content is not available yet. Retry after the indicated number of seconds. No response body is returned.
+          headers:
+            Retry-After:
+              $ref: '#/components/headers/RetryAfter'
+        '400':
+          description: |
+            The request is invalid. Either the `format` query parameter is missing, or its value is not one of the allowed values (plaintext, markdown).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missing_format:
+                  summary: The format query parameter was not provided.
+                  value:
+                    error:
+                      code: missing_format
+                      message: The format query parameter is required.
+                invalid_format:
+                  summary: The format value is not valid.
+                  value:
+                    error:
+                      code: invalid_format
+                      message: 'The format must be one of: plaintext, markdown.'
+        '401':
+          $ref: '#/components/responses/401AuthErrorV2'
+        '403':
+          $ref: '#/components/responses/403PermissionDeniedV2'
+        '404':
+          description: |
+            The document was not found. The document_id does not correspond to any document in the system.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: document_not_found
+                  message: The document was not found.
+        '429':
+          $ref: '#/components/responses/429TooManyRequestsV2'
 components:
   securitySchemes:
     apiKey:
@@ -14529,6 +14685,74 @@ components:
                     type: string
                     format: uri
                     nullable: true
+    DocumentSummaryType:
+      type: string
+      description: |
+        Document summary granularity (query parameter `type`).
+      enum:
+        - detailed
+        - short
+        - headline
+    DocumentSummaryResponse:
+      type: object
+      description: |
+        Summary response envelope. The `type` field echoes the `type` query parameter.
+      required:
+        - type
+        - summary
+      properties:
+        type:
+          $ref: '#/components/schemas/DocumentSummaryType'
+        summary:
+          type: string
+          description: |
+            Summary text for the requested summary type.
+    Error:
+      type: object
+      description: |
+        Error detail with a machine-readable code and a human-readable message.
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: |
+            Machine-readable error code.
+        message:
+          type: string
+          description: |
+            Human-readable description of the error.
+    ErrorResponse:
+      type: object
+      description: |
+        Standard error envelope following existing API conventions.
+      required:
+        - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+    DocumentContentFormat:
+      type: string
+      description: |
+        Format selector for document content (query `format` and JSON `format` on 200).
+      enum:
+        - plaintext
+        - markdown
+    DocumentContentResponse:
+      type: object
+      description: |
+        Content response envelope. The `format` field echoes the `format` query parameter.
+      required:
+        - format
+        - content
+      properties:
+        format:
+          $ref: '#/components/schemas/DocumentContentFormat'
+        content:
+          type: string
+          description: |
+            Document body as plain text (`format=plaintext`) or markdown (`format=markdown`).
   responses:
     '401':
       description: Authentication error
@@ -14950,6 +15174,33 @@ components:
       examples:
         Log Event ID:
           value: AZC86i5PYKMjQjMMMw9e
+    DocumentPathId:
+      name: document_id
+      in: path
+      required: true
+      description: |
+        The unique identifier of the document.
+      schema:
+        type: string
+      example: D3okRfgHRX7NEhavcACReB
+    DocumentSummaryTypeQuery:
+      name: type
+      in: query
+      required: true
+      description: |
+        Document summary granularity to return.
+      schema:
+        $ref: '#/components/schemas/DocumentSummaryType'
+      example: detailed
+    DocumentContentFormatQuery:
+      name: format
+      in: query
+      required: true
+      description: |
+        Document content representation to return.
+      schema:
+        $ref: '#/components/schemas/DocumentContentFormat'
+      example: plaintext
   examples:
     APILogListExample:
       value:
@@ -15014,3 +15265,40 @@ components:
         request_id: 284b1456-1111-4ba9-1111-0d82418205f5
         user_email: siarhei@pandadoc.com
         user_id: Hzpt4yyQ3A5qHTTPdZQxpH
+  headers:
+    SummaryETag:
+      description: |
+        An opaque identifier for the version of the returned summary. Not interchangeable across different `type` values.
+      required: true
+      schema:
+        type: string
+      example: '"v42"'
+    VaryType:
+      description: |
+        Indicates the response varies by the `type` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across types.
+      required: true
+      schema:
+        type: string
+      example: type
+    RetryAfter:
+      description: |
+        The number of seconds the client should wait before retrying the request. Included when the response is 202 to indicate the data is not yet available.
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      example: 5
+    ContentETag:
+      description: |
+        An opaque identifier for the version of the returned content. Not interchangeable across different `format` values.
+      required: true
+      schema:
+        type: string
+      example: '"v42"'
+    VaryFormat:
+      description: |
+        Indicates the response varies by the `format` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across formats.
+      required: true
+      schema:
+        type: string
+      example: format
