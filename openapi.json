@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.20.0"
+    "version": "7.20.1"
   },
   "servers": [
     {
@@ -10611,7 +10611,7 @@
             "$ref": "#/components/parameters/DocumentPathId"
           },
           {
-            "$ref": "#/components/parameters/SummaryTypeQuery"
+            "$ref": "#/components/parameters/DocumentSummaryTypeQuery"
           }
         ],
         "responses": {
@@ -10717,7 +10717,7 @@
             "$ref": "#/components/parameters/DocumentPathId"
           },
           {
-            "$ref": "#/components/parameters/ContentFormatQuery"
+            "$ref": "#/components/parameters/DocumentContentFormatQuery"
           }
         ],
         "responses": {
@@ -19890,9 +19890,9 @@
           }
         ]
       },
-      "SummaryType": {
+      "DocumentSummaryType": {
         "type": "string",
-        "description": "Summary granularity (query parameter `type`).\n",
+        "description": "Document summary granularity (query parameter `type`).\n",
         "enum": [
           "detailed",
           "short",
@@ -19908,7 +19908,7 @@
         ],
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/SummaryType"
+            "$ref": "#/components/schemas/DocumentSummaryType"
           },
           "summary": {
             "type": "string",
@@ -19946,7 +19946,7 @@
           }
         }
       },
-      "ContentFormat": {
+      "DocumentContentFormat": {
         "type": "string",
         "description": "Format selector for document content (query `format` and JSON `format` on 200).\n",
         "enum": [
@@ -19963,7 +19963,7 @@
         ],
         "properties": {
           "format": {
-            "$ref": "#/components/schemas/ContentFormat"
+            "$ref": "#/components/schemas/DocumentContentFormat"
           },
           "content": {
             "type": "string",
@@ -20592,28 +20592,27 @@
         "required": true,
         "description": "The unique identifier of the document.\n",
         "schema": {
-          "type": "string",
-          "format": "uuid"
+          "type": "string"
         },
-        "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        "example": "D3okRfgHRX7NEhavcACReB"
       },
-      "SummaryTypeQuery": {
+      "DocumentSummaryTypeQuery": {
         "name": "type",
         "in": "query",
         "required": true,
-        "description": "Summary granularity to return.\n",
+        "description": "Document summary granularity to return.\n",
         "schema": {
-          "$ref": "#/components/schemas/SummaryType"
+          "$ref": "#/components/schemas/DocumentSummaryType"
         },
         "example": "detailed"
       },
-      "ContentFormatQuery": {
+      "DocumentContentFormatQuery": {
         "name": "format",
         "in": "query",
         "required": true,
-        "description": "Content representation to return.\n",
+        "description": "Document content representation to return.\n",
         "schema": {
-          "$ref": "#/components/schemas/ContentFormat"
+          "$ref": "#/components/schemas/DocumentContentFormat"
         },
         "example": "plaintext"
       }

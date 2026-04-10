@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.20.0
+  version: 7.20.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -7803,7 +7803,7 @@ paths:
         Returns a summary for the specified document. Use query parameter `type` to select summary granularity.
       parameters:
         - $ref: '#/components/parameters/DocumentPathId'
-        - $ref: '#/components/parameters/SummaryTypeQuery'
+        - $ref: '#/components/parameters/DocumentSummaryTypeQuery'
       responses:
         '200':
           description: |
@@ -7874,7 +7874,7 @@ paths:
         Returns the document content for the specified document. Use query parameter `format` to select the content format.
       parameters:
         - $ref: '#/components/parameters/DocumentPathId'
-        - $ref: '#/components/parameters/ContentFormatQuery'
+        - $ref: '#/components/parameters/DocumentContentFormatQuery'
       responses:
         '200':
           description: |
@@ -14685,10 +14685,10 @@ components:
                     type: string
                     format: uri
                     nullable: true
-    SummaryType:
+    DocumentSummaryType:
       type: string
       description: |
-        Summary granularity (query parameter `type`).
+        Document summary granularity (query parameter `type`).
       enum:
         - detailed
         - short
@@ -14702,7 +14702,7 @@ components:
         - summary
       properties:
         type:
-          $ref: '#/components/schemas/SummaryType'
+          $ref: '#/components/schemas/DocumentSummaryType'
         summary:
           type: string
           description: |
@@ -14732,7 +14732,7 @@ components:
       properties:
         error:
           $ref: '#/components/schemas/Error'
-    ContentFormat:
+    DocumentContentFormat:
       type: string
       description: |
         Format selector for document content (query `format` and JSON `format` on 200).
@@ -14748,7 +14748,7 @@ components:
         - content
       properties:
         format:
-          $ref: '#/components/schemas/ContentFormat'
+          $ref: '#/components/schemas/DocumentContentFormat'
         content:
           type: string
           description: |
@@ -15182,25 +15182,24 @@ components:
         The unique identifier of the document.
       schema:
         type: string
-        format: uuid
-      example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-    SummaryTypeQuery:
+      example: D3okRfgHRX7NEhavcACReB
+    DocumentSummaryTypeQuery:
       name: type
       in: query
       required: true
       description: |
-        Summary granularity to return.
+        Document summary granularity to return.
       schema:
-        $ref: '#/components/schemas/SummaryType'
+        $ref: '#/components/schemas/DocumentSummaryType'
       example: detailed
-    ContentFormatQuery:
+    DocumentContentFormatQuery:
       name: format
       in: query
       required: true
       description: |
-        Content representation to return.
+        Document content representation to return.
       schema:
-        $ref: '#/components/schemas/ContentFormat'
+        $ref: '#/components/schemas/DocumentContentFormat'
       example: plaintext
   examples:
     APILogListExample:
