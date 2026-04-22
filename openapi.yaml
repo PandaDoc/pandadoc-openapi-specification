@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.20.1
+  version: 7.21.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -7477,6 +7477,53 @@ paths:
           $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
+  /public/v1/users/{user_id}:
+    get:
+      tags:
+        - User and Workspace management
+      summary: Get User Details by ID
+      operationId: detailsUser
+      description: |
+        Get detailed information about a specific user by their ID, including contact information, license type, and workspace roles.
+
+        You must be an organization admin to get user details.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: A unique identifier of the user.
+          schema:
+            type: string
+          example: ajnN7eGutJZsRKjQrNuPkh
+      responses:
+        '200':
+          description: User details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserResponse'
+              examples:
+                Get User:
+                  value:
+                    user_id: ajnN7eGutJZsRKjQrNuPkh
+                    email: josh@example.com
+                    first_name: Josh
+                    last_name: Doe
+                    phone_number: '+14842634627'
+                    license: Full
+                    is_organization_owner: true
+                    workspaces:
+                      - role: Admin
+                        workspace_id: fERpqZdFaF9dHVAeVxPFaV
+                        membership_id: nPh2PDhFdDqAES9k64h9qX
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
   /public/v1/workspaces/{workspace_id}/members:
     post:
       tags:
@@ -14456,6 +14503,7 @@ components:
                 example: Full
               is_organization_owner:
                 type: boolean
+                description: Whether the user is the owner of the organization.
               workspaces:
                 type: array
                 items:
@@ -14543,6 +14591,51 @@ components:
                 type: string
               member_id:
                 type: string
+    GetUserResponse:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: A unique identifier of the user in the organization.
+          example: ajnN7eGutJZsRKjQrNuPkh
+        email:
+          type: string
+          description: A user's email address.
+          example: josh@example.com
+        first_name:
+          type: string
+          description: A user's first name.
+          example: Josh
+        last_name:
+          type: string
+          description: A user's last name.
+          example: Doe
+        phone_number:
+          type: string
+          description: A user's phone number.
+          example: '+14842634627'
+        license:
+          type: string
+          description: A user's license in the organization.
+          example: Full
+        is_organization_owner:
+          type: boolean
+          description: Whether the user is the owner of the organization.
+        workspaces:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                $ref: '#/components/schemas/WorkspaceMemberRoleEnum'
+              workspace_id:
+                type: string
+                description: A user's workspace.
+                example: fERpqZdFaF9dHVAeVxPFaV
+              membership_id:
+                type: string
+                description: A user's membership id in workspace.
+                example: vibuun3DXG8QDDLfXm27Ne
     AddMemberRequest:
       type: object
       properties:
