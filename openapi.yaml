@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.20.1
+  version: 7.22.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -2806,6 +2806,72 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
+        '429':
+          $ref: '#/components/responses/429'
+    patch:
+      summary: Update Document Fields Assignment
+      description: |
+        Assign, reassign, or unassign document fields to recipients.
+        Supports bulk operations by accepting multiple field assignment items in a single request.
+
+        > 🚧 Before you start
+        >
+        > - The document must be in the 'Draft' (`document.draft`) status.
+        > - You must have the 'Can Edit Document' permission.
+      operationId: updateDocumentFieldsAssignment
+      tags:
+        - Document Fields
+      parameters:
+        - name: id
+          in: path
+          description: Document UUID.
+          schema:
+            type: string
+          required: true
+          example: BhVzRcxH9Z2LgfPPGXFUBa
+      requestBody:
+        description: A list of field assignment operations to apply to the document.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDocumentFieldsAssignmentRequest'
+            examples:
+              Assign field to recipient:
+                value:
+                  fields:
+                    - field_id: d6948f39-612a-4626-a439-ca9e0cbbda7c
+                      assigned_to: tf5dGS3Tmu3cj228ao6fnc
+              Reassign field to another recipient:
+                value:
+                  fields:
+                    - field_id: d6948f39-612a-4626-a439-ca9e0cbbda7c
+                      assigned_to: pGkLnJUAx99JpXJy5DVD30
+              Unassign field:
+                value:
+                  fields:
+                    - field_id: d6948f39-612a-4626-a439-ca9e0cbbda7c
+                      assigned_to: null
+              Bulk mixed operations:
+                value:
+                  fields:
+                    - field_id: d6948f39-612a-4626-a439-ca9e0cbbda7c
+                      assigned_to: tf5dGS3Tmu3cj228ao6fnc
+                    - field_id: a1234567-89ab-cdef-0123-456789abcdef
+                      assigned_to: tf5dGS3Tmu3cj228ao6fnc
+                    - field_id: b9876543-21fe-dcba-9876-543210fedcba
+                      assigned_to: null
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/400ValidationError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
     post:
@@ -7477,6 +7543,53 @@ paths:
           $ref: '#/components/responses/404'
         '429':
           $ref: '#/components/responses/429'
+  /public/v1/users/{user_id}:
+    get:
+      tags:
+        - User and Workspace management
+      summary: Get User Details by ID
+      operationId: detailsUser
+      description: |
+        Get detailed information about a specific user by their ID, including contact information, license type, and workspace roles.
+
+        You must be an organization admin to get user details.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: A unique identifier of the user.
+          schema:
+            type: string
+          example: ajnN7eGutJZsRKjQrNuPkh
+      responses:
+        '200':
+          description: User details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserResponse'
+              examples:
+                Get User:
+                  value:
+                    user_id: ajnN7eGutJZsRKjQrNuPkh
+                    email: josh@example.com
+                    first_name: Josh
+                    last_name: Doe
+                    phone_number: '+14842634627'
+                    license: Full
+                    is_organization_owner: true
+                    workspaces:
+                      - role: Admin
+                        workspace_id: fERpqZdFaF9dHVAeVxPFaV
+                        membership_id: nPh2PDhFdDqAES9k64h9qX
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
   /public/v1/workspaces/{workspace_id}/members:
     post:
       tags:
@@ -11134,6 +11247,38 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DocumentFieldsField'
+    DocumentFieldAssignmentItem:
+      title: DocumentFieldAssignmentItem
+      description: Specifies a field and the recipient it should be assigned or unassigned to.
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: uuid
+          description: UUID of the field to assign or unassign.
+          example: d6948f39-612a-4626-a439-ca9e0cbbda7c
+        assigned_to:
+          type: string
+          nullable: true
+          description: |
+            UUID of the recipient to assign the field to. Set to `null` to unassign the field from its current recipient.
+          example: tf5dGS3Tmu3cj228ao6fnc
+      required:
+        - field_id
+        - assigned_to
+    UpdateDocumentFieldsAssignmentRequest:
+      title: UpdateDocumentFieldsAssignmentRequest
+      description: Request body for updating field assignments on a document.
+      type: object
+      properties:
+        fields:
+          type: array
+          description: An array of field assignment operations. Each item specifies a field and the recipient it should be assigned to.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/DocumentFieldAssignmentItem'
+      required:
+        - fields
     DocumentAuditTrailResponse:
       type: object
       properties:
@@ -14456,6 +14601,7 @@ components:
                 example: Full
               is_organization_owner:
                 type: boolean
+                description: Whether the user is the owner of the organization.
               workspaces:
                 type: array
                 items:
@@ -14543,6 +14689,51 @@ components:
                 type: string
               member_id:
                 type: string
+    GetUserResponse:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: A unique identifier of the user in the organization.
+          example: ajnN7eGutJZsRKjQrNuPkh
+        email:
+          type: string
+          description: A user's email address.
+          example: josh@example.com
+        first_name:
+          type: string
+          description: A user's first name.
+          example: Josh
+        last_name:
+          type: string
+          description: A user's last name.
+          example: Doe
+        phone_number:
+          type: string
+          description: A user's phone number.
+          example: '+14842634627'
+        license:
+          type: string
+          description: A user's license in the organization.
+          example: Full
+        is_organization_owner:
+          type: boolean
+          description: Whether the user is the owner of the organization.
+        workspaces:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                $ref: '#/components/schemas/WorkspaceMemberRoleEnum'
+              workspace_id:
+                type: string
+                description: A user's workspace.
+                example: fERpqZdFaF9dHVAeVxPFaV
+              membership_id:
+                type: string
+                description: A user's membership id in workspace.
+                example: vibuun3DXG8QDDLfXm27Ne
     AddMemberRequest:
       type: object
       properties:
