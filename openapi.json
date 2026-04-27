@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.20.1"
+    "version": "7.23.0"
   },
   "servers": [
     {
@@ -3744,6 +3744,107 @@
           },
           "409": {
             "$ref": "#/components/responses/409"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Document Fields Assignment",
+        "description": "Assign, reassign, or unassign document fields to recipients.\nSupports bulk operations by accepting multiple field assignment items in a single request.\n\n> 🚧 Before you start\n>\n> - The document must be in the 'Draft' (`document.draft`) status.\n> - You must have the 'Can Edit Document' permission.\n",
+        "operationId": "updateDocumentFieldsAssignment",
+        "tags": [
+          "Document Fields"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Document UUID.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          }
+        ],
+        "requestBody": {
+          "description": "A list of field assignment operations to apply to the document.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDocumentFieldsAssignmentRequest"
+              },
+              "examples": {
+                "Assign field to recipient": {
+                  "value": {
+                    "fields": [
+                      {
+                        "field_id": "d6948f39-612a-4626-a439-ca9e0cbbda7c",
+                        "assigned_to": "tf5dGS3Tmu3cj228ao6fnc"
+                      }
+                    ]
+                  }
+                },
+                "Reassign field to another recipient": {
+                  "value": {
+                    "fields": [
+                      {
+                        "field_id": "d6948f39-612a-4626-a439-ca9e0cbbda7c",
+                        "assigned_to": "pGkLnJUAx99JpXJy5DVD30"
+                      }
+                    ]
+                  }
+                },
+                "Unassign field": {
+                  "value": {
+                    "fields": [
+                      {
+                        "field_id": "d6948f39-612a-4626-a439-ca9e0cbbda7c",
+                        "assigned_to": null
+                      }
+                    ]
+                  }
+                },
+                "Bulk mixed operations": {
+                  "value": {
+                    "fields": [
+                      {
+                        "field_id": "d6948f39-612a-4626-a439-ca9e0cbbda7c",
+                        "assigned_to": "tf5dGS3Tmu3cj228ao6fnc"
+                      },
+                      {
+                        "field_id": "a1234567-89ab-cdef-0123-456789abcdef",
+                        "assigned_to": "tf5dGS3Tmu3cj228ao6fnc"
+                      },
+                      {
+                        "field_id": "b9876543-21fe-dcba-9876-543210fedcba",
+                        "assigned_to": null
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -8677,6 +8778,177 @@
       }
     },
     "/public/v2/notary/notarization-requests": {
+      "get": {
+        "tags": [
+          "Notary"
+        ],
+        "summary": "List Notarization Requests",
+        "operationId": "listNotarizationRequests",
+        "description": "Retrieve a paginated list of notarization requests for your organization.\n\nResults can be filtered by status, creator, or document, and sorted by status or by the request's creation or completion dates.\n\n## Permissions\n\n> 🔒 **Requirements**\n>\n> - The **Notary On-Demand** or **Notary** add-on must be enabled for your organization. Without an active add-on, the endpoint returns `403 Forbidden`.\n> - The request is executed with the permissions of the API key owner. By default, the response only includes notarization requests created by the API key owner. To list notarization requests created by any user in the organization, the API key owner must have the **Can view any notarization request** permission.\n\n## Limits\n\nA maximum of 100 API calls per minute is permitted. Exceeding this limit triggers a 429 Too Many Requests error.\n",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by status (comma-separated values supported).",
+            "required": false,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "DRAFT",
+                  "SENT",
+                  "WAITING_FOR_NOTARY",
+                  "ACCEPTED",
+                  "LIVE",
+                  "COMPLETED",
+                  "INCOMPLETE",
+                  "CANCELLED"
+                ]
+              }
+            },
+            "example": [
+              "SENT"
+            ]
+          },
+          {
+            "name": "created_by_user_id",
+            "in": "query",
+            "description": "Filter by creator user ID (comma-separated values supported).",
+            "required": false,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "maxItems": 30,
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": [
+              "nyAnVpY7pZ23FBve8s9xgk"
+            ]
+          },
+          {
+            "name": "document_id",
+            "in": "query",
+            "description": "Filter by document ID (comma-separated values supported).",
+            "required": false,
+            "style": "form",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "maxItems": 30,
+              "items": {
+                "type": "string"
+              }
+            },
+            "example": [
+              "D3okRfgHRX7NEhavcACReB"
+            ]
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of results to skip.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results to return.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "example": 50
+          },
+          {
+            "name": "order_by",
+            "in": "query",
+            "description": "Sort field. Use a `-` prefix for descending order (e.g., `-date_created`).\nWhen omitted, results are sorted by `date_created` ascending (oldest first).\n",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "date_created",
+              "enum": [
+                "status",
+                "-status",
+                "date_created",
+                "-date_created",
+                "date_completed",
+                "-date_completed"
+              ]
+            },
+            "example": "-date_created"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of notarization requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNotarizationRequestsResponse"
+                },
+                "examples": {
+                  "List Notarization Requests": {
+                    "value": {
+                      "results": [
+                        {
+                          "id": "0b2256a2-5803-4ae9-b1b8-595f48e37173",
+                          "status": "COMPLETED",
+                          "name": "Sample Notarization Request",
+                          "document_id": "D3okRfgHRX7NEhavcACReB",
+                          "date_created": "2025-01-13T10:25:53.800367Z",
+                          "date_started": "2025-01-13T10:30:12.420000Z",
+                          "date_completed": "2025-01-13T10:55:44.180000Z",
+                          "created_by_user_id": "nyAnVpY7pZ23FBve8s9xgk"
+                        },
+                        {
+                          "id": "f75e053a-25e8-40be-8681-fd755ade2a2b",
+                          "status": "SENT",
+                          "name": "Another Notarization Request",
+                          "document_id": "BhVzRcxH9Z2LgfPPGXFUBa",
+                          "date_created": "2025-02-03T09:00:00.000000Z",
+                          "date_started": null,
+                          "date_completed": null,
+                          "created_by_user_id": "nyAnVpY7pZ23FBve8s9xgk"
+                        }
+                      ],
+                      "count": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400BadRequestV2"
+          },
+          "401": {
+            "$ref": "#/components/responses/401AuthErrorV2"
+          },
+          "403": {
+            "$ref": "#/components/responses/403PermissionDeniedV2"
+          },
+          "429": {
+            "$ref": "#/components/responses/429TooManyRequestsV2"
+          }
+        }
+      },
       "post": {
         "tags": [
           "Notary"
@@ -8753,7 +9025,7 @@
                         "first_name": "test",
                         "last_name": "test",
                         "email": "user@example.com",
-                        "id": "nyAnVpY7pZ23FBve8s9xgk"
+                        "user_id": "nyAnVpY7pZ23FBve8s9xgk"
                       },
                       "invitees": [
                         {
@@ -8768,6 +9040,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/400BadRequestV2"
+          },
+          "401": {
+            "$ref": "#/components/responses/401AuthErrorV2"
           },
           "403": {
             "$ref": "#/components/responses/403PermissionDeniedV2"
@@ -10134,6 +10412,72 @@
           },
           "400": {
             "$ref": "#/components/responses/400BadRequestUserRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/users/{user_id}": {
+      "get": {
+        "tags": [
+          "User and Workspace management"
+        ],
+        "summary": "Get User Details by ID",
+        "operationId": "detailsUser",
+        "description": "Get detailed information about a specific user by their ID, including contact information, license type, and workspace roles.\n\nYou must be an organization admin to get user details.\n",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "description": "A unique identifier of the user.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "ajnN7eGutJZsRKjQrNuPkh"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserResponse"
+                },
+                "examples": {
+                  "Get User": {
+                    "value": {
+                      "user_id": "ajnN7eGutJZsRKjQrNuPkh",
+                      "email": "josh@example.com",
+                      "first_name": "Josh",
+                      "last_name": "Doe",
+                      "phone_number": "+14842634627",
+                      "license": "Full",
+                      "is_organization_owner": true,
+                      "workspaces": [
+                        {
+                          "role": "Admin",
+                          "workspace_id": "fERpqZdFaF9dHVAeVxPFaV",
+                          "membership_id": "nPh2PDhFdDqAES9k64h9qX"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -15157,6 +15501,47 @@
           }
         }
       },
+      "DocumentFieldAssignmentItem": {
+        "title": "DocumentFieldAssignmentItem",
+        "description": "Specifies a field and the recipient it should be assigned or unassigned to.",
+        "type": "object",
+        "properties": {
+          "field_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID of the field to assign or unassign.",
+            "example": "d6948f39-612a-4626-a439-ca9e0cbbda7c"
+          },
+          "assigned_to": {
+            "type": "string",
+            "nullable": true,
+            "description": "UUID of the recipient to assign the field to. Set to `null` to unassign the field from its current recipient.\n",
+            "example": "tf5dGS3Tmu3cj228ao6fnc"
+          }
+        },
+        "required": [
+          "field_id",
+          "assigned_to"
+        ]
+      },
+      "UpdateDocumentFieldsAssignmentRequest": {
+        "title": "UpdateDocumentFieldsAssignmentRequest",
+        "description": "Request body for updating field assignments on a document.",
+        "type": "object",
+        "properties": {
+          "fields": {
+            "type": "array",
+            "description": "An array of field assignment operations. Each item specifies a field and the recipient it should be assigned to.",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/DocumentFieldAssignmentItem"
+            }
+          }
+        },
+        "required": [
+          "fields"
+        ]
+      },
       "DocumentAuditTrailResponse": {
         "type": "object",
         "properties": {
@@ -17935,6 +18320,80 @@
           }
         }
       },
+      "ListNotarizationRequestsResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "description": "Array of notarization request objects.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "A unique identifier of the notarization request.",
+                  "example": "0b2256a2-5803-4ae9-b1b8-595f48e37173"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Current status of the notarization request.",
+                  "example": "SENT",
+                  "enum": [
+                    "DRAFT",
+                    "SENT",
+                    "WAITING_FOR_NOTARY",
+                    "ACCEPTED",
+                    "LIVE",
+                    "COMPLETED",
+                    "INCOMPLETE",
+                    "CANCELLED"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Name of the notarization request.",
+                  "example": "Sample Notarization Request"
+                },
+                "document_id": {
+                  "type": "string",
+                  "description": "A unique identifier of the document for notarization.",
+                  "example": "D3okRfgHRX7NEhavcACReB"
+                },
+                "date_created": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "A date when a notarization request was created.",
+                  "example": "2025-01-13T10:25:53.800367Z"
+                },
+                "date_started": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true,
+                  "description": "A date when a notarization session was started.",
+                  "example": "2025-01-13T10:25:53.800367Z"
+                },
+                "date_completed": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true,
+                  "description": "A date when a notarization session was completed.",
+                  "example": "2025-01-13T10:25:53.800367Z"
+                },
+                "created_by_user_id": {
+                  "type": "string",
+                  "description": "Public user id of the request creator.",
+                  "example": "nyAnVpY7pZ23FBve8s9xgk"
+                }
+              }
+            }
+          },
+          "count": {
+            "type": "integer",
+            "description": "Total number of notarization requests matching the criteria.",
+            "example": 2
+          }
+        }
+      },
       "CreateNotarizationRequest": {
         "type": "object",
         "properties": {
@@ -19571,7 +20030,8 @@
                   "example": "Full"
                 },
                 "is_organization_owner": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Whether the user is the owner of the organization."
                 },
                 "workspaces": {
                   "type": "array",
@@ -19693,6 +20153,66 @@
                 },
                 "member_id": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetUserResponse": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "A unique identifier of the user in the organization.",
+            "example": "ajnN7eGutJZsRKjQrNuPkh"
+          },
+          "email": {
+            "type": "string",
+            "description": "A user's email address.",
+            "example": "josh@example.com"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "A user's first name.",
+            "example": "Josh"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "A user's last name.",
+            "example": "Doe"
+          },
+          "phone_number": {
+            "type": "string",
+            "description": "A user's phone number.",
+            "example": "+14842634627"
+          },
+          "license": {
+            "type": "string",
+            "description": "A user's license in the organization.",
+            "example": "Full"
+          },
+          "is_organization_owner": {
+            "type": "boolean",
+            "description": "Whether the user is the owner of the organization."
+          },
+          "workspaces": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "$ref": "#/components/schemas/WorkspaceMemberRoleEnum"
+                },
+                "workspace_id": {
+                  "type": "string",
+                  "description": "A user's workspace.",
+                  "example": "fERpqZdFaF9dHVAeVxPFaV"
+                },
+                "membership_id": {
+                  "type": "string",
+                  "description": "A user's membership id in workspace.",
+                  "example": "vibuun3DXG8QDDLfXm27Ne"
                 }
               }
             }
