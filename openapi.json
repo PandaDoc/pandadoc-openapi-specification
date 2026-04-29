@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.23.0"
+    "version": "7.24.0"
   },
   "servers": [
     {
@@ -3831,8 +3831,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No content"
           },
           "400": {
             "$ref": "#/components/responses/400ValidationError"

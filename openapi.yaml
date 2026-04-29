@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.23.0
+  version: 7.24.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -2862,8 +2862,8 @@ paths:
                     - field_id: b9876543-21fe-dcba-9876-543210fedcba
                       assigned_to: null
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No content
         '400':
           $ref: '#/components/responses/400ValidationError'
         '401':
