@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.24.0
+  version: 7.25.2
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -3422,6 +3422,15 @@ paths:
 
         - You cannot change emails of PandaDoc users.
         - You cannot use the email addresses of existing contacts. If you need to use an email from an existing contact, use the [Change Signer](https://developers.pandadoc.com/reference/change-signer) endpoint to replace a signer with this contact.
+
+        ### Recipient communication preferences
+
+        PandaDoc honors recipient opt-outs when re-notifying a recipient on a sent document. The request will return `400 Bad Request` in the following cases:
+
+        - **Email** — when changing a recipient's email or enabling email delivery, if the new email address has been marked as opted-out for your organization (for example, the recipient previously reported a PandaDoc email from your organization as spam).
+        - **SMS** — when changing a recipient's phone number or enabling SMS delivery, if the recipient has opted out of receiving SMS messages (for example, by replying STOP).
+
+        To remove a recipient from the opt-out list, contact PandaDoc Support.
       operationId: editDocumentRecipient
       tags:
         - Document Recipients
@@ -4693,11 +4702,23 @@ paths:
       summary: Template Update
       operationId: updateTemplate
       description: |
+        Update a template. Currently supports updating template variables (`tokens`) and managing template roles.
+
         > 🚧 Template status
         > 
         > You can only update a template in the PROCESSED status (`template.PROCESSED`). 
         > 
         > After creating a new template, it usually retains a `template.uploaded` status for 3-5 seconds while the template syncs across PandaDoc servers. When the template is available for further API calls, the template moves to the `template.PROCESSED` state. Use [Template Status](https://developers.pandadoc.com/reference/template-status) or Webhooks to check template status.
+
+        ## Managing template roles
+
+        Pass a `roles` array to replace the full set of template roles in a single request:
+
+          - Items with an existing `id` update that role (`name`, `signing_order`).
+          - Items without an `id` create a new role.
+          - Existing roles whose `id` is not in the array are deleted.
+
+        Role names must be unique within a template. Preassigned contacts and contact groups attached to roles in the template editor are preserved on updates and removed together with their role on deletion — they are not managed by this endpoint.
       parameters:
         - examples:
             Update template:
@@ -4709,11 +4730,39 @@ paths:
             type: string
           required: true
       requestBody:
+        description: Partial template update. All fields are optional.
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/TemplateUpdateRequest'
+            examples:
+              Update variables:
+                summary: Update template variables
+                value:
+                  tokens:
+                    - name: Favorite.Pet
+                      value: Panda
+              Batch update template roles:
+                summary: Batch update template roles (rename one, add a new one, delete the rest)
+                value:
+                  roles:
+                    - id: BqL3PVsB2tPLfaSqUiQQRf
+                      name: Client
+                      signing_order: 1
+                    - name: Manager
+                      signing_order: 2
+              Update variables and roles together:
+                summary: Update variables and batch update roles in a single request
+                value:
+                  tokens:
+                    - name: Favorite.Pet
+                      value: Panda
+                  roles:
+                    - name: Client
+                      signing_order: 1
+                    - name: Manager
+                      signing_order: 2
       responses:
         '204':
           description: No content
@@ -9235,7 +9284,6 @@ components:
     UpdateDocumentRecipient:
       title: Recipient
       allOf:
-        - $ref: '#/components/schemas/BaseActor'
         - $ref: '#/components/schemas/BaseIdentity'
         - type: object
           properties:
@@ -9253,28 +9301,26 @@ components:
                 - recipient
     UpdateDocumentRecipientGroup:
       title: RecipientGroup
-      allOf:
-        - $ref: '#/components/schemas/BaseActor'
-        - type: object
-          properties:
-            id:
-              type: string
-              example: ZPeAfcpzr9aiVs5vqUf6jg
-            name:
-              type: string
-              maxLength: 120
-            type:
-              type: string
-              example: recipient_group
-              enum:
-                - recipient_group
-            members:
-              type: array
-              minLength: 1
-              items:
-                $ref: '#/components/schemas/BaseIdentity'
-          required:
-            - name
+      type: object
+      properties:
+        id:
+          type: string
+          example: ZPeAfcpzr9aiVs5vqUf6jg
+        name:
+          type: string
+          maxLength: 120
+        type:
+          type: string
+          example: recipient_group
+          enum:
+            - recipient_group
+        members:
+          type: array
+          minLength: 1
+          items:
+            $ref: '#/components/schemas/BaseIdentity'
+      required:
+        - name
     UpdateDocumentActor:
       anyOf:
         - $ref: '#/components/schemas/UpdateDocumentRecipient'
@@ -11877,10 +11923,10 @@ components:
                     type: string
                     enum:
                       - Can't send reminder to CC recipient
-                      - Can't send reminder to recipient group
                       - Can't send reminder to the Recipient who completed their part
                       - Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet
                       - Can't send reminder. SMS delivery method is not selected for recipient
+                      - Can't send SMS reminder to recipient group
                       - Can't send SMS reminder. Confirmation of recipient consent is required. Admin should access workspace settings to certify
                       - Can't send SMS reminder to the Recipient more than once every 24 hours
                       - Can't send SMS reminder to the Recipient with no phone number
@@ -11904,7 +11950,6 @@ components:
                     type: string
                     enum:
                       - Can't send reminder to CC recipient
-                      - Can't send reminder to recipient group
                       - Can't send reminder to the Recipient who completed their part
                       - Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet
                       - Can't send reminder. Email delivery method is not selected for recipient
@@ -11943,7 +11988,7 @@ components:
                     example: |
                       **Reminder:** Please review and sign the document *"Service Agreement"*.
 
-                      Thank you,  
+                      Thank you,
                       **The Tech Solutions Team**
                     maxLength: 5000
           required:
@@ -12708,11 +12753,43 @@ components:
             - template.PROCESSED
             - template.UPLOADED
             - template.ERROR
+    TemplateRoleUpdateItems:
+      title: TemplateRoleUpdateItems
+      type: array
+      description: Replace the full set of template roles. Items with an existing `id` are updated, items without an `id` are created as new roles, and existing roles whose `id` is not present in the list are deleted.
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: Existing role identifier. Omit to create a new role.
+            example: BqL3PVsB2tPLfaSqUiQQRf
+          name:
+            type: string
+            maxLength: 255
+            description: Role name. Must be unique within the template.
+            example: Client
+          signing_order:
+            type: integer
+            minimum: 1
+            nullable: true
+            description: Signing order for the role. Set on every role as a contiguous sequence starting from `1` (duplicates allowed for parallel groups, e.g. `[1, 1, 2]`), or use `null` on every role for fully parallel signing.
+            example: 1
+        required:
+          - name
+      example:
+        - id: BqL3PVsB2tPLfaSqUiQQRf
+          name: Client
+          signing_order: 1
+        - name: Manager
+          signing_order: 2
     TemplateUpdateRequest:
       type: object
       properties:
         tokens:
           $ref: '#/components/schemas/Tokens'
+        roles:
+          $ref: '#/components/schemas/TemplateRoleUpdateItems'
     TemplateSettingsResponse:
       type: object
       description: Template settings response.

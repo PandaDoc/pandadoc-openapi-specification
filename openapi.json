@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.24.0"
+    "version": "7.25.2"
   },
   "servers": [
     {
@@ -4573,7 +4573,7 @@
     "/public/v1/documents/{id}/recipients/recipient/{recipient_id}": {
       "patch": {
         "summary": "Update Document Recipient",
-        "description": "Modify recipient's personal details.\n\n> 🚧 Before you start\n> \n> To edit a recipient, please ensure that you have the 'Can Edit Document' permission.\n\nUse this endpoint to easily fix typos in a recipient's name or email, or to change any other recipient information in a sent document. \n\n> 📘 Please note that changes made to a recipient within a document will also update their `Contact` information. However, these changes will not update information about this recipient in other documents where they have already been added.\n\n### Document status\n\n- You can edit a signer in the following document statuses:\n  - 'Draft' (`document.draft`),\n  - 'Waiting Approval' (`document.waiting_approval`),\n  - 'Approved' (`document.approved`),\n  - 'Rejected' (`document.rejected`),\n  - 'Sent' (`document.sent`),\n  - 'Viewed' (`document.viewed`), but only until they have signed the document.\n- You can edit a CC recipient in any document status **except**:\n  - 'Expired' (`document.voided`),\n  - 'Declined' (`document.declined`).\n\n> 📘 Updating a recipient's email after sending a document\n> \n> **Note**: If you update a recipient's email address after sending a document, they will receive an instant notification at the new email address, allowing them access to the document. Access via the previous email will be revoked.\n\n### Restrictions for updating a recipient's email\n\n- You cannot change emails of PandaDoc users.\n- You cannot use the email addresses of existing contacts. If you need to use an email from an existing contact, use the [Change Signer](https://developers.pandadoc.com/reference/change-signer) endpoint to replace a signer with this contact.\n",
+        "description": "Modify recipient's personal details.\n\n> 🚧 Before you start\n> \n> To edit a recipient, please ensure that you have the 'Can Edit Document' permission.\n\nUse this endpoint to easily fix typos in a recipient's name or email, or to change any other recipient information in a sent document. \n\n> 📘 Please note that changes made to a recipient within a document will also update their `Contact` information. However, these changes will not update information about this recipient in other documents where they have already been added.\n\n### Document status\n\n- You can edit a signer in the following document statuses:\n  - 'Draft' (`document.draft`),\n  - 'Waiting Approval' (`document.waiting_approval`),\n  - 'Approved' (`document.approved`),\n  - 'Rejected' (`document.rejected`),\n  - 'Sent' (`document.sent`),\n  - 'Viewed' (`document.viewed`), but only until they have signed the document.\n- You can edit a CC recipient in any document status **except**:\n  - 'Expired' (`document.voided`),\n  - 'Declined' (`document.declined`).\n\n> 📘 Updating a recipient's email after sending a document\n> \n> **Note**: If you update a recipient's email address after sending a document, they will receive an instant notification at the new email address, allowing them access to the document. Access via the previous email will be revoked.\n\n### Restrictions for updating a recipient's email\n\n- You cannot change emails of PandaDoc users.\n- You cannot use the email addresses of existing contacts. If you need to use an email from an existing contact, use the [Change Signer](https://developers.pandadoc.com/reference/change-signer) endpoint to replace a signer with this contact.\n\n### Recipient communication preferences\n\nPandaDoc honors recipient opt-outs when re-notifying a recipient on a sent document. The request will return `400 Bad Request` in the following cases:\n\n- **Email** — when changing a recipient's email or enabling email delivery, if the new email address has been marked as opted-out for your organization (for example, the recipient previously reported a PandaDoc email from your organization as spam).\n- **SMS** — when changing a recipient's phone number or enabling SMS delivery, if the recipient has opted out of receiving SMS messages (for example, by replying STOP).\n\nTo remove a recipient from the opt-out list, contact PandaDoc Support.\n",
         "operationId": "editDocumentRecipient",
         "tags": [
           "Document Recipients"
@@ -6339,7 +6339,7 @@
         ],
         "summary": "Template Update",
         "operationId": "updateTemplate",
-        "description": "> 🚧 Template status\n> \n> You can only update a template in the PROCESSED status (`template.PROCESSED`). \n> \n> After creating a new template, it usually retains a `template.uploaded` status for 3-5 seconds while the template syncs across PandaDoc servers. When the template is available for further API calls, the template moves to the `template.PROCESSED` state. Use [Template Status](https://developers.pandadoc.com/reference/template-status) or Webhooks to check template status.\n",
+        "description": "Update a template. Currently supports updating template variables (`tokens`) and managing template roles.\n\n> 🚧 Template status\n> \n> You can only update a template in the PROCESSED status (`template.PROCESSED`). \n> \n> After creating a new template, it usually retains a `template.uploaded` status for 3-5 seconds while the template syncs across PandaDoc servers. When the template is available for further API calls, the template moves to the `template.PROCESSED` state. Use [Template Status](https://developers.pandadoc.com/reference/template-status) or Webhooks to check template status.\n\n## Managing template roles\n\nPass a `roles` array to replace the full set of template roles in a single request:\n\n  - Items with an existing `id` update that role (`name`, `signing_order`).\n  - Items without an `id` create a new role.\n  - Existing roles whose `id` is not in the array are deleted.\n\nRole names must be unique within a template. Preassigned contacts and contact groups attached to roles in the template editor are preserved on updates and removed together with their role on deletion — they are not managed by this endpoint.\n",
         "parameters": [
           {
             "examples": {
@@ -6357,11 +6357,62 @@
           }
         ],
         "requestBody": {
+          "description": "Partial template update. All fields are optional.",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TemplateUpdateRequest"
+              },
+              "examples": {
+                "Update variables": {
+                  "summary": "Update template variables",
+                  "value": {
+                    "tokens": [
+                      {
+                        "name": "Favorite.Pet",
+                        "value": "Panda"
+                      }
+                    ]
+                  }
+                },
+                "Batch update template roles": {
+                  "summary": "Batch update template roles (rename one, add a new one, delete the rest)",
+                  "value": {
+                    "roles": [
+                      {
+                        "id": "BqL3PVsB2tPLfaSqUiQQRf",
+                        "name": "Client",
+                        "signing_order": 1
+                      },
+                      {
+                        "name": "Manager",
+                        "signing_order": 2
+                      }
+                    ]
+                  }
+                },
+                "Update variables and roles together": {
+                  "summary": "Update variables and batch update roles in a single request",
+                  "value": {
+                    "tokens": [
+                      {
+                        "name": "Favorite.Pet",
+                        "value": "Panda"
+                      }
+                    ],
+                    "roles": [
+                      {
+                        "name": "Client",
+                        "signing_order": 1
+                      },
+                      {
+                        "name": "Manager",
+                        "signing_order": 2
+                      }
+                    ]
+                  }
+                }
               }
             }
           }
@@ -12525,9 +12576,6 @@
         "title": "Recipient",
         "allOf": [
           {
-            "$ref": "#/components/schemas/BaseActor"
-          },
-          {
             "$ref": "#/components/schemas/BaseIdentity"
           },
           {
@@ -12556,40 +12604,33 @@
       },
       "UpdateDocumentRecipientGroup": {
         "title": "RecipientGroup",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseActor"
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "ZPeAfcpzr9aiVs5vqUf6jg"
           },
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "example": "ZPeAfcpzr9aiVs5vqUf6jg"
-              },
-              "name": {
-                "type": "string",
-                "maxLength": 120
-              },
-              "type": {
-                "type": "string",
-                "example": "recipient_group",
-                "enum": [
-                  "recipient_group"
-                ]
-              },
-              "members": {
-                "type": "array",
-                "minLength": 1,
-                "items": {
-                  "$ref": "#/components/schemas/BaseIdentity"
-                }
-              }
-            },
-            "required": [
-              "name"
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "type": {
+            "type": "string",
+            "example": "recipient_group",
+            "enum": [
+              "recipient_group"
             ]
+          },
+          "members": {
+            "type": "array",
+            "minLength": 1,
+            "items": {
+              "$ref": "#/components/schemas/BaseIdentity"
+            }
           }
+        },
+        "required": [
+          "name"
         ]
       },
       "UpdateDocumentActor": {
@@ -16027,10 +16068,10 @@
                       "type": "string",
                       "enum": [
                         "Can't send reminder to CC recipient",
-                        "Can't send reminder to recipient group",
                         "Can't send reminder to the Recipient who completed their part",
                         "Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet",
                         "Can't send reminder. SMS delivery method is not selected for recipient",
+                        "Can't send SMS reminder to recipient group",
                         "Can't send SMS reminder. Confirmation of recipient consent is required. Admin should access workspace settings to certify",
                         "Can't send SMS reminder to the Recipient more than once every 24 hours",
                         "Can't send SMS reminder to the Recipient with no phone number",
@@ -16061,7 +16102,6 @@
                       "type": "string",
                       "enum": [
                         "Can't send reminder to CC recipient",
-                        "Can't send reminder to recipient group",
                         "Can't send reminder to the Recipient who completed their part",
                         "Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet",
                         "Can't send reminder. Email delivery method is not selected for recipient",
@@ -16092,7 +16132,7 @@
                     "message": {
                       "type": "string",
                       "description": "Custom message body of the reminder email. Can include friendly or contextual\ntext encouraging the recipient to complete the signing process.\n\nSupports **Markdown** syntax for rich text formatting (e.g., bold, italics, links, and line breaks).\n",
-                      "example": "**Reminder:** Please review and sign the document *\"Service Agreement\"*.\n\nThank you,  \n**The Tech Solutions Team**\n",
+                      "example": "**Reminder:** Please review and sign the document *\"Service Agreement\"*.\n\nThank you,\n**The Tech Solutions Team**\n",
                       "maxLength": 5000
                     }
                   }
@@ -17185,11 +17225,56 @@
           }
         }
       },
+      "TemplateRoleUpdateItems": {
+        "title": "TemplateRoleUpdateItems",
+        "type": "array",
+        "description": "Replace the full set of template roles. Items with an existing `id` are updated, items without an `id` are created as new roles, and existing roles whose `id` is not present in the list are deleted.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Existing role identifier. Omit to create a new role.",
+              "example": "BqL3PVsB2tPLfaSqUiQQRf"
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 255,
+              "description": "Role name. Must be unique within the template.",
+              "example": "Client"
+            },
+            "signing_order": {
+              "type": "integer",
+              "minimum": 1,
+              "nullable": true,
+              "description": "Signing order for the role. Set on every role as a contiguous sequence starting from `1` (duplicates allowed for parallel groups, e.g. `[1, 1, 2]`), or use `null` on every role for fully parallel signing.",
+              "example": 1
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        "example": [
+          {
+            "id": "BqL3PVsB2tPLfaSqUiQQRf",
+            "name": "Client",
+            "signing_order": 1
+          },
+          {
+            "name": "Manager",
+            "signing_order": 2
+          }
+        ]
+      },
       "TemplateUpdateRequest": {
         "type": "object",
         "properties": {
           "tokens": {
             "$ref": "#/components/schemas/Tokens"
+          },
+          "roles": {
+            "$ref": "#/components/schemas/TemplateRoleUpdateItems"
           }
         }
       },
