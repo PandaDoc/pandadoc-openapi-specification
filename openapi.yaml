@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.25.1
+  version: 7.25.2
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -9284,7 +9284,6 @@ components:
     UpdateDocumentRecipient:
       title: Recipient
       allOf:
-        - $ref: '#/components/schemas/BaseActor'
         - $ref: '#/components/schemas/BaseIdentity'
         - type: object
           properties:
@@ -9302,28 +9301,26 @@ components:
                 - recipient
     UpdateDocumentRecipientGroup:
       title: RecipientGroup
-      allOf:
-        - $ref: '#/components/schemas/BaseActor'
-        - type: object
-          properties:
-            id:
-              type: string
-              example: ZPeAfcpzr9aiVs5vqUf6jg
-            name:
-              type: string
-              maxLength: 120
-            type:
-              type: string
-              example: recipient_group
-              enum:
-                - recipient_group
-            members:
-              type: array
-              minLength: 1
-              items:
-                $ref: '#/components/schemas/BaseIdentity'
-          required:
-            - name
+      type: object
+      properties:
+        id:
+          type: string
+          example: ZPeAfcpzr9aiVs5vqUf6jg
+        name:
+          type: string
+          maxLength: 120
+        type:
+          type: string
+          example: recipient_group
+          enum:
+            - recipient_group
+        members:
+          type: array
+          minLength: 1
+          items:
+            $ref: '#/components/schemas/BaseIdentity'
+      required:
+        - name
     UpdateDocumentActor:
       anyOf:
         - $ref: '#/components/schemas/UpdateDocumentRecipient'
