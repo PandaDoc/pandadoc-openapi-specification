@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.25.0
+  version: 7.25.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -11926,10 +11926,10 @@ components:
                     type: string
                     enum:
                       - Can't send reminder to CC recipient
-                      - Can't send reminder to recipient group
                       - Can't send reminder to the Recipient who completed their part
                       - Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet
                       - Can't send reminder. SMS delivery method is not selected for recipient
+                      - Can't send SMS reminder to recipient group
                       - Can't send SMS reminder. Confirmation of recipient consent is required. Admin should access workspace settings to certify
                       - Can't send SMS reminder to the Recipient more than once every 24 hours
                       - Can't send SMS reminder to the Recipient with no phone number
@@ -11953,7 +11953,6 @@ components:
                     type: string
                     enum:
                       - Can't send reminder to CC recipient
-                      - Can't send reminder to recipient group
                       - Can't send reminder to the Recipient who completed their part
                       - Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet
                       - Can't send reminder. Email delivery method is not selected for recipient
@@ -11992,7 +11991,7 @@ components:
                     example: |
                       **Reminder:** Please review and sign the document *"Service Agreement"*.
 
-                      Thank you,  
+                      Thank you,
                       **The Tech Solutions Team**
                     maxLength: 5000
           required:

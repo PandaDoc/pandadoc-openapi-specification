@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.25.0"
+    "version": "7.25.1"
   },
   "servers": [
     {
@@ -16078,10 +16078,10 @@
                       "type": "string",
                       "enum": [
                         "Can't send reminder to CC recipient",
-                        "Can't send reminder to recipient group",
                         "Can't send reminder to the Recipient who completed their part",
                         "Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet",
                         "Can't send reminder. SMS delivery method is not selected for recipient",
+                        "Can't send SMS reminder to recipient group",
                         "Can't send SMS reminder. Confirmation of recipient consent is required. Admin should access workspace settings to certify",
                         "Can't send SMS reminder to the Recipient more than once every 24 hours",
                         "Can't send SMS reminder to the Recipient with no phone number",
@@ -16112,7 +16112,6 @@
                       "type": "string",
                       "enum": [
                         "Can't send reminder to CC recipient",
-                        "Can't send reminder to recipient group",
                         "Can't send reminder to the Recipient who completed their part",
                         "Can't send reminder. Signing order is enabled and this Recipient can't sign the document yet",
                         "Can't send reminder. Email delivery method is not selected for recipient",
@@ -16143,7 +16142,7 @@
                     "message": {
                       "type": "string",
                       "description": "Custom message body of the reminder email. Can include friendly or contextual\ntext encouraging the recipient to complete the signing process.\n\nSupports **Markdown** syntax for rich text formatting (e.g., bold, italics, links, and line breaks).\n",
-                      "example": "**Reminder:** Please review and sign the document *\"Service Agreement\"*.\n\nThank you,  \n**The Tech Solutions Team**\n",
+                      "example": "**Reminder:** Please review and sign the document *\"Service Agreement\"*.\n\nThank you,\n**The Tech Solutions Team**\n",
                       "maxLength": 5000
                     }
                   }
