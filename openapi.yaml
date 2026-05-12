@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.25.2
+  version: 7.25.3
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -2428,8 +2428,8 @@ paths:
                   entity_type: deal
                   entity_id: '134'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
