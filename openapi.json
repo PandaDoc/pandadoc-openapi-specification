@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.25.3"
+    "version": "7.26.0"
   },
   "servers": [
     {
@@ -10693,6 +10693,97 @@
         }
       }
     },
+    "/public/v1/workspaces/{workspace_id}/members/{member_id}/role": {
+      "patch": {
+        "tags": [
+          "User and Workspace management"
+        ],
+        "summary": "Change Member Role in Workspace",
+        "description": "Change the role of an existing workspace member.\n\n- You must be an organization admin, a workspace admin, or hold a role with permission to edit member roles to call this endpoint.\n- The `role` field accepts either a built-in role name (`Admin`, `Manager`, `Member`, `Collaborator`) or the name of a custom role defined for the workspace.\n- The role of the workspace owner cannot be changed.\n- The role of the last member with admin privileges in the workspace cannot be changed.\n- When a member with a `Guest` license is promoted to any non-`Collaborator` role, the user's license is automatically upgraded to `Full (Standard)`. If the organization has no free seats available, an additional seat is purchased.\n",
+        "operationId": "changeMemberRole",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "in": "path",
+            "description": "Workspace id.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "member_id",
+            "in": "path",
+            "description": "Member id.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "example": "nPh2PDhFdDqAES9k64h9qX"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMemberRoleRequest"
+              },
+              "examples": {
+                "Change Member Role": {
+                  "value": {
+                    "role": "Member"
+                  }
+                },
+                "Assign Custom Role": {
+                  "value": {
+                    "role": "CustomRole"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateMemberRoleResponse"
+                },
+                "examples": {
+                  "Change Member Role": {
+                    "value": {
+                      "member_id": "iMymdDd9XFD3HyxP5VD67Q",
+                      "workspace_id": "2eWSKSvVqmuVCnuUK3iWwD",
+                      "role": "Member",
+                      "email": "email@example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400BadRequestUpdateMemberRoleError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
     "/public/v1/workspaces/{workspace_id}/api-keys": {
       "post": {
         "tags": [
@@ -20349,6 +20440,37 @@
           }
         }
       },
+      "UpdateMemberRoleRequest": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/WorkspaceMemberRoleEnum"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "UpdateMemberRoleResponse": {
+        "type": "object",
+        "properties": {
+          "member_id": {
+            "type": "string",
+            "example": "iMymdDd9XFD3HyxP5VD67Q"
+          },
+          "workspace_id": {
+            "type": "string",
+            "example": "2eWSKSvVqmuVCnuUK3iWwD"
+          },
+          "role": {
+            "$ref": "#/components/schemas/WorkspaceMemberRoleEnum"
+          },
+          "email": {
+            "type": "string",
+            "example": "email@example.com"
+          }
+        }
+      },
       "ApiKeyTypeEnum": {
         "type": "string",
         "enum": [
@@ -21064,6 +21186,40 @@
                 "detail": {
                   "type": "string",
                   "example": "This member or workspace does not exist."
+                }
+              }
+            }
+          }
+        }
+      },
+      "400BadRequestUpdateMemberRoleError": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "request_error"
+                },
+                "detail": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "description": "Field-level validation errors.",
+                      "example": {
+                        "role": [
+                          "The role 'NonExistentRole' does not exist in the workspace with ID 'BhVzRcxH9Z2LgfPPGXFUBa'. Please ensure the role is correctly defined and try again.",
+                          "This field is required."
+                        ]
+                      }
+                    },
+                    {
+                      "type": "string",
+                      "description": "A business-rule violation. Possible values include:\n  - `Cannot change the role of the workspace owner.`\n  - `Cannot change the role of the last member with admin privileges.`\n",
+                      "example": "Cannot change the role of the workspace owner."
+                    }
+                  ]
                 }
               }
             }
