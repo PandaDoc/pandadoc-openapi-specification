@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.26.0"
+    "version": "7.27.0"
   },
   "servers": [
     {
@@ -11306,6 +11306,242 @@
           }
         }
       }
+    },
+    "/public/beta/documents/search": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "x-internal": true,
+        "summary": "[Beta] List Documents Search",
+        "description": "Find documents from a natural-language query. PandaDoc AI interprets\nthe query and returns the matching documents.\n\nPandaDoc offers two document search tools: this AI-powered search\nand the structured <a href=\"#/operations/listDocuments\">List Documents</a>\nendpoint.\n\n<details><summary><strong>Document Search Tools Guide</strong> — click to expand</summary>\n\n#### When to use AI Search (this endpoint)\n\n- The query is in natural language (e.g., \"show me all completed documents from Q2 2026\")\n- The query mentions people by name (e.g., \"contracts shared with John Smith\")\n- The query uses relative date expressions (e.g., \"last week\", \"this quarter\")\n- You want the system to automatically determine the best filtering strategy\n- You want follow-up suggestions to help refine the search\n\n#### When to use List Documents\n\n- You already have exact, structured filter parameters (specific status codes, precise ISO-8601 date ranges)\n- You need to paginate through a large result set (explicit page/count control)\n- You need faster, more predictable response times\n- You need deterministic, repeatable queries for automation workflows\n\n#### Comparison\n\n| Feature                  | AI Search                                           | List Documents                                   |\n| ------------------------ | --------------------------------------------------- | ------------------------------------------------ |\n| **Input**                | Single natural-language query                       | Search query + optional structured filters       |\n| **Date handling**        | Understands relative dates (\"last week\", \"Q2 2026\") | Requires explicit ISO-8601 date range            |\n| **Status filtering**     | Interprets from query (\"completed\", \"sent\")         | Requires numeric status codes                    |\n| **Contact/owner search** | Resolves people by name                             | Not supported                                    |\n| **Pagination**           | Returns top 100 results                             | Supports explicit page and page size (up to 100) |\n| **Suggestions**          | Returns follow-up suggestions for refinement        | No suggestions                                   |\n| **Best for**             | Conversational, exploratory search                  | Precise, structured, repeatable queries          |\n\n</details>\n\nThe response may return fewer items than the total matches. The\nsearch caps the returned list based on query complexity: `count`\nshows the number of items returned in `results`. When the query\nmatches more documents than returned, use one of the returned\n`suggestions` as a stricter follow-up query to narrow the results.\n\n> 🚧 **Beta**\n>\n> This endpoint is currently in beta and may change without notice.\n",
+        "operationId": "searchDocumentsAi",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Natural-language search query. Supports filtering by status, owner, dates, and folder. Also supports keyword content search across document titles and body text.",
+            "examples": {
+              "Filter by Date": {
+                "value": "contracts created last month"
+              },
+              "Filter by Status and Owner": {
+                "value": "completed documents owned by Jane Doe"
+              },
+              "Content Search": {
+                "value": "documents mentioning NDA terms"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentSearchResponse"
+                },
+                "examples": {
+                  "Filtering Search": {
+                    "value": {
+                      "results": [
+                        {
+                          "document_id": "msFYActMfJHqNTKH9ig2DF",
+                          "name": "Service Agreement - Acme Corp",
+                          "status": "document.completed",
+                          "date_created": "2026-03-15T10:30:00Z",
+                          "owner": {
+                            "id": "9FeAY2NB3C9qDdtQRb4tTL",
+                            "name": "Jane Doe",
+                            "email": "jane.doe@example.com",
+                            "avatar": null
+                          },
+                          "folder": {
+                            "id": "Uf7yNEwkELsazbKHDMDAeV",
+                            "name": "Active Contracts"
+                          },
+                          "extra_fields": {
+                            "date_sent": "2026-03-16T09:00:00Z",
+                            "date_completed": "2026-03-20T14:22:00Z",
+                            "tags": [
+                              "legal",
+                              "Q1-2026"
+                            ],
+                            "recipients": [
+                              {
+                                "id": "bQySP2djjJkNKxyVbQ8pu4",
+                                "email": "john.smith@example.com",
+                                "first_name": "John",
+                                "last_name": "Smith",
+                                "role_name": "signer",
+                                "date_signed": "2026-03-20T14:22:00Z",
+                                "type": "signer",
+                                "company": "Acme Corp",
+                                "is_done": true
+                              }
+                            ],
+                            "recipient_count": 1,
+                            "signed_count": 1,
+                            "completion_rate": 1,
+                            "total": {
+                              "amount": 15000,
+                              "currency": "USD"
+                            },
+                            "document_type": {
+                              "id": "pXwnAhg8bk9SoBEGGdNu3d",
+                              "type": "contract",
+                              "general_type": "agreement"
+                            }
+                          }
+                        }
+                      ],
+                      "count": 1,
+                      "suggestions": [
+                        {
+                          "text": "Show only completed contracts"
+                        },
+                        {
+                          "text": "Filter by owner Jane Doe"
+                        }
+                      ],
+                      "message": "Found 1 document matching your query.",
+                      "intent": [
+                        {
+                          "field": "status",
+                          "value": "document.completed"
+                        },
+                        {
+                          "field": "date_created",
+                          "value": "last month"
+                        }
+                      ]
+                    }
+                  },
+                  "Empty Results": {
+                    "value": {
+                      "results": [],
+                      "count": 0,
+                      "suggestions": [
+                        {
+                          "text": "Try searching for all draft documents"
+                        }
+                      ],
+                      "message": "No documents found matching your query.",
+                      "intent": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400BadRequestV2"
+          },
+          "401": {
+            "$ref": "#/components/responses/401AuthErrorV2"
+          },
+          "403": {
+            "$ref": "#/components/responses/403PermissionDeniedV2"
+          },
+          "429": {
+            "$ref": "#/components/responses/429TooManyRequestsV2"
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "details"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "internal"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "pointer": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "data": {
+                            "type": "object",
+                            "nullable": true,
+                            "additionalProperties": true
+                          }
+                        },
+                        "required": [
+                          "code"
+                        ]
+                      },
+                      "example": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "The search did not complete within the allowed time. Retry the request or simplify the query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "details"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "timeout"
+                    },
+                    "details": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "pointer": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "data": {
+                            "type": "object",
+                            "nullable": true,
+                            "additionalProperties": true
+                          }
+                        },
+                        "required": [
+                          "code"
+                        ]
+                      },
+                      "example": []
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -20695,6 +20931,220 @@
           "content": {
             "type": "string",
             "description": "Document body as plain text (`format=plaintext`) or markdown (`format=markdown`).\n"
+          }
+        }
+      },
+      "DocumentSearchResultOwner": {
+        "title": "DocumentSearchResultOwner",
+        "description": "Owner of the document",
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "email"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Owner's user identifier.",
+            "example": "9FeAY2NB3C9qDdtQRb4tTL"
+          },
+          "name": {
+            "type": "string",
+            "description": "Owner's display name.",
+            "example": "Jane Doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "Owner's email address.",
+            "example": "jane.doe@example.com"
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true,
+            "description": "Owner's avatar URL. null if not set.",
+            "example": null
+          }
+        }
+      },
+      "DocumentSearchResultFolder": {
+        "title": "DocumentSearchResultFolder",
+        "description": "Folder containing the document",
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Folder identifier.",
+            "example": "Uf7yNEwkELsazbKHDMDAeV"
+          },
+          "name": {
+            "type": "string",
+            "description": "Folder display name.",
+            "example": "Active Contracts"
+          }
+        }
+      },
+      "DocumentSearchResult": {
+        "title": "DocumentSearchResult",
+        "description": "A single document returned by the search",
+        "type": "object",
+        "required": [
+          "document_id",
+          "name",
+          "status",
+          "date_created",
+          "owner",
+          "folder",
+          "extra_fields"
+        ],
+        "properties": {
+          "document_id": {
+            "type": "string",
+            "description": "Document identifier.",
+            "example": "msFYActMfJHqNTKH9ig2DF"
+          },
+          "name": {
+            "type": "string",
+            "description": "Document title or name.",
+            "example": "Service Agreement - Acme Corp"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DocumentStatusEnum"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the document was created (ISO 8601).",
+            "example": "2026-03-15T10:30:00Z"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/DocumentSearchResultOwner"
+          },
+          "folder": {
+            "$ref": "#/components/schemas/DocumentSearchResultFolder"
+          },
+          "extra_fields": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Additional document fields dynamically selected by the AI based on the query. Empty object when only standard fields were requested. Fields that may appear include: `title`, `date_modified`, `date_of_last_action`, `date_sent`, `date_first_signed`, `date_last_signed`, `date_first_viewed`, `date_last_viewed`, `date_completed`, `date_expired`, `date_expiration`, `removed`, `parent`, `path`, `recipients`, `recipient_count`, `viewed_total_count`, `viewed_count`, `signed_count`, `completion_rate`, `time_to_completion_hours`, `total`, `tags`, `document_type`, `effective_permissions`, and `clm_metadata`.",
+            "example": {
+              "date_sent": "2026-03-16T09:00:00Z",
+              "date_completed": "2026-03-20T14:22:00Z",
+              "tags": [
+                "legal",
+                "Q1-2026"
+              ],
+              "recipients": [
+                {
+                  "id": "bQySP2djjJkNKxyVbQ8pu4",
+                  "email": "john.smith@example.com",
+                  "first_name": "John",
+                  "last_name": "Smith",
+                  "role_name": "signer",
+                  "date_signed": "2026-03-20T14:22:00Z",
+                  "type": "signer",
+                  "company": "Acme Corp",
+                  "is_done": true
+                }
+              ],
+              "recipient_count": 1,
+              "signed_count": 1,
+              "completion_rate": 1,
+              "total": {
+                "amount": 15000,
+                "currency": "USD"
+              },
+              "document_type": {
+                "id": "pXwnAhg8bk9SoBEGGdNu3d",
+                "type": "contract",
+                "general_type": "agreement"
+              }
+            }
+          }
+        }
+      },
+      "DocumentSearchSuggestion": {
+        "title": "DocumentSearchSuggestion",
+        "description": "A follow-up search suggestion for refining results",
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Natural-language suggestion text. Designed to work as a valid query in the next call.",
+            "example": "Show only completed contracts"
+          }
+        }
+      },
+      "DocumentSearchAppliedFilter": {
+        "title": "DocumentSearchAppliedFilter",
+        "description": "A filter applied when resolving the natural-language query (e.g. field=\"status\", value=\"document.completed\")",
+        "type": "object",
+        "required": [
+          "field",
+          "value"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field or dimension used for filtering.",
+            "example": "status"
+          },
+          "value": {
+            "type": "string",
+            "description": "The resolved value applied for that field.",
+            "example": "document.completed"
+          }
+        }
+      },
+      "DocumentSearchResponse": {
+        "title": "DocumentSearchResponse",
+        "description": "Response containing matching documents and follow-up suggestions",
+        "type": "object",
+        "required": [
+          "results",
+          "count",
+          "suggestions",
+          "message",
+          "intent"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentSearchResult"
+            },
+            "description": "Matching documents. Empty list when nothing matches."
+          },
+          "count": {
+            "type": "integer",
+            "description": "Total number of matching documents.",
+            "example": 12
+          },
+          "suggestions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentSearchSuggestion"
+            },
+            "description": "Follow-up suggestions to narrow or refine the search."
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-friendly summary of the search outcome.",
+            "example": "Found 12 documents matching your query."
+          },
+          "intent": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentSearchAppliedFilter"
+            },
+            "description": "Filters that were applied to resolve the query. Helps the caller understand how the query was interpreted."
           }
         }
       }
