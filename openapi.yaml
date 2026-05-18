@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.27.0
+  version: 7.27.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -947,6 +947,8 @@ paths:
           description: No content
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
     patch:
       tags:
         - Documents
@@ -1000,6 +1002,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{document_id}/auto-reminders:
@@ -1327,6 +1331,8 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/status?upload:
@@ -1406,6 +1412,8 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/draft:
@@ -1451,6 +1459,8 @@ paths:
                     date_modified: '2017-09-04T02:21:13.963750Z'
                     expiration_date: null
                     version: '2'
+        '423':
+          $ref: '#/components/responses/423'
   /public/v1/documents/{id}/details:
     get:
       tags:
@@ -1472,6 +1482,7 @@ paths:
         - Tags
         - Linked objects
         - [Approval flow](https://support.pandadoc.com/en/articles/9714799-approval-workflow) (if present)
+        - Active editing lock (holder and expiry), when the document is locked
         - Timestamps associated with a document. Note that `date_modified` means any changes associated with the recipients and document status, while `content_date_modified` reflects any changes in the document content.
       parameters:
         - examples:
@@ -1599,6 +1610,7 @@ paths:
                       amount: '0'
                       currency: EUR
                     version: '2'
+                    lock: null
                 Document from empty template:
                   value:
                     approval_execution: null
@@ -1639,6 +1651,7 @@ paths:
                       amount: '0'
                       currency: USD
                     version: '2'
+                    lock: null
                 API Sample Document from PandaDoc template:
                   value:
                     id: 7kqXgjFejB2toXxjcC5jfZ
@@ -1937,6 +1950,7 @@ paths:
                     grand_total:
                       amount: '29.99'
                       currency: USD
+                    lock: null
                     linked_objects:
                       - provider: hubspot
                         entity_type: deal
@@ -2018,6 +2032,8 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/editing-sessions:
@@ -2449,6 +2465,10 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/linked-objects/{linked_object_id}:
@@ -2484,6 +2504,8 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/attachments:
@@ -2584,6 +2606,8 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/attachments?upload:
@@ -2621,6 +2645,8 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/attachments/{attachment_id}:
@@ -2701,6 +2727,8 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/attachments/{attachment_id}/download:
@@ -2872,6 +2900,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
     post:
@@ -2961,6 +2991,8 @@ paths:
           $ref: '#/components/responses/401'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v2/documents/{document_id}/audit-trail:
@@ -3141,6 +3173,8 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/ownership:
@@ -3199,6 +3233,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/append-content-library-item:
@@ -3270,6 +3306,8 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/recipients:
@@ -3340,6 +3378,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/recipients/{recipient_id}:
@@ -3385,6 +3425,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/recipients/recipient/{recipient_id}:
@@ -3479,6 +3521,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{id}/recipients/{recipient_id}/reassign:
@@ -3556,6 +3600,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{document_id}/send-reminder:
@@ -3767,6 +3813,8 @@ paths:
           $ref: '#/components/responses/400ValidationError'
         '401':
           $ref: '#/components/responses/401'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{document_id}/sections/uploads?upload:
@@ -3832,6 +3880,8 @@ paths:
           $ref: '#/components/responses/400ValidationError'
         '401':
           $ref: '#/components/responses/401'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/documents/{document_id}/sections/uploads/{upload_id}:
@@ -3982,6 +4032,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '423':
+          $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
   /public/v2/dsv/{document_id}/add-named-items:
@@ -9552,6 +9604,46 @@ components:
         uuid:
           type: string
           example: msFYActMfJHqNTKH8YSvF1
+    DocumentLockInfo:
+      type: object
+      description: |
+        Describes the user and lifetime of an active document editing lock.
+      properties:
+        locked_by_user_id:
+          type: string
+          minLength: 22
+          maxLength: 22
+          description: A unique identifier of the user holding the lock.
+          example: ajnN7eGutJZsRKjQrNuPkh
+        lock_type:
+          type: string
+          enum:
+            - wopi_editing
+          description: Type of the active document lock.
+        expires_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp when the lock automatically expires.
+    DocumentLockedResponse:
+      type: object
+      description: |
+        Generic response payload returned by any write API endpoint
+        when the target document is currently held by an active editing lock.
+      allOf:
+        - $ref: '#/components/schemas/DocumentLockInfo'
+        - type: object
+          required:
+            - type
+            - detail
+          properties:
+            type:
+              type: string
+              description: Error type discriminator.
+              enum:
+                - document_locked
+            detail:
+              type: string
+              description: Human-readable explanation of the lock condition.
     UpdateDocumentRecipient:
       title: Recipient
       allOf:
@@ -11176,6 +11268,13 @@ components:
           type: string
           description: Document version.
           example: '1'
+        lock:
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/DocumentLockInfo'
+            - type: object
+              description: |
+                Active editing lock on the document, if any. `null` when the document is not locked or the lock has expired.
     DocumentSendRequest:
       type: object
       properties:
@@ -15753,6 +15852,12 @@ components:
               info_message:
                 type: string
                 example: Warning - Document status document.uploaded doesn’t mean that the document already exists - processing happens asynchronously. Please follow the documentation section https://developers.pandadoc.com/reference/new-document
+    '423':
+      description: Document is locked for editing
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DocumentLockedResponse'
     '429':
       description: Too Many Requests
       content:

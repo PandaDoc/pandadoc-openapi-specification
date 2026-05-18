@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.27.0"
+    "version": "7.27.1"
   },
   "servers": [
     {
@@ -1272,6 +1272,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           }
         }
       },
@@ -1339,6 +1342,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -1763,6 +1769,9 @@
           "409": {
             "$ref": "#/components/responses/409"
           },
+          "423": {
+            "$ref": "#/components/responses/423"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -1845,6 +1854,9 @@
           "409": {
             "$ref": "#/components/responses/409"
           },
+          "423": {
+            "$ref": "#/components/responses/423"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -1898,6 +1910,9 @@
                 }
               }
             }
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           }
         }
       }
@@ -1909,7 +1924,7 @@
         ],
         "summary": "Document Details",
         "operationId": "detailsDocument",
-        "description": "Return detailed data about a document. Use Document Status for getting just a basic info and status.\n\nGet details about a document by its `id`. Details include:\n\n- Basic document information (name, document state, owner, sender, grand total, etc.)\n- Recipients (completion status, signing order, etc.)\n- Fields with values (incl. Collect Files field)\n- Tokens (variables) with values\n- Pricing information (pricing tables, products, quotes, etc.)\n- Content block names for table, image, and text blocks (tables, images, texts)\n- Metadata\n- Tags\n- Linked objects\n- [Approval flow](https://support.pandadoc.com/en/articles/9714799-approval-workflow) (if present)\n- Timestamps associated with a document. Note that `date_modified` means any changes associated with the recipients and document status, while `content_date_modified` reflects any changes in the document content.\n",
+        "description": "Return detailed data about a document. Use Document Status for getting just a basic info and status.\n\nGet details about a document by its `id`. Details include:\n\n- Basic document information (name, document state, owner, sender, grand total, etc.)\n- Recipients (completion status, signing order, etc.)\n- Fields with values (incl. Collect Files field)\n- Tokens (variables) with values\n- Pricing information (pricing tables, products, quotes, etc.)\n- Content block names for table, image, and text blocks (tables, images, texts)\n- Metadata\n- Tags\n- Linked objects\n- [Approval flow](https://support.pandadoc.com/en/articles/9714799-approval-workflow) (if present)\n- Active editing lock (holder and expiry), when the document is locked\n- Timestamps associated with a document. Note that `date_modified` means any changes associated with the recipients and document status, while `content_date_modified` reflects any changes in the document content.\n",
         "parameters": [
           {
             "examples": {
@@ -2074,7 +2089,8 @@
                         "amount": "0",
                         "currency": "EUR"
                       },
-                      "version": "2"
+                      "version": "2",
+                      "lock": null
                     }
                   },
                   "Document from empty template": {
@@ -2120,7 +2136,8 @@
                         "amount": "0",
                         "currency": "USD"
                       },
-                      "version": "2"
+                      "version": "2",
+                      "lock": null
                     }
                   },
                   "API Sample Document from PandaDoc template": {
@@ -2519,6 +2536,7 @@
                         "amount": "29.99",
                         "currency": "USD"
                       },
+                      "lock": null,
                       "linked_objects": [
                         {
                           "provider": "hubspot",
@@ -2604,6 +2622,9 @@
           },
           "409": {
             "$ref": "#/components/responses/409"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -3217,6 +3238,12 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -3268,6 +3295,9 @@
           },
           "409": {
             "$ref": "#/components/responses/409"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -3420,6 +3450,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "423": {
+            "$ref": "#/components/responses/423"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -3476,6 +3509,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -3593,6 +3629,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -3846,6 +3885,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "423": {
+            "$ref": "#/components/responses/423"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -3970,6 +4012,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -4231,6 +4276,9 @@
           "409": {
             "$ref": "#/components/responses/409"
           },
+          "423": {
+            "$ref": "#/components/responses/423"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -4316,6 +4364,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -4441,6 +4492,9 @@
           "409": {
             "$ref": "#/components/responses/409"
           },
+          "423": {
+            "$ref": "#/components/responses/423"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -4515,6 +4569,9 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
+          "423": {
+            "$ref": "#/components/responses/423"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -4563,6 +4620,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -4641,6 +4701,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -4725,6 +4788,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -5057,6 +5123,9 @@
           "401": {
             "$ref": "#/components/responses/401"
           },
+          "423": {
+            "$ref": "#/components/responses/423"
+          },
           "429": {
             "$ref": "#/components/responses/429"
           }
@@ -5152,6 +5221,9 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -5342,6 +5414,9 @@
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "423": {
+            "$ref": "#/components/responses/423"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -12899,6 +12974,60 @@
           }
         }
       },
+      "DocumentLockInfo": {
+        "type": "object",
+        "description": "Describes the user and lifetime of an active document editing lock.\n",
+        "properties": {
+          "locked_by_user_id": {
+            "type": "string",
+            "minLength": 22,
+            "maxLength": 22,
+            "description": "A unique identifier of the user holding the lock.",
+            "example": "ajnN7eGutJZsRKjQrNuPkh"
+          },
+          "lock_type": {
+            "type": "string",
+            "enum": [
+              "wopi_editing"
+            ],
+            "description": "Type of the active document lock."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp when the lock automatically expires."
+          }
+        }
+      },
+      "DocumentLockedResponse": {
+        "type": "object",
+        "description": "Generic response payload returned by any write API endpoint\nwhen the target document is currently held by an active editing lock.\n",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DocumentLockInfo"
+          },
+          {
+            "type": "object",
+            "required": [
+              "type",
+              "detail"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Error type discriminator.",
+                "enum": [
+                  "document_locked"
+                ]
+              },
+              "detail": {
+                "type": "string",
+                "description": "Human-readable explanation of the lock condition."
+              }
+            }
+          }
+        ]
+      },
       "UpdateDocumentRecipient": {
         "title": "Recipient",
         "allOf": [
@@ -15167,6 +15296,18 @@
             "type": "string",
             "description": "Document version.",
             "example": "1"
+          },
+          "lock": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DocumentLockInfo"
+              },
+              {
+                "type": "object",
+                "description": "Active editing lock on the document, if any. `null` when the document is not locked or the lock has expired.\n"
+              }
+            ]
           }
         }
       },
@@ -21252,6 +21393,16 @@
                   "example": "Warning - Document status document.uploaded doesn’t mean that the document already exists - processing happens asynchronously. Please follow the documentation section https://developers.pandadoc.com/reference/new-document"
                 }
               }
+            }
+          }
+        }
+      },
+      "423": {
+        "description": "Document is locked for editing",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DocumentLockedResponse"
             }
           }
         }
