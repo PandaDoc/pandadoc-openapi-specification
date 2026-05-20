@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.27.1
+  version: 7.28.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -8253,7 +8253,7 @@ paths:
               $ref: '#/components/headers/RetryAfter'
         '400':
           description: |
-            The request is invalid. Either the `type` query parameter is missing, or its value is not one of the allowed values (detailed, short, headline).
+            The request is invalid. Either the `type` query parameter is missing, or its value is not one of the allowed values (detailed, short, headline, xshort).
           content:
             application/json:
               schema:
@@ -8270,7 +8270,7 @@ paths:
                   value:
                     error:
                       code: invalid_type
-                      message: 'The type must be one of: detailed, short, headline.'
+                      message: 'The type must be one of: detailed, short, headline, xshort.'
         '401':
           $ref: '#/components/responses/401AuthErrorV2'
         '403':
@@ -15556,6 +15556,7 @@ components:
         - detailed
         - short
         - headline
+        - xshort
     DocumentSummaryResponse:
       type: object
       description: |
