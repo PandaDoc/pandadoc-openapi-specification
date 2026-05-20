@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.28.0"
+    "version": "7.28.1"
   },
   "servers": [
     {
@@ -11454,7 +11454,7 @@
                                 "email": "john.smith@example.com",
                                 "first_name": "John",
                                 "last_name": "Smith",
-                                "role_name": "signer",
+                                "role_name": "Client",
                                 "date_signed": "2026-03-20T14:22:00Z",
                                 "type": "signer",
                                 "company": "Acme Corp",
@@ -11470,8 +11470,8 @@
                             },
                             "document_type": {
                               "id": "pXwnAhg8bk9SoBEGGdNu3d",
-                              "type": "contract",
-                              "general_type": "agreement"
+                              "type": "Non-Disclosure Agreement",
+                              "general_type": "Agreement"
                             }
                           }
                         }
@@ -11534,39 +11534,17 @@
                 "schema": {
                   "type": "object",
                   "required": [
-                    "code",
-                    "details"
+                    "code"
                   ],
                   "properties": {
                     "code": {
                       "type": "string",
                       "example": "internal"
-                    },
-                    "details": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "code": {
-                            "type": "string"
-                          },
-                          "pointer": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "data": {
-                            "type": "object",
-                            "nullable": true,
-                            "additionalProperties": true
-                          }
-                        },
-                        "required": [
-                          "code"
-                        ]
-                      },
-                      "example": []
                     }
                   }
+                },
+                "example": {
+                  "code": "internal"
                 }
               }
             }
@@ -11578,39 +11556,17 @@
                 "schema": {
                   "type": "object",
                   "required": [
-                    "code",
-                    "details"
+                    "code"
                   ],
                   "properties": {
                     "code": {
                       "type": "string",
                       "example": "timeout"
-                    },
-                    "details": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "code": {
-                            "type": "string"
-                          },
-                          "pointer": {
-                            "type": "string",
-                            "nullable": true
-                          },
-                          "data": {
-                            "type": "object",
-                            "nullable": true,
-                            "additionalProperties": true
-                          }
-                        },
-                        "required": [
-                          "code"
-                        ]
-                      },
-                      "example": []
                     }
                   }
+                },
+                "example": {
+                  "code": "timeout"
                 }
               }
             }
@@ -21093,7 +21049,7 @@
           },
           "name": {
             "type": "string",
-            "description": "Owner's display name.",
+            "description": "Owner's display name (first and last name combined).",
             "example": "Jane Doe"
           },
           "email": {
@@ -21127,6 +21083,521 @@
             "type": "string",
             "description": "Folder display name.",
             "example": "Active Contracts"
+          }
+        }
+      },
+      "HighLevelDocumentTypeEnum": {
+        "type": "string",
+        "enum": [
+          "regular document",
+          "template",
+          "content library item"
+        ],
+        "example": "regular document"
+      },
+      "DocumentSearchParentTemplate": {
+        "title": "DocumentSearchParentTemplate",
+        "description": "Template from which the document was created. null when the document was not created from a template.",
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Template identifier.",
+            "example": "7Xfnrk7dTaWJ78wNUrg3rr"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Template name.",
+            "example": "Master Sales Contract"
+          }
+        }
+      },
+      "DocumentSearchPathEntry": {
+        "title": "DocumentSearchPathEntry",
+        "description": "A folder in the document's path from root to its location.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Folder identifier.",
+            "example": "Uf7yNEwkELsazbKHDMDAeV"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Folder name.",
+            "example": "Sales"
+          }
+        }
+      },
+      "RecipientTypeEnum": {
+        "type": "string",
+        "enum": [
+          "signer",
+          "CC",
+          "approver"
+        ],
+        "example": "signer"
+      },
+      "DocumentSearchRecipient": {
+        "title": "DocumentSearchRecipient",
+        "description": "A document recipient (signer, viewer, approver, etc.).",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Recipient identifier.",
+            "example": "bQySP2djjJkNKxyVbQ8pu4"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true,
+            "description": "Email address.",
+            "example": "john.smith@example.com"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "description": "Phone number.",
+            "example": "+1-555-0123"
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "First name.",
+            "example": "John"
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Last name.",
+            "example": "Smith"
+          },
+          "role_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "User-defined role label assigned to this recipient on the document (e.g. \"Client\", \"Sender\", \"Manager\"). Free-form string set by the document creator.",
+            "example": "Client"
+          },
+          "date_signed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the recipient signed the document (ISO 8601).",
+            "example": "2026-03-20T14:22:00Z"
+          },
+          "date_first_viewed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the recipient first viewed the document (ISO 8601).",
+            "example": "2026-03-17T08:45:00Z"
+          },
+          "date_last_viewed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the recipient last viewed the document (ISO 8601).",
+            "example": "2026-03-20T14:20:00Z"
+          },
+          "viewed_count": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Number of times the recipient viewed the document.",
+            "example": 3
+          },
+          "can_pay": {
+            "type": "boolean",
+            "description": "Whether the recipient can make payments.",
+            "default": false
+          },
+          "type": {
+            "type": "string",
+            "description": "Recipient type.",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RecipientTypeEnum"
+              }
+            ]
+          },
+          "group": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the recipient group this recipient belongs to. null for individual recipients.",
+            "example": "Legal Team"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Associated user identifier.",
+            "example": "9FeAY2NB3C9qDdtQRb4tTL"
+          },
+          "contact_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Associated contact identifier.",
+            "example": "DrNfkrquTcXH83cgF5ZGrr"
+          },
+          "company": {
+            "type": "string",
+            "nullable": true,
+            "description": "Company name.",
+            "example": "Acme Corp"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "Contact title.",
+            "example": "VP of Sales"
+          },
+          "internal": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether the contact is internal."
+          },
+          "location": {
+            "type": "string",
+            "nullable": true,
+            "description": "Contact location.",
+            "example": "San Francisco, CA"
+          },
+          "country": {
+            "type": "string",
+            "nullable": true,
+            "description": "Country.",
+            "example": "US"
+          },
+          "postal_code": {
+            "type": "string",
+            "nullable": true,
+            "description": "Postal code.",
+            "example": "94105"
+          },
+          "state": {
+            "type": "string",
+            "nullable": true,
+            "description": "State or province.",
+            "example": "CA"
+          },
+          "city": {
+            "type": "string",
+            "nullable": true,
+            "description": "City.",
+            "example": "San Francisco"
+          },
+          "street": {
+            "type": "string",
+            "nullable": true,
+            "description": "Street address.",
+            "example": "123 Market St"
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true,
+            "description": "Avatar URL. null if no email is associated.",
+            "example": "https://www.gravatar.com/avatar/abc123"
+          },
+          "is_done": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether the recipient has completed their action.",
+            "example": true
+          }
+        }
+      },
+      "DocumentSearchGrandTotal": {
+        "title": "DocumentSearchGrandTotal",
+        "description": "Document grand total.",
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "Total amount.",
+            "example": 15000
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency ISO code (e.g. USD, EUR).",
+            "example": "USD"
+          }
+        },
+        "required": [
+          "amount",
+          "currency"
+        ]
+      },
+      "GeneralDocumentTypeEnum": {
+        "type": "string",
+        "enum": [
+          "Agreement",
+          "Proposal",
+          "Invoice",
+          "Quote",
+          "Form",
+          "Policy"
+        ],
+        "example": "Agreement"
+      },
+      "DocumentSearchDocumentType": {
+        "title": "DocumentSearchDocumentType",
+        "description": "Document type classification. Each workspace can define custom specific types that belong to a general category.",
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Document type identifier.",
+            "example": "pXwnAhg8bk9SoBEGGdNu3d"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "Specific document type name. Can be a built-in system type or a workspace-defined custom type. Common system values include Non-Disclosure Agreement, Sales Agreement, Employment Agreement, Service Agreement, Contractor Agreement, Subscription Agreement, Partnership Agreement, Lease Agreement, Rental Agreement, License Agreement, Purchase Agreement, Statement of Work, Professional Services Agreement, Sales Proposal, Project Proposal, Business Letter, Financial Report, Inspection Report, Employment Termination Notice, and Employee Handbook.",
+            "example": "Non-Disclosure Agreement"
+          },
+          "general_type": {
+            "type": "string",
+            "description": "High-level document type category. null when the specific type does not belong to a general category.",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GeneralDocumentTypeEnum"
+              }
+            ]
+          }
+        }
+      },
+      "DocumentSearchEffectivePermissions": {
+        "title": "DocumentSearchEffectivePermissions",
+        "description": "Effective permissions of the current user for the document.",
+        "type": "object",
+        "properties": {
+          "can_manage_collaborators": {
+            "type": "boolean",
+            "description": "Whether the user can manage collaborators.",
+            "default": false
+          },
+          "can_revert_to_draft": {
+            "type": "boolean",
+            "description": "Whether the user can revert the document to draft.",
+            "default": false
+          }
+        },
+        "required": [
+          "can_manage_collaborators",
+          "can_revert_to_draft"
+        ]
+      },
+      "DocumentSearchClmMetadata": {
+        "title": "DocumentSearchClmMetadata",
+        "description": "A single CLM metadata key/value pair.",
+        "type": "object",
+        "required": [
+          "key",
+          "value"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Metadata key.",
+            "example": "department"
+          },
+          "value": {
+            "type": "string",
+            "description": "Metadata value, always serialized as a string regardless of the underlying typed value.",
+            "example": "Engineering"
+          }
+        }
+      },
+      "DocumentSearchExtraFields": {
+        "title": "DocumentSearchExtraFields",
+        "description": "Additional document fields dynamically selected by the AI based on the query. All properties are optional, only relevant will be included to the query.  The object is empty when only the standard fields were requested.",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "Document title (includes autonumbering).",
+            "example": "Service Agreement - Acme Corp"
+          },
+          "date_modified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the document was last modified (ISO 8601).",
+            "example": "2026-03-18T11:05:00Z"
+          },
+          "date_of_last_action": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the last action was performed on the document (ISO 8601).",
+            "example": "2026-03-20T14:22:00Z"
+          },
+          "date_sent": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the document was sent (ISO 8601).",
+            "example": "2026-03-16T09:00:00Z"
+          },
+          "date_first_signed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the first recipient signed the document (ISO 8601).",
+            "example": "2026-03-19T10:15:00Z"
+          },
+          "date_last_signed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the last recipient signed the document (ISO 8601).",
+            "example": "2026-03-20T14:22:00Z"
+          },
+          "date_first_viewed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the document was first viewed (ISO 8601).",
+            "example": "2026-03-16T11:30:00Z"
+          },
+          "date_last_viewed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the document was last viewed (ISO 8601).",
+            "example": "2026-03-20T14:20:00Z"
+          },
+          "date_completed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the document was completed (ISO 8601).",
+            "example": "2026-03-20T14:22:00Z"
+          },
+          "date_expired": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the document expired (ISO 8601).",
+            "example": "2026-04-15T00:00:00Z"
+          },
+          "date_expiration": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the document will expire (ISO 8601).",
+            "example": "2026-06-15T00:00:00Z"
+          },
+          "removed": {
+            "type": "boolean",
+            "description": "Whether the document has been removed.",
+            "default": false
+          },
+          "type": {
+            "type": "string",
+            "description": "High-level document type.",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HighLevelDocumentTypeEnum"
+              }
+            ]
+          },
+          "parent": {
+            "$ref": "#/components/schemas/DocumentSearchParentTemplate"
+          },
+          "path": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DocumentSearchPathEntry"
+            },
+            "description": "Ordered list of folders from root to the document's location."
+          },
+          "recipients": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DocumentSearchRecipient"
+            },
+            "description": "List of document recipients."
+          },
+          "recipient_count": {
+            "type": "integer",
+            "description": "Total number of recipients.",
+            "default": 0,
+            "example": 1
+          },
+          "viewed_total_count": {
+            "type": "integer",
+            "description": "Total number of times the document was viewed.",
+            "default": 0,
+            "example": 5
+          },
+          "viewed_count": {
+            "type": "integer",
+            "description": "Number of recipients who viewed the document.",
+            "default": 0,
+            "example": 2
+          },
+          "signed_count": {
+            "type": "integer",
+            "description": "Number of recipients who signed the document.",
+            "default": 0,
+            "example": 1
+          },
+          "completion_rate": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "description": "Completion rate of recipients (0.0 to 1.0).",
+            "example": 1
+          },
+          "time_to_completion_hours": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "description": "Time taken to complete the document, in hours.",
+            "example": 120.5
+          },
+          "total": {
+            "$ref": "#/components/schemas/DocumentSearchGrandTotal"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of document tags.",
+            "example": [
+              "legal",
+              "Q1-2026"
+            ]
+          },
+          "document_type": {
+            "$ref": "#/components/schemas/DocumentSearchDocumentType"
+          },
+          "effective_permissions": {
+            "$ref": "#/components/schemas/DocumentSearchEffectivePermissions"
+          },
+          "clm_metadata": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/DocumentSearchClmMetadata"
+            },
+            "description": "List of CLM metadata key/value pairs."
           }
         }
       },
@@ -21170,42 +21641,7 @@
             "$ref": "#/components/schemas/DocumentSearchResultFolder"
           },
           "extra_fields": {
-            "type": "object",
-            "additionalProperties": true,
-            "description": "Additional document fields dynamically selected by the AI based on the query. Empty object when only standard fields were requested. Fields that may appear include: `title`, `date_modified`, `date_of_last_action`, `date_sent`, `date_first_signed`, `date_last_signed`, `date_first_viewed`, `date_last_viewed`, `date_completed`, `date_expired`, `date_expiration`, `removed`, `parent`, `path`, `recipients`, `recipient_count`, `viewed_total_count`, `viewed_count`, `signed_count`, `completion_rate`, `time_to_completion_hours`, `total`, `tags`, `document_type`, `effective_permissions`, and `clm_metadata`.",
-            "example": {
-              "date_sent": "2026-03-16T09:00:00Z",
-              "date_completed": "2026-03-20T14:22:00Z",
-              "tags": [
-                "legal",
-                "Q1-2026"
-              ],
-              "recipients": [
-                {
-                  "id": "bQySP2djjJkNKxyVbQ8pu4",
-                  "email": "john.smith@example.com",
-                  "first_name": "John",
-                  "last_name": "Smith",
-                  "role_name": "signer",
-                  "date_signed": "2026-03-20T14:22:00Z",
-                  "type": "signer",
-                  "company": "Acme Corp",
-                  "is_done": true
-                }
-              ],
-              "recipient_count": 1,
-              "signed_count": 1,
-              "completion_rate": 1,
-              "total": {
-                "amount": 15000,
-                "currency": "USD"
-              },
-              "document_type": {
-                "id": "pXwnAhg8bk9SoBEGGdNu3d",
-                "type": "contract",
-                "general_type": "agreement"
-              }
-            }
+            "$ref": "#/components/schemas/DocumentSearchExtraFields"
           }
         }
       },
