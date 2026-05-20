@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.27.1"
+    "version": "7.28.0"
   },
   "servers": [
     {
@@ -11207,7 +11207,7 @@
             }
           },
           "400": {
-            "description": "The request is invalid. Either the `type` query parameter is missing, or its value is not one of the allowed values (detailed, short, headline).\n",
+            "description": "The request is invalid. Either the `type` query parameter is missing, or its value is not one of the allowed values (detailed, short, headline, xshort).\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -11228,7 +11228,7 @@
                     "value": {
                       "error": {
                         "code": "invalid_type",
-                        "message": "The type must be one of: detailed, short, headline."
+                        "message": "The type must be one of: detailed, short, headline, xshort."
                       }
                     }
                   }
@@ -21000,7 +21000,8 @@
         "enum": [
           "detailed",
           "short",
-          "headline"
+          "headline",
+          "xshort"
         ]
       },
       "DocumentSummaryResponse": {
