@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "PandaDoc Public API",
-    "description": "PandaDoc API spans a broad range of functionality to help you build incredible documents automation experiences inside your product.\n\nPandaDoc API is organized around REST. Our API has predictable resource-oriented URLs and uses standard HTTP response codes, authentication, and verbs.\n\n## Getting started\n\nYou can start testing PandaDoc API with a sandbox key on our [Enterprise](https://www.pandadoc.com/pricing/) plan, either active or in trial.\n\nGenerate your [sandbox key](https://developers.pandadoc.com/reference/sandbox-key) on the Developer Dashboard with predefined [rate limits](https://developers.pandadoc.com/reference/limits). Or contact our solutions expert if you work with high-transaction volumes.\n\n## Guides\n\nIf you’re just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you’re most interested in, whether that’s:\n\n- [Create from template](https://developers.pandadoc.com/docs/create-send-document),\n- [Upload and send a local PDF](https://developers.pandadoc.com/docs/upload-and-send-a-local-pdf),\n- or [Listening for changes in document status](https://developers.pandadoc.com/docs/listen-document-status-changes).\n\nWe also recommend you to discover our dynamic content generation on a fly: [Create from a template with content placeholder](https://developers.pandadoc.com/docs/create-with-content-placeholders-from-template).\n",
+    "description": "PandaDoc API spans a broad range of functionality to help you build incredible documents automation experiences inside your product.\n\nPandaDoc API is organized around REST. Our API has predictable resource-oriented URLs and uses standard HTTP response codes, authentication, and verbs.\n\n## Getting started\n\nYou can start testing PandaDoc API with a sandbox key on our [Enterprise](https://www.pandadoc.com/pricing/) plan, either active or in trial.\n\nGenerate your [sandbox key](https://developers.pandadoc.com/reference/sandbox-key) on the Developer Dashboard with predefined [rate limits](https://developers.pandadoc.com/reference/limits). Or contact our solutions expert if you work with high-transaction volumes.\n\n## Guides\n\nIf you're just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you're most interested in, whether that's:\n\n- [Create from template](https://developers.pandadoc.com/docs/create-send-document),\n- [Upload and send a local PDF](https://developers.pandadoc.com/docs/upload-and-send-a-local-pdf),\n- or [Listening for changes in document status](https://developers.pandadoc.com/docs/listen-document-status-changes).\n\nWe also recommend you to discover our dynamic content generation on a fly: [Create from a template with content placeholder](https://developers.pandadoc.com/docs/create-with-content-placeholders-from-template).\n",
     "termsOfService": "https://www.pandadoc.com/master-services-agreement/",
     "contact": {
       "name": "PandaDoc API Support",
@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.28.1"
+    "version": "7.29.1"
   },
   "servers": [
     {
@@ -2917,6 +2917,14 @@
               }
             }
           },
+          "202": {
+            "description": "The signed document file is not ready yet (for example, a bundle overall PDF or ZIP is still being produced). Retry after the indicated number of seconds. No response body is returned.\n",
+            "headers": {
+              "Retry-After": {
+                "$ref": "#/components/headers/RetryAfter"
+              }
+            }
+          },
           "400": {
             "$ref": "#/components/responses/400RequestError"
           },
@@ -2977,6 +2985,14 @@
                   "type": "string",
                   "format": "binary"
                 }
+              }
+            }
+          },
+          "202": {
+            "description": "The signed document file is not ready yet (for example, a bundle overall PDF or ZIP is still being produced). Retry after the indicated number of seconds. No response body is returned.\n",
+            "headers": {
+              "Retry-After": {
+                "$ref": "#/components/headers/RetryAfter"
               }
             }
           },
@@ -11375,6 +11391,136 @@
                 }
               }
             }
+          },
+          "429": {
+            "$ref": "#/components/responses/429TooManyRequestsV2"
+          }
+        }
+      }
+    },
+    "/public/beta/documents/{document_id}/ai-metadata": {
+      "get": {
+        "tags": [
+          "Documents"
+        ],
+        "x-internal": true,
+        "operationId": "getDocumentAiMetadata",
+        "summary": "[Beta] Get AI Metadata for a Document",
+        "description": "Returns the AI metadata fields populated for the document. Each result combines the field definition (`id`, `key`, `field_type`, `settings`) with the extracted value (`value`, `acceptance_status`).\n\nOnly fields that have an extracted value for the document are returned. While AI extraction is still in progress for the document, the endpoint returns HTTP 202 with `{ \"code\": \"extraction_pending\" }` and a `Retry-After` header — clients should retry after that many seconds.\n",
+        "parameters": [
+          {
+            "name": "document_id",
+            "in": "path",
+            "required": true,
+            "description": "The unique identifier of the document.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of fields to return in one response.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "example": 100
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "description": "Number of fields to skip before starting to collect the result set. For predictable paging, use multiples of `limit`.\n",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "example": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "AI metadata is available. Returns the fields populated for the document. `results` is empty when nothing has been extracted yet.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIMetadataResponse"
+                },
+                "examples": {
+                  "Document with extracted AI metadata": {
+                    "value": {
+                      "count": 2,
+                      "results": [
+                        {
+                          "id": "3SBkwkGBbMn6btzHTiKkGn",
+                          "key": "Counterparty name",
+                          "field_type": "multi_line",
+                          "settings": {},
+                          "value": {
+                            "id": "5KqRz9WLPzm4jx2hTb3vGz",
+                            "value": "Acme Corp",
+                            "source": "model",
+                            "acceptance_status": "pending"
+                          }
+                        },
+                        {
+                          "id": "aPpvJWCMNqf6mYbA2T3KdR",
+                          "key": "Contract value",
+                          "field_type": "currency",
+                          "settings": {},
+                          "value": {
+                            "id": "cQ7Y1XJpyTUf2gZ3hHkBNS",
+                            "value": "$250,000",
+                            "source": "user",
+                            "acceptance_status": "accepted"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "AI extraction has not yet finished for this document. Retry after the number of seconds indicated in the `Retry-After` header.\n",
+            "headers": {
+              "Retry-After": {
+                "description": "The number of seconds the client should wait before retrying the request.\n",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "example": 5
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIExtractionPendingResponse"
+                },
+                "examples": {
+                  "Extraction pending": {
+                    "value": {
+                      "code": "extraction_pending"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401AuthErrorV2"
+          },
+          "403": {
+            "$ref": "#/components/responses/403PermissionDeniedV2"
           },
           "429": {
             "$ref": "#/components/responses/429TooManyRequestsV2"
@@ -21032,6 +21178,128 @@
           }
         }
       },
+      "AIMetadataFieldType": {
+        "type": "string",
+        "description": "Data type of an AI metadata field.",
+        "enum": [
+          "single_line",
+          "multi_line",
+          "date",
+          "number",
+          "dropdown",
+          "checkbox",
+          "url",
+          "duration",
+          "percent",
+          "currency",
+          "signature_info"
+        ]
+      },
+      "AIMetadataAcceptanceStatus": {
+        "type": "string",
+        "description": "Acceptance state of an AI metadata value.",
+        "enum": [
+          "pending",
+          "accepted"
+        ]
+      },
+      "AIMetadataValue": {
+        "type": "object",
+        "description": "Extracted value for an AI metadata field on a document.",
+        "required": [
+          "value",
+          "acceptance_status"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "The extracted or entered value, serialised as a string. Interpretation depends on the parent field's `field_type` (e.g. an ISO-8601 date for `date`, an amount with currency for `currency`, a boolean literal for `checkbox`).\n",
+            "example": "Acme Corp"
+          },
+          "acceptance_status": {
+            "$ref": "#/components/schemas/AIMetadataAcceptanceStatus"
+          }
+        }
+      },
+      "AIMetadataField": {
+        "type": "object",
+        "description": "AI metadata field definition paired with its extracted value, if any.",
+        "required": [
+          "id",
+          "key",
+          "field_type",
+          "settings"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable identifier of the metadata field definition. The same identifier appears for the same field across every document.\n",
+            "example": "3SBkwkGBbMn6btzHTiKkGn"
+          },
+          "key": {
+            "type": "string",
+            "description": "Human-readable field key (e.g. `Contract value`, `Counterparty name`, `Expiration date`).\n",
+            "example": "Counterparty name"
+          },
+          "field_type": {
+            "$ref": "#/components/schemas/AIMetadataFieldType"
+          },
+          "settings": {
+            "type": "object",
+            "description": "Field-type-specific configuration (e.g. available `period` units for `duration`, allowed `items` for `dropdown`). Empty object when the field has no configuration.\n",
+            "additionalProperties": true
+          },
+          "value": {
+            "type": "object",
+            "nullable": true,
+            "description": "Extracted value for this field on the document. `null` when no value has been extracted (in practice, fields without values are not returned in `results`).\n",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AIMetadataValue"
+              }
+            ]
+          }
+        }
+      },
+      "AIMetadataResponse": {
+        "type": "object",
+        "description": "Page of AI metadata fields populated for a document.",
+        "required": [
+          "count",
+          "results"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Total number of AI metadata fields available for the document across all pages. The current page slice is in `results` and is bounded by `limit` and `offset`.\n",
+            "minimum": 0,
+            "example": 12
+          },
+          "results": {
+            "type": "array",
+            "description": "AI metadata fields populated for the document. Each entry combines the field definition with the extracted value. Empty when nothing has been extracted yet.\n",
+            "items": {
+              "$ref": "#/components/schemas/AIMetadataField"
+            }
+          }
+        }
+      },
+      "AIExtractionPendingResponse": {
+        "type": "object",
+        "description": "Returned with HTTP 202 while AI extraction is still in progress.",
+        "required": [
+          "code"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "extraction_pending"
+            ],
+            "example": "extraction_pending"
+          }
+        }
+      },
       "DocumentSearchResultOwner": {
         "title": "DocumentSearchResultOwner",
         "description": "Owner of the document",
@@ -22265,6 +22533,49 @@
         }
       }
     },
+    "headers": {
+      "RetryAfter": {
+        "description": "The number of seconds the client should wait before retrying the request. Included when the response is 202 to indicate the data is not yet available.\n",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "example": 5
+      },
+      "SummaryETag": {
+        "description": "An opaque identifier for the version of the returned summary. Not interchangeable across different `type` values.\n",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "example": "\"v42\""
+      },
+      "VaryType": {
+        "description": "Indicates the response varies by the `type` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across types.\n",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "example": "type"
+      },
+      "ContentETag": {
+        "description": "An opaque identifier for the version of the returned content. Not interchangeable across different `format` values.\n",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "example": "\"v42\""
+      },
+      "VaryFormat": {
+        "description": "Indicates the response varies by the `format` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across formats.\n",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "example": "format"
+      }
+    },
     "parameters": {
       "SinceParam": {
         "name": "since",
@@ -22501,49 +22812,6 @@
           "user_email": "siarhei@pandadoc.com",
           "user_id": "Hzpt4yyQ3A5qHTTPdZQxpH"
         }
-      }
-    },
-    "headers": {
-      "SummaryETag": {
-        "description": "An opaque identifier for the version of the returned summary. Not interchangeable across different `type` values.\n",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "example": "\"v42\""
-      },
-      "VaryType": {
-        "description": "Indicates the response varies by the `type` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across types.\n",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "example": "type"
-      },
-      "RetryAfter": {
-        "description": "The number of seconds the client should wait before retrying the request. Included when the response is 202 to indicate the data is not yet available.\n",
-        "required": true,
-        "schema": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "example": 5
-      },
-      "ContentETag": {
-        "description": "An opaque identifier for the version of the returned content. Not interchangeable across different `format` values.\n",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "example": "\"v42\""
-      },
-      "VaryFormat": {
-        "description": "Indicates the response varies by the `format` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across formats.\n",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "example": "format"
       }
     }
   }
