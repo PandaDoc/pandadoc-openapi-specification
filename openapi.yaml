@@ -14,7 +14,7 @@ info:
 
     ## Guides
 
-    If you’re just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you’re most interested in, whether that’s:
+    If you're just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you're most interested in, whether that's:
 
     - [Create from template](https://developers.pandadoc.com/docs/create-send-document),
     - [Upload and send a local PDF](https://developers.pandadoc.com/docs/upload-and-send-a-local-pdf),
@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.28.1
+  version: 7.29.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -2237,6 +2237,12 @@ paths:
               schema:
                 type: string
                 format: binary
+        '202':
+          description: |
+            The signed document file is not ready yet (for example, a bundle overall PDF or ZIP is still being produced). Retry after the indicated number of seconds. No response body is returned.
+          headers:
+            Retry-After:
+              $ref: '#/components/headers/RetryAfter'
         '400':
           $ref: '#/components/responses/400RequestError'
         '401':
@@ -2285,6 +2291,12 @@ paths:
               schema:
                 type: string
                 format: binary
+        '202':
+          description: |
+            The signed document file is not ready yet (for example, a bundle overall PDF or ZIP is still being produced). Retry after the indicated number of seconds. No response body is returned.
+          headers:
+            Retry-After:
+              $ref: '#/components/headers/RetryAfter'
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -8368,6 +8380,102 @@ paths:
                 error:
                   code: document_not_found
                   message: The document was not found.
+        '429':
+          $ref: '#/components/responses/429TooManyRequestsV2'
+  /public/beta/documents/{document_id}/ai-metadata:
+    get:
+      tags:
+        - Documents
+      x-internal: true
+      operationId: getDocumentAiMetadata
+      summary: '[Beta] Get AI Metadata for a Document'
+      description: |
+        Returns the AI metadata fields populated for the document. Each result combines the field definition (`id`, `key`, `field_type`, `settings`) with the extracted value (`value`, `acceptance_status`).
+
+        Only fields that have an extracted value for the document are returned. While AI extraction is still in progress for the document, the endpoint returns HTTP 202 with `{ "code": "extraction_pending" }` and a `Retry-After` header — clients should retry after that many seconds.
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          description: The unique identifier of the document.
+          schema:
+            type: string
+          example: BhVzRcxH9Z2LgfPPGXFUBa
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of fields to return in one response.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+          example: 100
+        - name: offset
+          in: query
+          required: false
+          description: |
+            Number of fields to skip before starting to collect the result set. For predictable paging, use multiples of `limit`.
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          example: 0
+      responses:
+        '200':
+          description: |
+            AI metadata is available. Returns the fields populated for the document. `results` is empty when nothing has been extracted yet.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIMetadataResponse'
+              examples:
+                Document with extracted AI metadata:
+                  value:
+                    count: 2
+                    results:
+                      - id: 3SBkwkGBbMn6btzHTiKkGn
+                        key: Counterparty name
+                        field_type: multi_line
+                        settings: {}
+                        value:
+                          id: 5KqRz9WLPzm4jx2hTb3vGz
+                          value: Acme Corp
+                          source: model
+                          acceptance_status: pending
+                      - id: aPpvJWCMNqf6mYbA2T3KdR
+                        key: Contract value
+                        field_type: currency
+                        settings: {}
+                        value:
+                          id: cQ7Y1XJpyTUf2gZ3hHkBNS
+                          value: $250,000
+                          source: user
+                          acceptance_status: accepted
+        '202':
+          description: |
+            AI extraction has not yet finished for this document. Retry after the number of seconds indicated in the `Retry-After` header.
+          headers:
+            Retry-After:
+              description: |
+                The number of seconds the client should wait before retrying the request.
+              required: true
+              schema:
+                type: integer
+                minimum: 1
+              example: 5
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIExtractionPendingResponse'
+              examples:
+                Extraction pending:
+                  value:
+                    code: extraction_pending
+        '401':
+          $ref: '#/components/responses/401AuthErrorV2'
+        '403':
+          $ref: '#/components/responses/403PermissionDeniedV2'
         '429':
           $ref: '#/components/responses/429TooManyRequestsV2'
   /public/beta/documents/search:
@@ -15585,6 +15693,104 @@ components:
           type: string
           description: |
             Document body as plain text (`format=plaintext`) or markdown (`format=markdown`).
+    AIMetadataFieldType:
+      type: string
+      description: Data type of an AI metadata field.
+      enum:
+        - single_line
+        - multi_line
+        - date
+        - number
+        - dropdown
+        - checkbox
+        - url
+        - duration
+        - percent
+        - currency
+        - signature_info
+    AIMetadataAcceptanceStatus:
+      type: string
+      description: Acceptance state of an AI metadata value.
+      enum:
+        - pending
+        - accepted
+    AIMetadataValue:
+      type: object
+      description: Extracted value for an AI metadata field on a document.
+      required:
+        - value
+        - acceptance_status
+      properties:
+        value:
+          type: string
+          description: |
+            The extracted or entered value, serialised as a string. Interpretation depends on the parent field's `field_type` (e.g. an ISO-8601 date for `date`, an amount with currency for `currency`, a boolean literal for `checkbox`).
+          example: Acme Corp
+        acceptance_status:
+          $ref: '#/components/schemas/AIMetadataAcceptanceStatus'
+    AIMetadataField:
+      type: object
+      description: AI metadata field definition paired with its extracted value, if any.
+      required:
+        - id
+        - key
+        - field_type
+        - settings
+      properties:
+        id:
+          type: string
+          description: |
+            Stable identifier of the metadata field definition. The same identifier appears for the same field across every document.
+          example: 3SBkwkGBbMn6btzHTiKkGn
+        key:
+          type: string
+          description: |
+            Human-readable field key (e.g. `Contract value`, `Counterparty name`, `Expiration date`).
+          example: Counterparty name
+        field_type:
+          $ref: '#/components/schemas/AIMetadataFieldType'
+        settings:
+          type: object
+          description: |
+            Field-type-specific configuration (e.g. available `period` units for `duration`, allowed `items` for `dropdown`). Empty object when the field has no configuration.
+          additionalProperties: true
+        value:
+          type: object
+          nullable: true
+          description: |
+            Extracted value for this field on the document. `null` when no value has been extracted (in practice, fields without values are not returned in `results`).
+          allOf:
+            - $ref: '#/components/schemas/AIMetadataValue'
+    AIMetadataResponse:
+      type: object
+      description: Page of AI metadata fields populated for a document.
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          description: |
+            Total number of AI metadata fields available for the document across all pages. The current page slice is in `results` and is bounded by `limit` and `offset`.
+          minimum: 0
+          example: 12
+        results:
+          type: array
+          description: |
+            AI metadata fields populated for the document. Each entry combines the field definition with the extracted value. Empty when nothing has been extracted yet.
+          items:
+            $ref: '#/components/schemas/AIMetadataField'
+    AIExtractionPendingResponse:
+      type: object
+      description: Returned with HTTP 202 while AI extraction is still in progress.
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - extraction_pending
+          example: extraction_pending
     DocumentSearchResultOwner:
       title: DocumentSearchResultOwner
       description: Owner of the document
@@ -16490,6 +16696,43 @@ components:
                         - `Cannot change the role of the workspace owner.`
                         - `Cannot change the role of the last member with admin privileges.`
                     example: Cannot change the role of the workspace owner.
+  headers:
+    RetryAfter:
+      description: |
+        The number of seconds the client should wait before retrying the request. Included when the response is 202 to indicate the data is not yet available.
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      example: 5
+    SummaryETag:
+      description: |
+        An opaque identifier for the version of the returned summary. Not interchangeable across different `type` values.
+      required: true
+      schema:
+        type: string
+      example: '"v42"'
+    VaryType:
+      description: |
+        Indicates the response varies by the `type` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across types.
+      required: true
+      schema:
+        type: string
+      example: type
+    ContentETag:
+      description: |
+        An opaque identifier for the version of the returned content. Not interchangeable across different `format` values.
+      required: true
+      schema:
+        type: string
+      example: '"v42"'
+    VaryFormat:
+      description: |
+        Indicates the response varies by the `format` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across formats.
+      required: true
+      schema:
+        type: string
+      example: format
   parameters:
     SinceParam:
       name: since
@@ -16673,40 +16916,3 @@ components:
         request_id: 284b1456-1111-4ba9-1111-0d82418205f5
         user_email: siarhei@pandadoc.com
         user_id: Hzpt4yyQ3A5qHTTPdZQxpH
-  headers:
-    SummaryETag:
-      description: |
-        An opaque identifier for the version of the returned summary. Not interchangeable across different `type` values.
-      required: true
-      schema:
-        type: string
-      example: '"v42"'
-    VaryType:
-      description: |
-        Indicates the response varies by the `type` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across types.
-      required: true
-      schema:
-        type: string
-      example: type
-    RetryAfter:
-      description: |
-        The number of seconds the client should wait before retrying the request. Included when the response is 202 to indicate the data is not yet available.
-      required: true
-      schema:
-        type: integer
-        minimum: 1
-      example: 5
-    ContentETag:
-      description: |
-        An opaque identifier for the version of the returned content. Not interchangeable across different `format` values.
-      required: true
-      schema:
-        type: string
-      example: '"v42"'
-    VaryFormat:
-      description: |
-        Indicates the response varies by the `format` query parameter. HTTP caches must use this when storing responses so ETag and body are not mixed across formats.
-      required: true
-      schema:
-        type: string
-      example: format
