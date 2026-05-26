@@ -3,6 +3,7 @@
   "info": {
     "title": "PandaDoc Public API",
     "description": "PandaDoc API spans a broad range of functionality to help you build incredible documents automation experiences inside your product.\n\nPandaDoc API is organized around REST. Our API has predictable resource-oriented URLs and uses standard HTTP response codes, authentication, and verbs.\n\n## Getting started\n\nYou can start testing PandaDoc API with a sandbox key on our [Enterprise](https://www.pandadoc.com/pricing/) plan, either active or in trial.\n\nGenerate your [sandbox key](https://developers.pandadoc.com/reference/sandbox-key) on the Developer Dashboard with predefined [rate limits](https://developers.pandadoc.com/reference/limits). Or contact our solutions expert if you work with high-transaction volumes.\n\n## Guides\n\nIf you're just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you're most interested in, whether that's:\n\n- [Create from template](https://developers.pandadoc.com/docs/create-send-document),\n- [Upload and send a local PDF](https://developers.pandadoc.com/docs/upload-and-send-a-local-pdf),\n- or [Listening for changes in document status](https://developers.pandadoc.com/docs/listen-document-status-changes).\n\nWe also recommend you to discover our dynamic content generation on a fly: [Create from a template with content placeholder](https://developers.pandadoc.com/docs/create-with-content-placeholders-from-template).\n",
+    "description": "PandaDoc API spans a broad range of functionality to help you build incredible documents automation experiences inside your product.\n\nPandaDoc API is organized around REST. Our API has predictable resource-oriented URLs and uses standard HTTP response codes, authentication, and verbs.\n\n## Getting started\n\nYou can start testing PandaDoc API with a sandbox key on our [Enterprise](https://www.pandadoc.com/pricing/) plan, either active or in trial.\n\nGenerate your [sandbox key](https://developers.pandadoc.com/reference/sandbox-key) on the Developer Dashboard with predefined [rate limits](https://developers.pandadoc.com/reference/limits). Or contact our solutions expert if you work with high-transaction volumes.\n\n## Guides\n\nIf you're just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you're most interested in, whether that's:\n\n- [Create from template](https://developers.pandadoc.com/docs/create-send-document),\n- [Upload and send a local PDF](https://developers.pandadoc.com/docs/upload-and-send-a-local-pdf),\n- or [Listening for changes in document status](https://developers.pandadoc.com/docs/listen-document-status-changes).\n\nWe also recommend you to discover our dynamic content generation on a fly: [Create from a template with content placeholder](https://developers.pandadoc.com/docs/create-with-content-placeholders-from-template).\n",
     "termsOfService": "https://www.pandadoc.com/master-services-agreement/",
     "contact": {
       "name": "PandaDoc API Support",
@@ -13,7 +14,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.29.1"
+    "version": "7.30.0"
   },
   "servers": [
     {
@@ -11406,7 +11407,7 @@
         "x-internal": true,
         "operationId": "getDocumentAiMetadata",
         "summary": "[Beta] Get AI Metadata for a Document",
-        "description": "Returns the AI metadata fields populated for the document. Each result combines the field definition (`id`, `key`, `field_type`, `settings`) with the extracted value (`value`, `acceptance_status`).\n\nOnly fields that have an extracted value for the document are returned. While AI extraction is still in progress for the document, the endpoint returns HTTP 202 with `{ \"code\": \"extraction_pending\" }` and a `Retry-After` header — clients should retry after that many seconds.\n",
+        "description": "Returns the AI metadata fields populated for the document. Each result combines the field definition (`id`, `key`, `field_type`, `settings`) with the extracted value (`value`, `acceptance_status`).\n\nOnly fields that have an extracted value for the document are returned.\n\nThe endpoint signals AI extraction state via the HTTP status code:\n\n- `202 extraction_pending` — extraction is in progress. Clients\n  should retry after the number of seconds indicated in the\n  `Retry-After` header.\n\n- `204 No Content` — extraction has terminally failed for this\n  document. No body is returned; retrying will not help — contact\n  support.\n\n- `409 not_started` — extraction has not been triggered for this\n  document (typically because the document is not yet completed).\n",
         "parameters": [
           {
             "name": "document_id",
@@ -11509,18 +11510,43 @@
                 "examples": {
                   "Extraction pending": {
                     "value": {
-                      "code": "extraction_pending"
+                      "code": "extraction_pending",
+                      "description": "Result is being generated. You can try later."
                     }
                   }
                 }
               }
             }
           },
+          "204": {
+            "description": "AI extraction has terminally failed for this document. No body is returned; retrying will not help — contact support.\n"
+          },
           "401": {
             "$ref": "#/components/responses/401AuthErrorV2"
           },
           "403": {
             "$ref": "#/components/responses/403PermissionDeniedV2"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NotFoundV2"
+          },
+          "409": {
+            "description": "Document is in an incorrect state to process the request.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIExtractionNotStartedResponse"
+                },
+                "examples": {
+                  "Extraction not started": {
+                    "value": {
+                      "code": "not_started",
+                      "description": "Likely, your document is not yet completed."
+                    }
+                  }
+                }
+              }
+            }
           },
           "429": {
             "$ref": "#/components/responses/429TooManyRequestsV2"
@@ -21288,7 +21314,8 @@
         "type": "object",
         "description": "Returned with HTTP 202 while AI extraction is still in progress.",
         "required": [
-          "code"
+          "code",
+          "description"
         ],
         "properties": {
           "code": {
@@ -21297,6 +21324,33 @@
               "extraction_pending"
             ],
             "example": "extraction_pending"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable explanation of the current extraction state.",
+            "example": "Result is being generated. You can try later."
+          }
+        }
+      },
+      "AIExtractionNotStartedResponse": {
+        "type": "object",
+        "description": "Returned with HTTP 409 when AI extraction has not been triggered for this document — typically because the document is not yet completed.\n",
+        "required": [
+          "code",
+          "description"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "not_started"
+            ],
+            "example": "not_started"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable explanation of why extraction has not started.",
+            "example": "Likely, your document is not yet completed."
           }
         }
       },
