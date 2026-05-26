@@ -15,6 +15,7 @@ info:
     ## Guides
 
     If you're just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you're most interested in, whether that's:
+    If you're just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you're most interested in, whether that's:
 
     - [Create from template](https://developers.pandadoc.com/docs/create-send-document),
     - [Upload and send a local PDF](https://developers.pandadoc.com/docs/upload-and-send-a-local-pdf),
@@ -29,7 +30,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.29.1
+  version: 7.30.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -8392,7 +8393,20 @@ paths:
       description: |
         Returns the AI metadata fields populated for the document. Each result combines the field definition (`id`, `key`, `field_type`, `settings`) with the extracted value (`value`, `acceptance_status`).
 
-        Only fields that have an extracted value for the document are returned. While AI extraction is still in progress for the document, the endpoint returns HTTP 202 with `{ "code": "extraction_pending" }` and a `Retry-After` header — clients should retry after that many seconds.
+        Only fields that have an extracted value for the document are returned.
+
+        The endpoint signals AI extraction state via the HTTP status code:
+
+        - `202 extraction_pending` — extraction is in progress. Clients
+          should retry after the number of seconds indicated in the
+          `Retry-After` header.
+
+        - `204 No Content` — extraction has terminally failed for this
+          document. No body is returned; retrying will not help — contact
+          support.
+
+        - `409 not_started` — extraction has not been triggered for this
+          document (typically because the document is not yet completed).
       parameters:
         - name: document_id
           in: path
@@ -8472,10 +8486,28 @@ paths:
                 Extraction pending:
                   value:
                     code: extraction_pending
+                    description: Result is being generated. You can try later.
+        '204':
+          description: |
+            AI extraction has terminally failed for this document. No body is returned; retrying will not help — contact support.
         '401':
           $ref: '#/components/responses/401AuthErrorV2'
         '403':
           $ref: '#/components/responses/403PermissionDeniedV2'
+        '404':
+          $ref: '#/components/responses/404NotFoundV2'
+        '409':
+          description: |
+            Document is in an incorrect state to process the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIExtractionNotStartedResponse'
+              examples:
+                Extraction not started:
+                  value:
+                    code: not_started
+                    description: Likely, your document is not yet completed.
         '429':
           $ref: '#/components/responses/429TooManyRequestsV2'
   /public/beta/documents/search:
@@ -15785,12 +15817,34 @@ components:
       description: Returned with HTTP 202 while AI extraction is still in progress.
       required:
         - code
+        - description
       properties:
         code:
           type: string
           enum:
             - extraction_pending
           example: extraction_pending
+        description:
+          type: string
+          description: Human-readable explanation of the current extraction state.
+          example: Result is being generated. You can try later.
+    AIExtractionNotStartedResponse:
+      type: object
+      description: |
+        Returned with HTTP 409 when AI extraction has not been triggered for this document — typically because the document is not yet completed.
+      required:
+        - code
+        - description
+      properties:
+        code:
+          type: string
+          enum:
+            - not_started
+          example: not_started
+        description:
+          type: string
+          description: Human-readable explanation of why extraction has not started.
+          example: Likely, your document is not yet completed.
     DocumentSearchResultOwner:
       title: DocumentSearchResultOwner
       description: Owner of the document
