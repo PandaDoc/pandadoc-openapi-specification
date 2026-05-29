@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.30.1"
+    "version": "7.30.2"
   },
   "servers": [
     {
@@ -15120,7 +15120,7 @@
           },
           "template": {
             "type": "object",
-            "description": "Document template details.",
+            "description": "Source template of the document. `null` for documents created from multiple templates (bundles) because only a single parent template is stored.",
             "nullable": true,
             "properties": {
               "id": {
