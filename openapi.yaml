@@ -15,7 +15,6 @@ info:
     ## Guides
 
     If you're just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you're most interested in, whether that's:
-    If you're just getting started with PandaDoc, you may want to jump straight into one of our [getting started guides](https://developers.pandadoc.com/docs/getting-started) for the feature you're most interested in, whether that's:
 
     - [Create from template](https://developers.pandadoc.com/docs/create-send-document),
     - [Upload and send a local PDF](https://developers.pandadoc.com/docs/upload-and-send-a-local-pdf),
@@ -30,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.30.0
+  version: 7.30.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
