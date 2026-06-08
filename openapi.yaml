@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.30.2
+  version: 7.30.3
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -3781,19 +3781,8 @@ paths:
           application/json:
             schema:
               oneOf:
-                - allOf:
-                    - $ref: '#/components/schemas/UploadSectionByTemplateRequest'
-                    - title: From PandaDoc Template
-                - allOf:
-                    - $ref: '#/components/schemas/UploadSectionRequest'
-                    - title: From File By Url
-                      properties:
-                        url:
-                          type: string
-                          example: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
-                          description: Secure (HTTPS) and publicly accessible URL to the PDF document.
-                      required:
-                        - url
+                - $ref: '#/components/schemas/UploadSectionByTemplateRequest'
+                - $ref: '#/components/schemas/UploadSectionByFileRequest'
             examples:
               Create Document Section From Template:
                 value:
@@ -9154,6 +9143,7 @@ components:
           recipient: '#/components/schemas/CreateDocumentRecipient'
           recipient_group: '#/components/schemas/CreateDocumentRecipientGroup'
     DocumentCreateByTemplateRequest:
+      title: From PandaDoc Template
       type: object
       required:
         - template_uuid
@@ -9482,32 +9472,23 @@ components:
             - created_via_api
             - test_document
             - created_from_source
+    DocumentCreateByPdfUrlRequest:
+      title: From File By Url
+      allOf:
+        - type: object
+          description: Use a URL to create a document.
+          properties:
+            url:
+              type: string
+              example: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+              description: Secure (HTTPS) and publicly accessible URL to the PDF document.
+          required:
+            - url
+        - $ref: '#/components/schemas/DocumentCreateByPdfRequest'
     DocumentCreateRequest:
       oneOf:
-        - allOf:
-            - type: object
-              title: From PandaDoc Template
-              description: Use a PandaDoc template to create a document.
-              properties:
-                template_uuid:
-                  type: string
-                  description: ID of the template you want to use. You can copy it from an in-app template URL such as `https://app.pandadoc.com/a/#/templates/{ID}/content`. A template ID is also obtained by listing templates.
-                  example: hryJY9mqYZHjQCYQuSjRQg
-              required:
-                - template_uuid
-            - $ref: '#/components/schemas/DocumentCreateByTemplateRequest'
-        - allOf:
-            - type: object
-              title: From File By Url
-              description: Use a URL to create a document.
-              properties:
-                url:
-                  type: string
-                  example: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
-                  description: Secure (HTTPS) and publicly accessible URL to the PDF document.
-              required:
-                - url
-            - $ref: '#/components/schemas/DocumentCreateByPdfRequest'
+        - $ref: '#/components/schemas/DocumentCreateByTemplateRequest'
+        - $ref: '#/components/schemas/DocumentCreateByPdfUrlRequest'
     DocumentStatusEnum:
       type: string
       enum:
@@ -12536,6 +12517,7 @@ components:
       required:
         - recipients
     UploadSectionByTemplateRequest:
+      title: From PandaDoc Template
       allOf:
         - type: object
           properties:
@@ -12639,6 +12621,18 @@ components:
           required:
             - recipients
         - $ref: '#/components/schemas/UploadSectionBase'
+    UploadSectionByFileRequest:
+      title: From File By Url
+      allOf:
+        - $ref: '#/components/schemas/UploadSectionRequest'
+        - type: object
+          properties:
+            url:
+              type: string
+              example: https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+              description: Secure (HTTPS) and publicly accessible URL to the PDF document.
+          required:
+            - url
     UploadSectionStatusEnum:
       type: string
       enum:
