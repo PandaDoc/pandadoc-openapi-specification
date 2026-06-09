@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.31.0
+  version: 7.32.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -453,6 +453,7 @@ paths:
                         kba_verification: null
                         id_verification:
                           enabled: true
+                        email_otp_verification: null
                   tokens:
                     - name: Favorite.Pet
                       value: Panda
@@ -1946,6 +1947,7 @@ paths:
                           kba_verification: null
                           id_verification: null,
                           phone_verification: null
+                          email_otp_verification: null
                         signature_date: '2021-10-23T21:07:04.147Z'
                     grand_total:
                       amount: '29.99'
@@ -9043,10 +9045,15 @@ components:
       type: object
       nullable: true
       description: |
-        To set up recipient verification, fill in verification_place and specify the type: passcode_verification, phone_verification, kba_verification or id_verification.
+        To set up recipient verification, provide verification_place (required) and exactly one verification type: passcode_verification, phone_verification, kba_verification, id_verification, or email_otp_verification. All other verification type fields must be null. Providing more than one verification type returns a 400 error.
         - For passcode_verification, provide the passcode.
         - For phone_verification, provide the phone_number.
+        - For email_otp_verification, provide the email.
         - For kba_verification and id_verification, set the enabled parameter to true.
+      example:
+        verification_place: before_open
+        email_otp_verification:
+          email: user@example.com
       properties:
         verification_place:
           $ref: '#/components/schemas/RecipientVerificationPlaceEnum'
@@ -9093,6 +9100,18 @@ components:
             enabled:
               type: boolean
               example: true
+        email_otp_verification:
+          type: object
+          description: Sets the email address to send a one-time passcode to.
+          properties:
+            email:
+              type: string
+              format: email
+              example: user@example.com
+              description: An email address to send a one-time passcode to.
+          required:
+            - email
+          nullable: true
     CreateDocumentRecipient:
       title: Recipient
       allOf:
@@ -12017,6 +12036,8 @@ components:
                   | 66 | Optional section in quote selected |
                   | 67 | Optional section in quote deselected |
                   | 68 | Section quantity in quote changed |
+                  | 69 | recipient verification with email otp passed |
+                  | 70 | recipient verification with email otp failed |
               reason:
                 type: string
                 nullable: true
