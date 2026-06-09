@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.30.3
+  version: 7.31.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -15305,6 +15305,18 @@ components:
           type: string
           example: A new workspace
           description: A name for the new workspace.
+        settings:
+          type: object
+          description: Optional workspace settings applied at creation time.
+          properties:
+            allow_join_by_domain:
+              type: boolean
+              default: true
+              description: Allow anyone at your domain to join this workspace upon request.
+            allow_request_access:
+              type: boolean
+              default: true
+              description: Allow anyone to request access to documents.
       required:
         - name
     CreateWorkspaceResponse:
