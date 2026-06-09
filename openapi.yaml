@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.32.0
+  version: 7.33.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -8404,6 +8404,7 @@ paths:
           description: The unique identifier of the document.
           schema:
             type: string
+            maxLength: 22
           example: BhVzRcxH9Z2LgfPPGXFUBa
         - name: limit
           in: query
@@ -8498,6 +8499,106 @@ paths:
                   value:
                     code: not_started
                     description: Likely, your document is not yet completed.
+        '429':
+          $ref: '#/components/responses/429TooManyRequestsV2'
+  /public/beta/documents/ai-metadata:
+    post:
+      tags:
+        - Documents
+      x-internal: true
+      operationId: batchGetDocumentAiMetadata
+      summary: '[Beta] Get AI Metadata for Multiple Documents'
+      description: |
+        Returns AI metadata for a list of documents in a single request. The batch variant of <a href="#/operations/getDocumentAiMetadata">Get AI Metadata for a Document</a>.
+
+        Use this endpoint when you need AI metadata for several documents and want to avoid issuing one request per document. Each `results[]` entry mirrors the per-document outcome of the single-document endpoint.
+
+        ### Partial-success model
+
+        The response is always `200 OK` when the request itself is valid and the caller is authenticated. Per-document outcomes are reported inside `results[]` via a `status` discriminator. A failure for one document (not found, access denied, isolated server-side failure) does not fail the whole request — the response still returns successful entries for the rest.
+
+        Per-document `status` values mirror the HTTP semantics of the single-document endpoint:
+
+        | Single-document HTTP | Batch `status`             | Notes                                                                              | | -------------------- | -------------------------- | ---------------------------------------------------------------------------------- | | `200`                | `ok`                       | `ai_metadata` carries the same payload as the single-document `200` body.          | | `202`                | `extraction_pending`       | Includes `retry_after` (seconds). Retry the whole batch or just this `document_id`.| | `204`                | `extraction_failed`        | Terminal. Retrying will not help — contact support.                                | | `409`                | `extraction_not_started`   | Typically because the document is not yet completed.                               | | `404`                | `not_found`                | Document does not exist or is deleted.                                             | | `403`                | `access_denied`            | Caller cannot access this specific document.                                       | | _(none — batch only)_| `internal_error`           | Isolated server-side failure for this document. Retrying the affected document is safe. |
+
+        Top-level non-`2xx` responses (`400`, `401`, `403`, `429`) are reserved for whole-request failures — for example, request validation, missing or invalid authentication, the caller has no read scope at all, or rate limiting.
+
+        > 🚧 **Beta** > > This endpoint is currently in beta and may change without notice.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchAIMetadataRequest'
+            examples:
+              All fields for three documents:
+                value:
+                  document_ids:
+                    - BhVzRcxH9Z2LgfPPGXFUBa
+                    - msFYActMfJHqNTKH9ig2DF
+                    - 9FeAY2NB3C9qDdtQRb4tTL
+              Specific fields only:
+                value:
+                  document_ids:
+                    - BhVzRcxH9Z2LgfPPGXFUBa
+                    - msFYActMfJHqNTKH9ig2DF
+                  field_keys:
+                    - Counterparty name
+                    - Contract value
+      responses:
+        '200':
+          description: |
+            The batch was accepted and processed. Per-document outcomes are in `results[]`. Inspect each entry's `status` field to handle success, pending extraction, terminal failure, missing document, or per-document access denial.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchAIMetadataResponse'
+              examples:
+                Mixed outcomes:
+                  value:
+                    count: 6
+                    results:
+                      - document_id: BhVzRcxH9Z2LgfPPGXFUBa
+                        status: ok
+                        ai_metadata:
+                          count: 2
+                          results:
+                            - id: 3SBkwkGBbMn6btzHTiKkGn
+                              key: Counterparty name
+                              field_type: multi_line
+                              settings: {}
+                              value:
+                                value: Acme Corp
+                                acceptance_status: pending
+                            - id: aPpvJWCMNqf6mYbA2T3KdR
+                              key: Contract value
+                              field_type: currency
+                              settings: {}
+                              value:
+                                value: $250,000
+                                acceptance_status: accepted
+                      - document_id: msFYActMfJHqNTKH9ig2DF
+                        status: extraction_pending
+                        retry_after: 5
+                        description: Result is being generated. You can try later.
+                      - document_id: 9FeAY2NB3C9qDdtQRb4tTL
+                        status: extraction_failed
+                        description: We couldn't extract data for this document. Contact support.
+                      - document_id: Uf7yNEwkELsazbKHDMDAeV
+                        status: extraction_not_started
+                        description: Likely, the document is not yet completed.
+                      - document_id: pXwnAhg8bk9SoBEGGdNu3d
+                        status: not_found
+                        description: Document not found.
+                      - document_id: bQySP2djjJkNKxyVbQ8pu4
+                        status: access_denied
+                        description: Access to this document is denied.
+        '400':
+          $ref: '#/components/responses/400BadRequestV2'
+        '401':
+          $ref: '#/components/responses/401AuthErrorV2'
+        '403':
+          $ref: '#/components/responses/403PermissionDeniedV2'
         '429':
           $ref: '#/components/responses/429TooManyRequestsV2'
   /public/beta/documents/search:
@@ -15797,6 +15898,7 @@ components:
       properties:
         id:
           type: string
+          maxLength: 22
           description: |
             Stable identifier of the metadata field definition. The same identifier appears for the same field across every document.
           example: 3SBkwkGBbMn6btzHTiKkGn
@@ -15871,6 +15973,236 @@ components:
           type: string
           description: Human-readable explanation of why extraction has not started.
           example: Likely, your document is not yet completed.
+    BatchAIMetadataRequest:
+      type: object
+      description: |
+        Batch request for AI metadata across multiple documents.
+      required:
+        - document_ids
+      properties:
+        document_ids:
+          type: array
+          description: |
+            Documents to fetch AI metadata for. Each entry must be a valid document identifier. Duplicates are not allowed.
+          minItems: 1
+          maxItems: 40
+          uniqueItems: true
+          items:
+            type: string
+            maxLength: 22
+            example: BhVzRcxH9Z2LgfPPGXFUBa
+        field_keys:
+          type: array
+          description: |
+            Optional filter — restrict the response, for each document, to this subset of AI metadata fields, matched by `key` (the human-readable field name returned as `results[].key` by the single-document endpoint, e.g. `Contract value`). Comparison is exact and case-sensitive. Unknown keys are silently ignored. When omitted, every populated field is returned per document.
+          minItems: 1
+          maxItems: 150
+          uniqueItems: true
+          items:
+            type: string
+            pattern: "^[^\0]+$"
+            example: Contract value
+    BatchAIMetadataResultStatus:
+      type: string
+      description: |
+        Per-document outcome discriminator. Mirrors the HTTP semantics of the single-document endpoint — see the operation description for the mapping. `internal_error` is exclusive to the batch endpoint and indicates an isolated server-side failure for that document only; the request as a whole succeeded and other documents in the same batch are unaffected.
+      enum:
+        - ok
+        - extraction_pending
+        - extraction_failed
+        - extraction_not_started
+        - not_found
+        - access_denied
+        - internal_error
+    BatchAIMetadataResultBase:
+      type: object
+      description: |
+        Fields common to every per-document outcome in a batch AI metadata response.
+      required:
+        - document_id
+        - status
+      properties:
+        document_id:
+          type: string
+          maxLength: 22
+          description: |
+            The document this result corresponds to. Echoed from the request.
+          example: BhVzRcxH9Z2LgfPPGXFUBa
+        status:
+          $ref: '#/components/schemas/BatchAIMetadataResultStatus'
+    BatchAIMetadataResultOk:
+      description: |
+        Per-document success entry. `ai_metadata` carries the same payload as the single-document endpoint's 200 body.
+      allOf:
+        - $ref: '#/components/schemas/BatchAIMetadataResultBase'
+        - type: object
+          required:
+            - ai_metadata
+          properties:
+            status:
+              type: string
+              enum:
+                - ok
+              example: ok
+            ai_metadata:
+              $ref: '#/components/schemas/AIMetadataResponse'
+    BatchAIMetadataResultExtractionPending:
+      description: |
+        AI extraction is still in progress for this document. Retry after `retry_after` seconds.
+      allOf:
+        - $ref: '#/components/schemas/BatchAIMetadataResultBase'
+        - type: object
+          required:
+            - retry_after
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - extraction_pending
+              example: extraction_pending
+            retry_after:
+              type: integer
+              description: |
+                Number of seconds the client should wait before retrying this document.
+              minimum: 1
+              example: 5
+            description:
+              type: string
+              description: Human-readable explanation of the current extraction state.
+              example: Result is being generated. You can try later.
+    BatchAIMetadataResultExtractionFailed:
+      description: |
+        AI extraction has terminally failed for this document. Retrying will not help — contact support.
+      allOf:
+        - $ref: '#/components/schemas/BatchAIMetadataResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - extraction_failed
+              example: extraction_failed
+            description:
+              type: string
+              description: Human-readable explanation of the failure.
+              example: We couldn't extract data for this document. Contact support.
+    BatchAIMetadataResultExtractionNotStarted:
+      description: |
+        AI extraction has not been triggered for this document — typically because the document is not yet completed.
+      allOf:
+        - $ref: '#/components/schemas/BatchAIMetadataResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - extraction_not_started
+              example: extraction_not_started
+            description:
+              type: string
+              description: Human-readable explanation of why extraction has not started.
+              example: Likely, the document is not yet completed.
+    BatchAIMetadataResultNotFound:
+      description: |
+        The document does not exist or has been deleted.
+      allOf:
+        - $ref: '#/components/schemas/BatchAIMetadataResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - not_found
+              example: not_found
+            description:
+              type: string
+              description: Human-readable explanation.
+              example: Document not found.
+    BatchAIMetadataResultAccessDenied:
+      description: |
+        The caller is authenticated but cannot access this specific document.
+      allOf:
+        - $ref: '#/components/schemas/BatchAIMetadataResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - access_denied
+              example: access_denied
+            description:
+              type: string
+              description: Human-readable explanation.
+              example: Access to this document is denied.
+    BatchAIMetadataResultInternalError:
+      description: |
+        An isolated server-side failure occurred for this document. The request as a whole succeeded; retrying the affected document (on its own or in a smaller batch) is safe.
+      allOf:
+        - $ref: '#/components/schemas/BatchAIMetadataResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - internal_error
+              example: internal_error
+            description:
+              type: string
+              description: Human-readable explanation.
+              example: An internal error occurred while fetching AI metadata for this document. Try again.
+    BatchAIMetadataResult:
+      type: object
+      description: |
+        Outcome for a single document in a batch AI metadata request. The concrete shape is selected by the `status` discriminator.
+      oneOf:
+        - $ref: '#/components/schemas/BatchAIMetadataResultOk'
+        - $ref: '#/components/schemas/BatchAIMetadataResultExtractionPending'
+        - $ref: '#/components/schemas/BatchAIMetadataResultExtractionFailed'
+        - $ref: '#/components/schemas/BatchAIMetadataResultExtractionNotStarted'
+        - $ref: '#/components/schemas/BatchAIMetadataResultNotFound'
+        - $ref: '#/components/schemas/BatchAIMetadataResultAccessDenied'
+        - $ref: '#/components/schemas/BatchAIMetadataResultInternalError'
+      discriminator:
+        propertyName: status
+        mapping:
+          ok: '#/components/schemas/BatchAIMetadataResultOk'
+          extraction_pending: '#/components/schemas/BatchAIMetadataResultExtractionPending'
+          extraction_failed: '#/components/schemas/BatchAIMetadataResultExtractionFailed'
+          extraction_not_started: '#/components/schemas/BatchAIMetadataResultExtractionNotStarted'
+          not_found: '#/components/schemas/BatchAIMetadataResultNotFound'
+          access_denied: '#/components/schemas/BatchAIMetadataResultAccessDenied'
+          internal_error: '#/components/schemas/BatchAIMetadataResultInternalError'
+    BatchAIMetadataResponse:
+      type: object
+      description: |
+        Per-document AI metadata results. Always returned with HTTP 200 when the request is valid; per-document failures are reported in `results[].status`.
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          description: |
+            Number of entries in `results`. Equal to the number of `document_ids` in the request.
+          minimum: 0
+          example: 6
+        results:
+          type: array
+          description: |
+            Per-document outcomes, in the same order as the request's `document_ids`. Each entry's shape depends on its `status`.
+          items:
+            $ref: '#/components/schemas/BatchAIMetadataResult'
     DocumentSearchResultOwner:
       title: DocumentSearchResultOwner
       description: Owner of the document
