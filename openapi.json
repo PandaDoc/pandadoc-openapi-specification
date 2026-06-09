@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "7.31.0"
+    "version": "7.32.0"
   },
   "servers": [
     {
@@ -578,7 +578,8 @@
                           "kba_verification": null,
                           "id_verification": {
                             "enabled": true
-                          }
+                          },
+                          "email_otp_verification": null
                         }
                       }
                     ],
@@ -2527,7 +2528,8 @@
                             },
                             "kba_verification": null,
                             "id_verification": "null,",
-                            "phone_verification": null
+                            "phone_verification": null,
+                            "email_otp_verification": null
                           },
                           "signature_date": "2021-10-23T21:07:04.147Z"
                         }
@@ -12198,7 +12200,13 @@
       "RecipientVerificationSettings": {
         "type": "object",
         "nullable": true,
-        "description": "To set up recipient verification, fill in verification_place and specify the type: passcode_verification, phone_verification, kba_verification or id_verification.\n- For passcode_verification, provide the passcode.\n- For phone_verification, provide the phone_number.\n- For kba_verification and id_verification, set the enabled parameter to true.\n",
+        "description": "To set up recipient verification, provide verification_place (required) and exactly one verification type: passcode_verification, phone_verification, kba_verification, id_verification, or email_otp_verification. All other verification type fields must be null. Providing more than one verification type returns a 400 error.\n- For passcode_verification, provide the passcode.\n- For phone_verification, provide the phone_number.\n- For email_otp_verification, provide the email.\n- For kba_verification and id_verification, set the enabled parameter to true.\n",
+        "example": {
+          "verification_place": "before_open",
+          "email_otp_verification": {
+            "email": "user@example.com"
+          }
+        },
         "properties": {
           "verification_place": {
             "$ref": "#/components/schemas/RecipientVerificationPlaceEnum"
@@ -12261,6 +12269,22 @@
                 "example": true
               }
             }
+          },
+          "email_otp_verification": {
+            "type": "object",
+            "description": "Sets the email address to send a one-time passcode to.",
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "user@example.com",
+                "description": "An email address to send a one-time passcode to."
+              }
+            },
+            "required": [
+              "email"
+            ],
+            "nullable": true
           }
         }
       },
@@ -16174,7 +16198,7 @@
                 },
                 "action": {
                   "type": "integer",
-                  "description": "Numeric code representing the type of action performed.\nPossible values:\n\n| Integer Value | String Representation |\n|---------------|---------------------------------------------|\n| 1 | new document |\n| 2 | new revision |\n| 3 | approval request |\n| 4 | approved |\n| 5 | rejected |\n| 6 | sent |\n| 7 | completed by all |\n| 8 | viewed |\n| 9 | completed |\n| 10 | waiting pay |\n| 11 | paid |\n| 12 | forwarded |\n| 13 | expired |\n| 14 | bank account submitted |\n| 15 | bank account verified |\n| 16 | payment submitted |\n| 17 | payment failed |\n| 18 | completed manually |\n| 19 | expired manually |\n| 20 | paid manually |\n| 21 | approval deleted |\n| 22 | approval forced |\n| 23 | reassigned |\n| 24 | recipient edited |\n| 25 | recipient added |\n| 26 | recipient deleted |\n| 27 | declined manually |\n| 28 | approval step skipped |\n| 29 | suggest edits |\n| 43 | declined |\n| 44 | partly paid |\n| 45 | partly paid manually |\n| 47 | recipient verification with kba passed |\n| 48 | recipient verification with id passed |\n| 49 | recipient verification with text sms passed |\n| 50 | recipient verification with passcode passed |\n| 51 | recipient verification with kba failed |\n| 52 | recipient verification with id failed |\n| 53 | recipient verification with text sms failed |\n| 54 | recipient verification with passcode failed |\n| 55 | recipient signed with QES |\n| 56 | QES completed |\n| 57 | recipient QES attempt started |\n| 58 | recipient QES attempt expired |\n| 59 | Optional item in quote selected |\n| 60 | Optional item in quote deselected |\n| 61 | Item quantity in quote changed |\n| 62 | Item quantity in pricing table changed |\n| 63 | Optional item in pricing table selected |\n| 64 | Optional item in pricing table deselected |\n| 65 | Section item in pricing table selected (one of) |\n| 66 | Optional section in quote selected |\n| 67 | Optional section in quote deselected |\n| 68 | Section quantity in quote changed |\n"
+                  "description": "Numeric code representing the type of action performed.\nPossible values:\n\n| Integer Value | String Representation |\n|---------------|---------------------------------------------|\n| 1 | new document |\n| 2 | new revision |\n| 3 | approval request |\n| 4 | approved |\n| 5 | rejected |\n| 6 | sent |\n| 7 | completed by all |\n| 8 | viewed |\n| 9 | completed |\n| 10 | waiting pay |\n| 11 | paid |\n| 12 | forwarded |\n| 13 | expired |\n| 14 | bank account submitted |\n| 15 | bank account verified |\n| 16 | payment submitted |\n| 17 | payment failed |\n| 18 | completed manually |\n| 19 | expired manually |\n| 20 | paid manually |\n| 21 | approval deleted |\n| 22 | approval forced |\n| 23 | reassigned |\n| 24 | recipient edited |\n| 25 | recipient added |\n| 26 | recipient deleted |\n| 27 | declined manually |\n| 28 | approval step skipped |\n| 29 | suggest edits |\n| 43 | declined |\n| 44 | partly paid |\n| 45 | partly paid manually |\n| 47 | recipient verification with kba passed |\n| 48 | recipient verification with id passed |\n| 49 | recipient verification with text sms passed |\n| 50 | recipient verification with passcode passed |\n| 51 | recipient verification with kba failed |\n| 52 | recipient verification with id failed |\n| 53 | recipient verification with text sms failed |\n| 54 | recipient verification with passcode failed |\n| 55 | recipient signed with QES |\n| 56 | QES completed |\n| 57 | recipient QES attempt started |\n| 58 | recipient QES attempt expired |\n| 59 | Optional item in quote selected |\n| 60 | Optional item in quote deselected |\n| 61 | Item quantity in quote changed |\n| 62 | Item quantity in pricing table changed |\n| 63 | Optional item in pricing table selected |\n| 64 | Optional item in pricing table deselected |\n| 65 | Section item in pricing table selected (one of) |\n| 66 | Optional section in quote selected |\n| 67 | Optional section in quote deselected |\n| 68 | Section quantity in quote changed |\n| 69 | recipient verification with email otp passed |\n| 70 | recipient verification with email otp failed |\n"
                 },
                 "reason": {
                   "type": "string",
