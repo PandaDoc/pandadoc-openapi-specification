@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.33.0
+  version: 7.33.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -2191,6 +2191,9 @@ paths:
       operationId: downloadDocument
       description: |
         Download documents as a PDF.
+        > ❗️ Downloading completed and signed documents
+        >
+        > To download completed and signed documents, you should use the [Download Protected Document](https://developers.pandadoc.com/reference/download-protected-document) endpoint instead. See the [How to download a completed document](https://developers.pandadoc.com/docs/how-to-download-completed-document) guide for details.
       parameters:
         - name: id
           in: path
