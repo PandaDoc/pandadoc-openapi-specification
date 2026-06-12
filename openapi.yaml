@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 7.33.1
+  version: 8.0.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -223,14 +223,14 @@ paths:
           in: query
           schema:
             type: string
-            format: datetime
+            format: date-time
           description: Limits results to the documents with the `date_created` greater than or equal to this value.
           example: '2024-10-27T15:22:23.132757Z'
         - name: created_to
           in: query
           schema:
             type: string
-            format: datetime
+            format: date-time
           description: Limits results to the documents with the `date_created` less than this value.
           example: '2024-10-27T15:22:23.132757Z'
         - name: deleted
@@ -249,14 +249,14 @@ paths:
           in: query
           schema:
             type: string
-            format: datetime
+            format: date-time
           example: '2024-10-27T15:22:23.132757Z'
           description: Limits results to the documents with the `date_completed` greater than or equal to this value.
         - name: completed_to
           in: query
           schema:
             type: string
-            format: datetime
+            format: date-time
           description: Limits results to the documents with the `date_completed` less than this value.
           example: '2024-10-27T15:22:23.132757Z'
         - name: membership_id
@@ -281,14 +281,14 @@ paths:
           in: query
           schema:
             type: string
-            format: datetime
+            format: date-time
           description: Limits results to the documents with the `date_modified` greater than or equal to this value.
           example: '2024-10-27T15:22:23.132757Z'
         - name: modified_to
           in: query
           schema:
             type: string
-            format: datetime
+            format: date-time
           description: Limits results to the documents with the `date_modified` less than this value.
           example: '2024-10-27T15:22:23.132757Z'
         - name: q
@@ -1161,7 +1161,7 @@ paths:
               examples:
                 Auto Reminder Status:
                   value:
-                    result:
+                    reminders:
                       - recipient_id: 2eWSKSvVqmuVCnuUK3iWwD
                         status: sent
                       - recipient_id: 2ZjA3A3RvjgVadJ9DpNQwz
@@ -9108,10 +9108,12 @@ components:
       properties:
         role:
           type: string
+          nullable: true
           example: user
           description: A recipient's role in the document from the template. A recipient will be added in CC if a role parameter is not provided.
         signing_order:
           type: integer
+          nullable: true
           example: 1
           description: |
             Set a signing order for a recipient. Learn more: https://developers.pandadoc.com/docs/set-signing-order
@@ -9130,10 +9132,12 @@ components:
           description: A recipient's phone number.
         first_name:
           type: string
+          nullable: true
           example: Josh
           description: A recipient's first name. We automatically take the first name from contact data if this field is missed.
         last_name:
           type: string
+          nullable: true
           example: Ron
           description: A recipient's last name. We automatically take the last name from contact data if this field is missed.
     RecipientVerificationPlaceEnum:
@@ -9147,7 +9151,6 @@ components:
         - before_sign
     RecipientVerificationSettings:
       type: object
-      nullable: true
       description: |
         To set up recipient verification, provide verification_place (required) and exactly one verification type: passcode_verification, phone_verification, kba_verification, id_verification, or email_otp_verification. All other verification type fields must be null. Providing more than one verification type returns a 400 error.
         - For passcode_verification, provide the passcode.
@@ -9175,6 +9178,7 @@ components:
           nullable: true
         phone_verification:
           type: object
+          nullable: true
           description: Sets the phone number to send a passcode to.
           properties:
             phone_number:
@@ -9186,6 +9190,7 @@ components:
             - phone_number
         kba_verification:
           type: object
+          nullable: true
           description: Sets the KBA verification.
           properties:
             time_limit_sec:
@@ -9199,6 +9204,7 @@ components:
               example: 2
         id_verification:
           type: object
+          nullable: true
           description: Sets the ID verification.
           properties:
             enabled:
@@ -10135,7 +10141,7 @@ components:
     DocumentAutoRemindersResponse:
       type: object
       properties:
-        result:
+        reminders:
           type: array
           items:
             type: object
@@ -10150,8 +10156,8 @@ components:
                   - error
                   - scheduled
                 description: Status of the reminder attempt (sent, error, scheduled).
-          required:
-            - recipient_id
+            required:
+              - recipient_id
     DocumentESignDisclosure:
       type: object
       properties:
@@ -10216,6 +10222,19 @@ components:
           nullable: true
         version:
           type: string
+    Token:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Token name.
+          example: Document.GrandTotal
+        value:
+          type: string
+          description: Token value.
+          example: $29.99
+      required:
+        - name
     RecipientAssignmentDetails:
       type: object
       properties:
@@ -11071,6 +11090,7 @@ components:
           example: CC
         role:
           type: string
+          nullable: true
           deprecated: true
           example: ''
         roles:
@@ -11090,6 +11110,14 @@ components:
         has_completed:
           type: boolean
           example: true
+    RecipientVerificationSettingsResponse:
+      type: object
+      nullable: true
+      description: |
+        Recipient verification settings as returned in document details.
+        `null` when verification is not configured for the recipient.
+      allOf:
+        - $ref: '#/components/schemas/RecipientVerificationSettings'
     DocumentDetailsRecipient:
       title: Recipient
       allOf:
@@ -11123,7 +11151,7 @@ components:
               nullable: true
               example: '2021-10-23T21:07:04.147345Z'
             verification_settings:
-              $ref: '#/components/schemas/RecipientVerificationSettings'
+              $ref: '#/components/schemas/RecipientVerificationSettingsResponse'
             redirect:
               $ref: '#/components/schemas/RecipientRedirect'
             avatar:
@@ -11283,7 +11311,7 @@ components:
           type: array
           description: Document tokens.
           items:
-            type: object
+            $ref: '#/components/schemas/Token'
           example:
             - name: Document.GrandTotal
               value: $29.99
@@ -11392,7 +11420,21 @@ components:
             - tag1
             - tag2
         sent_by:
+          type: object
+          nullable: true
           description: Document sent by.
+          properties:
+            id:
+              type: string
+            email:
+              type: string
+            first_name:
+              type: string
+            last_name:
+              type: string
+            avatar:
+              type: string
+              nullable: true
         recipients:
           type: array
           description: Document recipients.
@@ -11480,6 +11522,7 @@ components:
           description: Document version.
           example: '1'
         lock:
+          type: object
           nullable: true
           allOf:
             - $ref: '#/components/schemas/DocumentLockInfo'
@@ -12461,12 +12504,14 @@ components:
                 properties:
                   subject:
                     type: string
+                    nullable: true
                     description: |
                       Subject line of the reminder email sent to the recipient.
                     example: 'Reminder: Please sign the document "Service Agreement"'
                     maxLength: 512
                   message:
                     type: string
+                    nullable: true
                     description: |
                       Custom message body of the reminder email. Can include friendly or contextual
                       text encouraging the recipient to complete the signing process.
@@ -12501,9 +12546,11 @@ components:
                   sent_at:
                     type: string
                     format: date-time
-                    description: Timestamp of when the reminder was sent, in ISO 8601 format.
+                    nullable: true
+                    description: Timestamp of when the reminder was sent, in ISO 8601 format. Present only on success.
                   detail:
                     type: string
+                    nullable: true
                     enum:
                       - Can't send reminder to CC recipient
                       - Can't send reminder to the Recipient who completed their part
@@ -12515,7 +12562,7 @@ components:
                       - Can't send SMS reminder to the Recipient with no phone number
                       - Can't send SMS reminder to the Recipient with invalid phone number
                       - Can't send reminder. The document does not contain a recipient with the specified recipient ID
-                    description: Detailed explanation of why the reminder could not be sent, if applicable.
+                    description: Detailed explanation of why the reminder could not be sent. Present only on error.
               email:
                 type: object
                 properties:
@@ -12528,9 +12575,11 @@ components:
                   sent_at:
                     type: string
                     format: date-time
-                    description: Timestamp of when the reminder was sent, in ISO 8601 format.
+                    nullable: true
+                    description: Timestamp of when the reminder was sent, in ISO 8601 format. Present only on success.
                   detail:
                     type: string
+                    nullable: true
                     enum:
                       - Can't send reminder to CC recipient
                       - Can't send reminder to the Recipient who completed their part
@@ -12541,7 +12590,7 @@ components:
                       - Can't send email reminder to the Recipient more than once every 24 hours
                       - Can't send reminder. The document does not contain a recipient with the specified recipient ID
                       - Can’t send reminder. Email message contains potentially malicious links and could not be processed
-                    description: Detailed explanation of why the reminder could not be sent, if applicable.
+                    description: Detailed explanation of why the reminder could not be sent. Present only on error.
               email_customization:
                 type: object
                 description: |
@@ -12557,12 +12606,14 @@ components:
                 properties:
                   subject:
                     type: string
+                    nullable: true
                     description: |
                       Subject line of the reminder email sent to the recipient.
                     example: 'Reminder: Please sign the document "Service Agreement"'
                     maxLength: 512
                   message:
                     type: string
+                    nullable: true
                     description: |
                       Custom message body of the reminder email. Can include friendly or contextual
                       text encouraging the recipient to complete the signing process.
@@ -12892,8 +12943,8 @@ components:
               - page_name
               - page_uuid
         count:
-          type: number
-          format: integer
+          type: integer
+          format: int32
           minimum: 0
           description: Total number of items created.
       required:
@@ -13186,18 +13237,14 @@ components:
             public_template: true
         tokens:
           type: array
+          description: Template tokens.
           items:
-            type: object
-            properties:
-              name:
-                type: string
-                example: Document.Value
-              value:
-                type: string
+            $ref: '#/components/schemas/Token'
         fields:
           type: array
+          description: Template fields.
           items:
-            type: object
+            $ref: '#/components/schemas/Field'
           example:
             - uuid: 74bcb05d-e4cd-458d-bc1d-671c2be8b221
               name: Favorite.Color
@@ -13210,7 +13257,7 @@ components:
                 preassigned_person:
                   email: test@panddoc.com
                   type: preassigned contact
-                type: role
+                type: recipient
               merge_field: Favorite.Color
               field_id: text1
               type: text
@@ -15784,7 +15831,7 @@ components:
                   url:
                     description: The url for downloading the DOCX file.
                     type: string
-                    format: uri
+                    format: url
                     nullable: true
     DocumentSummaryType:
       type: string
@@ -16774,10 +16821,15 @@ components:
             properties:
               type:
                 type: string
-                example: permission_error
+                example: permissions_error
               detail:
-                type: string
-                example: You do not have permission to perform this action.
+                description: |
+                  Error details. Either a human-readable message string, or a structured object.
+                oneOf:
+                  - type: string
+                    example: You do not have permission to perform this action.
+                  - type: object
+                    additionalProperties: true
               info_message:
                 type: string
                 description: Human-readable explanation of the permission error.
