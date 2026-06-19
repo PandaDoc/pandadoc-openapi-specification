@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.2.0"
+    "version": "8.3.0"
   },
   "servers": [
     {
@@ -3954,6 +3954,47 @@
                             "width": 1,
                             "height": 1
                           }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "Create radio buttons without visible values": {
+                  "value": {
+                    "fields": [
+                      {
+                        "type": "radio_buttons",
+                        "layout": {
+                          "page": 1,
+                          "position": {
+                            "offset_x": 100,
+                            "offset_y": 200,
+                            "anchor_point": "topleft"
+                          },
+                          "style": {
+                            "width": 16,
+                            "height": 16
+                          }
+                        },
+                        "settings": {
+                          "show_values": false,
+                          "required": false,
+                          "options": [
+                            {
+                              "text": "Yes",
+                              "position": {
+                                "offset_x": 0,
+                                "offset_y": 0
+                              }
+                            },
+                            {
+                              "text": "No",
+                              "position": {
+                                "offset_x": 0,
+                                "offset_y": 38
+                              }
+                            }
+                          ]
                         }
                       }
                     ]
@@ -16273,6 +16314,73 @@
           }
         }
       },
+      "DocumentFieldOptionCreate": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Option label.",
+            "example": "Yes"
+          },
+          "position": {
+            "type": "object",
+            "description": "Option position relative to the field. Used by `radio_buttons` fields.",
+            "properties": {
+              "offset_x": {
+                "type": "number",
+                "example": 0
+              },
+              "offset_y": {
+                "type": "number",
+                "example": 38
+              }
+            }
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "DocumentFieldSettingsCreate": {
+        "type": "object",
+        "description": "Field configuration. The available properties depend on the field `type`.\n",
+        "properties": {
+          "required": {
+            "type": "boolean",
+            "default": true,
+            "example": false,
+            "description": "Whether the recipient must complete the field."
+          },
+          "placeholder": {
+            "type": "string",
+            "example": "Enter value",
+            "description": "Placeholder text shown in the field. Applies to text, date, dropdown, payment, and collected file fields."
+          },
+          "masked": {
+            "type": "boolean",
+            "example": false,
+            "description": "Hide the entered value behind a mask. Applies to text and date fields."
+          },
+          "multiline": {
+            "type": "boolean",
+            "example": false,
+            "description": "Allow the value to span multiple lines. Applies to text fields."
+          },
+          "show_values": {
+            "type": "boolean",
+            "default": true,
+            "example": false,
+            "description": "Show the option values next to the radio buttons. Applies to `radio_buttons` fields.\nSet to `false` to hide the values.\n"
+          },
+          "options": {
+            "type": "array",
+            "description": "Selectable options. Applies to `radio_buttons` and `dropdown` fields.\nFor `radio_buttons`, include a `position` for each option to place it on the page.\n",
+            "items": {
+              "$ref": "#/components/schemas/DocumentFieldOptionCreate"
+            }
+          }
+        }
+      },
       "DocumentFieldsFieldCreate": {
         "type": "object",
         "properties": {
@@ -16287,12 +16395,12 @@
           "type": {
             "$ref": "#/components/schemas/FieldTypeEnum"
           },
-          "placeholder": {
-            "type": "string"
-          },
           "assigned_to": {
             "type": "string",
             "description": "Optional uuid of a recipient."
+          },
+          "settings": {
+            "$ref": "#/components/schemas/DocumentFieldSettingsCreate"
           },
           "layout": {
             "$ref": "#/components/schemas/DocumentFieldsLayout"
