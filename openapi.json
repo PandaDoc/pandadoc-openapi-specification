@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.0.1"
+    "version": "8.1.0"
   },
   "servers": [
     {
@@ -4148,7 +4148,7 @@
           "Document Settings"
         ],
         "summary": "Get document settings",
-        "description": "Retrieves the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).\n",
+        "description": "Retrieves the settings for a specified document.\n",
         "operationId": "documentSettingsGet",
         "parameters": [
           {
@@ -4176,7 +4176,8 @@
                     "value": {
                       "language": "en-US",
                       "qualified_electronic_signature": true,
-                      "expires_in": 30
+                      "expires_in": 30,
+                      "suggest_edits": false
                     }
                   }
                 }
@@ -4190,7 +4191,7 @@
           "Document Settings"
         ],
         "summary": "Update document settings",
-        "description": "Updates the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).\n",
+        "description": "Updates the settings for a specified document.\n",
         "operationId": "documentSettingsUpdate",
         "parameters": [
           {
@@ -4217,7 +4218,8 @@
                   "value": {
                     "language": "fr-FR",
                     "qualified_electronic_signature": true,
-                    "expires_in": 60
+                    "expires_in": 60,
+                    "suggest_edits": true
                   }
                 }
               }
@@ -4238,7 +4240,8 @@
                     "value": {
                       "language": "fr-FR",
                       "qualified_electronic_signature": true,
-                      "expires_in": 60
+                      "expires_in": 60,
+                      "suggest_edits": true
                     }
                   }
                 }
@@ -16447,12 +16450,17 @@
             "type": "integer",
             "format": "int32",
             "description": "Document expiration in days. If not explicitly set, defaults to the system default expiration.\n"
+          },
+          "suggest_edits": {
+            "description": "Indicates whether Suggest Edits (redlining) is enabled for the document. When `true`,\nrecipients can suggest edits to the document content during the signing process.\n",
+            "type": "boolean"
           }
         },
         "required": [
           "language",
           "qualified_electronic_signature",
-          "expires_in"
+          "expires_in",
+          "suggest_edits"
         ]
       },
       "UpdateDocumentSettingsRequest": {
@@ -16471,6 +16479,10 @@
             "format": "int32",
             "minimum": 1,
             "description": "Document expiration in days. Minimum is 1 day.\n"
+          },
+          "suggest_edits": {
+            "type": "boolean",
+            "description": "Enables or disables Suggest Edits (redlining) for the document. When `true`,\nrecipients can suggest edits to the document content. Can only be changed while\nthe document is in `draft` status.\n"
           }
         }
       },

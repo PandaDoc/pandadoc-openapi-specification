@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.0.1
+  version: 8.1.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -3092,7 +3092,7 @@ paths:
         - Document Settings
       summary: Get document settings
       description: |
-        Retrieves the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).
+        Retrieves the settings for a specified document.
       operationId: documentSettingsGet
       parameters:
         - name: document_id
@@ -3116,12 +3116,13 @@ paths:
                     language: en-US
                     qualified_electronic_signature: true
                     expires_in: 30
+                    suggest_edits: false
     patch:
       tags:
         - Document Settings
       summary: Update document settings
       description: |
-        Updates the settings for a specified document. Supported fields: language, qualified_electronic_signature, expires_in (in days).
+        Updates the settings for a specified document.
       operationId: documentSettingsUpdate
       parameters:
         - name: document_id
@@ -3144,6 +3145,7 @@ paths:
                   language: fr-FR
                   qualified_electronic_signature: true
                   expires_in: 60
+                  suggest_edits: true
       responses:
         '200':
           description: Successfully updated document settings.
@@ -3158,6 +3160,7 @@ paths:
                     language: fr-FR
                     qualified_electronic_signature: true
                     expires_in: 60
+                    suggest_edits: true
   /public/v1/documents/{id}/ownership:
     patch:
       tags:
@@ -12235,10 +12238,16 @@ components:
           format: int32
           description: |
             Document expiration in days. If not explicitly set, defaults to the system default expiration.
+        suggest_edits:
+          description: |
+            Indicates whether Suggest Edits (redlining) is enabled for the document. When `true`,
+            recipients can suggest edits to the document content during the signing process.
+          type: boolean
       required:
         - language
         - qualified_electronic_signature
         - expires_in
+        - suggest_edits
     UpdateDocumentSettingsRequest:
       type: object
       description: Document settings update request.
@@ -12257,6 +12266,12 @@ components:
           minimum: 1
           description: |
             Document expiration in days. Minimum is 1 day.
+        suggest_edits:
+          type: boolean
+          description: |
+            Enables or disables Suggest Edits (redlining) for the document. When `true`,
+            recipients can suggest edits to the document content. Can only be changed while
+            the document is in `draft` status.
     DocumentTransferOwnershipRequest:
       type: object
       properties:
