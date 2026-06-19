@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.1.0"
+    "version": "8.2.0"
   },
   "servers": [
     {
@@ -13307,6 +13307,12 @@
                 "enum": [
                   "recipient"
                 ]
+              },
+              "signing_order": {
+                "type": "integer",
+                "nullable": true,
+                "example": 1,
+                "description": "Set a signing order for a recipient. Pass `null` for all recipients to disable the signing order. Learn more: https://developers.pandadoc.com/docs/set-signing-order\n"
               }
             }
           }
@@ -13337,6 +13343,12 @@
             "items": {
               "$ref": "#/components/schemas/BaseIdentity"
             }
+          },
+          "signing_order": {
+            "type": "integer",
+            "nullable": true,
+            "example": 1,
+            "description": "Set a signing order for a recipient group. Pass `null` for all recipients to disable the signing order. Learn more: https://developers.pandadoc.com/docs/set-signing-order\n"
           }
         },
         "required": [
