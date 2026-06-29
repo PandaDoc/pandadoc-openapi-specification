@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.3.0
+  version: 8.4.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -877,6 +877,7 @@ paths:
         | `document.voided`           | The document expired and is no longer available for completion or signature.                                                                                                                                                     |
         | `document.declined`         | The document was [manually marked](https://support.pandadoc.com/en/articles/9714842-manually-change-document-status) as "Declined"                                                                                    |
         | `document.external_review`  | The document is reviewed by it's recipient using Suggest Edit feature                                                                                                                                                            |
+        | `document.scheduled`        | The document is a draft scheduled to be sent automatically at a future time.                                                                                                                                                     |
       parameters:
         - examples:
             Document processing after create:
@@ -9663,6 +9664,7 @@ components:
         - document.voided
         - document.declined
         - document.external_review
+        - document.scheduled
       example: document.draft
     DocumentCreateResponse:
       type: object
