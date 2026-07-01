@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.4.0
+  version: 8.4.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -10415,6 +10415,11 @@ components:
         field_id:
           type: string
           example: FieldId1
+        is_filled:
+          type: boolean
+          readOnly: true
+          description: |
+            Whether the field has a completed value according to its type.
         type:
           $ref: '#/components/schemas/FieldTypeEnum'
     Checkbox:
@@ -11385,6 +11390,7 @@ components:
                 type: recipient
               field_id: CollectFile1
               type: collect_file
+              is_filled: true
             - uuid: f9574c3b-5b1e-4479-b2c9-c3ccd92748f3
               name: Favorite.Color
               merge_field: Favorite.Color
@@ -11405,6 +11411,7 @@ components:
                     last_name: Doe
               field_id: text1
               type: text
+              is_filled: true
             - uuid: M4755SJuoyz5Jzsw4WXTDb
               name: Like
               merge_field: Like
@@ -11423,6 +11430,7 @@ components:
                 type: recipient
               field_id: checkbox1
               type: checkbox
+              is_filled: true
         pricing:
           $ref: '#/components/schemas/PricingResponse'
         tables:
@@ -12022,6 +12030,9 @@ components:
         title:
           type: string
         value: {}
+        is_filled:
+          type: boolean
+          readOnly: true
         field_id:
           type: string
         type:
@@ -13370,6 +13381,7 @@ components:
               merge_field: Favorite.Color
               field_id: text1
               type: text
+              is_filled: false
         pricing:
           $ref: '#/components/schemas/PricingResponse'
         tags:
