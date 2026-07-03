@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.4.1"
+    "version": "8.5.0"
   },
   "servers": [
     {
@@ -4695,7 +4695,7 @@
     "/public/v1/documents/{id}/recipients/recipient/{recipient_id}": {
       "patch": {
         "summary": "Update Document Recipient",
-        "description": "Modify recipient's personal details.\n\n> 🚧 Before you start\n> \n> To edit a recipient, please ensure that you have the 'Can Edit Document' permission.\n\nUse this endpoint to easily fix typos in a recipient's name or email, or to change any other recipient information in a sent document. \n\n> 📘 Please note that changes made to a recipient within a document will also update their `Contact` information. However, these changes will not update information about this recipient in other documents where they have already been added.\n\n### Document status\n\n- You can edit a signer in the following document statuses:\n  - 'Draft' (`document.draft`),\n  - 'Waiting Approval' (`document.waiting_approval`),\n  - 'Approved' (`document.approved`),\n  - 'Rejected' (`document.rejected`),\n  - 'Sent' (`document.sent`),\n  - 'Viewed' (`document.viewed`), but only until they have signed the document.\n- You can edit a CC recipient in any document status **except**:\n  - 'Expired' (`document.voided`),\n  - 'Declined' (`document.declined`).\n\n> 📘 Updating a recipient's email after sending a document\n> \n> **Note**: If you update a recipient's email address after sending a document, they will receive an instant notification at the new email address, allowing them access to the document. Access via the previous email will be revoked.\n\n### Restrictions for updating a recipient's email\n\n- You cannot change emails of PandaDoc users.\n- You cannot use the email addresses of existing contacts. If you need to use an email from an existing contact, use the [Change Signer](https://developers.pandadoc.com/reference/change-signer) endpoint to replace a signer with this contact.\n\n### Recipient communication preferences\n\nPandaDoc honors recipient opt-outs when re-notifying a recipient on a sent document. The request will return `400 Bad Request` in the following cases:\n\n- **Email** — when changing a recipient's email or enabling email delivery, if the new email address has been marked as opted-out for your organization (for example, the recipient previously reported a PandaDoc email from your organization as spam).\n- **SMS** — when changing a recipient's phone number or enabling SMS delivery, if the recipient has opted out of receiving SMS messages (for example, by replying STOP).\n\nTo remove a recipient from the opt-out list, contact PandaDoc Support.\n",
+        "description": "Modify a recipient's personal details, or update a recipient group's name and members.\n\n> 🚧 Before you start\n> \n> To edit a recipient, please ensure that you have the 'Can Edit Document' permission.\n\nUse this endpoint to easily fix typos in a recipient's name or email, or to change any other recipient information in a sent document. \n\n### Editing a recipient group\n\nWhen the `recipient_id` points to a recipient group, you can rename the group and/or change its members:\n\n- Send `name` to rename the group.\n- Send `members` to replace the group's membership. The list you send becomes the group's new full membership: members you omit are removed, and new entries are added. Members are matched by `email`; for a retained member, only the contact fields you include (`first_name`, `last_name`) are updated, and omitted fields keep their existing values.\n- At least one of `name` or `members` must be provided, and `members` (when sent) must contain at least one member.\n\nOn a sent document, newly added members are notified and receive their access link, while removed members lose access.\n\nBoth individual recipient and recipient group edits return `204 No Content`.\n\n> 📘 Please note that changes made to a recipient within a document will also update their `Contact` information. However, these changes will not update information about this recipient in other documents where they have already been added.\n\n### Document status\n\n- You can edit a signer in the following document statuses:\n  - 'Draft' (`document.draft`),\n  - 'Waiting Approval' (`document.waiting_approval`),\n  - 'Approved' (`document.approved`),\n  - 'Rejected' (`document.rejected`),\n  - 'Sent' (`document.sent`),\n  - 'Viewed' (`document.viewed`), but only until they have signed the document.\n- You can edit a CC recipient in any document status **except**:\n  - 'Expired' (`document.voided`),\n  - 'Declined' (`document.declined`).\n\n> 📘 Updating a recipient's email after sending a document\n> \n> **Note**: If you update a recipient's email address after sending a document, they will receive an instant notification at the new email address, allowing them access to the document. Access via the previous email will be revoked.\n\n### Restrictions for updating a recipient's email\n\n- You cannot change emails of PandaDoc users.\n- You cannot use the email addresses of existing contacts. If you need to use an email from an existing contact, use the [Change Signer](https://developers.pandadoc.com/reference/change-signer) endpoint to replace a signer with this contact.\n\n### Recipient communication preferences\n\nPandaDoc honors recipient opt-outs when re-notifying a recipient on a sent document. The request will return `400 Bad Request` in the following cases:\n\n- **Email** — when changing a recipient's email or enabling email delivery, if the new email address has been marked as opted-out for your organization (for example, the recipient previously reported a PandaDoc email from your organization as spam).\n- **SMS** — when changing a recipient's phone number or enabling SMS delivery, if the recipient has opted out of receiving SMS messages (for example, by replying STOP).\n\nTo remove a recipient from the opt-out list, contact PandaDoc Support.\n",
         "operationId": "editDocumentRecipient",
         "tags": [
           "Document Recipients"
@@ -4727,7 +4727,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DocumentRecipientEditRequest"
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/DocumentRecipientEditRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/DocumentRecipientGroupEditRequest"
+                  }
+                ]
               },
               "examples": {
                 "Update Document Recipient": {
@@ -4743,6 +4750,25 @@
                     "postal_code": "",
                     "country": ""
                   }
+                },
+                "Rename Recipient Group": {
+                  "value": {
+                    "name": "Approvers"
+                  }
+                },
+                "Update Recipient Group Members": {
+                  "value": {
+                    "members": [
+                      {
+                        "email": "kept.member@pandadoc.com"
+                      },
+                      {
+                        "email": "new.member@pandadoc.com",
+                        "first_name": "New",
+                        "last_name": "Member"
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -4750,7 +4776,7 @@
         },
         "responses": {
           "204": {
-            "description": "No content"
+            "description": "No content."
           },
           "400": {
             "$ref": "#/components/responses/400RequestError"
@@ -15058,6 +15084,15 @@
           }
         }
       },
+      "RecipientTypeEnum": {
+        "type": "string",
+        "enum": [
+          "signer",
+          "CC",
+          "approver"
+        ],
+        "example": "signer"
+      },
       "RecipientPersonalDetails": {
         "type": "object",
         "description": "Actor",
@@ -15067,8 +15102,7 @@
             "example": "7kqXgjFejB2toXxjcC5jfZ"
           },
           "recipient_type": {
-            "type": "string",
-            "example": "CC"
+            "$ref": "#/components/schemas/RecipientTypeEnum"
           },
           "role": {
             "type": "string",
@@ -15861,8 +15895,7 @@
                   "example": "Dow"
                 },
                 "recipient_type": {
-                  "type": "string",
-                  "example": "CC"
+                  "$ref": "#/components/schemas/RecipientTypeEnum"
                 },
                 "email": {
                   "type": "string",
@@ -16842,6 +16875,7 @@
         }
       },
       "DocumentRecipientEditRequest": {
+        "title": "Recipient",
         "type": "object",
         "properties": {
           "email": {
@@ -16873,7 +16907,7 @@
             "nullable": true,
             "example": "John Doe Inc."
           },
-          "job_title": {
+          "title": {
             "type": "string",
             "nullable": true,
             "example": "CTO"
@@ -16898,11 +16932,65 @@
             "nullable": true,
             "example": "75001"
           },
+          "country": {
+            "type": "string",
+            "nullable": true,
+            "example": "United States"
+          },
           "verification_settings": {
             "$ref": "#/components/schemas/RecipientVerificationSettings"
           },
           "redirect": {
             "$ref": "#/components/schemas/RecipientRedirect"
+          }
+        }
+      },
+      "DocumentRecipientGroupEditMember": {
+        "title": "Recipient Group Member",
+        "type": "object",
+        "description": "A recipient group member. `email` is required and is the identity used to match members across edits. Phone is not supported for group members.",
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "josh@example.com",
+            "description": "The member's email address. Required: it identifies the member when diffing the group's membership."
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Josh",
+            "description": "The member's first name."
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true,
+            "example": "Ron",
+            "description": "The member's last name."
+          }
+        }
+      },
+      "DocumentRecipientGroupEditRequest": {
+        "title": "Recipient Group",
+        "type": "object",
+        "minProperties": 1,
+        "description": "Update a recipient group's name and/or its members. Provide at least one\nof `name` or `members`.\n\nWhen `members` is sent, it **replaces** the group's current membership:\nmembers not present in the list are removed from the group, and any new\nmembers are added. On a sent document, newly added members are notified\nand removed members lose access. Members are matched by `email`; for a\nretained member, only the contact fields you include (`first_name`,\n`last_name`) are updated, and omitted fields keep their existing values.\n",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "example": "Approvers",
+            "description": "New name for the recipient group."
+          },
+          "members": {
+            "type": "array",
+            "minItems": 1,
+            "description": "The full list of members the group should contain after the update. Must contain at least one member when provided.",
+            "items": {
+              "$ref": "#/components/schemas/DocumentRecipientGroupEditMember"
+            }
           }
         }
       },
@@ -22142,15 +22230,6 @@
             "example": "Sales"
           }
         }
-      },
-      "RecipientTypeEnum": {
-        "type": "string",
-        "enum": [
-          "signer",
-          "CC",
-          "approver"
-        ],
-        "example": "signer"
       },
       "DocumentSearchRecipient": {
         "title": "DocumentSearchRecipient",

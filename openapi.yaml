@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.4.1
+  version: 8.5.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -3479,13 +3479,25 @@ paths:
     patch:
       summary: Update Document Recipient
       description: |
-        Modify recipient's personal details.
+        Modify a recipient's personal details, or update a recipient group's name and members.
 
         > 🚧 Before you start
         > 
         > To edit a recipient, please ensure that you have the 'Can Edit Document' permission.
 
         Use this endpoint to easily fix typos in a recipient's name or email, or to change any other recipient information in a sent document. 
+
+        ### Editing a recipient group
+
+        When the `recipient_id` points to a recipient group, you can rename the group and/or change its members:
+
+        - Send `name` to rename the group.
+        - Send `members` to replace the group's membership. The list you send becomes the group's new full membership: members you omit are removed, and new entries are added. Members are matched by `email`; for a retained member, only the contact fields you include (`first_name`, `last_name`) are updated, and omitted fields keep their existing values.
+        - At least one of `name` or `members` must be provided, and `members` (when sent) must contain at least one member.
+
+        On a sent document, newly added members are notified and receive their access link, while removed members lose access.
+
+        Both individual recipient and recipient group edits return `204 No Content`.
 
         > 📘 Please note that changes made to a recipient within a document will also update their `Contact` information. However, these changes will not update information about this recipient in other documents where they have already been added.
 
@@ -3542,7 +3554,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DocumentRecipientEditRequest'
+              anyOf:
+                - $ref: '#/components/schemas/DocumentRecipientEditRequest'
+                - $ref: '#/components/schemas/DocumentRecipientGroupEditRequest'
             examples:
               Update Document Recipient:
                 value:
@@ -3556,9 +3570,19 @@ paths:
                   state: ''
                   postal_code: ''
                   country: ''
+              Rename Recipient Group:
+                value:
+                  name: Approvers
+              Update Recipient Group Members:
+                value:
+                  members:
+                    - email: kept.member@pandadoc.com
+                    - email: new.member@pandadoc.com
+                      first_name: New
+                      last_name: Member
       responses:
         '204':
-          description: No content
+          description: No content.
         '400':
           $ref: '#/components/responses/400RequestError'
         '401':
@@ -11125,6 +11149,13 @@ components:
         total:
           type: string
           example: '11500'
+    RecipientTypeEnum:
+      type: string
+      enum:
+        - signer
+        - CC
+        - approver
+      example: signer
     RecipientPersonalDetails:
       type: object
       description: Actor
@@ -11133,8 +11164,7 @@ components:
           type: string
           example: 7kqXgjFejB2toXxjcC5jfZ
         recipient_type:
-          type: string
-          example: CC
+          $ref: '#/components/schemas/RecipientTypeEnum'
         role:
           type: string
           nullable: true
@@ -11720,8 +11750,7 @@ components:
                 type: string
                 example: Dow
               recipient_type:
-                type: string
-                example: CC
+                $ref: '#/components/schemas/RecipientTypeEnum'
               email:
                 type: string
                 nullable: true
@@ -12539,6 +12568,7 @@ components:
           type: string
           example: 2eWSKSvVqmuVCnuUK3iWwD
     DocumentRecipientEditRequest:
+      title: Recipient
       type: object
       properties:
         email:
@@ -12564,7 +12594,7 @@ components:
           type: string
           nullable: true
           example: John Doe Inc.
-        job_title:
+        title:
           type: string
           nullable: true
           example: CTO
@@ -12584,10 +12614,61 @@ components:
           type: string
           nullable: true
           example: '75001'
+        country:
+          type: string
+          nullable: true
+          example: United States
         verification_settings:
           $ref: '#/components/schemas/RecipientVerificationSettings'
         redirect:
           $ref: '#/components/schemas/RecipientRedirect'
+    DocumentRecipientGroupEditMember:
+      title: Recipient Group Member
+      type: object
+      description: A recipient group member. `email` is required and is the identity used to match members across edits. Phone is not supported for group members.
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          example: josh@example.com
+          description: 'The member''s email address. Required: it identifies the member when diffing the group''s membership.'
+        first_name:
+          type: string
+          nullable: true
+          example: Josh
+          description: The member's first name.
+        last_name:
+          type: string
+          nullable: true
+          example: Ron
+          description: The member's last name.
+    DocumentRecipientGroupEditRequest:
+      title: Recipient Group
+      type: object
+      minProperties: 1
+      description: |
+        Update a recipient group's name and/or its members. Provide at least one
+        of `name` or `members`.
+
+        When `members` is sent, it **replaces** the group's current membership:
+        members not present in the list are removed from the group, and any new
+        members are added. On a sent document, newly added members are notified
+        and removed members lose access. Members are matched by `email`; for a
+        retained member, only the contact fields you include (`first_name`,
+        `last_name`) are updated, and omitted fields keep their existing values.
+      properties:
+        name:
+          type: string
+          maxLength: 120
+          example: Approvers
+          description: New name for the recipient group.
+        members:
+          type: array
+          minItems: 1
+          description: The full list of members the group should contain after the update. Must contain at least one member when provided.
+          items:
+            $ref: '#/components/schemas/DocumentRecipientGroupEditMember'
     DocumentSendManualReminderRequest:
       type: object
       properties:
@@ -16454,13 +16535,6 @@ components:
           nullable: true
           description: Folder name.
           example: Sales
-    RecipientTypeEnum:
-      type: string
-      enum:
-        - signer
-        - CC
-        - approver
-      example: signer
     DocumentSearchRecipient:
       title: DocumentSearchRecipient
       description: A document recipient (signer, viewer, approver, etc.).
