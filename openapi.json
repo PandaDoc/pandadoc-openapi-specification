@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.5.0"
+    "version": "8.6.0"
   },
   "servers": [
     {
@@ -10322,6 +10322,12 @@
                   "value": {
                     "name": "A new workspace"
                   }
+                },
+                "Create Workspace with icon": {
+                  "value": {
+                    "name": "A new workspace",
+                    "icon_url": "https://cdn.example.com/icons/workspace.png"
+                  }
                 }
               }
             }
@@ -10345,6 +10351,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -21079,6 +21088,12 @@
             "type": "string",
             "example": "A new workspace",
             "description": "A name for the new workspace."
+          },
+          "icon_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://cdn.example.com/icons/workspace.png",
+            "description": "Workspace icon will be displayed in the application and is not visible to your customers.\nIcon should have square proportions.\nSupported formats:\nJPEG, PNG, GIF, WEBP. Max size: 5 MB\n"
           },
           "settings": {
             "type": "object",

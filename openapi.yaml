@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.5.0
+  version: 8.6.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -7652,6 +7652,10 @@ paths:
               Create Workspace:
                 value:
                   name: A new workspace
+              Create Workspace with icon:
+                value:
+                  name: A new workspace
+                  icon_url: https://cdn.example.com/icons/workspace.png
       responses:
         '201':
           description: OK
@@ -7664,6 +7668,8 @@ paths:
                   value:
                     id: 5RdKYSewV5vMtik3CmoDMR
                     name: A new workspace
+        '400':
+          $ref: '#/components/responses/400ValidationError'
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -15679,6 +15685,15 @@ components:
           type: string
           example: A new workspace
           description: A name for the new workspace.
+        icon_url:
+          type: string
+          format: uri
+          example: https://cdn.example.com/icons/workspace.png
+          description: |
+            Workspace icon will be displayed in the application and is not visible to your customers.
+            Icon should have square proportions.
+            Supported formats:
+            JPEG, PNG, GIF, WEBP. Max size: 5 MB
         settings:
           type: object
           description: Optional workspace settings applied at creation time.
