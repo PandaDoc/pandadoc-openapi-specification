@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.7.0
+  version: 8.7.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -11590,9 +11590,7 @@ components:
                       description: Linked object child ID.
                       example: ea88ed1dc8094dd3a57754aa643a1954
         status:
-          type: string
-          description: Document status.
-          example: document.draft
+          $ref: '#/components/schemas/DocumentStatusEnum'
         approval_execution:
           type: object
           description: Document approval execution.

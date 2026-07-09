@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.7.0"
+    "version": "8.7.1"
   },
   "servers": [
     {
@@ -15680,9 +15680,7 @@
             }
           },
           "status": {
-            "type": "string",
-            "description": "Document status.",
-            "example": "document.draft"
+            "$ref": "#/components/schemas/DocumentStatusEnum"
           },
           "approval_execution": {
             "type": "object",
