@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.6.1
+  version: 8.7.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -317,6 +317,7 @@ paths:
               * 11: document.voided
               * 12: document.declined
               * 13: document.external_review
+              * 14: document.scheduled
           example: 5
         - name: status__ne
           x-ignore-snake-case: true
@@ -339,6 +340,7 @@ paths:
               * 11: document.voided
               * 12: document.declined
               * 13: document.external_review
+              * 14: document.scheduled
           example: 5
         - name: tag
           in: query
@@ -8982,6 +8984,7 @@ components:
         - 11
         - 12
         - 13
+        - 14
       example: 12
     DocumentListResponse:
       type: object
@@ -12638,7 +12641,7 @@ components:
         email:
           type: string
           example: josh@example.com
-          description: 'The member''s email address. Required: it identifies the member when diffing the group''s membership.'
+          description: "The member's email address. Required: it identifies the member when diffing the group's membership."
         first_name:
           type: string
           nullable: true
