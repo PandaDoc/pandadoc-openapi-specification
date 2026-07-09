@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.6.1"
+    "version": "8.7.0"
   },
   "servers": [
     {
@@ -412,7 +412,7 @@
             "schema": {
               "$ref": "#/components/schemas/DocumentStatusRequestEnum"
             },
-            "description": "Filters documents by the status.\n  * 0: document.draft\n  * 1: document.sent\n  * 2: document.completed\n  * 3: document.uploaded\n  * 4: document.error\n  * 5: document.viewed\n  * 6: document.waiting_approval\n  * 7: document.approved\n  * 8: document.rejected\n  * 9: document.waiting_pay\n  * 10: document.paid\n  * 11: document.voided\n  * 12: document.declined\n  * 13: document.external_review\n",
+            "description": "Filters documents by the status.\n  * 0: document.draft\n  * 1: document.sent\n  * 2: document.completed\n  * 3: document.uploaded\n  * 4: document.error\n  * 5: document.viewed\n  * 6: document.waiting_approval\n  * 7: document.approved\n  * 8: document.rejected\n  * 9: document.waiting_pay\n  * 10: document.paid\n  * 11: document.voided\n  * 12: document.declined\n  * 13: document.external_review\n  * 14: document.scheduled\n",
             "example": 5
           },
           {
@@ -422,7 +422,7 @@
             "schema": {
               "$ref": "#/components/schemas/DocumentStatusRequestEnum"
             },
-            "description": "Exludes documents with this status.\n  * 0: document.draft\n  * 1: document.sent\n  * 2: document.completed\n  * 3: document.uploaded\n  * 4: document.error\n  * 5: document.viewed\n  * 6: document.waiting_approval\n  * 7: document.approved\n  * 8: document.rejected\n  * 9: document.waiting_pay\n  * 10: document.paid\n  * 11: document.voided\n  * 12: document.declined\n  * 13: document.external_review\n",
+            "description": "Exludes documents with this status.\n  * 0: document.draft\n  * 1: document.sent\n  * 2: document.completed\n  * 3: document.uploaded\n  * 4: document.error\n  * 5: document.viewed\n  * 6: document.waiting_approval\n  * 7: document.approved\n  * 8: document.rejected\n  * 9: document.waiting_pay\n  * 10: document.paid\n  * 11: document.voided\n  * 12: document.declined\n  * 13: document.external_review\n  * 14: document.scheduled\n",
             "example": 5
           },
           {
@@ -12102,7 +12102,8 @@
           10,
           11,
           12,
-          13
+          13,
+          14
         ],
         "example": 12
       },
