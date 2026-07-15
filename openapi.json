@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.7.1"
+    "version": "8.8.0"
   },
   "servers": [
     {
@@ -6241,6 +6241,107 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "429": {
+            "$ref": "#/components/responses/429"
+          }
+        }
+      }
+    },
+    "/public/v1/templates/{id}/duplicate": {
+      "post": {
+        "summary": "Duplicate Template",
+        "description": "## Duplicate Template\n\nCreates a copy of a template within the same workspace.\n\n> 📘 **Permissions**\n>\n> Requires `can_read_templates` and `can_duplicate_templates` permissions. Duplicating templates owned by other users additionally requires `can_duplicate_any_template`.\n",
+        "operationId": "duplicateTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "parameters": [
+          {
+            "examples": {
+              "Duplicate Template": {
+                "value": "EE8yUNg5HztqVAuH85He8V"
+              },
+              "Duplicate with Custom Name": {
+                "value": "vibuun3DXG8QDDLfXm27Ne"
+              }
+            },
+            "name": "id",
+            "description": "Template ID",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Optional payload with a custom name for the duplicated template.",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateDuplicateRequest"
+              },
+              "examples": {
+                "Duplicate Template": {
+                  "value": {}
+                },
+                "Duplicate with Custom Name": {
+                  "value": {
+                    "name": "My Duplicated Template"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Template duplicated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateDuplicateResponse"
+                },
+                "examples": {
+                  "Duplicate Template": {
+                    "value": {
+                      "id": "va9aNuj3uX2w9M7uytn967",
+                      "name": "Copy of Sample Template",
+                      "date_created": "2025-01-15T10:30:00.123456Z",
+                      "date_modified": "2025-01-15T10:30:00.234567Z",
+                      "meta": {
+                        "source_template_id": "EE8yUNg5HztqVAuH85He8V"
+                      }
+                    }
+                  },
+                  "Duplicate with Custom Name": {
+                    "value": {
+                      "id": "BhVzRcxH9Z2LgfPPGXFUBa",
+                      "name": "My Duplicated Template",
+                      "date_created": "2025-01-15T10:30:00.345678Z",
+                      "date_modified": "2025-01-15T10:30:00.456789Z",
+                      "meta": {
+                        "source_template_id": "vibuun3DXG8QDDLfXm27Ne"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400RequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           },
           "429": {
             "$ref": "#/components/responses/429"
@@ -17973,6 +18074,59 @@
                 "description": "JSON as a multipart/form-data string."
               }
             ]
+          }
+        }
+      },
+      "TemplateDuplicateRequest": {
+        "title": "TemplateDuplicateRequest",
+        "description": "Request payload for duplicating a template within the same workspace.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Custom name for the duplicated template. When omitted or empty, a name is auto-generated from the source template.",
+            "maxLength": 255,
+            "example": "My Duplicated Template"
+          }
+        }
+      },
+      "TemplateDuplicateResponse": {
+        "title": "TemplateDuplicateResponse",
+        "description": "Duplicated template details.",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the duplicated template.",
+            "example": "va9aNuj3uX2w9M7uytn967"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the duplicated template.",
+            "example": "Copy of Sample Template"
+          },
+          "date_created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the duplicated template was created.",
+            "example": "2025-01-15T10:30:00.123456Z"
+          },
+          "date_modified": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the duplicated template was last modified.",
+            "example": "2025-01-15T10:30:00.234567Z"
+          },
+          "meta": {
+            "type": "object",
+            "description": "Metadata about the duplication operation.",
+            "properties": {
+              "source_template_id": {
+                "type": "string",
+                "description": "Unique identifier of the source template that was duplicated.",
+                "example": "EE8yUNg5HztqVAuH85He8V"
+              }
+            }
           }
         }
       },
