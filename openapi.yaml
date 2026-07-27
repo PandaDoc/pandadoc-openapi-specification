@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.8.0
+  version: 8.9.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -5117,6 +5117,108 @@ paths:
                   summary: Updated template settings
                   value:
                     language: fr-FR
+  /public/v1/templates/{template_id}/shares:
+    get:
+      tags:
+        - Template Settings
+      summary: Get Template Sharing Settings
+      description: |
+        Retrieves template sharing settings.
+      operationId: getTemplateShares
+      parameters:
+        - name: template_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the Template to retrieve Shares for.
+          examples:
+            Get Template Sharing Settings:
+              value: LuBWwWzfxzajJe2eqEcoeZ
+      responses:
+        '200':
+          description: Successfully retrieved the Template's Shares.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateSharesResponse'
+              examples:
+                Get Template Sharing Settings:
+                  summary: Template shared with two workspaces
+                  value:
+                    workspace_ids:
+                      - BhVzRcxH9Z2LgfPPGXFUBa
+                      - 2eWSKSvVqmuVCnuUK3iWwD
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+    put:
+      tags:
+        - Template Settings
+      summary: Update Template Sharing Settings
+      description: |
+        Replaces the full list of Workspaces this Template is shared with.
+        The caller must be a member of every Workspace being newly shared by this
+        call. Unsharing a Workspace only requires permission to edit the Template.
+      operationId: updateTemplateSharingSettings
+      parameters:
+        - name: template_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the Template whose Shares are being replaced.
+          examples:
+            Share with two workspaces:
+              value: LuBWwWzfxzajJe2eqEcoeZ
+            Unshare from all workspaces:
+              value: LuBWwWzfxzajJe2eqEcoeZ
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateSharesRequest'
+            examples:
+              Share with two workspaces:
+                value:
+                  workspace_ids:
+                    - BhVzRcxH9Z2LgfPPGXFUBa
+                    - 2eWSKSvVqmuVCnuUK3iWwD
+              Unshare from all workspaces:
+                value:
+                  workspace_ids: []
+      responses:
+        '200':
+          description: Successfully replaced the Template's Shares.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateSharesResponse'
+              examples:
+                Share with two workspaces:
+                  value:
+                    workspace_ids:
+                      - BhVzRcxH9Z2LgfPPGXFUBa
+                      - 2eWSKSvVqmuVCnuUK3iWwD
+                Unshare from all workspaces:
+                  value:
+                    workspace_ids: []
+        '400':
+          $ref: '#/components/responses/400ValidationError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
   /public/v1/forms:
     get:
       summary: List Forms
@@ -13770,6 +13872,40 @@ components:
       properties:
         language:
           $ref: '#/components/schemas/DocumentLanguageEnum'
+    TemplateSharesResponse:
+      type: object
+      description: The Workspaces a Template is currently shared with.
+      properties:
+        workspace_ids:
+          type: array
+          description: |
+            Unique identifiers of the Workspaces the Template is currently shared
+            with, reflecting the server state at the time of the response.
+          items:
+            type: string
+          example:
+            - BhVzRcxH9Z2LgfPPGXFUBa
+            - 2eWSKSvVqmuVCnuUK3iWwD
+      required:
+        - workspace_ids
+    TemplateSharesRequest:
+      type: object
+      description: The desired set of Workspaces a Template should be shared with.
+      properties:
+        workspace_ids:
+          type: array
+          description: |
+            Unique identifiers of the Workspaces the Template should be shared
+            with, representing the complete desired end-state rather than a delta.
+            Duplicate ids are deduplicated, and the server replaces the prior
+            shares with this set atomically.
+          items:
+            type: string
+          example:
+            - BhVzRcxH9Z2LgfPPGXFUBa
+            - 2eWSKSvVqmuVCnuUK3iWwD
+      required:
+        - workspace_ids
     FormListResponse:
       type: object
       properties:
