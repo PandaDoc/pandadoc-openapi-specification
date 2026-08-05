@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.9.0"
+    "version": "8.10.0"
   },
   "servers": [
     {
@@ -10496,6 +10496,15 @@
         "summary": "List Workspaces",
         "description": "Get a list of all the active workspaces in the organization.\n",
         "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filters workspaces by name (case-insensitive).",
+            "example": "My Workspace"
+          },
           {
             "name": "count",
             "in": "query",
