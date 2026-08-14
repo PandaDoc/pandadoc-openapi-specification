@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.10.0"
+    "version": "8.11.0"
   },
   "servers": [
     {
@@ -2042,6 +2042,7 @@
                         "tag1"
                       ],
                       "status": "document.completed",
+                      "qes_status": "pending",
                       "recipients": [
                         {
                           "id": "8KAZvGRL3W4u44a4fyDoeH",
@@ -15553,6 +15554,16 @@
           }
         ]
       },
+      "DocumentQESStatusEnum": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "in_progress",
+          "completed"
+        ],
+        "example": "pending",
+        "description": "The status of the QES (Qualified Electronic Signature) for the document.\nIt indicates whether the QES process is still pending or has been completed.\n"
+      },
       "DocumentDetailsResponse": {
         "type": "object",
         "properties": {
@@ -15946,6 +15957,16 @@
           },
           "status": {
             "$ref": "#/components/schemas/DocumentStatusEnum"
+          },
+          "qes_status": {
+            "type": "string",
+            "description": "The status of the QES (Qualified Electronic Signature) for the document.\nNull if the QES is disabled for document.\n",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DocumentQESStatusEnum"
+              }
+            ]
           },
           "approval_execution": {
             "type": "object",
