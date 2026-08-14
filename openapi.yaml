@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.10.0
+  version: 8.11.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -1575,6 +1575,7 @@ paths:
                     tags:
                       - tag1
                     status: document.completed
+                    qes_status: pending
                     recipients:
                       - id: 8KAZvGRL3W4u44a4fyDoeH
                         first_name: Recipient First Name
@@ -11477,6 +11478,16 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/DocumentDetailsRecipientGroupMember'
+    DocumentQESStatusEnum:
+      type: string
+      enum:
+        - pending
+        - in_progress
+        - completed
+      example: pending
+      description: |
+        The status of the QES (Qualified Electronic Signature) for the document.
+        It indicates whether the QES process is still pending or has been completed.
     DocumentDetailsResponse:
       type: object
       properties:
@@ -11772,6 +11783,14 @@ components:
                       example: ea88ed1dc8094dd3a57754aa643a1954
         status:
           $ref: '#/components/schemas/DocumentStatusEnum'
+        qes_status:
+          type: string
+          description: |
+            The status of the QES (Qualified Electronic Signature) for the document.
+            Null if the QES is disabled for document.
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/DocumentQESStatusEnum'
         approval_execution:
           type: object
           description: Document approval execution.
