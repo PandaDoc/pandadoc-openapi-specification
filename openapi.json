@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.11.0"
+    "version": "8.11.1"
   },
   "servers": [
     {
@@ -14880,6 +14880,17 @@
           }
         }
       },
+      "QuoteUpdateRequestBillingFrequencyEnum": {
+        "type": "string",
+        "nullable": true,
+        "enum": [
+          "weekly",
+          "monthly",
+          "annually",
+          "quarterly",
+          "semiannually"
+        ]
+      },
       "QuoteSectionSettings": {
         "type": "object",
         "properties": {
@@ -15145,8 +15156,7 @@
                         "nullable": true
                       },
                       "billing_frequency": {
-                        "type": "string",
-                        "nullable": true
+                        "$ref": "#/components/schemas/QuoteUpdateRequestBillingFrequencyEnum"
                       },
                       "contract_term": {
                         "type": "string",
@@ -21125,17 +21135,6 @@
             }
           }
         }
-      },
-      "QuoteUpdateRequestBillingFrequencyEnum": {
-        "type": "string",
-        "nullable": true,
-        "enum": [
-          "weekly",
-          "monthly",
-          "annually",
-          "quarterly",
-          "semiannualy"
-        ]
       },
       "QuoteUpdateRequestSettingsSelectionTypeTypeEnum": {
         "type": "string",

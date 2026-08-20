@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.11.0
+  version: 8.11.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -10998,6 +10998,15 @@ components:
         currency:
           type: string
           example: USD
+    QuoteUpdateRequestBillingFrequencyEnum:
+      type: string
+      nullable: true
+      enum:
+        - weekly
+        - monthly
+        - annually
+        - quarterly
+        - semiannually
     QuoteSectionSettings:
       type: object
       properties:
@@ -11196,8 +11205,7 @@ components:
                       type: string
                       nullable: true
                     billing_frequency:
-                      type: string
-                      nullable: true
+                      $ref: '#/components/schemas/QuoteUpdateRequestBillingFrequencyEnum'
                     contract_term:
                       type: string
                       nullable: true
@@ -15705,15 +15713,6 @@ components:
               value:
                 type: number
                 nullable: false
-    QuoteUpdateRequestBillingFrequencyEnum:
-      type: string
-      nullable: true
-      enum:
-        - weekly
-        - monthly
-        - annually
-        - quarterly
-        - semiannualy
     QuoteUpdateRequestSettingsSelectionTypeTypeEnum:
       type: string
       enum:
