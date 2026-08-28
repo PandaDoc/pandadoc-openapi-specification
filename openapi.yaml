@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.12.0
+  version: 8.13.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -9020,6 +9020,70 @@ paths:
                     example: timeout
               example:
                 code: timeout
+  /public/beta/workspaces/{workspace_id}:
+    patch:
+      tags:
+        - User and Workspace management
+      summary: '[Beta] Update Workspace'
+      operationId: updateWorkspace
+      description: |
+        Update a workspace's name and branding.
+
+        - You need to be an Org Admin to update a workspace.
+      parameters:
+        - name: workspace_id
+          in: path
+          description: Workspace id.
+          schema:
+            type: string
+          required: true
+          example: BhVzRcxH9Z2LgfPPGXFUBa
+      requestBody:
+        description: Workspace fields to update.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWorkspaceRequest'
+            examples:
+              Rename Workspace:
+                value:
+                  name: Renamed workspace
+              Update customer-facing branding:
+                value:
+                  branding:
+                    logo_url: https://cdn.example.com/logos/workspace.png
+                    accent_color: '#248567'
+              Clear customer-facing branding:
+                value:
+                  branding:
+                    logo_url: null
+                    accent_color: null
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateWorkspaceResponse'
+              examples:
+                Update Workspace:
+                  value:
+                    id: BhVzRcxH9Z2LgfPPGXFUBa
+                    name: Renamed workspace
+                    branding:
+                      logo_url: https://cdn.example.com/logos/workspace.png
+                      accent_color: '#248567'
+        '400':
+          $ref: '#/components/responses/400ValidationError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
 components:
   securitySchemes:
     apiKey:
@@ -17301,6 +17365,69 @@ components:
           items:
             $ref: '#/components/schemas/DocumentSearchAppliedFilter'
           description: Filters that were applied to resolve the query. Helps the caller understand how the query was interpreted.
+    WorkspaceBranding:
+      title: WorkspaceBranding
+      type: object
+      description: |
+        Customer-facing branding shown to recipients on the document signing page and
+        in branded emails and templates.
+      properties:
+        logo_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://cdn.example.com/logos/workspace.png
+          description: |
+            Logo shown to recipients.
+            The URL must be publicly reachable over HTTPS.
+            Supported formats: JPEG, PNG, GIF, WEBP. Max size: 5 MB.
+        accent_color:
+          type: string
+          nullable: true
+          pattern: ^#[A-Fa-f0-9]{6}$
+          example: '#248567'
+          description: |
+            Accent color as a 6-digit HEX value (with leading `#`).
+            Sets the main branded template color and email button color.
+    UpdateWorkspaceRequest:
+      title: UpdateWorkspaceRequest
+      type: object
+      description: |
+        Request payload to update a workspace. All fields are optional — omit a field to
+        keep its current value. Nullable fields accept `null` to clear the current value.
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: Renamed workspace
+          description: A new name for the workspace.
+        icon_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://cdn.example.com/icons/workspace.png
+          description: |
+            Workspace icon displayed in the application; not visible to your customers.
+            Icon should have square proportions.
+            The URL must be publicly reachable over HTTPS.
+            Supported formats: JPEG, PNG, GIF, WEBP. Max size: 5 MB.
+        branding:
+          $ref: '#/components/schemas/WorkspaceBranding'
+    UpdateWorkspaceResponse:
+      title: UpdateWorkspaceResponse
+      description: Workspace state returned after a successful update.
+      type: object
+      properties:
+        id:
+          type: string
+          example: iMymdDd9XFD3HyxP5VD67Q
+          description: Workspace id.
+        name:
+          type: string
+          example: Renamed workspace
+          description: Current workspace name.
+        branding:
+          $ref: '#/components/schemas/WorkspaceBranding'
   responses:
     '401':
       description: Authentication error
