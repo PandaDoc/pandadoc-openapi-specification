@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.13.0
+  version: 8.14.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -7720,7 +7720,19 @@ paths:
       tags:
         - Quotes
       summary: Quote update
-      description: This operation updates the details of a specific quote within a document by specifying the document ID and quote ID.
+      description: |
+        This operation updates the details of a specific quote within a document by specifying the document ID and quote ID.
+
+        > 📘 **Permissions**
+        >
+        > Requires the 'Can Edit Document' and 'Can Edit Content' permissions.
+        > The document must be in Draft (`document.draft`).
+        > Updating quotes is available on plans that include
+        > [Product Catalog](https://support.pandadoc.com/en/articles/9714691-product-catalog).
+
+        > 🚧 Payload size
+        >
+        > The maximum request body size is 512 KiB (524288 bytes). Larger requests return `413` and are not applied.
       operationId: quoteUpdate
       parameters:
         - name: document_id
@@ -7758,6 +7770,99 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
+        '413':
+          $ref: '#/components/responses/413RequestTooLarge'
+        '429':
+          $ref: '#/components/responses/429'
+  /public/v1/documents/{document_id}/quotes:
+    patch:
+      tags:
+        - Quotes
+      summary: '[Beta] Update Multiple Quotes'
+      operationId: quotesBatchUpdate
+      description: |
+        Updates multiple quotes within a single document in one request — the batch variant of <a href="#/operations/quoteUpdate">Quote update</a>. The response is always `200 OK` once the request itself is valid; each quote's outcome is reported independently in `results[]`, so one bad quote does not fail the others. See `QuotesBatchUpdateResult` for the possible per-quote outcomes.
+        > 📘 **Permissions** > > Requires the 'Can Edit Document' and 'Can Edit Content' permissions. > The document must be in Draft (`document.draft`). Updating quotes is > available on plans that include > [Product Catalog](https://support.pandadoc.com/en/articles/9714691-product-catalog).
+
+        > 🚧 **Beta** > > This endpoint is currently in beta and may change without notice.
+
+        > 🚧 Payload size > > The maximum request body size is 512 KiB (524288 bytes). Larger > requests return `413` before any quote is processed.
+      parameters:
+        - name: document_id
+          description: Document ID
+          in: path
+          schema:
+            type: string
+          required: true
+          example: BhVzRcxH9Z2LgfPPGXFUBa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuotesBatchUpdateRequest'
+            examples:
+              'Two quotes: one updated, one conflicted':
+                value:
+                  quotes:
+                    - id: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
+                      currency: USD
+                      sections:
+                        - id: 3f9a6b1e-2c4d-4a3e-9f0b-7e6d5c4b3a29
+                          items:
+                            - id: 61a7e2ab-aaa7-4001-9a9d-1f4f3de28441
+                              qty: 25
+                              price_settings:
+                                base_value: 40
+                                tiers:
+                                  - min_qty: 1
+                                    value: 0
+                                  - min_qty: 10
+                                    value: 10
+                    - id: 2b6b0e3a-df3f-4a90-9b1a-6a7a2d6e3d10
+                      sections:
+                        - id: 7c1e2a4d-9e3b-4c1a-8b2d-5f6a7c8d9e0f
+                          items:
+                            - id: 232d5268-01fa-4372-88ce-64b190b62007
+                              price: 500
+      responses:
+        '200':
+          description: The batch was processed. See `results[].status` for each quote's outcome.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuotesBatchUpdateResponse'
+              examples:
+                'Two quotes: one updated, one conflicted':
+                  value:
+                    count: 2
+                    results:
+                      - id: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
+                        status: ok
+                        quote:
+                          id: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
+                          currency: USD
+                          total: '1000'
+                          summary:
+                            total: '1000'
+                            subtotal: '1000'
+                          sections: []
+                          merge_rules: []
+                          settings:
+                            selection_type: custom
+                      - id: 2b6b0e3a-df3f-4a90-9b1a-6a7a2d6e3d10
+                        status: conflict
+                        description: Quote was updated concurrently. Fetch the latest version and retry.
+        '400':
+          $ref: '#/components/responses/400ValidationError'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '413':
+          $ref: '#/components/responses/413RequestTooLarge'
         '429':
           $ref: '#/components/responses/429'
   /public/v1/workspaces:
@@ -16005,6 +16110,202 @@ components:
             selection_type:
               $ref: '#/components/schemas/QuoteUpdateRequestSettingsSelectionTypeTypeEnum'
           nullable: false
+    QuotesBatchUpdateItem:
+      description: |
+        A single quote update within the batch. Same shape as the single-quote update request (`QuoteUpdateRequest`), with an added `id` identifying which quote this entry applies to.
+      allOf:
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: ID of the quote to update.
+              example: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
+        - $ref: '#/components/schemas/QuoteUpdateRequest'
+    QuotesBatchUpdateRequest:
+      type: object
+      description: |
+        Batch request to update multiple quotes within a single document.
+      required:
+        - quotes
+      properties:
+        quotes:
+          type: array
+          description: |
+            Quotes to update within this document. Each entry is processed independently — see the operation description for the partial-success model. Duplicate `id` values are not allowed.
+          minItems: 1
+          maxItems: 25
+          items:
+            $ref: '#/components/schemas/QuotesBatchUpdateItem'
+    QuotesBatchUpdateResultStatus:
+      type: string
+      description: |
+        Per-quote outcome discriminator. `ok`, `validation_error`, `not_in_document`, `not_found`, and `conflict` mirror the single-quote update endpoint's `200`/`400`/`403`/`404`/`409` responses respectively — see each variant's own schema. `internal_error` is exclusive to the batch endpoint and indicates an isolated server-side failure for that quote only; the request as a whole succeeded and other quotes in the same batch are unaffected.
+      enum:
+        - ok
+        - validation_error
+        - not_in_document
+        - not_found
+        - conflict
+        - internal_error
+    QuotesBatchUpdateResultBase:
+      type: object
+      description: |
+        Fields common to every per-quote outcome in a batch quotes update response.
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The quote this result corresponds to. Echoed from the request.
+          example: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
+        status:
+          $ref: '#/components/schemas/QuotesBatchUpdateResultStatus'
+    QuotesBatchUpdateResultOk:
+      description: |
+        Per-quote success entry, mirroring the single-quote endpoint's `200` response. `quote` carries the same payload as that endpoint's body.
+      allOf:
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
+        - type: object
+          required:
+            - quote
+          properties:
+            status:
+              type: string
+              enum:
+                - ok
+              example: ok
+            quote:
+              $ref: '#/components/schemas/QuoteResponse'
+    QuotesBatchUpdateResultValidationError:
+      description: |
+        Mirrors the single-quote endpoint's `400` response. The update payload for this quote failed validation (e.g. both `price` and `price_settings` set on the same item).
+      allOf:
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - validation_error
+              example: validation_error
+            description:
+              type: string
+              description: Human-readable explanation of the validation failure.
+              example: You can't specify both `price` and `price_settings`.
+    QuotesBatchUpdateResultNotInDocument:
+      description: |
+        Mirrors the single-quote endpoint's `403` response. This quote is not part of the specified document's content.
+      allOf:
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - not_in_document
+              example: not_in_document
+            description:
+              type: string
+              example: Quote is not part of this document.
+    QuotesBatchUpdateResultNotFound:
+      description: |
+        Mirrors the single-quote endpoint's `404` response. This quote does not exist or has no resolvable current version.
+      allOf:
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - not_found
+              example: not_found
+            description:
+              type: string
+              example: Quote not found.
+    QuotesBatchUpdateResultConflict:
+      description: |
+        Mirrors the single-quote endpoint's `409` response. The quote was modified concurrently since the version you have; fetch the latest version and retry.
+      allOf:
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - conflict
+              example: conflict
+            description:
+              type: string
+              example: Quote was updated concurrently. Fetch the latest version and retry.
+    QuotesBatchUpdateResultInternalError:
+      description: |
+        An isolated server-side failure occurred for this quote. The request as a whole succeeded; retrying the affected quote (on its own or in a smaller batch) is safe.
+      allOf:
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
+        - type: object
+          required:
+            - description
+          properties:
+            status:
+              type: string
+              enum:
+                - internal_error
+              example: internal_error
+            description:
+              type: string
+              example: An internal error occurred while updating this quote. Try again.
+    QuotesBatchUpdateResult:
+      description: |
+        Outcome for a single quote in a batch update request. The concrete shape is selected by the `status` discriminator.
+      oneOf:
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultOk'
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultValidationError'
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultNotInDocument'
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultNotFound'
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultConflict'
+        - $ref: '#/components/schemas/QuotesBatchUpdateResultInternalError'
+      discriminator:
+        propertyName: status
+        mapping:
+          ok: '#/components/schemas/QuotesBatchUpdateResultOk'
+          validation_error: '#/components/schemas/QuotesBatchUpdateResultValidationError'
+          not_in_document: '#/components/schemas/QuotesBatchUpdateResultNotInDocument'
+          not_found: '#/components/schemas/QuotesBatchUpdateResultNotFound'
+          conflict: '#/components/schemas/QuotesBatchUpdateResultConflict'
+          internal_error: '#/components/schemas/QuotesBatchUpdateResultInternalError'
+    QuotesBatchUpdateResponse:
+      type: object
+      description: |
+        Per-quote update outcomes. Always returned with HTTP 200 when the request itself is valid; per-quote failures are reported in `results[].status`.
+      required:
+        - count
+        - results
+      properties:
+        count:
+          type: integer
+          description: |
+            Number of entries in `results`. Equal to the number of `quotes` in the request.
+          minimum: 0
+          example: 2
+        results:
+          type: array
+          description: |
+            Per-quote outcomes, in the same order as the request's `quotes`. Each entry's shape depends on its `status`.
+          items:
+            $ref: '#/components/schemas/QuotesBatchUpdateResult'
     ListWorkspacesResponse:
       type: object
       properties:
@@ -17699,6 +18000,25 @@ components:
                   required:
                     - code
                 example: []
+    413RequestTooLarge:
+      description: Request entity too large.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                example: validation_error
+              detail:
+                type: string
+                example: Request body exceeds the maximum size of 524288 bytes.
+          examples:
+            payloadTooLarge:
+              summary: Request body exceeds 512 KiB
+              value:
+                type: validation_error
+                detail: Request body exceeds the maximum size of 524288 bytes.
     400BadRequestUserRequestError:
       description: Bad Request
       content:
