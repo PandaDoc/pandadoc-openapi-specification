@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.15.0
+  version: 8.15.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -1856,7 +1856,7 @@ paths:
                                 - header: string
                                   name: string
                                   merge_name: string
-                                  hidden: string
+                                  hidden: false
                               items:
                                 - id: string
                                   sku: string
@@ -2030,6 +2030,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DocumentSendResponse'
+              examples:
+                default:
+                  value:
+                    id: qhHUDZkpyTwqoxjfsJdeVP
+                    name: Purchase Order
+                    status: document.sent
+                    date_created: '2026-07-31T12:34:39.545645Z'
+                    date_modified: '2026-07-31T12:38:15.189891Z'
+                    date_completed: null
+                    expiration_date: '2026-09-29T12:38:14.689656Z'
+                    version: '2'
+                    uuid: qhHUDZkpyTwqoxjfsJdeVP
+                    recipients:
+                      - id: JQVqawXtDdsDzaaSxWQvff
+                        first_name: John
+                        last_name: Doe
+                        email: john.doe@example.com
+                        phone: ''
+                        recipient_type: signer
+                        signing_order: 1
+                        shared_link: https://app.pandadoc.com/document/v2?token=a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2
+                        delivery_methods:
+                          sms: false
+                          email: true
+                        type: recipient
+                      - id: 4oZSyccEDbK3DEeJFWaHpS
+                        first_name: Alex
+                        last_name: Nowak
+                        email: alex.nowak@example.com
+                        phone: +1 800 555 0199
+                        recipient_type: signer
+                        signing_order: 2
+                        shared_link: https://app.pandadoc.com/document/v2?token=b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3
+                        delivery_methods:
+                          sms: false
+                          email: true
+                        type: recipient
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -4406,6 +4443,467 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContentLibraryItemResponse'
+              examples:
+                Content Library Item Details:
+                  value:
+                    id: gggHt2b6u7ummBLjirDLLg
+                    name: ACME example document
+                    folder_uuid: k6oJucUPhHVspV7w5RDMgE
+                    date_created: '2025-11-24T16:11:32.137623Z'
+                    date_modified: '2026-07-30T13:00:48.258255Z'
+                    content_date_modified: '2026-07-30T13:02:31.766924Z'
+                    created_by:
+                      id: gQfGuzaooRmXx7nYFPmGej
+                      email: john.doe@example.com
+                      first_name: John
+                      last_name: Doe
+                      avatar: null
+                      membership_id: 6TV64NKS5UJpVN8xhJxJ7m
+                    metadata: {}
+                    tokens:
+                      - name: ACME Representative.Company
+                        value: ''
+                      - name: ACME Representative.FirstName
+                        value: ''
+                      - name: ACME Representative.LastName
+                        value: ''
+                      - name: Client.Company
+                        value: ''
+                      - name: Client.FirstName
+                        value: ''
+                      - name: Client.LastName
+                        value: ''
+                      - name: Document.CreatedDate
+                        value: ''
+                      - name: subject
+                        value: ''
+                    fields:
+                      - uuid: aae9842f-ccad-4965-a54c-65d970173099
+                        name: Text
+                        title: ''
+                        value: ''
+                        placeholder: Enter value
+                        is_filled: false
+                        assigned_to:
+                          id: xdhvZVZ27tm8VSuZiH7Jgf
+                          name: ACME Representative
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: Text1
+                        type: text
+                        merge_field: null
+                      - uuid: 19933184-5352-4876-9059-baead396eadc
+                        name: Text
+                        title: ''
+                        value: ''
+                        placeholder: Enter value
+                        is_filled: false
+                        assigned_to:
+                          id: r3z77NfjprTpYs2dYVtnuZ
+                          name: Client
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: Text2
+                        type: text
+                        merge_field: null
+                      - uuid: 8af6faea-9cbe-4523-a717-98c7efb8746b
+                        name: Signature
+                        title: ''
+                        value: {}
+                        placeholder: Signature
+                        is_filled: false
+                        assigned_to:
+                          id: xdhvZVZ27tm8VSuZiH7Jgf
+                          name: ACME Representative
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: Signature1
+                        type: signature
+                      - uuid: 03388b2c-dcf5-4421-a083-76e3a8de7a95
+                        name: Signature
+                        title: ''
+                        value: {}
+                        placeholder: Signature
+                        is_filled: false
+                        assigned_to:
+                          id: r3z77NfjprTpYs2dYVtnuZ
+                          name: Client
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: Signature2
+                        type: signature
+                      - uuid: ffa82118-9f9f-40cf-8409-d66c3a83e810
+                        name: Date
+                        title: ''
+                        value: null
+                        placeholder: Select date
+                        is_filled: false
+                        assigned_to:
+                          id: r3z77NfjprTpYs2dYVtnuZ
+                          name: Client
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: Date1
+                        type: date
+                        merge_field: null
+                      - uuid: 5409a771-a114-4d8d-ab70-23a53a9152e3
+                        name: Click to upload a file
+                        title: ''
+                        value: {}
+                        placeholder: Click to upload a file
+                        is_filled: false
+                        assigned_to:
+                          id: r3z77NfjprTpYs2dYVtnuZ
+                          name: Client
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: CollectFile1
+                        type: collect_file
+                      - uuid: c1b615a5-d838-461f-85b5-aad458409912
+                        name: Checkbox
+                        title: ''
+                        value: false
+                        placeholder: null
+                        is_filled: false
+                        assigned_to:
+                          id: r3z77NfjprTpYs2dYVtnuZ
+                          name: Client
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: Checkbox1
+                        type: checkbox
+                        merge_field: null
+                      - uuid: 32422461-ca56-48b7-9279-73c2298eecd6
+                        name: Radio_buttons
+                        title: ''
+                        value: null
+                        placeholder: null
+                        is_filled: false
+                        assigned_to:
+                          id: r3z77NfjprTpYs2dYVtnuZ
+                          name: Client
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: RadioButtons1
+                        type: radio_buttons
+                        merge_field: null
+                      - uuid: 8ffbc4c3-b569-4dfd-b31f-d38fc878e9b7
+                        name: Dropdown
+                        title: ''
+                        value: null
+                        placeholder: Please select...
+                        is_filled: false
+                        assigned_to:
+                          id: r3z77NfjprTpYs2dYVtnuZ
+                          name: Client
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: Dropdown1
+                        type: dropdown
+                        merge_field: null
+                      - uuid: 877acda2-c027-4428-a7af-487ebcdf0d31
+                        name: example.CRM.variable
+                        title: ''
+                        value: null
+                        placeholder: Please select...
+                        is_filled: false
+                        assigned_to:
+                          id: r3z77NfjprTpYs2dYVtnuZ
+                          name: Client
+                          signing_order: null
+                          preassigned_person: null
+                          type: role
+                        field_id: Dropdown1_1
+                        type: dropdown
+                        merge_field: example.CRM.variable
+                    pricing:
+                      tables:
+                        - name: Pricing Table 1
+                          id: b75ead58-2a16-4edd-93e2-c54e77b4669d
+                          total: '110'
+                          is_included_in_total: true
+                          summary:
+                            subtotal: '110'
+                            total: '110'
+                            discount: '0'
+                            tax: '0'
+                            fee: '0'
+                          items:
+                            - id: 0e58f738-6bf2-4525-9f1f-49577ffb1fe4
+                              sku: black_tea
+                              qty: '1'
+                              name: Black tea
+                              cost: '40'
+                              price: '60'
+                              description: just some black tea
+                              custom_fields: {}
+                              custom_columns:
+                                Cost: '40'
+                                Images:
+                                  - uuid: 0e3d64d8-9d64-47af-b9d1-c749c994e708
+                                    url: https://api.pandadoc.com/api/product-catalog/thumbnails?image_url=https%3A%2F%2Fcatalog-images.prod.pandadoc-static.com%2Fimages%2FDDPiziV8jujAAbLystdpWZ%2F5dea0631-66c7-46c4-aaf9-9af8e5264951%2Fpeppermint-tea-on-teacup-1417945.jpg
+                                    size:
+                                      width: null
+                                      height: 80
+                                Subtotal: '60'
+                              discount: null
+                              tax_first: null
+                              tax_second: null
+                              subtotal: '60'
+                              options:
+                                qty_editable: false
+                              sale_price: '60'
+                              taxes: {}
+                              discounts: {}
+                              fees: {}
+                              merged_data:
+                                Name: Black tea
+                                Description: just some black tea
+                                Price: '60'
+                                QTY: '1'
+                                SKU: black_tea
+                                Cost: '40'
+                                Subtotal: '60'
+                                Images:
+                                  - uuid: 0e3d64d8-9d64-47af-b9d1-c749c994e708
+                                    url: https://api.pandadoc.com/api/product-catalog/thumbnails?image_url=https%3A%2F%2Fcatalog-images.prod.pandadoc-static.com%2Fimages%2FDDPiziV8jujAAbLystdpWZ%2F5dea0631-66c7-46c4-aaf9-9af8e5264951%2Fpeppermint-tea-on-teacup-1417945.jpg
+                                    size:
+                                      width: null
+                                      height: 80
+                            - id: 4cb8153d-b8e2-488e-a93e-75df419cfe42
+                              sku: green_tea
+                              qty: '1'
+                              name: Green tea
+                              cost: '30'
+                              price: '50'
+                              description: just some green tea
+                              custom_fields: {}
+                              custom_columns:
+                                Cost: '30'
+                                Images:
+                                  - uuid: 4459f92e-c190-4fbf-b8e4-eef401c03655
+                                    url: https://api.pandadoc.com/api/product-catalog/thumbnails?image_url=https%3A%2F%2Fcatalog-images.prod.pandadoc-static.com%2Fimages%2FDDPiziV8jujAAbLystdpWZ%2F9f854ea0-112d-4faf-b8ca-e94f00d28102%2FTea-thumb.jpg
+                                    size:
+                                      width: null
+                                      height: 80
+                                Subtotal: '50'
+                              discount: null
+                              tax_first: null
+                              tax_second: null
+                              subtotal: '50'
+                              options:
+                                qty_editable: false
+                              sale_price: '50'
+                              taxes: {}
+                              discounts: {}
+                              fees: {}
+                              merged_data:
+                                Name: Green tea
+                                Description: just some green tea
+                                Price: '50'
+                                QTY: '1'
+                                SKU: green_tea
+                                Cost: '30'
+                                Subtotal: '50'
+                                Images:
+                                  - uuid: 4459f92e-c190-4fbf-b8e4-eef401c03655
+                                    url: https://api.pandadoc.com/api/product-catalog/thumbnails?image_url=https%3A%2F%2Fcatalog-images.prod.pandadoc-static.com%2Fimages%2FDDPiziV8jujAAbLystdpWZ%2F9f854ea0-112d-4faf-b8ca-e94f00d28102%2FTea-thumb.jpg
+                                    size:
+                                      width: null
+                                      height: 80
+                          currency: USD
+                      total: '460'
+                      quotes:
+                        - id: 319c1d27-fcf9-434b-8d10-6a4056da1481
+                          currency: USD
+                          total: '350'
+                          summary:
+                            total: '350'
+                            subtotal: '0'
+                            one_time_subtotal: '0'
+                            recurring_subtotal: []
+                            total_qty: null
+                            custom_fields: {}
+                            discounts: {}
+                            fees: {}
+                            taxes: {}
+                            total_discount: null
+                            total_tax: null
+                            total_fee: null
+                            total_savings: null
+                            total_contract_value: null
+                          sections:
+                            - id: c054744e-bc1d-495a-9b3e-5bb22ad40037
+                              name: Section name
+                              total: '350'
+                              summary:
+                                total: '350'
+                                subtotal: '0'
+                                one_time_subtotal: '0'
+                                recurring_subtotal: []
+                                total_qty: null
+                                custom_fields: {}
+                                discounts: {}
+                                fees: {}
+                                taxes: {}
+                                total_section_value: null
+                              columns:
+                                - header: Name
+                                  name: Name
+                                  merge_name: Name
+                                  hidden: false
+                                - header: Description
+                                  name: Description
+                                  merge_name: Description
+                                  hidden: false
+                                - header: Price
+                                  name: Price
+                                  merge_name: Price
+                                  hidden: false
+                                - header: Quantity
+                                  name: Quantity
+                                  merge_name: Quantity
+                                  hidden: false
+                                - header: Total
+                                  name: Total
+                                  merge_name: Total
+                                  hidden: false
+                                - header: SKU
+                                  name: SKU
+                                  merge_name: SKU
+                                  hidden: true
+                                - header: Cost
+                                  name: Cost
+                                  merge_name: Cost
+                                  hidden: true
+                              items:
+                                - id: f2149dda-205b-40ea-8188-c3ab4d66e294
+                                  sku: coffee_maker
+                                  name: Siphon vacuum coffee maker
+                                  description: <p>Its exceptionally effective vacuum brewing method extracts all precious oils of your favorite coffee. In addition, the brewing time and temperature are perfectly calibrated, ensuring a perfect cup of coffee with each brew.</p>
+                                  qty: '1'
+                                  total_qty: null
+                                  price: '250'
+                                  cost: '100'
+                                  billing_frequency: null
+                                  contract_term: null
+                                  pricing_method: flat
+                                  type: product
+                                  reference_type: catalog
+                                  reference_id: 67a06da9-6be1-6b62-b7a1-2479d01bed07
+                                  options:
+                                    qty_editable: false
+                                    selected: true
+                                  custom_columns: {}
+                                  multipliers: {}
+                                  discounts: {}
+                                  fees: {}
+                                  taxes: {}
+                                  total: '250'
+                                  external_columns: {}
+                                  overall_total: null
+                                  thumbnail: https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/81361512-488e-42c8-8c13-5e61b8a27638/1.jpeg
+                                  images:
+                                    - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/81361512-488e-42c8-8c13-5e61b8a27638/1.jpeg
+                                    - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/a0aca18e-8074-4698-aadb-3f41c1bd6a88/2.jpeg
+                                  merged_data:
+                                    Name: Siphon vacuum coffee maker
+                                    Description: <p>Its exceptionally effective vacuum brewing method extracts all precious oils of your favorite coffee. In addition, the brewing time and temperature are perfectly calibrated, ensuring a perfect cup of coffee with each brew.</p>
+                                    Thumbnail: https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/81361512-488e-42c8-8c13-5e61b8a27638/1.jpeg
+                                    Images:
+                                      - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/81361512-488e-42c8-8c13-5e61b8a27638/1.jpeg
+                                      - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/a0aca18e-8074-4698-aadb-3f41c1bd6a88/2.jpeg
+                                    Price: '250'
+                                    Quantity: '1'
+                                    SKU: coffee_maker
+                                    Cost: '100'
+                                - id: 0d24b2b6-bbad-482f-9048-b60c2efc72d3
+                                  sku: coffee_brewer
+                                  name: Jittermaster coffee brewer
+                                  description: '<p>Double-layer Filter: Dual layers of 304 stainless steel allow fine oils from coffee powder to infuse themselves into your coffee, creating a richer, fuller flavor and no coffee ground deposits</p>'
+                                  qty: '1'
+                                  total_qty: null
+                                  price: '100'
+                                  cost: '50'
+                                  billing_frequency: null
+                                  contract_term: null
+                                  pricing_method: flat
+                                  type: product
+                                  reference_type: catalog
+                                  reference_id: 15c8cbb7-5f5a-851f-c39e-b01f57d02c1b
+                                  options:
+                                    qty_editable: false
+                                    selected: true
+                                  custom_columns: {}
+                                  multipliers: {}
+                                  discounts: {}
+                                  fees: {}
+                                  taxes: {}
+                                  total: '100'
+                                  external_columns: {}
+                                  overall_total: null
+                                  thumbnail: https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/b593eb9a-74cd-40a0-8c38-6a9d39248d3d/3.jpeg
+                                  images:
+                                    - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/b593eb9a-74cd-40a0-8c38-6a9d39248d3d/3.jpeg
+                                    - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/ea09bd4a-c619-4b3e-8f99-f1a2180a97a8/4.jpeg
+                                    - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6e6312f8-787d-4453-8772-ac81f481be00/5.jpeg
+                                  merged_data:
+                                    Name: Jittermaster coffee brewer
+                                    Description: '<p>Double-layer Filter: Dual layers of 304 stainless steel allow fine oils from coffee powder to infuse themselves into your coffee, creating a richer, fuller flavor and no coffee ground deposits</p>'
+                                    Thumbnail: https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/b593eb9a-74cd-40a0-8c38-6a9d39248d3d/3.jpeg
+                                    Images:
+                                      - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/b593eb9a-74cd-40a0-8c38-6a9d39248d3d/3.jpeg
+                                      - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/ea09bd4a-c619-4b3e-8f99-f1a2180a97a8/4.jpeg
+                                      - https://catalog-images.prod.pandadoc-static.com/images/bg78StVWLHzp3tYiubszPb/6e6312f8-787d-4453-8772-ac81f481be00/5.jpeg
+                                    Price: '100'
+                                    Quantity: '1'
+                                    SKU: coffee_brewer
+                                    Cost: '50'
+                              settings:
+                                selection_type: custom
+                                optional: false
+                                selected: true
+                                data_merge_enabled: true
+                          merge_rules: []
+                          settings:
+                            selection_type: custom
+                    tags: []
+                    roles:
+                      - id: r3z77NfjprTpYs2dYVtnuZ
+                        name: Client
+                        signing_order: null
+                        preassigned_person: null
+                      - id: xdhvZVZ27tm8VSuZiH7Jgf
+                        name: ACME Representative
+                        signing_order: null
+                        preassigned_person: null
+                    version: '2'
+                    content_placeholders: []
+                    images:
+                      - name: Image 1
+                        block_uuid: 8178b9c8-d7eb-464f-9707-644ca2854920
+                        urls:
+                          - https://DDPiziV8jujAAbLystdpWZ.images.pandadoc-static.com/images/DDPiziV8jujAAbLystdpWZ/8b7d3132cfff4db49dfc2a4620fb7ffd
+                      - name: Image 2
+                        block_uuid: ae5d6036-aa54-4d65-aa44-9dba71745497
+                        urls:
+                          - https://DDPiziV8jujAAbLystdpWZ.images.pandadoc-static.com/images/DDPiziV8jujAAbLystdpWZ/a9495d6871814afdaac4fee568af1529
+                      - name: Image 3
+                        block_uuid: 52d17692-57aa-4835-96f4-512fb9226fb4
+                        urls:
+                          - https://DDPiziV8jujAAbLystdpWZ.images.pandadoc-static.com/images/DDPiziV8jujAAbLystdpWZ/ca16034a05c043749ff72f5efa1a3d4b
+                    tables:
+                      - name: Table 1
+                    lock: null
         '401':
           $ref: '#/components/responses/401'
         '403':
@@ -7733,19 +8231,6 @@ paths:
         > 🚧 Payload size
         >
         > The maximum request body size is 512 KiB (524288 bytes). Larger requests return `413` and are not applied.
-      description: |
-        This operation updates the details of a specific quote within a document by specifying the document ID and quote ID.
-
-        > 📘 **Permissions**
-        >
-        > Requires the 'Can Edit Document' and 'Can Edit Content' permissions.
-        > The document must be in Draft (`document.draft`).
-        > Updating quotes is available on plans that include
-        > [Product Catalog](https://support.pandadoc.com/en/articles/9714691-product-catalog).
-
-        > 🚧 Payload size
-        >
-        > The maximum request body size is 512 KiB (524288 bytes). Larger requests return `413` and are not applied.
       operationId: quoteUpdate
       parameters:
         - name: document_id
@@ -7783,99 +8268,6 @@ paths:
           $ref: '#/components/responses/404'
         '409':
           $ref: '#/components/responses/409'
-        '413':
-          $ref: '#/components/responses/413RequestTooLarge'
-        '429':
-          $ref: '#/components/responses/429'
-  /public/v1/documents/{document_id}/quotes:
-    patch:
-      tags:
-        - Quotes
-      summary: '[Beta] Update Multiple Quotes'
-      operationId: quotesBatchUpdate
-      description: |
-        Updates multiple quotes within a single document in one request — the batch variant of <a href="#/operations/quoteUpdate">Quote update</a>. The response is always `200 OK` once the request itself is valid; each quote's outcome is reported independently in `results[]`, so one bad quote does not fail the others. See `QuotesBatchUpdateResult` for the possible per-quote outcomes.
-        > 📘 **Permissions** > > Requires the 'Can Edit Document' and 'Can Edit Content' permissions. > The document must be in Draft (`document.draft`). Updating quotes is > available on plans that include > [Product Catalog](https://support.pandadoc.com/en/articles/9714691-product-catalog).
-
-        > 🚧 **Beta** > > This endpoint is currently in beta and may change without notice.
-
-        > 🚧 Payload size > > The maximum request body size is 512 KiB (524288 bytes). Larger > requests return `413` before any quote is processed.
-      parameters:
-        - name: document_id
-          description: Document ID
-          in: path
-          schema:
-            type: string
-          required: true
-          example: BhVzRcxH9Z2LgfPPGXFUBa
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/QuotesBatchUpdateRequest'
-            examples:
-              'Two quotes: one updated, one conflicted':
-                value:
-                  quotes:
-                    - id: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
-                      currency: USD
-                      sections:
-                        - id: 3f9a6b1e-2c4d-4a3e-9f0b-7e6d5c4b3a29
-                          items:
-                            - id: 61a7e2ab-aaa7-4001-9a9d-1f4f3de28441
-                              qty: 25
-                              price_settings:
-                                base_value: 40
-                                tiers:
-                                  - min_qty: 1
-                                    value: 0
-                                  - min_qty: 10
-                                    value: 10
-                    - id: 2b6b0e3a-df3f-4a90-9b1a-6a7a2d6e3d10
-                      sections:
-                        - id: 7c1e2a4d-9e3b-4c1a-8b2d-5f6a7c8d9e0f
-                          items:
-                            - id: 232d5268-01fa-4372-88ce-64b190b62007
-                              price: 500
-      responses:
-        '200':
-          description: The batch was processed. See `results[].status` for each quote's outcome.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/QuotesBatchUpdateResponse'
-              examples:
-                'Two quotes: one updated, one conflicted':
-                  value:
-                    count: 2
-                    results:
-                      - id: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
-                        status: ok
-                        quote:
-                          id: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
-                          currency: USD
-                          total: '1000'
-                          summary:
-                            total: '1000'
-                            subtotal: '1000'
-                          sections: []
-                          merge_rules: []
-                          settings:
-                            selection_type: custom
-                      - id: 2b6b0e3a-df3f-4a90-9b1a-6a7a2d6e3d10
-                        status: conflict
-                        description: Quote was updated concurrently. Fetch the latest version and retry.
-        '400':
-          $ref: '#/components/responses/400ValidationError'
-        '401':
-          $ref: '#/components/responses/401'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '413':
-          $ref: '#/components/responses/413RequestTooLarge'
         '413':
           $ref: '#/components/responses/413RequestTooLarge'
         '429':
@@ -11246,6 +11638,8 @@ components:
                   multichoice_selected:
                     type: boolean
                     nullable: true
+                  qty_editable:
+                    type: boolean
               sale_price:
                 type: string
                 nullable: true
@@ -11311,6 +11705,8 @@ components:
             - custom
             - single
             - multiple
+        data_merge_enabled:
+          type: boolean
     QuoteResponse:
       type: object
       properties:
@@ -11465,7 +11861,7 @@ components:
                       type: string
                       nullable: true
                     hidden:
-                      type: string
+                      type: boolean
               items:
                 type: array
                 items:
@@ -11576,6 +11972,23 @@ components:
                     overall_total:
                       type: string
                       example: '1000'
+                      nullable: true
+                    total_qty:
+                      type: string
+                      nullable: true
+                    reference_id:
+                      type: string
+                      nullable: true
+                    thumbnail:
+                      type: string
+                      nullable: true
+                    images:
+                      type: array
+                      nullable: true
+                      items:
+                        type: string
+                    merged_data:
+                      type: object
                       nullable: true
                 nullable: true
               total:
@@ -13138,7 +13551,7 @@ components:
         email:
           type: string
           example: josh@example.com
-          description: 'The member''s email address. Required: it identifies the member when diffing the group''s membership.'
+          description: "The member's email address. Required: it identifies the member when diffing the group's membership."
         first_name:
           type: string
           nullable: true
@@ -13740,6 +14153,9 @@ components:
         content_date_modified:
           type: string
           example: '2021-10-23T21:07:04.147345Z'
+        folder_uuid:
+          type: string
+          nullable: true
         created_by:
           type: object
           properties:
@@ -13759,6 +14175,9 @@ components:
               type: string
               nullable: true
               example: https://pd-live-media.s3.amazonaws.com/users/000GTSGwJw000L2KZqc000/avatar.jpg
+            membership_id:
+              type: string
+              nullable: true
         metadata:
           type: object
         tokens:
@@ -13799,6 +14218,9 @@ components:
           type: array
           items:
             type: object
+        lock:
+          type: object
+          nullable: true
     TemplateCreateResponse:
       type: object
       properties:
@@ -16412,202 +16834,6 @@ components:
             Per-quote outcomes, in the same order as the request's `quotes`. Each entry's shape depends on its `status`.
           items:
             $ref: '#/components/schemas/QuotesBatchUpdateResult'
-    QuotesBatchUpdateItem:
-      description: |
-        A single quote update within the batch. Same shape as the single-quote update request (`QuoteUpdateRequest`), with an added `id` identifying which quote this entry applies to.
-      allOf:
-        - type: object
-          required:
-            - id
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: ID of the quote to update.
-              example: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
-        - $ref: '#/components/schemas/QuoteUpdateRequest'
-    QuotesBatchUpdateRequest:
-      type: object
-      description: |
-        Batch request to update multiple quotes within a single document.
-      required:
-        - quotes
-      properties:
-        quotes:
-          type: array
-          description: |
-            Quotes to update within this document. Each entry is processed independently — see the operation description for the partial-success model. Duplicate `id` values are not allowed.
-          minItems: 1
-          maxItems: 25
-          items:
-            $ref: '#/components/schemas/QuotesBatchUpdateItem'
-    QuotesBatchUpdateResultStatus:
-      type: string
-      description: |
-        Per-quote outcome discriminator. `ok`, `validation_error`, `not_in_document`, `not_found`, and `conflict` mirror the single-quote update endpoint's `200`/`400`/`403`/`404`/`409` responses respectively — see each variant's own schema. `internal_error` is exclusive to the batch endpoint and indicates an isolated server-side failure for that quote only; the request as a whole succeeded and other quotes in the same batch are unaffected.
-      enum:
-        - ok
-        - validation_error
-        - not_in_document
-        - not_found
-        - conflict
-        - internal_error
-    QuotesBatchUpdateResultBase:
-      type: object
-      description: |
-        Fields common to every per-quote outcome in a batch quotes update response.
-      required:
-        - id
-        - status
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The quote this result corresponds to. Echoed from the request.
-          example: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
-        status:
-          $ref: '#/components/schemas/QuotesBatchUpdateResultStatus'
-    QuotesBatchUpdateResultOk:
-      description: |
-        Per-quote success entry, mirroring the single-quote endpoint's `200` response. `quote` carries the same payload as that endpoint's body.
-      allOf:
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
-        - type: object
-          required:
-            - quote
-          properties:
-            status:
-              type: string
-              enum:
-                - ok
-              example: ok
-            quote:
-              $ref: '#/components/schemas/QuoteResponse'
-    QuotesBatchUpdateResultValidationError:
-      description: |
-        Mirrors the single-quote endpoint's `400` response. The update payload for this quote failed validation (e.g. both `price` and `price_settings` set on the same item).
-      allOf:
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
-        - type: object
-          required:
-            - description
-          properties:
-            status:
-              type: string
-              enum:
-                - validation_error
-              example: validation_error
-            description:
-              type: string
-              description: Human-readable explanation of the validation failure.
-              example: You can't specify both `price` and `price_settings`.
-    QuotesBatchUpdateResultNotInDocument:
-      description: |
-        Mirrors the single-quote endpoint's `403` response. This quote is not part of the specified document's content.
-      allOf:
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
-        - type: object
-          required:
-            - description
-          properties:
-            status:
-              type: string
-              enum:
-                - not_in_document
-              example: not_in_document
-            description:
-              type: string
-              example: Quote is not part of this document.
-    QuotesBatchUpdateResultNotFound:
-      description: |
-        Mirrors the single-quote endpoint's `404` response. This quote does not exist or has no resolvable current version.
-      allOf:
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
-        - type: object
-          required:
-            - description
-          properties:
-            status:
-              type: string
-              enum:
-                - not_found
-              example: not_found
-            description:
-              type: string
-              example: Quote not found.
-    QuotesBatchUpdateResultConflict:
-      description: |
-        Mirrors the single-quote endpoint's `409` response. The quote was modified concurrently since the version you have; fetch the latest version and retry.
-      allOf:
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
-        - type: object
-          required:
-            - description
-          properties:
-            status:
-              type: string
-              enum:
-                - conflict
-              example: conflict
-            description:
-              type: string
-              example: Quote was updated concurrently. Fetch the latest version and retry.
-    QuotesBatchUpdateResultInternalError:
-      description: |
-        An isolated server-side failure occurred for this quote. The request as a whole succeeded; retrying the affected quote (on its own or in a smaller batch) is safe.
-      allOf:
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
-        - type: object
-          required:
-            - description
-          properties:
-            status:
-              type: string
-              enum:
-                - internal_error
-              example: internal_error
-            description:
-              type: string
-              example: An internal error occurred while updating this quote. Try again.
-    QuotesBatchUpdateResult:
-      description: |
-        Outcome for a single quote in a batch update request. The concrete shape is selected by the `status` discriminator.
-      oneOf:
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultOk'
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultValidationError'
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultNotInDocument'
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultNotFound'
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultConflict'
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultInternalError'
-      discriminator:
-        propertyName: status
-        mapping:
-          ok: '#/components/schemas/QuotesBatchUpdateResultOk'
-          validation_error: '#/components/schemas/QuotesBatchUpdateResultValidationError'
-          not_in_document: '#/components/schemas/QuotesBatchUpdateResultNotInDocument'
-          not_found: '#/components/schemas/QuotesBatchUpdateResultNotFound'
-          conflict: '#/components/schemas/QuotesBatchUpdateResultConflict'
-          internal_error: '#/components/schemas/QuotesBatchUpdateResultInternalError'
-    QuotesBatchUpdateResponse:
-      type: object
-      description: |
-        Per-quote update outcomes. Always returned with HTTP 200 when the request itself is valid; per-quote failures are reported in `results[].status`.
-      required:
-        - count
-        - results
-      properties:
-        count:
-          type: integer
-          description: |
-            Number of entries in `results`. Equal to the number of `quotes` in the request.
-          minimum: 0
-          example: 2
-        results:
-          type: array
-          description: |
-            Per-quote outcomes, in the same order as the request's `quotes`. Each entry's shape depends on its `status`.
-          items:
-            $ref: '#/components/schemas/QuotesBatchUpdateResult'
     ListWorkspacesResponse:
       type: object
       properties:
@@ -18302,25 +18528,6 @@ components:
                   required:
                     - code
                 example: []
-    413RequestTooLarge:
-      description: Request entity too large.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              type:
-                type: string
-                example: validation_error
-              detail:
-                type: string
-                example: Request body exceeds the maximum size of 524288 bytes.
-          examples:
-            payloadTooLarge:
-              summary: Request body exceeds 512 KiB
-              value:
-                type: validation_error
-                detail: Request body exceeds the maximum size of 524288 bytes.
     413RequestTooLarge:
       description: Request entity too large.
       content:
