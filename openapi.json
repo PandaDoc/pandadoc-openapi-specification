@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.16.0"
+    "version": "8.16.1"
   },
   "servers": [
     {
@@ -11146,7 +11146,7 @@
         ],
         "summary": "[Beta] Update Multiple Quotes",
         "operationId": "quotesBatchUpdate",
-        "description": "Updates multiple quotes within a single document in one request — the batch variant of <a href=\"#/operations/quoteUpdate\">Quote update</a>. The response is always `200 OK` once the request itself is valid; each quote's outcome is reported independently in `results[]`, so one bad quote does not fail the others. See `QuotesBatchUpdateResult` for the possible per-quote outcomes.\n> 📘 **Permissions** > > Requires the 'Can Edit Document' and 'Can Edit Content' permissions. > The document must be in Draft (`document.draft`). Updating quotes is > available on plans that include > [Product Catalog](https://support.pandadoc.com/en/articles/9714691-product-catalog).\n\n> 🚧 **Beta** > > This endpoint is currently in beta and may change without notice.\n\n> 🚧 Payload size > > The maximum request body size is 512 KiB (524288 bytes). Larger > requests return `413` before any quote is processed.\n",
+        "description": "This operation updates multiple quotes within a single document in one request — the batch variant of <a href=\"#/operations/quoteUpdate\">Quote update</a>. The response is always `200 OK` once the request itself is valid; each quote's outcome is reported independently in `results[]`, so one bad quote does not fail the others. See `QuotesBatchUpdateResult` for the possible per-quote outcomes.\n\n> 📘 **Permissions**\n>\n> Requires the 'Can Edit Document' and 'Can Edit Content' permissions.\n> The document must be in Draft (`document.draft`).\n> Updating quotes is available on plans that include\n> [Product Catalog](https://support.pandadoc.com/en/articles/9714691-product-catalog).\n\n> 🚧 **Beta**\n>\n> This endpoint is currently in beta and may change without notice.\n\n> 🚧 Payload size\n>\n> The maximum request body size is 512 KiB (524288 bytes). Larger requests return `413` before any quote is processed.\n",
         "parameters": [
           {
             "name": "document_id",
