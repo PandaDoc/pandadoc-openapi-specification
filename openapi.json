@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.15.1"
+    "version": "8.16.0"
   },
   "servers": [
     {
@@ -14051,6 +14051,12 @@
           "name"
         ],
         "properties": {
+          "editable": {
+            "type": "boolean",
+            "default": false,
+            "description": "Only applicable when creating a document from a DOCX file. When `true`, the DOCX is converted into editable content, so the resulting document can be edited.\n\nCannot be combined with `parse_form_fields` or `fields`, which place fields by coordinates on PDF pages.\n",
+            "example": true
+          },
           "parse_form_fields": {
             "type": "boolean",
             "description": "Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags."
@@ -18887,6 +18893,12 @@
       "ContentLibraryItemCreateRequest": {
         "type": "object",
         "properties": {
+          "editable": {
+            "type": "boolean",
+            "default": false,
+            "description": "Only applicable when creating a content library item from a DOCX file. When `true`, the DOCX is converted into editable content, so the resulting content library item can be edited.\n",
+            "example": true
+          },
           "name": {
             "type": "string",
             "description": "The name of the Content Library Item.",
@@ -19141,6 +19153,12 @@
       "CreateTemplateRequest": {
         "type": "object",
         "properties": {
+          "editable": {
+            "type": "boolean",
+            "default": false,
+            "description": "Only applicable when creating a template from a DOCX file. When `true`, the DOCX is converted into editable content, so the resulting template can be edited.\n",
+            "example": true
+          },
           "name": {
             "type": "string",
             "description": "The name of the template.",
