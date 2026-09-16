@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.16.1
+  version: 8.17.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -13350,6 +13350,10 @@ components:
           type: string
           description: A unique identifier of a workspace member.
           example: radQBiBkU7MBk59NSgaGfd
+        silent:
+          type: boolean
+          default: false
+          description: If set to `true`, disables the email and in-app notifications about the ownership transfer that are sent to the new document owner.
     DocumentTransferAllOwnershipRequest:
       type: object
       properties:
@@ -13361,6 +13365,10 @@ components:
           type: string
           description: A unique identifier of a workspace member to whom you want to transfer ownership.
           example: radQBiBkU7MBk59NSgaGfd
+        silent:
+          type: boolean
+          default: false
+          description: If set to `true`, disables the email and in-app notifications about the ownership transfer that are sent to the new documents owner.
     AppendCLIDataRequest:
       type: object
       properties:
