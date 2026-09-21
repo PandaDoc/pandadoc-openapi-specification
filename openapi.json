@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.17.1"
+    "version": "8.18.0"
   },
   "servers": [
     {
@@ -121,6 +121,10 @@
     {
       "name": "Notary",
       "description": "Operations for creating and managing notarization requests."
+    },
+    {
+      "name": "Privacy settings",
+      "description": "Operations for retrieving and updating workspace privacy settings."
     },
     {
       "name": "Product catalog",
@@ -11063,6 +11067,133 @@
           },
           "403": {
             "$ref": "#/components/responses/403PermissionDeniedV2"
+          }
+        }
+      }
+    },
+    "/public/beta/privacy-settings/workspaces/{workspace_id}": {
+      "parameters": [
+        {
+          "name": "workspace_id",
+          "in": "path",
+          "required": true,
+          "description": "Workspace id.",
+          "schema": {
+            "type": "string",
+            "maxLength": 22
+          },
+          "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Privacy settings"
+        ],
+        "summary": "Get Workspace Privacy Settings",
+        "operationId": "getWorkspacePrivacySettings",
+        "description": "Get the effective privacy settings for a workspace in your organization.\n\nYou need to be an Org Admin. List workspaces with `GET /public/v1/workspaces`\nwhen you need workspace ids.\n",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacySettings"
+                },
+                "examples": {
+                  "Privacy settings": {
+                    "value": {
+                      "workspace_id": "BhVzRcxH9Z2LgfPPGXFUBa",
+                      "hipaa_compliance_enabled": false,
+                      "cfr11_compliance_enabled": false,
+                      "ai_features_enabled": true,
+                      "ai_on_premises_processing_enabled": true,
+                      "ai_cloud_third_party_enabled": true,
+                      "ai_on_premises_training_enabled": true,
+                      "ai_third_party_training_enabled": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401AuthErrorV2"
+          },
+          "403": {
+            "$ref": "#/components/responses/403PermissionDeniedV2"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NotFoundV2"
+          },
+          "429": {
+            "$ref": "#/components/responses/429TooManyRequestsV2"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Privacy settings"
+        ],
+        "summary": "Update Workspace Privacy Settings",
+        "operationId": "updateWorkspacePrivacySettings",
+        "description": "Partially update privacy settings for a workspace in your organization.\n\nYou need to be an Org Admin. Omitted properties remain unchanged. Disabling\n`ai_features_enabled` also disables every dependent AI setting. HIPAA\ncompliance can force AI settings off. Unknown properties are ignored.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePrivacySettings"
+              },
+              "examples": {
+                "Disable AI features": {
+                  "value": {
+                    "ai_features_enabled": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivacySettings"
+                },
+                "examples": {
+                  "Updated privacy settings": {
+                    "value": {
+                      "workspace_id": "BhVzRcxH9Z2LgfPPGXFUBa",
+                      "hipaa_compliance_enabled": false,
+                      "cfr11_compliance_enabled": false,
+                      "ai_features_enabled": false,
+                      "ai_on_premises_processing_enabled": false,
+                      "ai_cloud_third_party_enabled": false,
+                      "ai_on_premises_training_enabled": false,
+                      "ai_third_party_training_enabled": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400BadRequestV2"
+          },
+          "401": {
+            "$ref": "#/components/responses/401AuthErrorV2"
+          },
+          "403": {
+            "$ref": "#/components/responses/403PermissionDeniedV2"
+          },
+          "404": {
+            "$ref": "#/components/responses/404NotFoundV2"
+          },
+          "429": {
+            "$ref": "#/components/responses/429TooManyRequestsV2"
           }
         }
       }
@@ -22040,6 +22171,78 @@
                 "$ref": "#/components/schemas/ProductCatalogItemPriceConfiguration"
               }
             }
+          }
+        }
+      },
+      "PrivacySettings": {
+        "type": "object",
+        "properties": {
+          "workspace_id": {
+            "type": "string",
+            "readOnly": true,
+            "description": "Workspace ID."
+          },
+          "hipaa_compliance_enabled": {
+            "type": "boolean",
+            "readOnly": true,
+            "description": "Whether HIPAA compliance is enabled for the workspace."
+          },
+          "cfr11_compliance_enabled": {
+            "type": "boolean",
+            "readOnly": true,
+            "description": "Whether CFR 11 compliance is enabled for the workspace."
+          },
+          "ai_features_enabled": {
+            "type": "boolean",
+            "description": "Master switch for AI features in the workspace."
+          },
+          "ai_on_premises_processing_enabled": {
+            "type": "boolean",
+            "description": "Whether PandaDoc-operated AI processing is enabled."
+          },
+          "ai_cloud_third_party_enabled": {
+            "type": "boolean",
+            "description": "Whether third-party cloud AI processing is enabled."
+          },
+          "ai_on_premises_training_enabled": {
+            "type": "boolean",
+            "readOnly": true,
+            "description": "Whether PandaDoc-operated model training is enabled."
+          },
+          "ai_third_party_training_enabled": {
+            "type": "boolean",
+            "description": "Whether third-party model training is enabled."
+          }
+        },
+        "required": [
+          "workspace_id",
+          "hipaa_compliance_enabled",
+          "cfr11_compliance_enabled",
+          "ai_features_enabled",
+          "ai_on_premises_processing_enabled",
+          "ai_cloud_third_party_enabled",
+          "ai_on_premises_training_enabled",
+          "ai_third_party_training_enabled"
+        ]
+      },
+      "UpdatePrivacySettings": {
+        "type": "object",
+        "properties": {
+          "ai_features_enabled": {
+            "type": "boolean",
+            "description": "Master switch for AI features. Setting it to `false` also disables\nevery dependent AI setting.\n"
+          },
+          "ai_on_premises_processing_enabled": {
+            "type": "boolean",
+            "description": "Whether PandaDoc-operated AI processing is enabled."
+          },
+          "ai_cloud_third_party_enabled": {
+            "type": "boolean",
+            "description": "Whether third-party cloud AI processing is enabled."
+          },
+          "ai_third_party_training_enabled": {
+            "type": "boolean",
+            "description": "Whether third-party model training is enabled."
           }
         }
       },
