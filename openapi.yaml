@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.17.0
+  version: 8.17.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -9964,10 +9964,15 @@ components:
                       type: object
                       example:
                         Fluffiness: 5/5
+                  required:
+                    - options
+                    - data
             required:
               - title
+              - default
       required:
         - name
+        - sections
     TableCell:
       type: object
       description: Defines a single cell in the table, which can appear in either the header or the rows.
