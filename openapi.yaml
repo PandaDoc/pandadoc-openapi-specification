@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.18.0
+  version: 8.18.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -8223,21 +8223,28 @@ paths:
         description: Workspace id.
         schema:
           type: string
+          pattern: ^[A-Za-z0-9]{22}$
           maxLength: 22
+          minLength: 22
         example: BhVzRcxH9Z2LgfPPGXFUBa
     get:
       tags:
         - Privacy settings
-      summary: Get Workspace Privacy Settings
+      summary: '[Beta] Workspace Privacy Settings Details'
       operationId: getWorkspacePrivacySettings
       description: |
-        Get the effective privacy settings for a workspace in your organization.
+        Returns the privacy settings currently in effect for a workspace in your
+        organization.
 
-        You need to be an Org Admin. List workspaces with `GET /public/v1/workspaces`
-        when you need workspace ids.
+        You must be an **organization admin**. Organization admin is an
+        organization-wide role and is separate from workspace admin. Workspace
+        admin alone is not enough for this endpoint.
+
+        List workspaces with `GET /public/v1/workspaces` when you need workspace
+        ids.
       responses:
         '200':
-          description: OK
+          description: Privacy settings for the workspace.
           content:
             application/json:
               schema:
@@ -8253,6 +8260,8 @@ paths:
                     ai_cloud_third_party_enabled: true
                     ai_on_premises_training_enabled: true
                     ai_third_party_training_enabled: false
+        '400':
+          $ref: '#/components/responses/400BadRequestV2'
         '401':
           $ref: '#/components/responses/401AuthErrorV2'
         '403':
@@ -8264,15 +8273,39 @@ paths:
     patch:
       tags:
         - Privacy settings
-      summary: Update Workspace Privacy Settings
+      summary: '[Beta] Update Workspace Privacy Settings'
       operationId: updateWorkspacePrivacySettings
       description: |
-        Partially update privacy settings for a workspace in your organization.
+        Updates one or more AI privacy settings for a workspace in your
+        organization.
 
-        You need to be an Org Admin. Omitted properties remain unchanged. Disabling
-        `ai_features_enabled` also disables every dependent AI setting. HIPAA
-        compliance can force AI settings off. Unknown properties are ignored.
+        This is a PATCH: include only the fields you want to change. Fields you
+        omit keep their current values. Unknown properties are ignored.
+
+        You must be an **organization admin**. Organization admin is an
+        organization-wide role and is separate from workspace admin. Workspace
+        admin alone is not enough for this endpoint.
+
+        ## Writable fields
+
+        - `ai_features_enabled`
+        - `ai_on_premises_processing_enabled`
+        - `ai_cloud_third_party_enabled`
+        - `ai_third_party_training_enabled`
+
+        HIPAA (`hipaa_compliance_enabled`), 21 CFR Part 11
+        (`cfr11_compliance_enabled`), and `ai_on_premises_training_enabled` are
+        returned on read but cannot be changed through this endpoint.
+
+        ## Cascades
+
+        - Setting `ai_features_enabled` to `false` also turns off
+          `ai_on_premises_processing_enabled`, `ai_cloud_third_party_enabled`,
+          `ai_on_premises_training_enabled`, and `ai_third_party_training_enabled`.
+        - When `hipaa_compliance_enabled` is `true` for the workspace, the same
+          AI fields are forced off, including values sent in the same request.
       requestBody:
+        description: AI privacy settings to change. Omit fields you want to leave unchanged.
         required: true
         content:
           application/json:
@@ -8284,7 +8317,7 @@ paths:
                   ai_features_enabled: false
       responses:
         '200':
-          description: OK
+          description: Updated privacy settings for the workspace.
           content:
             application/json:
               schema:
@@ -16517,36 +16550,53 @@ components:
             price_configuration:
               $ref: '#/components/schemas/ProductCatalogItemPriceConfiguration'
     PrivacySettings:
+      title: PrivacySettings
+      description: |
+        Effective privacy settings for a workspace. Compliance flags and
+        on-premises training are read-only on this API.
       type: object
       properties:
         workspace_id:
           type: string
           readOnly: true
-          description: Workspace ID.
+          pattern: ^[A-Za-z0-9]{22}$
+          maxLength: 22
+          minLength: 22
+          description: Workspace id.
+          example: BhVzRcxH9Z2LgfPPGXFUBa
         hipaa_compliance_enabled:
           type: boolean
           readOnly: true
-          description: Whether HIPAA compliance is enabled for the workspace.
+          description: |
+            Whether HIPAA compliance is enabled for the workspace. When
+            `true`, every AI setting is forced off.
+          example: false
         cfr11_compliance_enabled:
           type: boolean
           readOnly: true
-          description: Whether CFR 11 compliance is enabled for the workspace.
+          description: Whether 21 CFR Part 11 compliance is enabled for the workspace.
+          example: false
         ai_features_enabled:
           type: boolean
           description: Master switch for AI features in the workspace.
+          example: true
         ai_on_premises_processing_enabled:
           type: boolean
           description: Whether PandaDoc-operated AI processing is enabled.
+          example: true
         ai_cloud_third_party_enabled:
           type: boolean
           description: Whether third-party cloud AI processing is enabled.
+          example: true
         ai_on_premises_training_enabled:
           type: boolean
           readOnly: true
           description: Whether PandaDoc-operated model training is enabled.
+          example: true
         ai_third_party_training_enabled:
           type: boolean
           description: Whether third-party model training is enabled.
+          example: false
       required:
         - workspace_id
         - hipaa_compliance_enabled
@@ -16557,22 +16607,32 @@ components:
         - ai_on_premises_training_enabled
         - ai_third_party_training_enabled
     UpdatePrivacySettings:
+      title: UpdatePrivacySettings
+      description: |
+        Fields that can be changed on a workspace privacy settings PATCH.
+        Omit any field you want to leave unchanged.
       type: object
       properties:
         ai_features_enabled:
           type: boolean
           description: |
             Master switch for AI features. Setting it to `false` also disables
-            every dependent AI setting.
+            `ai_on_premises_processing_enabled`, `ai_cloud_third_party_enabled`,
+            `ai_on_premises_training_enabled`, and
+            `ai_third_party_training_enabled`.
+          example: false
         ai_on_premises_processing_enabled:
           type: boolean
           description: Whether PandaDoc-operated AI processing is enabled.
+          example: true
         ai_cloud_third_party_enabled:
           type: boolean
           description: Whether third-party cloud AI processing is enabled.
+          example: true
         ai_third_party_training_enabled:
           type: boolean
           description: Whether third-party model training is enabled.
+          example: false
     QuoteUpdateRequestDiscountTypeEnum:
       type: string
       enum:

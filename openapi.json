@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.18.0"
+    "version": "8.18.1"
   },
   "servers": [
     {
@@ -11080,7 +11080,9 @@
           "description": "Workspace id.",
           "schema": {
             "type": "string",
-            "maxLength": 22
+            "pattern": "^[A-Za-z0-9]{22}$",
+            "maxLength": 22,
+            "minLength": 22
           },
           "example": "BhVzRcxH9Z2LgfPPGXFUBa"
         }
@@ -11089,12 +11091,12 @@
         "tags": [
           "Privacy settings"
         ],
-        "summary": "Get Workspace Privacy Settings",
+        "summary": "[Beta] Workspace Privacy Settings Details",
         "operationId": "getWorkspacePrivacySettings",
-        "description": "Get the effective privacy settings for a workspace in your organization.\n\nYou need to be an Org Admin. List workspaces with `GET /public/v1/workspaces`\nwhen you need workspace ids.\n",
+        "description": "Returns the privacy settings currently in effect for a workspace in your\norganization.\n\nYou must be an **organization admin**. Organization admin is an\norganization-wide role and is separate from workspace admin. Workspace\nadmin alone is not enough for this endpoint.\n\nList workspaces with `GET /public/v1/workspaces` when you need workspace\nids.\n",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Privacy settings for the workspace.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11117,6 +11119,9 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/400BadRequestV2"
+          },
           "401": {
             "$ref": "#/components/responses/401AuthErrorV2"
           },
@@ -11135,10 +11140,11 @@
         "tags": [
           "Privacy settings"
         ],
-        "summary": "Update Workspace Privacy Settings",
+        "summary": "[Beta] Update Workspace Privacy Settings",
         "operationId": "updateWorkspacePrivacySettings",
-        "description": "Partially update privacy settings for a workspace in your organization.\n\nYou need to be an Org Admin. Omitted properties remain unchanged. Disabling\n`ai_features_enabled` also disables every dependent AI setting. HIPAA\ncompliance can force AI settings off. Unknown properties are ignored.\n",
+        "description": "Updates one or more AI privacy settings for a workspace in your\norganization.\n\nThis is a PATCH: include only the fields you want to change. Fields you\nomit keep their current values. Unknown properties are ignored.\n\nYou must be an **organization admin**. Organization admin is an\norganization-wide role and is separate from workspace admin. Workspace\nadmin alone is not enough for this endpoint.\n\n## Writable fields\n\n- `ai_features_enabled`\n- `ai_on_premises_processing_enabled`\n- `ai_cloud_third_party_enabled`\n- `ai_third_party_training_enabled`\n\nHIPAA (`hipaa_compliance_enabled`), 21 CFR Part 11\n(`cfr11_compliance_enabled`), and `ai_on_premises_training_enabled` are\nreturned on read but cannot be changed through this endpoint.\n\n## Cascades\n\n- Setting `ai_features_enabled` to `false` also turns off\n  `ai_on_premises_processing_enabled`, `ai_cloud_third_party_enabled`,\n  `ai_on_premises_training_enabled`, and `ai_third_party_training_enabled`.\n- When `hipaa_compliance_enabled` is `true` for the workspace, the same\n  AI fields are forced off, including values sent in the same request.\n",
         "requestBody": {
+          "description": "AI privacy settings to change. Omit fields you want to leave unchanged.",
           "required": true,
           "content": {
             "application/json": {
@@ -11157,7 +11163,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Updated privacy settings for the workspace.",
             "content": {
               "application/json": {
                 "schema": {
@@ -22175,43 +22181,56 @@
         }
       },
       "PrivacySettings": {
+        "title": "PrivacySettings",
+        "description": "Effective privacy settings for a workspace. Compliance flags and\non-premises training are read-only on this API.\n",
         "type": "object",
         "properties": {
           "workspace_id": {
             "type": "string",
             "readOnly": true,
-            "description": "Workspace ID."
+            "pattern": "^[A-Za-z0-9]{22}$",
+            "maxLength": 22,
+            "minLength": 22,
+            "description": "Workspace id.",
+            "example": "BhVzRcxH9Z2LgfPPGXFUBa"
           },
           "hipaa_compliance_enabled": {
             "type": "boolean",
             "readOnly": true,
-            "description": "Whether HIPAA compliance is enabled for the workspace."
+            "description": "Whether HIPAA compliance is enabled for the workspace. When\n`true`, every AI setting is forced off.\n",
+            "example": false
           },
           "cfr11_compliance_enabled": {
             "type": "boolean",
             "readOnly": true,
-            "description": "Whether CFR 11 compliance is enabled for the workspace."
+            "description": "Whether 21 CFR Part 11 compliance is enabled for the workspace.",
+            "example": false
           },
           "ai_features_enabled": {
             "type": "boolean",
-            "description": "Master switch for AI features in the workspace."
+            "description": "Master switch for AI features in the workspace.",
+            "example": true
           },
           "ai_on_premises_processing_enabled": {
             "type": "boolean",
-            "description": "Whether PandaDoc-operated AI processing is enabled."
+            "description": "Whether PandaDoc-operated AI processing is enabled.",
+            "example": true
           },
           "ai_cloud_third_party_enabled": {
             "type": "boolean",
-            "description": "Whether third-party cloud AI processing is enabled."
+            "description": "Whether third-party cloud AI processing is enabled.",
+            "example": true
           },
           "ai_on_premises_training_enabled": {
             "type": "boolean",
             "readOnly": true,
-            "description": "Whether PandaDoc-operated model training is enabled."
+            "description": "Whether PandaDoc-operated model training is enabled.",
+            "example": true
           },
           "ai_third_party_training_enabled": {
             "type": "boolean",
-            "description": "Whether third-party model training is enabled."
+            "description": "Whether third-party model training is enabled.",
+            "example": false
           }
         },
         "required": [
@@ -22226,23 +22245,29 @@
         ]
       },
       "UpdatePrivacySettings": {
+        "title": "UpdatePrivacySettings",
+        "description": "Fields that can be changed on a workspace privacy settings PATCH.\nOmit any field you want to leave unchanged.\n",
         "type": "object",
         "properties": {
           "ai_features_enabled": {
             "type": "boolean",
-            "description": "Master switch for AI features. Setting it to `false` also disables\nevery dependent AI setting.\n"
+            "description": "Master switch for AI features. Setting it to `false` also disables\n`ai_on_premises_processing_enabled`, `ai_cloud_third_party_enabled`,\n`ai_on_premises_training_enabled`, and\n`ai_third_party_training_enabled`.\n",
+            "example": false
           },
           "ai_on_premises_processing_enabled": {
             "type": "boolean",
-            "description": "Whether PandaDoc-operated AI processing is enabled."
+            "description": "Whether PandaDoc-operated AI processing is enabled.",
+            "example": true
           },
           "ai_cloud_third_party_enabled": {
             "type": "boolean",
-            "description": "Whether third-party cloud AI processing is enabled."
+            "description": "Whether third-party cloud AI processing is enabled.",
+            "example": true
           },
           "ai_third_party_training_enabled": {
             "type": "boolean",
-            "description": "Whether third-party model training is enabled."
+            "description": "Whether third-party model training is enabled.",
+            "example": false
           }
         }
       },
