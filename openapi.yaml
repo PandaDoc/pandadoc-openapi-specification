@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.18.1
+  version: 8.19.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -14064,6 +14064,10 @@ components:
             parse_form_fields:
               type: boolean
               description: Set this parameter as `true` if you create a document from a PDF with form fields and as `false` if you upload a PDF with field tags.
+            parse_text_tags:
+              type: boolean
+              default: true
+              description: Set this parameter as `false` to skip detection and validation of field tags in the uploaded file, keeping them as regular text.
             fields:
               type: object
               description: |
