@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.19.0"
+    "version": "8.20.0"
   },
   "servers": [
     {
@@ -457,6 +457,7 @@
                           "status": "document.draft",
                           "date_created": "2024-07-02T16:21:35.770196Z",
                           "date_modified": "2024-07-02T16:21:37.696724Z",
+                          "date_sent": null,
                           "expiration_date": null,
                           "version": "2"
                         },
@@ -466,6 +467,7 @@
                           "status": "document.completed",
                           "date_created": "2024-01-25T15:35:27.186107Z",
                           "date_modified": "2024-06-21T15:07:34.192101Z",
+                          "date_sent": "2024-01-25T15:40:12.482301Z",
                           "expiration_date": "2024-08-20T15:07:32.869161Z",
                           "version": "2"
                         }
@@ -13439,6 +13441,11 @@
                 },
                 "date_modified": {
                   "type": "string",
+                  "example": "2021-10-08T11:06:32.337395Z"
+                },
+                "date_sent": {
+                  "type": "string",
+                  "nullable": true,
                   "example": "2021-10-08T11:06:32.337395Z"
                 },
                 "date_completed": {
