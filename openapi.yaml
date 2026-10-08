@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.21.0
+  version: 8.22.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -68,6 +68,8 @@ tags:
     description: Operations for managing templates, including listing, creating, and deleting templates.
   - name: Template Settings
     description: Operations for managing template settings, such as retrieving and updating settings.
+  - name: Approval Workflows
+    description: Operations for retrieving or replacing the approval workflow on a template.
   - name: Forms
     description: Operations for managing and retrieving forms, including filtering and sorting options.
   - name: Folders
@@ -8217,6 +8219,261 @@ paths:
           description: No content
         '403':
           $ref: '#/components/responses/403PermissionDeniedV2'
+  /public/beta/templates/{template_id}/approval-workflow:
+    parameters:
+      - name: template_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique identifier of the template.
+        example: BhVzRcxH9Z2LgfPPGXFUBa
+    get:
+      tags:
+        - Approval Workflows
+      summary: '[Beta] Get Submit for approval configuration'
+      description: |
+        Retrieves the Submit for approval configuration on a template. Learn more
+        about
+        [approval workflows](https://support.pandadoc.com/en/?q=Approval+workflow).
+      operationId: templateApprovalWorkflowGet
+      responses:
+        '200':
+          description: Successfully retrieved the Submit for approval configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalWorkflowResponse'
+              examples:
+                Configured workflow:
+                  summary: Sequential manager then finance group
+                  value:
+                    is_enabled: true
+                    is_ordering_enabled: true
+                    is_editing_allowed: false
+                    has_conditional_approvals: false
+                    steps:
+                      - id: fq9CX7PWgpe7eao6ujEdYG
+                        assignee:
+                          id: mGVeQe7xy9AN9eCg8VSdNm
+                          user:
+                            id: FA5QAu8UGA3oVDQZuPL75B
+                            email: manager@example.com
+                            first_name: Alex
+                            last_name: Manager
+                          is_document_sender: false
+                      - id: wET7vFKg4FAKcAovct7GwP
+                        group:
+                          id: XUF5pcWnMqYAfDX7mAD9kD
+                          name: Finance
+                          assignees:
+                            - id: vTXS79mqVFAe99baxKKvP5
+                              user:
+                                id: RyMNXBjBPRppw56TfYBrXi
+                                email: finance@example.com
+                                first_name: Sam
+                                last_name: Finance
+                              is_document_sender: false
+                            - id: 4oZSyccEDbK3DEeJFWaHpS
+                              is_document_sender: true
+                Selectable group:
+                  summary: Pre-selected member of a selectable group
+                  value:
+                    is_enabled: true
+                    is_ordering_enabled: true
+                    is_editing_allowed: false
+                    has_conditional_approvals: false
+                    steps:
+                      - id: wET7vFKg4FAKcAovct7GwP
+                        group:
+                          id: XUF5pcWnMqYAfDX7mAD9kD
+                          name: Finance
+                          type: selectable
+                          assignees:
+                            - id: vTXS79mqVFAe99baxKKvP5
+                              user:
+                                id: RyMNXBjBPRppw56TfYBrXi
+                                email: finance@example.com
+                                first_name: Sam
+                                last_name: Finance
+                              is_document_sender: false
+                              is_selected: true
+                            - id: 4oZSyccEDbK3DEeJFWaHpS
+                              user:
+                                id: FA5QAu8UGA3oVDQZuPL75B
+                                email: manager@example.com
+                                first_name: Alex
+                                last_name: Manager
+                              is_document_sender: false
+                              is_selected: false
+                Not configured:
+                  summary: Template with no Submit for approval configuration
+                  value:
+                    is_enabled: false
+                    is_ordering_enabled: false
+                    is_editing_allowed: false
+                    has_conditional_approvals: false
+                    steps: []
+        '401':
+          $ref: '#/components/responses/401AuthErrorV2'
+        '403':
+          $ref: '#/components/responses/403PermissionDeniedV2'
+        '404':
+          $ref: '#/components/responses/404NotFoundV2'
+        '429':
+          $ref: '#/components/responses/429TooManyRequestsV2'
+    put:
+      tags:
+        - Approval Workflows
+      summary: '[Beta] Update Template Approval Workflow'
+      description: |
+        Creates or replaces the Submit for approval configuration on a template.
+        A template has at most one configuration; this operation always writes the
+        full desired end-state. `steps` lists the stages in the approval order and
+        must contain at least one stage. The property name stays `steps` so it
+        matches `selected_approvers.steps` on Send Document. Learn more about
+        [approval workflows](https://support.pandadoc.com/en/?q=Approval+workflow).
+      operationId: templateApprovalWorkflowUpdate
+      requestBody:
+        description: Full replacement of the Submit for approval configuration.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalWorkflowRequest'
+            examples:
+              Sequential manager then finance group:
+                summary: Sequential manager then finance group
+                value:
+                  is_enabled: true
+                  is_ordering_enabled: true
+                  is_editing_allowed: false
+                  steps:
+                    - assignee:
+                        email: manager@example.com
+                    - group:
+                        name: Finance
+                        assignees:
+                          - membership_id: QMDSzwabfFzTgjW6KijHyu
+                          - is_document_sender: true
+              Selectable group:
+                summary: Pre-selected member of a selectable group
+                value:
+                  is_enabled: true
+                  is_ordering_enabled: true
+                  is_editing_allowed: false
+                  steps:
+                    - group:
+                        name: Finance
+                        type: selectable
+                        assignees:
+                          - email: finance@example.com
+                            is_selected: true
+                          - email: manager@example.com
+                            is_selected: false
+              Disabled workflow:
+                summary: Turn Submit for approval off and keep its stages
+                value:
+                  is_enabled: false
+                  steps:
+                    - assignee:
+                        email: manager@example.com
+      responses:
+        '200':
+          description: Successfully created or replaced the Submit for approval configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalWorkflowResponse'
+              examples:
+                Sequential manager then finance group:
+                  summary: Sequential manager then finance group
+                  value:
+                    is_enabled: true
+                    is_ordering_enabled: true
+                    is_editing_allowed: false
+                    has_conditional_approvals: false
+                    steps:
+                      - id: fq9CX7PWgpe7eao6ujEdYG
+                        assignee:
+                          id: mGVeQe7xy9AN9eCg8VSdNm
+                          user:
+                            id: FA5QAu8UGA3oVDQZuPL75B
+                            email: manager@example.com
+                            first_name: Alex
+                            last_name: Manager
+                          is_document_sender: false
+                      - id: wET7vFKg4FAKcAovct7GwP
+                        group:
+                          id: XUF5pcWnMqYAfDX7mAD9kD
+                          name: Finance
+                          assignees:
+                            - id: vTXS79mqVFAe99baxKKvP5
+                              user:
+                                id: RyMNXBjBPRppw56TfYBrXi
+                                email: finance@example.com
+                                first_name: Sam
+                                last_name: Finance
+                              is_document_sender: false
+                            - id: 4oZSyccEDbK3DEeJFWaHpS
+                              is_document_sender: true
+                Selectable group:
+                  summary: Pre-selected member of a selectable group
+                  value:
+                    is_enabled: true
+                    is_ordering_enabled: true
+                    is_editing_allowed: false
+                    has_conditional_approvals: false
+                    steps:
+                      - id: wET7vFKg4FAKcAovct7GwP
+                        group:
+                          id: XUF5pcWnMqYAfDX7mAD9kD
+                          name: Finance
+                          type: selectable
+                          assignees:
+                            - id: vTXS79mqVFAe99baxKKvP5
+                              user:
+                                id: RyMNXBjBPRppw56TfYBrXi
+                                email: finance@example.com
+                                first_name: Sam
+                                last_name: Finance
+                              is_document_sender: false
+                              is_selected: true
+                            - id: 4oZSyccEDbK3DEeJFWaHpS
+                              user:
+                                id: FA5QAu8UGA3oVDQZuPL75B
+                                email: manager@example.com
+                                first_name: Alex
+                                last_name: Manager
+                              is_document_sender: false
+                              is_selected: false
+                Disabled workflow:
+                  summary: Submit for approval turned off
+                  value:
+                    is_enabled: false
+                    is_ordering_enabled: true
+                    is_editing_allowed: false
+                    has_conditional_approvals: false
+                    steps:
+                      - id: fq9CX7PWgpe7eao6ujEdYG
+                        assignee:
+                          id: mGVeQe7xy9AN9eCg8VSdNm
+                          user:
+                            id: FA5QAu8UGA3oVDQZuPL75B
+                            email: manager@example.com
+                            first_name: Alex
+                            last_name: Manager
+                          is_document_sender: false
+        '400':
+          $ref: '#/components/responses/400BadRequestV2'
+        '401':
+          $ref: '#/components/responses/401AuthErrorV2'
+        '403':
+          $ref: '#/components/responses/403PermissionDeniedV2'
+        '404':
+          $ref: '#/components/responses/404NotFoundV2'
+        '429':
+          $ref: '#/components/responses/429TooManyRequestsV2'
   /public/beta/privacy-settings/workspaces/{workspace_id}:
     parameters:
       - name: workspace_id
@@ -10018,6 +10275,7 @@ components:
                 example: '2021-10-08T11:06:32.337395Z'
               date_sent:
                 type: string
+                description: Document sent date.
                 nullable: true
                 example: '2021-10-08T11:06:32.337395Z'
               date_completed:
@@ -16561,6 +16819,356 @@ components:
                     nullable: true
             price_configuration:
               $ref: '#/components/schemas/ProductCatalogItemPriceConfiguration'
+    ApprovalWorkflowUser:
+      title: ApprovalWorkflowUser
+      type: object
+      description: A workspace member who can act as an approver.
+      properties:
+        id:
+          type: string
+          description: |
+            User id. Not a workspace membership id. Do not send this value as
+            `membership_id` on PUT. Use `email` to identify this user on a
+            later PUT.
+          example: FA5QAu8UGA3oVDQZuPL75B
+        email:
+          type: string
+          format: email
+          description: User email address.
+          example: manager@example.com
+        first_name:
+          type: string
+          description: User first name.
+          example: Alex
+        last_name:
+          type: string
+          description: User last name.
+          example: Manager
+        avatar:
+          type: string
+          description: URL of the user avatar. Omitted when the user has no avatar.
+          example: https://avatars.pandadoc-static.com/users/FA5QAu8UGA3oVDQZuPL75B/avatar.jpeg
+      required:
+        - id
+        - email
+    ApprovalWorkflowAssigneeResponse:
+      title: ApprovalWorkflowAssigneeResponse
+      type: object
+      description: |
+        An approver for a stage in the approval order, or a member of an
+        approval group.
+
+        `user` is present for a workspace member and omitted when
+        `is_document_sender` is `true`.
+      properties:
+        id:
+          type: string
+          description: |
+            Approver id within the Submit for approval configuration. Not a
+            membership id and not a user id. Do not send this value as
+            `membership_id` on PUT.
+          example: mGVeQe7xy9AN9eCg8VSdNm
+        user:
+          $ref: '#/components/schemas/ApprovalWorkflowUser'
+        is_document_sender:
+          type: boolean
+          description: Whether this approver is the document sender.
+          example: false
+        is_selected:
+          type: boolean
+          description: |
+            Whether this approver is pre-selected. Present only for members
+            of a selectable group.
+          example: true
+      required:
+        - id
+        - is_document_sender
+    ApprovalWorkflowGroupType:
+      title: ApprovalWorkflowGroupType
+      type: string
+      description: |
+        Present only for Allow user to select approver. When `type` is
+        omitted, every approver in the group is notified and any one of them
+        can approve. The group is still required.
+
+        - `selectable` — Allow user to select approver. The sender chooses
+          one approver from the group in Submit for approval.
+      enum:
+        - selectable
+      example: selectable
+    ApprovalWorkflowGroupResponse:
+      title: ApprovalWorkflowGroupResponse
+      type: object
+      description: An approval group for one stage in the approval order.
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the group.
+          example: XUF5pcWnMqYAfDX7mAD9kD
+        name:
+          type: string
+          description: Display name of the group.
+          example: Finance
+        type:
+          $ref: '#/components/schemas/ApprovalWorkflowGroupType'
+        assignees:
+          type: array
+          description: |
+            Approvers in the group. A stored group can have no approvers. PUT
+            requires at least one approver in every group.
+          items:
+            $ref: '#/components/schemas/ApprovalWorkflowAssigneeResponse'
+      required:
+        - id
+        - name
+        - assignees
+    ApprovalWorkflowStepResponse:
+      title: ApprovalWorkflowStepResponse
+      type: object
+      description: |
+        One stage in the approval order of the Submit for approval
+        configuration.
+
+        A stage with one approver includes `assignee` and omits `group`. A
+        stage with an approval group includes `group` and omits `assignee`.
+      properties:
+        id:
+          type: string
+          description: Unique identifier of this stage in the approval order.
+          example: fq9CX7PWgpe7eao6ujEdYG
+        assignee:
+          $ref: '#/components/schemas/ApprovalWorkflowAssigneeResponse'
+        group:
+          $ref: '#/components/schemas/ApprovalWorkflowGroupResponse'
+      required:
+        - id
+    ApprovalWorkflowResponse:
+      title: ApprovalWorkflowResponse
+      type: object
+      description: The Submit for approval configuration stored on the template.
+      properties:
+        is_enabled:
+          type: boolean
+          description: |
+            Stored enabled flag. A configuration that is enabled but contains
+            only groups with no approvers is still returned as enabled. An
+            unconfigured template returns `false`.
+        is_ordering_enabled:
+          type: boolean
+          description: |
+            Approval order. When `true`, the document goes to one approver
+            at a time. When `false`, every approver is requested together.
+            On an unconfigured template this is `false` (empty state).
+            Creating a configuration with the field omitted defaults to
+            `true`.
+        is_editing_allowed:
+          type: boolean
+          description: Whether the approvers and approval groups can be edited on documents created from this template.
+        has_conditional_approvals:
+          type: boolean
+          description: |
+            `true` when an approver or an approval group has conditional
+            approvals. Those conditional approvals are not included in
+            `steps`. PUT on this path is rejected until they are removed
+            in PandaDoc.
+        steps:
+          type: array
+          description: |
+            Stored stages in the approval order, including groups with no
+            approvers. `[]` means the template has no Submit for approval
+            configuration (`is_enabled` is `false`).
+
+            PUT requires at least one approver in every group, so an empty
+            group from this response must be replaced or dropped before writing.
+          items:
+            $ref: '#/components/schemas/ApprovalWorkflowStepResponse'
+      required:
+        - is_enabled
+        - is_ordering_enabled
+        - is_editing_allowed
+        - has_conditional_approvals
+        - steps
+    ApprovalWorkflowAssigneeSelected:
+      title: ApprovalWorkflowAssigneeSelected
+      type: boolean
+      default: false
+      description: |
+        Pre-selects this approver in a selectable group. Ignored when the
+        approver is the whole stage in the approval order, or on a member of
+        any other group type. Responses include this field only for
+        selectable groups.
+      example: false
+    ApprovalWorkflowAssigneeRequest:
+      title: ApprovalWorkflowAssigneeRequest
+      description: |
+        Identify an approver as a workspace member (`membership_id` or `email`)
+        or as the document sender (`is_document_sender: true`).
+
+        Provide exactly one of `membership_id` or `email`, unless
+        `is_document_sender` is `true`. When `is_document_sender` is `true`,
+        omit both identifiers. Resolve `membership_id` with
+        <a href="#/operations/listMembers">List Members</a>.
+      oneOf:
+        - title: ApprovalWorkflowAssigneeByMembership
+          type: object
+          additionalProperties: false
+          required:
+            - membership_id
+          properties:
+            membership_id:
+              type: string
+              description: |
+                Workspace membership id from
+                <a href="#/operations/listMembers">List Members</a>.
+                Not the approver `id` or `user.id` from GET. Copying either of
+                those into this field is rejected. To replace a workflow from
+                a GET response, send `user.email`, or send a membership id
+                from List Members.
+              example: QMDSzwabfFzTgjW6KijHyu
+            is_document_sender:
+              type: boolean
+              enum:
+                - false
+              default: false
+              description: Omit or set to `false` when identifying a workspace member.
+            is_selected:
+              $ref: '#/components/schemas/ApprovalWorkflowAssigneeSelected'
+        - title: ApprovalWorkflowAssigneeByEmail
+          type: object
+          additionalProperties: false
+          required:
+            - email
+          properties:
+            email:
+              type: string
+              format: email
+              description: Email of a workspace member.
+              example: manager@example.com
+            is_document_sender:
+              type: boolean
+              enum:
+                - false
+              default: false
+              description: Omit or set to `false` when identifying a workspace member.
+            is_selected:
+              $ref: '#/components/schemas/ApprovalWorkflowAssigneeSelected'
+        - title: ApprovalWorkflowAssigneeDocumentSender
+          type: object
+          additionalProperties: false
+          required:
+            - is_document_sender
+          properties:
+            is_document_sender:
+              type: boolean
+              enum:
+                - true
+              description: |
+                When `true`, the document sender is the approver for this
+                stage. Do not set `membership_id` or `email`.
+            is_selected:
+              $ref: '#/components/schemas/ApprovalWorkflowAssigneeSelected'
+    ApprovalWorkflowGroupRequest:
+      title: ApprovalWorkflowGroupRequest
+      type: object
+      additionalProperties: false
+      description: |
+        An approval group for one stage in the approval order. Omit `type`
+        unless the group is Allow user to select approver (`selectable`).
+        When `type` is omitted, every approver in the group is notified and
+        any one approval finishes the stage. The group is still required.
+      properties:
+        name:
+          type: string
+          maxLength: 128
+          description: Display name of the group.
+          example: Finance
+        type:
+          $ref: '#/components/schemas/ApprovalWorkflowGroupType'
+        assignees:
+          type: array
+          minItems: 1
+          maxItems: 50
+          description: |
+            Approvers in the group. Must contain unique users. At least one
+            approver, at most 50 per group, and at most 100 approvers across
+            the whole configuration. A group with no approvers can appear on
+            GET and is rejected here. The property name stays `assignees` so
+            it matches Send Document.
+          items:
+            $ref: '#/components/schemas/ApprovalWorkflowAssigneeRequest'
+      required:
+        - name
+        - assignees
+    ApprovalWorkflowStepRequest:
+      title: ApprovalWorkflowStepRequest
+      type: object
+      additionalProperties: false
+      description: |
+        One stage in the approval order of the Submit for approval
+        configuration. Provide either `assignee` (one approver) or `group`
+        (an approval group), not both. The property name stays `assignee` so
+        it matches `assignees` on Send Document.
+      properties:
+        assignee:
+          $ref: '#/components/schemas/ApprovalWorkflowAssigneeRequest'
+        group:
+          $ref: '#/components/schemas/ApprovalWorkflowGroupRequest'
+      oneOf:
+        - required:
+            - assignee
+        - required:
+            - group
+    ApprovalWorkflowRequest:
+      title: ApprovalWorkflowRequest
+      type: object
+      additionalProperties: false
+      description: |
+        Full replacement of the Submit for approval configuration on a
+        template. A template has at most one configuration; this request
+        creates it or replaces the existing one. `steps` lists the stages in
+        the approval order and must contain at least one stage. The property
+        name stays `steps` so it matches `selected_approvers.steps` on Send
+        Document.
+      properties:
+        is_enabled:
+          type: boolean
+          default: true
+          description: |
+            Whether Submit for approval runs when a document is created from
+            this template. Set to `false` to turn it off while keeping its
+            stages. Defaults to `true` when omitted.
+        is_ordering_enabled:
+          type: boolean
+          default: true
+          description: |
+            Approval order. When `true`, the document goes to one approver
+            at a time. When `false`, every approver is requested together.
+            Defaults to `true` when omitted.
+
+            An unconfigured GET returns `false`. That empty state is not this
+            default. Set the field, or omit it, when building a create request
+            from that GET body.
+        is_editing_allowed:
+          type: boolean
+          default: false
+          description: Whether the approvers and approval groups can be edited on documents created from this template.
+        steps:
+          type: array
+          minItems: 1
+          maxItems: 50
+          description: |
+            Stages in the approval order. Each stage is one approver or one
+            approval group. At least 1 stage, at most 50, and at most 100
+            approvers across all stages. A stage with one approver counts as
+            one approver. A stage with an approval group counts as each
+            approver in that group.
+
+            An empty array is rejected. To turn Submit for approval off
+            without dropping its stages, set `is_enabled` to `false`.
+          items:
+            $ref: '#/components/schemas/ApprovalWorkflowStepRequest'
+      required:
+        - steps
     PrivacySettings:
       title: PrivacySettings
       description: |
