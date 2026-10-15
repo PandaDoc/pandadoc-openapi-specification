@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.22.0
+  version: 8.22.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -3418,8 +3418,8 @@ paths:
 
         To add a new CC recipient to a document, two parameters must be included in the request body:
 
-        - `kind`: Set this parameter to `contact` to specify an individual contact.
-        - `id`:  Input the ID of the desired contact.
+        - `kind`: Set this parameter to `contact` to specify an individual contact, or `contact_group` to specify a contact group.
+        - `id`:  Input the ID of the desired contact (for `kind: contact`) or contact group (for `kind: contact_group`).
 
         To retrieve the contact's ID, use the [List Contacts](https://developers.pandadoc.com/reference/list-contacts) endpoint to access a list of all contacts, and then locate the desired contact by searching using the name or email address within the returned list.
 
@@ -3659,8 +3659,8 @@ paths:
 
         The endpoint path includes the `recipient_id` of the original signer and the request body must include the following two parameters:
 
-        - `kind`: Set this parameter to `contact` to specify an individual contact.
-        - `id`: Input the ID of the contact you want to use as a replacement for the original signer.
+        - `kind`: Set this parameter to `contact` to specify an individual contact, or `contact_group` to specify a contact group.
+        - `id`: Input the ID of the contact (for `kind: contact`) or contact group (for `kind: contact_group`) you want to use as a replacement for the original signer.
 
         To retrieve the contact's ID, use the [List Contacts](https://developers.pandadoc.com/reference/list-contacts) endpoint to access a list of all contacts, and then locate the desired contact by searching using the name or email address within the returned list.
 
@@ -13899,7 +13899,11 @@ components:
         id:
           type: string
           example: 2eWSKSvVqmuVCnuUK3iWwD
-          description: Contact uuid.
+          description: |
+            The ID of the recipient to add.
+
+            - For `kind: contact` — the contact ID returned by the List Contacts endpoint.
+            - For `kind: contact_group` — the contact group ID.
         kind:
           $ref: '#/components/schemas/RecipientKindEnum'
       required:
