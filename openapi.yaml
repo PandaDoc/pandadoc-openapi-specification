@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.22.1
+  version: 8.23.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -952,6 +952,14 @@ paths:
           schema:
             type: string
           required: true
+        - name: forever
+          description: |
+            Set to `false` to soft-delete the document (move it to the Trash Bin, where it can be restored) instead of deleting it permanently. Defaults to `true`.
+          in: query
+          schema:
+            type: boolean
+            default: true
+          example: false
       responses:
         '204':
           description: No content
