@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.23.0"
+    "version": "8.24.0"
   },
   "servers": [
     {
@@ -16574,6 +16574,14 @@
                       },
                       "hidden": {
                         "type": "boolean"
+                      },
+                      "formula_expression": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "formula_error_code": {
+                        "type": "string",
+                        "nullable": true
                       }
                     }
                   }
@@ -16652,6 +16660,14 @@
                         "nullable": true,
                         "additionalProperties": {
                           "type": "string"
+                        }
+                      },
+                      "formula_columns": {
+                        "type": "object",
+                        "nullable": true,
+                        "additionalProperties": {
+                          "type": "string",
+                          "nullable": true
                         }
                       },
                       "external_columns": {
@@ -23132,6 +23148,39 @@
                 },
                 "summary": {
                   "$ref": "#/components/schemas/QuoteUpdateRequestSummary"
+                },
+                "columns": {
+                  "type": "array",
+                  "nullable": true,
+                  "description": "Omitted, null, or an empty list leaves the columns unchanged. A non-empty list replaces the full set, so columns not in the list are removed.",
+                  "items": {
+                    "type": "object",
+                    "title": "UpdateIntegrationQuoteSectionColumn",
+                    "properties": {
+                      "header": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "merge_name": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "hidden": {
+                        "type": "boolean"
+                      },
+                      "formula_expression": {
+                        "type": "string",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "hidden"
+                    ]
+                  }
                 },
                 "items": {
                   "type": "array",
