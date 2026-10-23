@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.24.0
+  version: 8.24.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -8676,7 +8676,7 @@ paths:
       summary: '[Beta] Update Multiple Quotes'
       operationId: quotesBatchUpdate
       description: |
-        This operation updates multiple quotes within a single document in one request — the batch variant of <a href="#/operations/quoteUpdate">Quote update</a>. The response is always `200 OK` once the request itself is valid; each quote's outcome is reported independently in `results[]`, so one bad quote does not fail the others. See `QuotesBatchUpdateResult` for the possible per-quote outcomes.
+        This operation updates multiple quotes within a single document in one request — the batch variant of <a href="#/operations/quoteUpdate">Quote update</a>. The response is always `200 OK` once the request itself is valid; each quote's outcome is reported independently in `results[]`, so one bad quote does not fail the others. If several requests update the same quote in parallel, the last write wins. See `QuotesBatchUpdateResult` for the possible per-quote outcomes.
 
         > 📘 **Permissions**
         >
@@ -8707,7 +8707,7 @@ paths:
             schema:
               $ref: '#/components/schemas/QuotesBatchUpdateRequest'
             examples:
-              'Two quotes: one updated, one conflicted':
+              'Two quotes: one updated, one not found':
                 value:
                   quotes:
                     - id: 99aaa4f9-3250-4f5b-a953-6d7bfc5d8c9e
@@ -8738,7 +8738,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/QuotesBatchUpdateResponse'
               examples:
-                'Two quotes: one updated, one conflicted':
+                'Two quotes: one updated, one not found':
                   value:
                     count: 2
                     results:
@@ -8756,8 +8756,8 @@ paths:
                           settings:
                             selection_type: custom
                       - id: 2b6b0e3a-df3f-4a90-9b1a-6a7a2d6e3d10
-                        status: conflict
-                        description: Quote was updated concurrently. Fetch the latest version and retry.
+                        status: not_found
+                        description: Quote not found.
         '400':
           $ref: '#/components/responses/400ValidationError'
         '401':
@@ -17595,13 +17595,12 @@ components:
     QuotesBatchUpdateResultStatus:
       type: string
       description: |
-        Per-quote outcome discriminator. `ok`, `validation_error`, `not_in_document`, `not_found`, and `conflict` mirror the single-quote update endpoint's `200`/`400`/`403`/`404`/`409` responses respectively — see each variant's own schema. `internal_error` is exclusive to the batch endpoint and indicates an isolated server-side failure for that quote only; the request as a whole succeeded and other quotes in the same batch are unaffected.
+        Per-quote outcome discriminator. `ok`, `validation_error`, `not_in_document`, and `not_found` mirror the single-quote update endpoint's `200`/`400`/`403`/`404` responses respectively — see each variant's own schema. Concurrent updates of the same quote do not conflict: the last write wins. `internal_error` is exclusive to the batch endpoint and indicates an isolated server-side failure for that quote only; the request as a whole succeeded and other quotes in the same batch are unaffected.
       enum:
         - ok
         - validation_error
         - not_in_document
         - not_found
-        - conflict
         - internal_error
     QuotesBatchUpdateResultBase:
       type: object
@@ -17671,7 +17670,7 @@ components:
               example: Quote is not part of this document.
     QuotesBatchUpdateResultNotFound:
       description: |
-        Mirrors the single-quote endpoint's `404` response. This quote does not exist or has no resolvable current version.
+        Mirrors the single-quote endpoint's `404` response. This quote does not exist.
       allOf:
         - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
         - type: object
@@ -17686,23 +17685,6 @@ components:
             description:
               type: string
               example: Quote not found.
-    QuotesBatchUpdateResultConflict:
-      description: |
-        Mirrors the single-quote endpoint's `409` response. The quote was modified concurrently since the version you have; fetch the latest version and retry.
-      allOf:
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultBase'
-        - type: object
-          required:
-            - description
-          properties:
-            status:
-              type: string
-              enum:
-                - conflict
-              example: conflict
-            description:
-              type: string
-              example: Quote was updated concurrently. Fetch the latest version and retry.
     QuotesBatchUpdateResultInternalError:
       description: |
         An isolated server-side failure occurred for this quote. The request as a whole succeeded; retrying the affected quote (on its own or in a smaller batch) is safe.
@@ -17728,7 +17710,6 @@ components:
         - $ref: '#/components/schemas/QuotesBatchUpdateResultValidationError'
         - $ref: '#/components/schemas/QuotesBatchUpdateResultNotInDocument'
         - $ref: '#/components/schemas/QuotesBatchUpdateResultNotFound'
-        - $ref: '#/components/schemas/QuotesBatchUpdateResultConflict'
         - $ref: '#/components/schemas/QuotesBatchUpdateResultInternalError'
       discriminator:
         propertyName: status
@@ -17737,7 +17718,6 @@ components:
           validation_error: '#/components/schemas/QuotesBatchUpdateResultValidationError'
           not_in_document: '#/components/schemas/QuotesBatchUpdateResultNotInDocument'
           not_found: '#/components/schemas/QuotesBatchUpdateResultNotFound'
-          conflict: '#/components/schemas/QuotesBatchUpdateResultConflict'
           internal_error: '#/components/schemas/QuotesBatchUpdateResultInternalError'
     QuotesBatchUpdateResponse:
       type: object
