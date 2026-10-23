@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.24.0"
+    "version": "8.24.1"
   },
   "servers": [
     {
@@ -11678,7 +11678,7 @@
         ],
         "summary": "[Beta] Update Multiple Quotes",
         "operationId": "quotesBatchUpdate",
-        "description": "This operation updates multiple quotes within a single document in one request — the batch variant of <a href=\"#/operations/quoteUpdate\">Quote update</a>. The response is always `200 OK` once the request itself is valid; each quote's outcome is reported independently in `results[]`, so one bad quote does not fail the others. See `QuotesBatchUpdateResult` for the possible per-quote outcomes.\n\n> 📘 **Permissions**\n>\n> Requires the 'Can Edit Document' and 'Can Edit Content' permissions.\n> The document must be in Draft (`document.draft`).\n> Updating quotes is available on plans that include\n> [Product Catalog](https://support.pandadoc.com/en/articles/9714691-product-catalog).\n\n> 🚧 **Beta**\n>\n> This endpoint is currently in beta and may change without notice.\n\n> 🚧 Payload size\n>\n> The maximum request body size is 512 KiB (524288 bytes). Larger requests return `413` before any quote is processed.\n",
+        "description": "This operation updates multiple quotes within a single document in one request — the batch variant of <a href=\"#/operations/quoteUpdate\">Quote update</a>. The response is always `200 OK` once the request itself is valid; each quote's outcome is reported independently in `results[]`, so one bad quote does not fail the others. If several requests update the same quote in parallel, the last write wins. See `QuotesBatchUpdateResult` for the possible per-quote outcomes.\n\n> 📘 **Permissions**\n>\n> Requires the 'Can Edit Document' and 'Can Edit Content' permissions.\n> The document must be in Draft (`document.draft`).\n> Updating quotes is available on plans that include\n> [Product Catalog](https://support.pandadoc.com/en/articles/9714691-product-catalog).\n\n> 🚧 **Beta**\n>\n> This endpoint is currently in beta and may change without notice.\n\n> 🚧 Payload size\n>\n> The maximum request body size is 512 KiB (524288 bytes). Larger requests return `413` before any quote is processed.\n",
         "parameters": [
           {
             "name": "document_id",
@@ -11699,7 +11699,7 @@
                 "$ref": "#/components/schemas/QuotesBatchUpdateRequest"
               },
               "examples": {
-                "Two quotes: one updated, one conflicted": {
+                "Two quotes: one updated, one not found": {
                   "value": {
                     "quotes": [
                       {
@@ -11760,7 +11760,7 @@
                   "$ref": "#/components/schemas/QuotesBatchUpdateResponse"
                 },
                 "examples": {
-                  "Two quotes: one updated, one conflicted": {
+                  "Two quotes: one updated, one not found": {
                     "value": {
                       "count": 2,
                       "results": [
@@ -11784,8 +11784,8 @@
                         },
                         {
                           "id": "2b6b0e3a-df3f-4a90-9b1a-6a7a2d6e3d10",
-                          "status": "conflict",
-                          "description": "Quote was updated concurrently. Fetch the latest version and retry."
+                          "status": "not_found",
+                          "description": "Quote not found."
                         }
                       ]
                     }
@@ -23467,13 +23467,12 @@
       },
       "QuotesBatchUpdateResultStatus": {
         "type": "string",
-        "description": "Per-quote outcome discriminator. `ok`, `validation_error`, `not_in_document`, `not_found`, and `conflict` mirror the single-quote update endpoint's `200`/`400`/`403`/`404`/`409` responses respectively — see each variant's own schema. `internal_error` is exclusive to the batch endpoint and indicates an isolated server-side failure for that quote only; the request as a whole succeeded and other quotes in the same batch are unaffected.\n",
+        "description": "Per-quote outcome discriminator. `ok`, `validation_error`, `not_in_document`, and `not_found` mirror the single-quote update endpoint's `200`/`400`/`403`/`404` responses respectively — see each variant's own schema. Concurrent updates of the same quote do not conflict: the last write wins. `internal_error` is exclusive to the batch endpoint and indicates an isolated server-side failure for that quote only; the request as a whole succeeded and other quotes in the same batch are unaffected.\n",
         "enum": [
           "ok",
           "validation_error",
           "not_in_document",
           "not_found",
-          "conflict",
           "internal_error"
         ]
       },
@@ -23578,7 +23577,7 @@
         ]
       },
       "QuotesBatchUpdateResultNotFound": {
-        "description": "Mirrors the single-quote endpoint's `404` response. This quote does not exist or has no resolvable current version.\n",
+        "description": "Mirrors the single-quote endpoint's `404` response. This quote does not exist.\n",
         "allOf": [
           {
             "$ref": "#/components/schemas/QuotesBatchUpdateResultBase"
@@ -23599,33 +23598,6 @@
               "description": {
                 "type": "string",
                 "example": "Quote not found."
-              }
-            }
-          }
-        ]
-      },
-      "QuotesBatchUpdateResultConflict": {
-        "description": "Mirrors the single-quote endpoint's `409` response. The quote was modified concurrently since the version you have; fetch the latest version and retry.\n",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/QuotesBatchUpdateResultBase"
-          },
-          {
-            "type": "object",
-            "required": [
-              "description"
-            ],
-            "properties": {
-              "status": {
-                "type": "string",
-                "enum": [
-                  "conflict"
-                ],
-                "example": "conflict"
-              },
-              "description": {
-                "type": "string",
-                "example": "Quote was updated concurrently. Fetch the latest version and retry."
               }
             }
           }
@@ -23674,9 +23646,6 @@
             "$ref": "#/components/schemas/QuotesBatchUpdateResultNotFound"
           },
           {
-            "$ref": "#/components/schemas/QuotesBatchUpdateResultConflict"
-          },
-          {
             "$ref": "#/components/schemas/QuotesBatchUpdateResultInternalError"
           }
         ],
@@ -23687,7 +23656,6 @@
             "validation_error": "#/components/schemas/QuotesBatchUpdateResultValidationError",
             "not_in_document": "#/components/schemas/QuotesBatchUpdateResultNotInDocument",
             "not_found": "#/components/schemas/QuotesBatchUpdateResultNotFound",
-            "conflict": "#/components/schemas/QuotesBatchUpdateResultConflict",
             "internal_error": "#/components/schemas/QuotesBatchUpdateResultInternalError"
           }
         }
