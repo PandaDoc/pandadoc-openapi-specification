@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.24.1
+  version: 8.25.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -10349,6 +10349,47 @@ components:
                     data:
                       type: object
                       title: Pricing Table Request Row Data
+                      additionalProperties: true
+                      properties:
+                        images:
+                          type: array
+                          description: Images to show in the row. The table gets an `Images` column holding them. A custom field named `Images` can't be used in a table whose rows send `images`. When `data_merge` is `true`, pass the list under the external name of the table's images column.
+                          items:
+                            type: object
+                            properties:
+                              src:
+                                type: string
+                                format: uri
+                                description: Public URL of the image.
+                                example: https://example.com/panda.png
+                            required:
+                              - src
+                        pricing_method:
+                          type: string
+                          enum:
+                            - volume_based_price
+                            - volume_based_discount_price
+                          description: Volume pricing of the row. Send it together with `tiers`, or not at all. With `volume_based_price` the price comes from the matching tier. With `volume_based_discount_price` the matching tier is a percentage taken off the row's price, which is the base price.
+                        tiers:
+                          type: array
+                          description: Volume tiers, up to 50. The tier with the highest `min_qty` that does not exceed the row's quantity applies to the whole quantity. Send it together with `pricing_method`. One tier must have `min_qty` 1, and each `min_qty` must be unique.
+                          maxItems: 50
+                          items:
+                            type: object
+                            properties:
+                              min_qty:
+                                type: integer
+                                minimum: 1
+                                description: Smallest quantity the tier applies from.
+                                example: 10
+                              value:
+                                type: number
+                                minimum: 0
+                                description: Price per item for `volume_based_price`. Percentage off the row's price, at most 100, for `volume_based_discount_price`.
+                                example: 90
+                            required:
+                              - min_qty
+                              - value
                       example:
                         Name: Toy Panda
                         Description: Fluffy
