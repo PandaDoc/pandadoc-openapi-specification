@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.25.0"
+    "version": "8.25.1"
   },
   "servers": [
     {
@@ -153,7 +153,7 @@
         "summary": "Create/Refresh Access Token",
         "operationId": "accessToken",
         "security": [],
-        "description": "Create or refresh an access token to make requests on behalf of a user. This endpoint is used to obtain an `access_token` and `refresh_token` for the first time, and to refresh the `access_token` when it expires.\nThis endpoint is part of OAuth 2.0 implementation. You need to configure OAuth App to obtain `client_id` and `client_secret`. Read more about [OAuth 2.0 implementation](https://developers.pandadoc.com/reference/authentication-process).\nMake sure you're sending the header `Content-Type: application/x-www-form-urlencoded`. \n\n## Create Access Token\nAs a result of the OAuth 2.0 user authentication process, you should get a `code` that can be exchanged for an `access_token`. Use this endpoint to do this exchange, and to refresh the token later.\n\n> 🚧 Invalid Grant?\n> \n> If you receive an `invalid grant` response it is likely because you used the same `code` more than once from the [Authorize a PandaDoc User](ref:authorize-a-user) step above. The `code` parameter is generated for one-time use. A new `code` value must be generated if you wish to change API users, permissions, or simply generate a new `code` value for the same PandaDoc user.\n\n> 📘 expires_in\n> \n> `expires_in` is based in seconds. Currently, a token expires in 31535999 seconds = 1 year.\n\n## Refresh Access Token\nEventually, `access_token` expires and accessing an API method returns **401 unauthorized**. Your application needs to refresh the OAuth2 token with the stored `refresh_token` returned when initially creating an access token.\n\nOnce refreshed, calls on behalf of the originally authorized user can resume immediately. Use the newly returned `access_token` for all future API requests.\n\n> 🚧 Invalid Grant?\n> \n> If you receive an `invalid grant` response, it is likely because your `refresh_token` is invalid.\n",
+        "description": "Create or refresh an access token to make requests on behalf of a user. This endpoint is used to obtain an `access_token` and `refresh_token` for the first time, and to refresh the `access_token` when it expires.\nThis endpoint is part of OAuth 2.0 implementation. You need to configure OAuth App to obtain `client_id` and `client_secret`. Read more about [OAuth 2.0 implementation](https://developers.pandadoc.com/reference/authentication-process).\nMake sure you're sending the header `Content-Type: application/x-www-form-urlencoded`. \n\n## Create Access Token\nAs a result of the OAuth 2.0 user authentication process, you should get a `code` that can be exchanged for an `access_token`. Use this endpoint to do this exchange, and to refresh the token later.\n\n> 🚧 Invalid Grant?\n> \n> If you receive an `invalid grant` response, the `code` from the [Authorize a PandaDoc User](ref:authorize-a-user) step above has most likely expired or was already used. The `code` is valid for **60 seconds** and can be used only once, so exchange it for an `access_token` right after the redirect. A new `code` value must be generated if it expired, if you wish to change API users or permissions, or simply to get a new `code` value for the same PandaDoc user.\n\n> 📘 expires_in\n> \n> `expires_in` is based in seconds. Currently, a token expires in 31535999 seconds = 1 year.\n\n## Refresh Access Token\nEventually, `access_token` expires and accessing an API method returns **401 unauthorized**. Your application needs to refresh the OAuth2 token with the stored `refresh_token` returned when initially creating an access token.\n\nOnce refreshed, calls on behalf of the originally authorized user can resume immediately. Use the newly returned `access_token` for all future API requests.\n\n> 🚧 Invalid Grant?\n> \n> If you receive an `invalid grant` response, it is likely because your `refresh_token` is invalid.\n",
         "tags": [
           "OAuth 2.0 Authentication"
         ],
@@ -13647,7 +13647,7 @@
             }
           }
         },
-        "description": "Send the authenticating user to the PandaDoc OAuth2 request URL. We recommend a button or a link titled\n\"Connect to PandaDoc\" if you are connecting users from a custom application. Users will see the \"Authorize Application\" screen.\nWhen the user clicks \"Authorize\", PandaDoc redirects the user back to your site with an authorization code inside the URL.\n\nhttps://app.pandadoc.com/oauth2/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read%20write&response_type=code\n\nRequest `read`, `write`, or both as space-separated `read write`. `read+write` is deprecated.\n\n`client_id` and `redirect_uri` values should match your application settings.\n"
+        "description": "Send the authenticating user to the PandaDoc OAuth2 request URL. We recommend a button or a link titled\n\"Connect to PandaDoc\" if you are connecting users from a custom application. Users will see the \"Authorize Application\" screen.\nWhen the user clicks \"Authorize\", PandaDoc redirects the user back to your site with an authorization code inside the URL.\nThe authorization code is valid for 60 seconds and can be used only once, so exchange it for an access token immediately.\n\nhttps://app.pandadoc.com/oauth2/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read%20write&response_type=code\n\nRequest `read`, `write`, or both as space-separated `read write`. `read+write` is deprecated.\n\n`client_id` and `redirect_uri` values should match your application settings.\n"
       }
     },
     "schemas": {
@@ -13672,7 +13672,7 @@
           },
           "code": {
             "type": "string",
-            "description": "`auth_code` from the server on the previous step (Authorize a PandaDoc User).\n",
+            "description": "`auth_code` from the server on the previous step (Authorize a PandaDoc User). Valid for 60 seconds and can be used only once.\n",
             "example": "a9a60d4dabb61ade665c712d2b41766e7bb9a2f9"
           },
           "scope": {

@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.25.0
+  version: 8.25.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -112,7 +112,7 @@ paths:
 
         > 🚧 Invalid Grant?
         > 
-        > If you receive an `invalid grant` response it is likely because you used the same `code` more than once from the [Authorize a PandaDoc User](ref:authorize-a-user) step above. The `code` parameter is generated for one-time use. A new `code` value must be generated if you wish to change API users, permissions, or simply generate a new `code` value for the same PandaDoc user.
+        > If you receive an `invalid grant` response, the `code` from the [Authorize a PandaDoc User](ref:authorize-a-user) step above has most likely expired or was already used. The `code` is valid for **60 seconds** and can be used only once, so exchange it for an `access_token` right after the redirect. A new `code` value must be generated if it expired, if you wish to change API users or permissions, or simply to get a new `code` value for the same PandaDoc user.
 
         > 📘 expires_in
         > 
@@ -10118,6 +10118,7 @@ components:
         Send the authenticating user to the PandaDoc OAuth2 request URL. We recommend a button or a link titled
         "Connect to PandaDoc" if you are connecting users from a custom application. Users will see the "Authorize Application" screen.
         When the user clicks "Authorize", PandaDoc redirects the user back to your site with an authorization code inside the URL.
+        The authorization code is valid for 60 seconds and can be used only once, so exchange it for an access token immediately.
 
         https://app.pandadoc.com/oauth2/authorize?client_id={client_id}&redirect_uri={redirect_uri}&scope=read%20write&response_type=code
 
@@ -10144,7 +10145,7 @@ components:
         code:
           type: string
           description: |
-            `auth_code` from the server on the previous step (Authorize a PandaDoc User).
+            `auth_code` from the server on the previous step (Authorize a PandaDoc User). Valid for 60 seconds and can be used only once.
           example: a9a60d4dabb61ade665c712d2b41766e7bb9a2f9
         scope:
           type: string
