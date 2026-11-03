@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.25.1
+  version: 8.26.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -1611,6 +1611,7 @@ paths:
                         contact_id: HzXnuyNraSXMhXchYjUmHJ
                         shared_link: https://app.pandadoc.com/document/15d4b481384b652a298530ddc7023bfc07a67d59
                         signature_date: '2024-07-08T15:43:53.800135Z'
+                        date_current_revision_signed: '2024-07-08T15:43:53.800135Z'
                         verification_settings:
                           verification_place: before_open
                           kba_verification: null
@@ -1967,6 +1968,7 @@ paths:
                           phone_verification: null
                           email_otp_verification: null
                         signature_date: '2021-10-23T21:07:04.147Z'
+                        date_current_revision_signed: '2021-10-23T21:07:04.147Z'
                     grand_total:
                       amount: '29.99'
                       currency: USD
@@ -12608,6 +12610,12 @@ components:
             signature_date:
               type: string
               nullable: true
+              description: Latest signature by this recipient's user on any version of the document. It is matched by user, so it also appears on other recipients and group memberships of the same person, and it keeps its value after the document is moved back to draft. To find who signed the current version, use `date_current_revision_signed`.
+              example: '2021-10-23T21:07:04.147345Z'
+            date_current_revision_signed:
+              type: string
+              nullable: true
+              description: When this recipient signed the current version of the document. `null` until the recipient completes the current version, including after the document is moved back to draft and sent again.
               example: '2021-10-23T21:07:04.147345Z'
             verification_settings:
               $ref: '#/components/schemas/RecipientVerificationSettingsResponse'
@@ -12649,6 +12657,12 @@ components:
         signature_date:
           type: string
           nullable: true
+          description: Latest signature by this member's user on any version of the document, with the same semantics as the recipient's `signature_date`. It does not identify who signed on the group's behalf; use `date_current_revision_signed`.
+          example: '2021-10-23T21:07:04.147345Z'
+        date_current_revision_signed:
+          type: string
+          nullable: true
+          description: When this member signed the current version of the document on the group's behalf. `null` for the other members, and until the group completes the current version.
           example: '2021-10-23T21:07:04.147345Z'
     DocumentDetailsRecipientGroup:
       title: Recipient Group
