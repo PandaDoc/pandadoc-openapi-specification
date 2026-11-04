@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.26.0
+  version: 8.27.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -12152,6 +12152,21 @@ components:
         currency:
           type: string
           example: USD
+    QuoteColumnOption:
+      type: object
+      title: QuoteColumnOption
+      description: One choice of a dropdown column.
+      properties:
+        value:
+          type: string
+          description: Option value, without leading or trailing whitespace. Must be unique within the column. Empty only for text columns.
+          example: Black
+        is_default:
+          type: boolean
+          default: false
+          description: Whether the option is applied to items that have no value for the column. Exactly one option of a column is the default.
+      required:
+        - value
     QuoteUpdateRequestBillingFrequencyEnum:
       type: string
       nullable: true
@@ -12337,6 +12352,12 @@ components:
                     formula_error_code:
                       type: string
                       nullable: true
+                    options:
+                      type: array
+                      nullable: true
+                      description: Dropdown choices of the column. Null when the column is not a dropdown. Item values of the column are one of them.
+                      items:
+                        $ref: '#/components/schemas/QuoteColumnOption'
               items:
                 type: array
                 items:
@@ -17438,6 +17459,14 @@ components:
                     formula_expression:
                       type: string
                       nullable: true
+                    options:
+                      type: array
+                      nullable: true
+                      description: Dropdown choices of the column. When set, item values of the column must be one of them. Provide 1 to 15 unique, trimmed options and mark exactly one as default. Omitted leaves the options unchanged, null removes them, an empty list is an error. Options can only be set on text, number, currency and contract term columns.
+                      minItems: 1
+                      maxItems: 15
+                      items:
+                        $ref: '#/components/schemas/QuoteColumnOption'
                   required:
                     - name
                     - hidden
