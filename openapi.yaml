@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.27.0
+  version: 8.27.1
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -19847,5 +19847,5 @@ components:
         application: null
         key: 9cf111111c3bd477ab9bb4123453b7f5d6502cd8
         request_id: 284b1456-1111-4ba9-1111-0d82418205f5
-        user_email: siarhei@pandadoc.com
+        user_email: john.doe@example.com
         user_id: Hzpt4yyQ3A5qHTTPdZQxpH
