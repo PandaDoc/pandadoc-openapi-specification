@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.28.0
+  version: 8.29.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -2582,6 +2582,143 @@ paths:
           $ref: '#/components/responses/423'
         '429':
           $ref: '#/components/responses/429'
+  /public/v1/documents/{id}/linked-objects/{linked_object_id}/refresh:
+    post:
+      tags:
+        - Document Link to CRM
+      summary: Refresh Document from Linked Object
+      operationId: refreshLinkedObject
+      description: |
+        Pull the latest data from a CRM object linked to the document. This is the same as clicking **Refresh** in the document editor.
+
+        The refresh updates the document's variables and merge fields with data from the linked CRM object. For HubSpot, Pipedrive, and Salesforce, it also pulls the object's line items into quote blocks and pricing tables, and applies the template's Merge Rules to them.
+
+        Use [List Linked Objects](https://developers.pandadoc.com/reference/listlinkedobjects) to get the `linked_object_id`, or [Create Linked Object](https://developers.pandadoc.com/reference/createlinkedobject) to link one first.
+
+        > 🚧 Requirements
+        >
+        > - The document must be in the `document.draft` status. Otherwise, the endpoint returns `403`.
+        > - The API user must be able to edit the document's content.
+        > - Only one refresh can run on a document at a time. A second request returns `409` until the first one finishes.
+
+        > 📘 If the refresh can't fetch line items from a CRM that supports them, the endpoint returns `502` with the `products_fetch_error` code. Variables and merge fields may already be updated. Retry the request.
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: Specify document ID.
+          example: ZPeAfcpzr9aiVs5vqUf6jg
+        - name: linked_object_id
+          in: path
+          schema:
+            type: string
+          required: true
+          description: Specify linked object ID.
+          example: deb0d530-d759-4189-a422-8d2265e01b2e
+      responses:
+        '204':
+          description: The document was refreshed with data from the linked CRM object.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LinkedObjectRefreshRequestErrorResponse'
+                  - $ref: '#/components/schemas/LinkedObjectRefreshIntegrationErrorResponse'
+              examples:
+                Linked Object Not Found:
+                  value:
+                    type: request_error
+                    detail: deb0d530-d759-4189-a422-8d2265e01b2e does not exist. Please provide a correct one.
+                Invalid Linked Object ID:
+                  value:
+                    type: request_error
+                    detail:
+                      link_id:
+                        - Must be a valid UUID.
+                Unsupported CRM:
+                  value:
+                    type: integration_error
+                    errors:
+                      - code: unsupported_integration
+                        message: ''
+                Integration Not Enabled:
+                  value:
+                    type: integration_error
+                    errors:
+                      - code: not_enabled
+                        message: ''
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LinkedObjectRefreshRequestErrorResponse'
+                  - $ref: '#/components/schemas/LinkedObjectRefreshIntegrationErrorResponse'
+              examples:
+                Refresh In Progress:
+                  value:
+                    type: state_error
+                    detail: CRM data refresh is already in progress for this document.
+                CRM Authorization Expired:
+                  value:
+                    type: integration_error
+                    errors:
+                      - code: unauthorized
+                        message: ''
+        '423':
+          $ref: '#/components/responses/423'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedObjectRefreshIntegrationErrorResponse'
+              examples:
+                Integration Service Error:
+                  value:
+                    type: integration_error
+                    errors:
+                      - code: unhandled
+                        message: ''
+        '502':
+          description: Line items could not be fetched from the CRM. Variables and merge fields may already be updated. Retry the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedObjectRefreshIntegrationErrorResponse'
+              examples:
+                Line Items Fetch Failed:
+                  value:
+                    type: integration_error
+                    errors:
+                      - code: products_fetch_error
+                        message: Line items could not be fetched from the CRM. Variables may have been refreshed. Retry the request.
+        '504':
+          description: The CRM didn't respond in time. Retry the request later.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkedObjectRefreshIntegrationErrorResponse'
+              examples:
+                CRM Timeout:
+                  value:
+                    type: integration_error
+                    errors:
+                      - code: request_timeout
+                        message: ''
   /public/v1/documents/{id}/attachments:
     get:
       summary: List Document Attachments
@@ -13379,6 +13516,55 @@ components:
         - provider
         - entity_type
         - entity_id
+    LinkedObjectRefreshRequestErrorResponse:
+      type: object
+      description: Error returned when the request or the document's state doesn't allow the refresh.
+      required:
+        - type
+        - detail
+      properties:
+        type:
+          type: string
+          description: Error type.
+          example: request_error
+        detail:
+          description: Human-readable explanation of the error, or validation errors per field.
+          oneOf:
+            - type: string
+              example: deb0d530-d759-4189-a422-8d2265e01b2e does not exist. Please provide a correct one.
+            - type: object
+              additionalProperties: true
+              example:
+                link_id:
+                  - Must be a valid UUID.
+    LinkedObjectRefreshIntegrationErrorResponse:
+      type: object
+      description: Error returned when the CRM integration fails to provide data for the refresh.
+      required:
+        - type
+        - errors
+      properties:
+        type:
+          type: string
+          description: Error type.
+          enum:
+            - integration_error
+        errors:
+          type: array
+          description: Integration errors.
+          items:
+            type: object
+            required:
+              - code
+            properties:
+              code:
+                type: string
+                description: Machine-readable error code.
+                example: products_fetch_error
+              message:
+                type: string
+                description: Human-readable error message. Can be empty.
+                example: Line items could not be fetched from the CRM. Variables may have been refreshed. Retry the request.
     DocumentAttachmentResponse:
       type: object
       properties:
