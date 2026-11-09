@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.27.1
+  version: 8.28.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -17497,6 +17497,21 @@ components:
                       nullable: false
                       description: Item description. If you create an item without providing a value, it will have the default value.
                       default: ''
+                    images:
+                      type: array
+                      nullable: false
+                      description: Item image URLs. Omitted leaves the images unchanged, an empty list removes them. Images not hosted by PandaDoc are downloaded and stored in PandaDoc, and the item gets the stored URLs. Images must be JPEG, PNG, GIF or WebP, at most 10 MB each, and at most 10 new images can be uploaded per request.
+                      items:
+                        type: string
+                        format: uri
+                      example:
+                        - https://example.com/images/product.png
+                    thumbnail:
+                      type: string
+                      format: uri
+                      nullable: true
+                      description: Item thumbnail URL. Omitted leaves the thumbnail unchanged, null removes it. Stored the same way as `images`.
+                      example: https://example.com/images/product.png
                     qty:
                       type: integer
                       nullable: false
