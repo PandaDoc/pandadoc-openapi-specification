@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.29.0"
+    "version": "8.29.1"
   },
   "servers": [
     {
@@ -17269,7 +17269,8 @@
               "signature_date": {
                 "type": "string",
                 "nullable": true,
-                "description": "Latest signature by this recipient's user on any version of the document. It is matched by user, so it also appears on other recipients and group memberships of the same person, and it keeps its value after the document is moved back to draft. To find who signed the current version, use `date_current_revision_signed`.",
+                "deprecated": true,
+                "description": "Deprecated — use `date_current_revision_signed` instead. Latest signature by this recipient's user on any version of the document. It is matched by user, so it also appears on other recipients and group memberships of the same person, and it keeps its value after the document is moved back to draft.",
                 "example": "2021-10-23T21:07:04.147345Z"
               },
               "date_current_revision_signed": {
@@ -17333,7 +17334,8 @@
           "signature_date": {
             "type": "string",
             "nullable": true,
-            "description": "Latest signature by this member's user on any version of the document, with the same semantics as the recipient's `signature_date`. It does not identify who signed on the group's behalf; use `date_current_revision_signed`.",
+            "deprecated": true,
+            "description": "Deprecated — use `date_current_revision_signed` instead. Latest signature by this member's user on any version of the document, with the same semantics as the recipient's `signature_date`. It does not identify who signed on the group's behalf.",
             "example": "2021-10-23T21:07:04.147345Z"
           },
           "date_current_revision_signed": {
