@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.29.1
+  version: 8.29.2
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -1020,6 +1020,8 @@ paths:
           $ref: '#/components/responses/403'
         '404':
           $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
         '423':
           $ref: '#/components/responses/423'
         '429':
