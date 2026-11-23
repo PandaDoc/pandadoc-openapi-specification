@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.29.2"
+    "version": "8.30.0"
   },
   "servers": [
     {
@@ -21365,7 +21365,8 @@
           "template_deleted",
           "content_library_item_created",
           "content_library_item_creation_failed",
-          "recipient_qes_verified"
+          "recipient_qes_verified",
+          "recipient_viewed"
         ],
         "example": "document_state_changed"
       },
@@ -21554,7 +21555,8 @@
           "template_deleted",
           "content_library_item_created",
           "content_library_item_creation_failed",
-          "recipient_qes_verified"
+          "recipient_qes_verified",
+          "recipient_viewed"
         ],
         "example": "document_state_changed"
       },

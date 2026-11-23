@@ -29,7 +29,7 @@ info:
   license:
     name: MIT
     url: https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE
-  version: 8.29.2
+  version: 8.30.0
 servers:
   - url: https://api.pandadoc.com
     description: Public API
@@ -15922,6 +15922,7 @@ components:
         - content_library_item_created
         - content_library_item_creation_failed
         - recipient_qes_verified
+        - recipient_viewed
       example: document_state_changed
     WebhookSubscriptionStatusEnum:
       type: string
@@ -16068,6 +16069,7 @@ components:
         - content_library_item_created
         - content_library_item_creation_failed
         - recipient_qes_verified
+        - recipient_viewed
       example: document_state_changed
     WebhookEventHttpStatusCodeGroupEnum:
       type: integer
