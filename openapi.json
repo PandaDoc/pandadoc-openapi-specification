@@ -13,7 +13,7 @@
       "name": "MIT",
       "url": "https://github.com/PandaDoc/pandadoc-openapi-specification/blob/main/LICENSE"
     },
-    "version": "8.30.0"
+    "version": "8.31.0"
   },
   "servers": [
     {
@@ -4004,7 +4004,7 @@
     "/public/v1/documents/{id}/fields": {
       "get": {
         "summary": "List Document Fields",
-        "description": "Return the list of fields for a particular document.",
+        "description": "Return the list of fields for a particular document.\n\nBy default, only fields positioned on a page (`absolute` placement) are returned.\nUse the `placement` query parameter to also include fields placed inline in the document content.\n\nInline fields:\n- have `placement` set to `inline`;\n- don't include `layout`;\n- are read-only for [Create Document Fields](https://developers.pandadoc.com/reference/create-document-fields). You can't create inline fields through the API, but you can assign them to recipients with [Update Document Fields Assignment](https://developers.pandadoc.com/reference/updatedocumentfieldsassignment).\n",
         "operationId": "listDocumentFields",
         "tags": [
           "Document Fields"
@@ -4019,6 +4019,23 @@
             },
             "required": true,
             "example": "BhVzRcxH9Z2LgfPPGXFUBa"
+          },
+          {
+            "name": "placement",
+            "in": "query",
+            "required": false,
+            "description": "Filter fields by how they are placed in the document.\nDefaults to `absolute`, which keeps the existing behavior. Use `all` to return every field in the document.\n",
+            "schema": {
+              "$ref": "#/components/schemas/DocumentFieldsPlacementFilterEnum"
+            },
+            "examples": {
+              "Absolute fields only (default)": {
+                "value": "absolute"
+              },
+              "All fields": {
+                "value": "all"
+              }
+            }
           }
         ],
         "responses": {
@@ -4071,7 +4088,83 @@
                               "height": 1
                             }
                           },
+                          "placement": "absolute",
                           "merge_field": null
+                        }
+                      ]
+                    }
+                  },
+                  "All fields (placement=all)": {
+                    "value": {
+                      "fields": [
+                        {
+                          "uuid": "d6948f39-612a-4626-a439-ca9e0cbbda7c",
+                          "name": "Text",
+                          "title": "",
+                          "value": "",
+                          "is_filled": false,
+                          "assigned_to": {
+                            "id": "tf5dGS3Tmu3cj228ao6fnc",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "email": "john.doe@example.com",
+                            "phone": "",
+                            "recipient_type": "signer",
+                            "has_completed": false,
+                            "signing_order": null,
+                            "delivery_methods": {},
+                            "redirect": {},
+                            "type": "recipient"
+                          },
+                          "field_id": "text_d6948f39-612a-4626-a439-ca9e0cbbda7c",
+                          "type": "text",
+                          "settings": {
+                            "required": true,
+                            "placeholder": "Enter value",
+                            "masked": false,
+                            "multiline": true
+                          },
+                          "layout": {
+                            "page": 1,
+                            "position": {
+                              "offset_x": 1,
+                              "offset_y": 1,
+                              "anchor_point": "topleft"
+                            },
+                            "style": {
+                              "width": 1,
+                              "height": 1
+                            }
+                          },
+                          "placement": "absolute",
+                          "merge_field": null
+                        },
+                        {
+                          "uuid": "0b5e8f8e-2f4c-4d3e-9a52-6a1b3c7d9e10",
+                          "name": "Signature",
+                          "title": "",
+                          "value": {},
+                          "is_filled": false,
+                          "assigned_to": {
+                            "id": "tf5dGS3Tmu3cj228ao6fnc",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "email": "john.doe@example.com",
+                            "phone": "",
+                            "recipient_type": "signer",
+                            "has_completed": false,
+                            "signing_order": null,
+                            "delivery_methods": {},
+                            "redirect": {},
+                            "type": "recipient"
+                          },
+                          "field_id": "signature_0b5e8f8e-2f4c-4d3e-9a52-6a1b3c7d9e10",
+                          "type": "signature",
+                          "settings": {
+                            "required": true,
+                            "placeholder": "Signature"
+                          },
+                          "placement": "inline"
                         }
                       ]
                     }
@@ -4079,6 +4172,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/400ValidationError"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -4200,7 +4296,7 @@
       },
       "post": {
         "summary": "Create Document Fields",
-        "description": "Creates fields for a particular document.\nFor CFR11-compliant workspaces (21 CFR Part 11), \nsignature fields must have a minimum size of 108×33.\n",
+        "description": "Creates fields for a particular document.\nFor CFR11-compliant workspaces (21 CFR Part 11), \nsignature fields must have a minimum size of 108×33.\n\nOnly fields positioned on a page can be created: `layout` is required, and created fields are returned with `placement` set to `absolute`.\nInline fields returned by [List Document Fields](https://developers.pandadoc.com/reference/list-document-fields) are read-only and can't be created or copied with this endpoint.\n",
         "operationId": "createDocumentFields",
         "tags": [
           "Document Fields"
@@ -4341,6 +4437,7 @@
                               "height": 1
                             }
                           },
+                          "placement": "absolute",
                           "merge_field": null
                         }
                       ]
@@ -18411,6 +18508,17 @@
           }
         ]
       },
+      "DocumentFieldsPlacementFilterEnum": {
+        "type": "string",
+        "description": "Which fields to return, based on how they are placed in the document.\n- `absolute`: fields positioned on a page with `layout` coordinates.\n- `inline`: fields placed inline in the document content (for example, in text blocks and tables). They have no `layout`.\n- `all`: both absolute and inline fields.\n",
+        "enum": [
+          "absolute",
+          "inline",
+          "all"
+        ],
+        "default": "absolute",
+        "example": "all"
+      },
       "DocumentFieldAnchorPointEnum": {
         "type": "string",
         "enum": [
@@ -18471,6 +18579,114 @@
           "position",
           "style"
         ]
+      },
+      "DocumentFieldPlacementEnum": {
+        "type": "string",
+        "description": "How the field is placed in the document.\n- `absolute`: positioned on a page; `layout` describes its position.\n- `inline`: placed inline in the document content; `layout` is not returned.\n\nNew values may be added in the future. Handle unknown values gracefully.\n",
+        "enum": [
+          "absolute",
+          "inline"
+        ],
+        "readOnly": true,
+        "example": "absolute"
+      },
+      "DocumentFieldOption": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Option ID."
+          },
+          "text": {
+            "type": "string",
+            "description": "Option label.",
+            "example": "Yes"
+          },
+          "position": {
+            "type": "object",
+            "description": "Option position relative to the field. Returned for `radio_buttons` fields.",
+            "properties": {
+              "offset_x": {
+                "type": "number",
+                "example": 0
+              },
+              "offset_y": {
+                "type": "number",
+                "example": 38
+              }
+            }
+          }
+        }
+      },
+      "DocumentFieldSettings": {
+        "type": "object",
+        "description": "Field configuration. The returned properties depend on the field `type`.\n",
+        "readOnly": true,
+        "properties": {
+          "required": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether the recipient must complete the field."
+          },
+          "placeholder": {
+            "type": "string",
+            "example": "Enter value",
+            "description": "Placeholder text shown in the field. Applies to all field types except `checkbox` and `radio_buttons`."
+          },
+          "masked": {
+            "type": "boolean",
+            "example": false,
+            "description": "Whether the entered value is hidden behind a mask. Applies to text, date, and dropdown fields."
+          },
+          "multiline": {
+            "type": "boolean",
+            "example": false,
+            "description": "Whether the value can span multiple lines. Applies to text fields."
+          },
+          "autofilled": {
+            "type": "boolean",
+            "example": false,
+            "description": "Whether the date is filled in automatically. Applies to date fields."
+          },
+          "autofill_interval": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "example": null,
+            "description": "Interval used to autofill the date. Applies to date fields."
+          },
+          "date_format": {
+            "type": "string",
+            "example": "MM / dd / yyyy",
+            "description": "Date display format. Applies to date fields."
+          },
+          "collector_uuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Payment collector ID. Applies to payment fields."
+          },
+          "caption": {
+            "type": "string",
+            "description": "Caption shown to the recipient. Applies to collected file fields."
+          },
+          "anybody_can_download": {
+            "type": "boolean",
+            "description": "Whether any recipient can download the uploaded file. Applies to collected file fields."
+          },
+          "show_values": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether option values are shown next to the radio buttons. Applies to `radio_buttons` fields."
+          },
+          "options": {
+            "type": "array",
+            "description": "Selectable options. Applies to `radio_buttons` and `dropdown` fields.",
+            "items": {
+              "$ref": "#/components/schemas/DocumentFieldOption"
+            }
+          }
+        }
       },
       "DocumentFieldsField": {
         "type": "object",
@@ -18538,6 +18754,18 @@
           "section_uuid": {
             "type": "string",
             "format": "uuid"
+          },
+          "placement": {
+            "$ref": "#/components/schemas/DocumentFieldPlacementEnum"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/DocumentFieldSettings"
+          },
+          "merge_field": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true,
+            "description": "Merge field name used to populate the field with data from your CRM or API.\nReturned only for `text`, `checkbox`, `date`, `dropdown`, and `radio_buttons` fields.\n"
           }
         }
       },
